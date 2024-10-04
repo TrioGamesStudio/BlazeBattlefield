@@ -15,14 +15,16 @@ public class FirstPersonCamera : LocalCameraBase
     private Vector2 lookInput;
     private void LateUpdate()
     {
+  
         if (target == null)
         {
             return;
         }
+       
 
         transform.position = target.position;
         lookInput.y = Mathf.Clamp(lookInput.y, -70f, 70f);
-        transform.rotation = Quaternion.Euler( - lookInput.y, lookInput.x, 0);
+        transform.rotation = Quaternion.Euler(-lookInput.y, lookInput.x, 0);
         //target.transform.rotation = Quaternion.Euler(0, lookInput.x, 0);
         if (target != null)
             target.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
@@ -46,7 +48,7 @@ public class FirstPersonCamera : LocalCameraBase
         this.target = target;
     }
 
-    
+
 }
 public abstract class LocalCameraBase : MonoBehaviour, ISetupInput, IPlayerCamera
 {
