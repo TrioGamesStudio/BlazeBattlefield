@@ -8,9 +8,9 @@ using UnityEngine.InputSystem;
 public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovementActions
 {
 
-    public Action<Vector2> MoveAction;
-    public Action<Vector2> LookAction;
-    public Action JumpAction;
+    public static Action<Vector2> MoveAction;
+    public static Action<Vector2> LookAction;
+    public static Action JumpAction;
     private void OnEnable()
     {
         Instance.PlayerMovement.SetCallbacks(this);

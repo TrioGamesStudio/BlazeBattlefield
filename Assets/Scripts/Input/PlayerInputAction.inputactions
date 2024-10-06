@@ -650,6 +650,74 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "StanceControl",
+            "id": "062398a4-765d-4ae6-9f31-0f1489585e26",
+            "actions": [
+                {
+                    "name": "Prone",
+                    "type": "Button",
+                    "id": "aa7745a4-121a-4d1c-9c85-067c800ccb0d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Stand",
+                    "type": "Button",
+                    "id": "48d28c3a-26b7-40b5-a3ce-eca6d859fa10",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Crouch",
+                    "type": "Button",
+                    "id": "0058af50-876c-493e-a566-daa2c5c2e4f2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1845c693-3b41-4540-a017-8b56c393af30",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Prone",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "63def866-97fd-43af-ba9d-262adecb516e",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Stand",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b143258e-715e-4ea3-a9b9-10411816a2f3",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

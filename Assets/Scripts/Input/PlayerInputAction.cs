@@ -672,6 +672,74 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""StanceControl"",
+            ""id"": ""062398a4-765d-4ae6-9f31-0f1489585e26"",
+            ""actions"": [
+                {
+                    ""name"": ""Prone"",
+                    ""type"": ""Button"",
+                    ""id"": ""aa7745a4-121a-4d1c-9c85-067c800ccb0d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Stand"",
+                    ""type"": ""Button"",
+                    ""id"": ""48d28c3a-26b7-40b5-a3ce-eca6d859fa10"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""0058af50-876c-493e-a566-daa2c5c2e4f2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""1845c693-3b41-4540-a017-8b56c393af30"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Prone"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""63def866-97fd-43af-ba9d-262adecb516e"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Stand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b143258e-715e-4ea3-a9b9-10411816a2f3"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -754,12 +822,18 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        // StanceControl
+        m_StanceControl = asset.FindActionMap("StanceControl", throwIfNotFound: true);
+        m_StanceControl_Prone = m_StanceControl.FindAction("Prone", throwIfNotFound: true);
+        m_StanceControl_Stand = m_StanceControl.FindAction("Stand", throwIfNotFound: true);
+        m_StanceControl_Crouch = m_StanceControl.FindAction("Crouch", throwIfNotFound: true);
     }
 
     ~@PlayerInputAction()
     {
         UnityEngine.Debug.Assert(!m_PlayerMovement.enabled, "This will cause a leak and performance issues, PlayerInputAction.PlayerMovement.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerInputAction.UI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_StanceControl.enabled, "This will cause a leak and performance issues, PlayerInputAction.StanceControl.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -997,6 +1071,68 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // StanceControl
+    private readonly InputActionMap m_StanceControl;
+    private List<IStanceControlActions> m_StanceControlActionsCallbackInterfaces = new List<IStanceControlActions>();
+    private readonly InputAction m_StanceControl_Prone;
+    private readonly InputAction m_StanceControl_Stand;
+    private readonly InputAction m_StanceControl_Crouch;
+    public struct StanceControlActions
+    {
+        private @PlayerInputAction m_Wrapper;
+        public StanceControlActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Prone => m_Wrapper.m_StanceControl_Prone;
+        public InputAction @Stand => m_Wrapper.m_StanceControl_Stand;
+        public InputAction @Crouch => m_Wrapper.m_StanceControl_Crouch;
+        public InputActionMap Get() { return m_Wrapper.m_StanceControl; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(StanceControlActions set) { return set.Get(); }
+        public void AddCallbacks(IStanceControlActions instance)
+        {
+            if (instance == null || m_Wrapper.m_StanceControlActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_StanceControlActionsCallbackInterfaces.Add(instance);
+            @Prone.started += instance.OnProne;
+            @Prone.performed += instance.OnProne;
+            @Prone.canceled += instance.OnProne;
+            @Stand.started += instance.OnStand;
+            @Stand.performed += instance.OnStand;
+            @Stand.canceled += instance.OnStand;
+            @Crouch.started += instance.OnCrouch;
+            @Crouch.performed += instance.OnCrouch;
+            @Crouch.canceled += instance.OnCrouch;
+        }
+
+        private void UnregisterCallbacks(IStanceControlActions instance)
+        {
+            @Prone.started -= instance.OnProne;
+            @Prone.performed -= instance.OnProne;
+            @Prone.canceled -= instance.OnProne;
+            @Stand.started -= instance.OnStand;
+            @Stand.performed -= instance.OnStand;
+            @Stand.canceled -= instance.OnStand;
+            @Crouch.started -= instance.OnCrouch;
+            @Crouch.performed -= instance.OnCrouch;
+            @Crouch.canceled -= instance.OnCrouch;
+        }
+
+        public void RemoveCallbacks(IStanceControlActions instance)
+        {
+            if (m_Wrapper.m_StanceControlActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IStanceControlActions instance)
+        {
+            foreach (var item in m_Wrapper.m_StanceControlActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_StanceControlActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public StanceControlActions @StanceControl => new StanceControlActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1060,5 +1196,11 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+    }
+    public interface IStanceControlActions
+    {
+        void OnProne(InputAction.CallbackContext context);
+        void OnStand(InputAction.CallbackContext context);
+        void OnCrouch(InputAction.CallbackContext context);
     }
 }

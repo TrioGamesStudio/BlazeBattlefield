@@ -8,8 +8,8 @@ using UnityEngine.Serialization;
 /// </summary>
 public interface ISetupInput
 {
-    void RegisterInput(InputPlayerMovement inputPlayerMovement);
-    void UnRegisterInput(InputPlayerMovement inputPlayerMovement);
+    void RegisterInput();
+    void UnRegisterInput();
 }
 public interface IPlayerCamera
 {
@@ -25,24 +25,18 @@ public class InputPlayerHandler : NetworkBehaviour
     [Header("Reference")]
     [SerializeField] private NetworkMovementBase movement;
     [SerializeField] private LocalCameraBase firstPersonCamera;
-    [FormerlySerializedAs("inputReader")] [SerializeField] private InputPlayerMovement inputPlayerMovement;
-
-    public void SetupInput(InputPlayerMovement inputPlayerMovement)
-    {
-        this.inputPlayerMovement = inputPlayerMovement;
-    }
-   
+    
     
     public void SwitchMovementController(NetworkMovementBase networkMovement)
     {
-        movement?.UnRegisterInput(inputPlayerMovement);
+        movement?.UnRegisterInput();
         movement = networkMovement;
-        movement?.RegisterInput(inputPlayerMovement);
+        movement?.RegisterInput();
     }
     public void SwitchCameraController(LocalCameraBase cameraBase)
     {
-        firstPersonCamera?.UnRegisterInput(inputPlayerMovement);
+        firstPersonCamera?.UnRegisterInput();
         firstPersonCamera = cameraBase;
-        firstPersonCamera?.RegisterInput(inputPlayerMovement);
+        firstPersonCamera?.RegisterInput();
     }
 }

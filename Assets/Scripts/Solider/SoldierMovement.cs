@@ -69,16 +69,16 @@ public class SoldierMovement : NetworkMovementBase
         isJumpPressed = true;
     }
     // use when switching movement method: walking to drive ...
-    public override void RegisterInput(InputPlayerMovement inputPlayerMovement)
+    public override void RegisterInput()
     {
-        inputPlayerMovement.MoveAction += Move;
-        inputPlayerMovement.JumpAction += Jump;
+        InputPlayerMovement.MoveAction += Move;
+        InputPlayerMovement.JumpAction += Jump;
     }
 
-    public override void UnRegisterInput(InputPlayerMovement inputPlayerMovement)
+    public override void UnRegisterInput()
     {
-        inputPlayerMovement.MoveAction -= Move;
-        inputPlayerMovement.JumpAction -= Jump;
+        InputPlayerMovement.MoveAction -= Move;
+        InputPlayerMovement.JumpAction -= Jump;
         // reset input
         moveInput = Vector3.zero;
     }
@@ -86,6 +86,6 @@ public class SoldierMovement : NetworkMovementBase
 public abstract class NetworkMovementBase : NetworkBehaviour, ISetupInput, IPlayerMovement
 {
     public abstract void Move(Vector2 inputDirection);
-    public abstract void RegisterInput(InputPlayerMovement inputPlayerMovement);
-    public abstract void UnRegisterInput(InputPlayerMovement inputPlayerMovement);
+    public abstract void RegisterInput();
+    public abstract void UnRegisterInput();
 }

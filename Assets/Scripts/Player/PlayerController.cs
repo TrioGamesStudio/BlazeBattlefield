@@ -15,7 +15,6 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private Camera CameraPrefab;
     [Header("Scriptable Object")]
     [SerializeField] private PlayerData playerData;
-    [FormerlySerializedAs("inputReader")] [SerializeField] private InputPlayerMovement inputPlayerMovement;
     
 
     public static PlayerController LocalPlayer;
@@ -36,7 +35,6 @@ public class PlayerController : NetworkBehaviour
         {
             InputReader.Instance.Enable();
             // inputPlayerMovement.EnableInput();
-            InputPlayerHandler.SetupInput(inputPlayerMovement);
             InputPlayerHandler.enabled = true;
             LocalPlayer = this;
         }
