@@ -32,11 +32,13 @@ public class SoldierMovement : NetworkMovementBase
             controller.Jump();
         }
         // Moving
-        controller.Move(Runner.DeltaTime * speed * moveInput);
         //transform.Translate(Runner.DeltaTime * speed * moveInput);
 
         if (cameraLook != null)
             transform.rotation = Quaternion.Euler(0, cameraLook.eulerAngles.y, 0);
+        
+        
+        controller.Move(Runner.DeltaTime * speed * moveInput);
     }
     public override void Move(Vector2 inputDirection)
     {
@@ -52,16 +54,16 @@ public class SoldierMovement : NetworkMovementBase
     {
         isJumpPressed = true;
     }
-    public override void RegisterInput(InputReader inputReader)
+    public override void RegisterInput(InputPlayerMovement inputPlayerMovement)
     {
-        inputReader.MoveAction += Move;
-        inputReader.JumpAction += Jump;
+        inputPlayerMovement.MoveAction += Move;
+        inputPlayerMovement.JumpAction += Jump;
     }
 
-    public override void UnRegisterInput(InputReader inputReader)
+    public override void UnRegisterInput(InputPlayerMovement inputPlayerMovement)
     {
-        inputReader.MoveAction -= Move;
-        inputReader.JumpAction -= Jump;
+        inputPlayerMovement.MoveAction -= Move;
+        inputPlayerMovement.JumpAction -= Jump;
         // reset input
         moveInput = Vector3.zero;
     }
@@ -69,6 +71,6 @@ public class SoldierMovement : NetworkMovementBase
 public abstract class NetworkMovementBase : NetworkBehaviour, ISetupInput, IPlayerMovement
 {
     public abstract void Move(Vector2 inputDirection);
-    public abstract void RegisterInput(InputReader inputReader);
-    public abstract void UnRegisterInput(InputReader inputReader);
+    public abstract void RegisterInput(InputPlayerMovement inputPlayerMovement);
+    public abstract void UnRegisterInput(InputPlayerMovement inputPlayerMovement);
 }

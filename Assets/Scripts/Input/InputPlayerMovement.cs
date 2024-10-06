@@ -4,27 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-[CreateAssetMenu(fileName = "InputReader", menuName = "Input/InputReader")]
-public class InputReader : ScriptableObject, PlayerInputAction.IPlayerMovementActions
+[CreateAssetMenu(fileName = "InputPlayerMovement", menuName = "Input/InputPlayerMovement")]
+public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovementActions
 {
-    private PlayerInputAction InputAction;
 
     public Action<Vector2> MoveAction;
     public Action<Vector2> LookAction;
-    public Action ReloadAction;
     public Action JumpAction;
     private void OnEnable()
     {
-        if (InputAction == null)
-        {
-            InputAction = new PlayerInputAction();
-            InputAction.PlayerMovement.SetCallbacks(this);
-        }
+        Instance.PlayerMovement.SetCallbacks(this);
     }
-    public void EnableInput()
-    {
-        InputAction.Enable();
-    }
+ 
 
     public void OnMoving(InputAction.CallbackContext context)
     {
@@ -56,12 +47,21 @@ public class InputReader : ScriptableObject, PlayerInputAction.IPlayerMovementAc
     {
         JumpAction?.Invoke();
     }
+    
+}
 
-    public void OnReload(InputAction.CallbackContext context)
+public abstract class InputReader : ScriptableObject
+{
+    private static PlayerInputAction instance;
+    public static PlayerInputAction Instance
     {
-        if (context.performed)
+        get
         {
-            ReloadAction?.Invoke();
+            if (instance == null)
+            {
+                instance = new PlayerInputAction();
+            }
+            return instance;
         }
     }
 }

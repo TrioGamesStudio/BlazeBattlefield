@@ -15,7 +15,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private Camera CameraPrefab;
     [Header("Scriptable Object")]
     [SerializeField] private PlayerData playerData;
-    [FormerlySerializedAs("inputPlayerMovement")] [SerializeField] private InputReader inputReader;
+    [FormerlySerializedAs("inputReader")] [SerializeField] private InputPlayerMovement inputPlayerMovement;
     
 
     public static PlayerController LocalPlayer;
@@ -34,8 +34,9 @@ public class PlayerController : NetworkBehaviour
         // Just add input for Local Player
         if (HasStateAuthority)
         {
-            inputReader.EnableInput();
-            InputPlayerHandler.SetupInput(inputReader);
+            InputReader.Instance.Enable();
+            // inputPlayerMovement.EnableInput();
+            InputPlayerHandler.SetupInput(inputPlayerMovement);
             InputPlayerHandler.enabled = true;
             LocalPlayer = this;
         }

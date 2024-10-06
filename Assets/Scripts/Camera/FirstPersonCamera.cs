@@ -35,13 +35,13 @@ public class FirstPersonCamera : LocalCameraBase
         lookInput += direction * MouseSentivity;
     }
 
-    public override void RegisterInput(InputReader inputReader)
+    public override void RegisterInput(InputPlayerMovement inputPlayerMovement)
     {
-        inputReader.LookAction += Looking;
+        inputPlayerMovement.LookAction += Looking;
     }
-    public override void UnRegisterInput(InputReader inputReader)
+    public override void UnRegisterInput(InputPlayerMovement inputPlayerMovement)
     {
-        inputReader.LookAction -= Looking;
+        inputPlayerMovement.LookAction -= Looking;
     }
     public override void SetTarget(Transform target)
     {
@@ -54,6 +54,6 @@ public abstract class LocalCameraBase : MonoBehaviour, ISetupInput, IPlayerCamer
 {
     public abstract void Looking(Vector2 direction);
     public abstract void SetTarget(Transform target);
-    public abstract void RegisterInput(InputReader inputReader);
-    public abstract void UnRegisterInput(InputReader inputReader);
+    public abstract void RegisterInput(InputPlayerMovement inputPlayerMovement);
+    public abstract void UnRegisterInput(InputPlayerMovement inputPlayerMovement);
 }
