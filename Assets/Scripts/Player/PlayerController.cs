@@ -4,6 +4,8 @@ using UnityEngine;
 using Fusion;
 using System;
 using System.Threading.Tasks;
+using UnityEngine.Serialization;
+
 public class PlayerController : NetworkBehaviour
 {
     [Networked] public string playerName { get; set; }
@@ -13,7 +15,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private Camera CameraPrefab;
     [Header("Scriptable Object")]
     [SerializeField] private PlayerData playerData;
-    [SerializeField] private InputReader inputReader;
+    [FormerlySerializedAs("inputPlayerMovement")] [SerializeField] private InputReader inputReader;
     
 
     public static PlayerController LocalPlayer;

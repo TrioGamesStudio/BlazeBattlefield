@@ -52,16 +52,16 @@ public class SoldierMovement : NetworkMovementBase
     {
         isJumpPressed = true;
     }
-    public override void RegisterInput(InputReader InputReader)
+    public override void RegisterInput(InputReader inputReader)
     {
-        InputReader.MoveAction += Move;
-        InputReader.JumpAction += Jump;
+        inputReader.MoveAction += Move;
+        inputReader.JumpAction += Jump;
     }
 
-    public override void UnRegisterInput(InputReader InputReader)
+    public override void UnRegisterInput(InputReader inputReader)
     {
-        InputReader.MoveAction -= Move;
-        InputReader.JumpAction -= Jump;
+        inputReader.MoveAction -= Move;
+        inputReader.JumpAction -= Jump;
         // reset input
         moveInput = Vector3.zero;
     }
@@ -69,6 +69,6 @@ public class SoldierMovement : NetworkMovementBase
 public abstract class NetworkMovementBase : NetworkBehaviour, ISetupInput, IPlayerMovement
 {
     public abstract void Move(Vector2 inputDirection);
-    public abstract void RegisterInput(InputReader InputReader);
-    public abstract void UnRegisterInput(InputReader InputReader);
+    public abstract void RegisterInput(InputReader inputReader);
+    public abstract void UnRegisterInput(InputReader inputReader);
 }

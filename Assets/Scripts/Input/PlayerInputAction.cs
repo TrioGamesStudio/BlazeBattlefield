@@ -672,120 +672,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
-        },
-        {
-            ""name"": ""VehicleMovement"",
-            ""id"": ""91453dad-dd7f-4d8c-827f-2e66fe0c3544"",
-            ""actions"": [
-                {
-                    ""name"": ""Moving"",
-                    ""type"": ""Value"",
-                    ""id"": ""d7896bb9-ff01-42e1-a876-6bda5af2f5b0"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Look"",
-                    ""type"": ""Value"",
-                    ""id"": ""003364ee-b4db-4d9a-a420-1c18aa107e2d"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": ""WASD"",
-                    ""id"": ""4c5a5a34-4f3f-4f59-9dec-e3da1ed65388"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Moving"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""c095320c-374a-4556-84a2-38d87c5e302a"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Moving"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""d3163753-8b40-436e-9b51-059d0032dd89"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Moving"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""95fab7f0-756e-4ba3-a8c7-9181881f1681"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Moving"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""7c1583de-d220-4d44-bcbd-64923e7b2eb0"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Moving"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4ef6513c-7b2d-4ff3-87e2-0d409db2cdd7"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Moving"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""9cd0cf21-ac5d-4ce8-af20-6364b664e571"",
-                    ""path"": ""<Mouse>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""04685504-d634-4882-b96a-f8d7ad6a4889"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
         }
     ],
     ""controlSchemes"": [
@@ -868,17 +754,12 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-        // VehicleMovement
-        m_VehicleMovement = asset.FindActionMap("VehicleMovement", throwIfNotFound: true);
-        m_VehicleMovement_Moving = m_VehicleMovement.FindAction("Moving", throwIfNotFound: true);
-        m_VehicleMovement_Look = m_VehicleMovement.FindAction("Look", throwIfNotFound: true);
     }
 
     ~@PlayerInputAction()
     {
         UnityEngine.Debug.Assert(!m_PlayerMovement.enabled, "This will cause a leak and performance issues, PlayerInputAction.PlayerMovement.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerInputAction.UI.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_VehicleMovement.enabled, "This will cause a leak and performance issues, PlayerInputAction.VehicleMovement.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -1116,60 +997,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
-
-    // VehicleMovement
-    private readonly InputActionMap m_VehicleMovement;
-    private List<IVehicleMovementActions> m_VehicleMovementActionsCallbackInterfaces = new List<IVehicleMovementActions>();
-    private readonly InputAction m_VehicleMovement_Moving;
-    private readonly InputAction m_VehicleMovement_Look;
-    public struct VehicleMovementActions
-    {
-        private @PlayerInputAction m_Wrapper;
-        public VehicleMovementActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Moving => m_Wrapper.m_VehicleMovement_Moving;
-        public InputAction @Look => m_Wrapper.m_VehicleMovement_Look;
-        public InputActionMap Get() { return m_Wrapper.m_VehicleMovement; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(VehicleMovementActions set) { return set.Get(); }
-        public void AddCallbacks(IVehicleMovementActions instance)
-        {
-            if (instance == null || m_Wrapper.m_VehicleMovementActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_VehicleMovementActionsCallbackInterfaces.Add(instance);
-            @Moving.started += instance.OnMoving;
-            @Moving.performed += instance.OnMoving;
-            @Moving.canceled += instance.OnMoving;
-            @Look.started += instance.OnLook;
-            @Look.performed += instance.OnLook;
-            @Look.canceled += instance.OnLook;
-        }
-
-        private void UnregisterCallbacks(IVehicleMovementActions instance)
-        {
-            @Moving.started -= instance.OnMoving;
-            @Moving.performed -= instance.OnMoving;
-            @Moving.canceled -= instance.OnMoving;
-            @Look.started -= instance.OnLook;
-            @Look.performed -= instance.OnLook;
-            @Look.canceled -= instance.OnLook;
-        }
-
-        public void RemoveCallbacks(IVehicleMovementActions instance)
-        {
-            if (m_Wrapper.m_VehicleMovementActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IVehicleMovementActions instance)
-        {
-            foreach (var item in m_Wrapper.m_VehicleMovementActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_VehicleMovementActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public VehicleMovementActions @VehicleMovement => new VehicleMovementActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1233,10 +1060,5 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
-    }
-    public interface IVehicleMovementActions
-    {
-        void OnMoving(InputAction.CallbackContext context);
-        void OnLook(InputAction.CallbackContext context);
     }
 }

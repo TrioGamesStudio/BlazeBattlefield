@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-[CreateAssetMenu(fileName = "Input Reader", menuName = "Input/Input Reader")]
+[CreateAssetMenu(fileName = "InputReader", menuName = "Input/InputReader")]
 public class InputReader : ScriptableObject, PlayerInputAction.IPlayerMovementActions
 {
     private PlayerInputAction InputAction;
 
     public Action<Vector2> MoveAction;
     public Action<Vector2> LookAction;
+    public Action ReloadAction;
     public Action JumpAction;
     private void OnEnable()
     {
@@ -54,5 +55,13 @@ public class InputReader : ScriptableObject, PlayerInputAction.IPlayerMovementAc
     public void OnJumping(InputAction.CallbackContext context)
     {
         JumpAction?.Invoke();
+    }
+
+    public void OnReload(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            ReloadAction?.Invoke();
+        }
     }
 }
