@@ -31,14 +31,27 @@ public class SoldierMovement : NetworkMovementBase
         {
             controller.Jump();
         }
-        // Moving
-        //transform.Translate(Runner.DeltaTime * speed * moveInput);
-
+  
+        
         if (cameraLook != null)
+        {
+            Vector3 forward = cameraLook.forward;
+            Vector3 right = cameraLook.right;
+
+            forward.y = 0f;
+            right.y = 0f;
+
+            forward.Normalize();
+            right.Normalize();
+
+            Vector3 desiredMoveDirection = forward * moveInput.z + right * moveInput.x;
+            controller.Move(Runner.DeltaTime * speed * desiredMoveDirection);
+            
+            
+            // rotate
             transform.rotation = Quaternion.Euler(0, cameraLook.eulerAngles.y, 0);
-        
-        
-        controller.Move(Runner.DeltaTime * speed * moveInput);
+
+        }
     }
     public override void Move(Vector2 inputDirection)
     {
@@ -50,10 +63,12 @@ public class SoldierMovement : NetworkMovementBase
         moveInput = new Vector3(inputDirection.x, 0, inputDirection.y);
         moveInput.Normalize();
     }
-    public void Jump()
+
+    private void Jump()
     {
         isJumpPressed = true;
     }
+    // use when switching movement method: walking to drive ...
     public override void RegisterInput(InputPlayerMovement inputPlayerMovement)
     {
         inputPlayerMovement.MoveAction += Move;
