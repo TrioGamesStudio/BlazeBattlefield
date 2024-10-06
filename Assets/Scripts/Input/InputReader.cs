@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 [CreateAssetMenu(fileName = "Input Reader", menuName = "Input/Input Reader")]
-public class InputReader : ScriptableObject, PlayerInputAction.IPlayerActions
+public class InputReader : ScriptableObject, PlayerInputAction.IPlayerMovementActions
 {
     private PlayerInputAction InputAction;
 
@@ -17,7 +17,7 @@ public class InputReader : ScriptableObject, PlayerInputAction.IPlayerActions
         if (InputAction == null)
         {
             InputAction = new PlayerInputAction();
-            InputAction.Player.SetCallbacks(this);
+            InputAction.PlayerMovement.SetCallbacks(this);
         }
     }
     public void EnableInput()
@@ -49,5 +49,10 @@ public class InputReader : ScriptableObject, PlayerInputAction.IPlayerActions
             LookAction?.Invoke(Vector2.zero);
         }
         Debug.Log("Looking: " + context.ReadValue<Vector2>());
+    }
+
+    public void OnJumping(InputAction.CallbackContext context)
+    {
+        JumpAction?.Invoke();
     }
 }
