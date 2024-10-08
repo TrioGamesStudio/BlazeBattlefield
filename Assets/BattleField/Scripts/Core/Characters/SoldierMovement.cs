@@ -43,12 +43,12 @@ public class SoldierMovement : NetworkMovementBase
 
             forward.Normalize();
             right.Normalize();
-
+            // move by camera rotation
             Vector3 desiredMoveDirection = forward * moveInput.z + right * moveInput.x;
             controller.Move(Runner.DeltaTime * speed * desiredMoveDirection);
             
             
-            // rotate
+            // rotate transform by camera
             transform.rotation = Quaternion.Euler(0, cameraLook.eulerAngles.y, 0);
 
         }

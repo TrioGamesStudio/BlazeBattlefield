@@ -25,7 +25,7 @@ public class ItemCollectionUI : MonoBehaviour
     {
         OnItemRefreshChange = null;
     }
-
+    // fake data
     public class ItemRaw
     {
         public ItemRaw(string name, int count)
