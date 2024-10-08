@@ -21,19 +21,9 @@ public class ItemCollectionUI : MonoBehaviour
     {
         OnItemRefreshChange = null;
     }
-    [Button]
-    private void TestUI()
-    {
-        List<ItemCollectUI.ItemData> list = new List<ItemCollectUI.ItemData>()
-        {
-            ItemCollectUI.ItemData.CreateInstance(null, "Gun 1", 3),
-            ItemCollectUI.ItemData.CreateInstance(null, "Gun 3", 1),
-            ItemCollectUI.ItemData.CreateInstance(null, "Dagger 3", 1),
-            ItemCollectUI.ItemData.CreateInstance(null, "Sniper 0", 2),
-            ItemCollectUI.ItemData.CreateInstance(null, "Blade 1", 6),
-        };
-        ItemRefreshChange(list);
-    }
+
+   
+    
     private void ItemRefreshChange(List<ItemCollectUI.ItemData> itemDatas)
     {
         foreach (var item in poolItemUI)
@@ -46,11 +36,17 @@ public class ItemCollectionUI : MonoBehaviour
         
         foreach (var itemData in itemDatas)
         {
+            // set item data to data
             ItemCollectUI itemCollectUI = Instantiate(ItemCollectUIPrefab, Holder.transform);
             itemCollectUI.itemCount.text = itemData.count.ToString();
             itemCollectUI.itemName.text = itemData.name;
             itemCollectUI.icon.sprite = itemData.sprite;
-            
+            itemCollectUI.OnCollectCallback = () =>
+            {
+                Debug.Log("On Click ui collect");
+                itemData.collectCallback?.Invoke();
+                itemCollectUI.gameObject.SetActive(false);
+            };
             itemCollectUI.gameObject.SetActive(true);
 
             poolItemUI.Add(itemCollectUI);
