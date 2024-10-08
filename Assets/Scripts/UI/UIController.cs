@@ -16,7 +16,7 @@ public class UIController : MonoBehaviour
     public Sprite singleMode;
     public Sprite duoMode;
     private bool isPanelActive = false;
-    bool isSingle = true;
+    //bool isSingle = true;
 
     void Start()
     {
@@ -25,7 +25,7 @@ public class UIController : MonoBehaviour
 
     void Update()
     {
-        //HandleTouchInput();
+        HandleTouchInput();
     }
 
     // Initializes the button listeners and ensures the panel is hidden initially
@@ -36,21 +36,47 @@ public class UIController : MonoBehaviour
         if (showButton != null)
         {
             // Assign the button's onClick event to toggle the panel
-            showButton.onClick.AddListener(TogglePanel);
+            showButton.onClick.AddListener(ShowPanel);
         }
     }
 
     // Handles touch input to hide the panel if the touch is on the background but not on the button
     private void HandleTouchInput()
     {
-        if (isPanelActive && Input.touchCount > 0)
+        //if (isPanelActive && Input.touchCount > 0)
+        //{
+        //    // Ignore if touch is on a UI element like the showButton
+        //    if (!IsPointerOverUI() && IsTouchOnBackground())
+        //    {
+        //        HidePanel();
+        //    }
+        //}
+
+        if (isPanelActive && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
-            // Ignore if touch is on a UI element like the showButton
-            if (!IsPointerOverUI() && IsTouchOnBackground())
+            if (IsTouchOnBackgroundOnly())
             {
                 HidePanel();
             }
         }
+    }
+
+    private bool IsTouchOnBackgroundOnly()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = Input.GetTouch(0).position;
+        List<RaycastResult> results = new();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+
+        // Check if the only hit UI element is the background
+        return results.Count == 1 && results[0].gameObject == background;
+
+        //// Check if the touch is over any UI element
+        //PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        //eventDataCurrentPosition.position = Input.GetTouch(0).position;
+        //List<RaycastResult> results = new();
+        //EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        //return results.Count > 0;
     }
 
     // Toggles the panel between show and hide states
@@ -69,6 +95,7 @@ public class UIController : MonoBehaviour
     // Method to show the panel and set it active
     public void ShowPanel()
     {
+        if (isPanelActive) return;
         panel.SetActive(true);
         isPanelActive = true;
     }
@@ -78,43 +105,6 @@ public class UIController : MonoBehaviour
     {
         panel.SetActive(false);
         isPanelActive = false;
-    }
-
-    // Utility method to check if the touch is on the background UI element
-    private bool IsTouchOnBackground()
-    {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current)
-        {
-            position = Input.GetTouch(0).position
-        };
-
-        List<RaycastResult> raycastResults = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, raycastResults);
-
-        foreach (RaycastResult result in raycastResults)
-        {
-            // Check if the touched object is the background
-            if (result.gameObject == background)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Method to check if the touch is over any UI element (like the showButton)
-    private bool IsPointerOverUI()
-    {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current)
-        {
-            position = Input.GetTouch(0).position
-        };
-
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-
-        // If results contain any UI element, the touch is over UI
-        return results.Count > 0;
     }
 
     public void SwitchMode(bool single)
