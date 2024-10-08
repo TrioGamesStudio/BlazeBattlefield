@@ -28,20 +28,34 @@ public class FirstPersonCamera : LocalCameraBase
         //target.transform.rotation = Quaternion.Euler(0, lookInput.x, 0);
         if (target != null)
             target.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+        Looking(lookingDir);
     }
 
+    private Vector2 lookingDir;
     public override void Looking(Vector2 direction)
     {
         lookInput += direction * MouseSentivity;
     }
 
+    private void SetDirection(Vector2 direction)
+    {
+        lookingDir = direction;
+    }
     public override void RegisterInput()
     {
-        InputPlayerMovement.LookAction += Looking;
+        InputPlayerMovement.LookAction += SetDirection;
+        InputCombatControl.Attack += TriggerAttack;
+    }
+
+    private void TriggerAttack(bool b)
+    {
+        Debug.Log("On Trigger attack");
+
     }
     public override void UnRegisterInput()
     {
-        InputPlayerMovement.LookAction -= Looking;
+        InputPlayerMovement.LookAction -= SetDirection;
+        InputCombatControl.Attack -= TriggerAttack;
     }
     public override void SetTarget(Transform target)
     {

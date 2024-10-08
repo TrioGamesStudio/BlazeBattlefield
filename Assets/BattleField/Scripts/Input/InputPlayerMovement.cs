@@ -29,14 +29,15 @@ public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovemen
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
-        {
-            LookAction?.Invoke(context.ReadValue<Vector2>());
-        }
-        else if (context.phase == InputActionPhase.Canceled)
-        {
-            LookAction?.Invoke(Vector2.zero);
-        }
+        LookAction?.Invoke(context.ReadValue<Vector2>());
+        // if (context.phase == InputActionPhase.Performed)
+        // {
+        //     LookAction?.Invoke(context.ReadValue<Vector2>());
+        // }
+        // else if (context.phase == InputActionPhase.Canceled)
+        // {
+        //     LookAction?.Invoke(Vector2.zero);
+        // }
         Debug.Log("Looking: " + context.ReadValue<Vector2>());
     }
 
