@@ -73,6 +73,7 @@ public class SoldierMovement : NetworkMovementBase
     {
         InputPlayerMovement.MoveAction += Move;
         InputPlayerMovement.JumpAction += Jump;
+        
     }
 
     public override void UnRegisterInput()

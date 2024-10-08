@@ -35,6 +35,7 @@ public class ItemCollectUI : MonoBehaviour, IPointerClickHandler
     {
         // Debug.Log($"UI Collect: '{itemName.text}' '{itemCount.text}'",gameObject);
         OnCollectCallback?.Invoke();
+        // Inventory.Collect(item.id)
     }
 }
 

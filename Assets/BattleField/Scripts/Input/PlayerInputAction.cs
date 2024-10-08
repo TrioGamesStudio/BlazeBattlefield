@@ -740,6 +740,254 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Combat"",
+            ""id"": ""3129066c-784d-46a6-b1c1-16d9b93da428"",
+            ""actions"": [
+                {
+                    ""name"": ""Swap Gun 1"",
+                    ""type"": ""Button"",
+                    ""id"": ""6c8a9714-2191-4ab2-9daf-635b5c57a06b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Swap Gun 2"",
+                    ""type"": ""Button"",
+                    ""id"": ""87474fd5-2d4f-4e3b-9a54-18bdadadf878"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Swap Gun 3"",
+                    ""type"": ""Button"",
+                    ""id"": ""841f6250-5ac9-4c19-905f-4bcd721faf04"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Swap Meele"",
+                    ""type"": ""Button"",
+                    ""id"": ""7235e3be-976c-402c-a198-c20a2a854edb"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Use Heal"",
+                    ""type"": ""Button"",
+                    ""id"": ""2c5d9706-4492-48c0-815a-57fa73e9164c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Swap Grenade"",
+                    ""type"": ""Button"",
+                    ""id"": ""17f32207-96b9-4564-bf27-8039907124d4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""5ad5eb90-a114-4c28-b96d-5c4fd074f41a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Hold"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Scope"",
+                    ""type"": ""Button"",
+                    ""id"": ""0dd457a3-a939-4211-a9d0-83855f24713c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Receive"",
+                    ""type"": ""Button"",
+                    ""id"": ""1d5c94bc-c3d4-4977-9b0e-a42aeca8deb3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Get In Car"",
+                    ""type"": ""Button"",
+                    ""id"": ""01503eee-9b6f-43bd-82af-4433658641c0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Swap Fire Mode"",
+                    ""type"": ""Button"",
+                    ""id"": ""ec6eff3f-481e-4b00-a413-3bd7891c5ade"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Show Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""f60cb93e-39da-4ebc-afd1-dd26f6697035"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""2af14099-f6cc-45b0-be9f-2bab14d77f86"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap Gun 1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""15225e4d-f9b0-4700-b55c-1cd65db20743"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap Gun 2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""27230527-188b-4bb3-a9af-188a2c7fc4b5"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap Gun 3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""20b06656-2a2a-46fc-b3f3-1af473f2cfb4"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap Meele"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5d0f243e-5141-47ec-81c4-02d6a06a14a8"",
+                    ""path"": ""<Keyboard>/0"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use Heal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea8ce90a-e87d-4f7c-ba6a-b0b01ceb4a14"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap Grenade"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""73f67a65-ae89-420f-9ff3-1b0bd76ac7c6"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b06f1ce-e3de-4cd4-80d0-92f017327b8b"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scope"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""79052192-a540-44d1-8e30-55f3739f2df7"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Receive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e508b1c2-55ed-4635-8bad-eccc268a9330"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Get In Car"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4ae396ca-404d-4458-af84-3052f503ede3"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap Fire Mode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cb696f3d-1df4-4b90-9ba7-e53d866cc2ca"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Show Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -827,6 +1075,20 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_StanceControl_Prone = m_StanceControl.FindAction("Prone", throwIfNotFound: true);
         m_StanceControl_Stand = m_StanceControl.FindAction("Stand", throwIfNotFound: true);
         m_StanceControl_Crouch = m_StanceControl.FindAction("Crouch", throwIfNotFound: true);
+        // Combat
+        m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
+        m_Combat_SwapGun1 = m_Combat.FindAction("Swap Gun 1", throwIfNotFound: true);
+        m_Combat_SwapGun2 = m_Combat.FindAction("Swap Gun 2", throwIfNotFound: true);
+        m_Combat_SwapGun3 = m_Combat.FindAction("Swap Gun 3", throwIfNotFound: true);
+        m_Combat_SwapMeele = m_Combat.FindAction("Swap Meele", throwIfNotFound: true);
+        m_Combat_UseHeal = m_Combat.FindAction("Use Heal", throwIfNotFound: true);
+        m_Combat_SwapGrenade = m_Combat.FindAction("Swap Grenade", throwIfNotFound: true);
+        m_Combat_Attack = m_Combat.FindAction("Attack", throwIfNotFound: true);
+        m_Combat_Scope = m_Combat.FindAction("Scope", throwIfNotFound: true);
+        m_Combat_Receive = m_Combat.FindAction("Receive", throwIfNotFound: true);
+        m_Combat_GetInCar = m_Combat.FindAction("Get In Car", throwIfNotFound: true);
+        m_Combat_SwapFireMode = m_Combat.FindAction("Swap Fire Mode", throwIfNotFound: true);
+        m_Combat_ShowInventory = m_Combat.FindAction("Show Inventory", throwIfNotFound: true);
     }
 
     ~@PlayerInputAction()
@@ -834,6 +1096,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_PlayerMovement.enabled, "This will cause a leak and performance issues, PlayerInputAction.PlayerMovement.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerInputAction.UI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_StanceControl.enabled, "This will cause a leak and performance issues, PlayerInputAction.StanceControl.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Combat.enabled, "This will cause a leak and performance issues, PlayerInputAction.Combat.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -1133,6 +1396,140 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         }
     }
     public StanceControlActions @StanceControl => new StanceControlActions(this);
+
+    // Combat
+    private readonly InputActionMap m_Combat;
+    private List<ICombatActions> m_CombatActionsCallbackInterfaces = new List<ICombatActions>();
+    private readonly InputAction m_Combat_SwapGun1;
+    private readonly InputAction m_Combat_SwapGun2;
+    private readonly InputAction m_Combat_SwapGun3;
+    private readonly InputAction m_Combat_SwapMeele;
+    private readonly InputAction m_Combat_UseHeal;
+    private readonly InputAction m_Combat_SwapGrenade;
+    private readonly InputAction m_Combat_Attack;
+    private readonly InputAction m_Combat_Scope;
+    private readonly InputAction m_Combat_Receive;
+    private readonly InputAction m_Combat_GetInCar;
+    private readonly InputAction m_Combat_SwapFireMode;
+    private readonly InputAction m_Combat_ShowInventory;
+    public struct CombatActions
+    {
+        private @PlayerInputAction m_Wrapper;
+        public CombatActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
+        public InputAction @SwapGun1 => m_Wrapper.m_Combat_SwapGun1;
+        public InputAction @SwapGun2 => m_Wrapper.m_Combat_SwapGun2;
+        public InputAction @SwapGun3 => m_Wrapper.m_Combat_SwapGun3;
+        public InputAction @SwapMeele => m_Wrapper.m_Combat_SwapMeele;
+        public InputAction @UseHeal => m_Wrapper.m_Combat_UseHeal;
+        public InputAction @SwapGrenade => m_Wrapper.m_Combat_SwapGrenade;
+        public InputAction @Attack => m_Wrapper.m_Combat_Attack;
+        public InputAction @Scope => m_Wrapper.m_Combat_Scope;
+        public InputAction @Receive => m_Wrapper.m_Combat_Receive;
+        public InputAction @GetInCar => m_Wrapper.m_Combat_GetInCar;
+        public InputAction @SwapFireMode => m_Wrapper.m_Combat_SwapFireMode;
+        public InputAction @ShowInventory => m_Wrapper.m_Combat_ShowInventory;
+        public InputActionMap Get() { return m_Wrapper.m_Combat; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CombatActions set) { return set.Get(); }
+        public void AddCallbacks(ICombatActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CombatActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CombatActionsCallbackInterfaces.Add(instance);
+            @SwapGun1.started += instance.OnSwapGun1;
+            @SwapGun1.performed += instance.OnSwapGun1;
+            @SwapGun1.canceled += instance.OnSwapGun1;
+            @SwapGun2.started += instance.OnSwapGun2;
+            @SwapGun2.performed += instance.OnSwapGun2;
+            @SwapGun2.canceled += instance.OnSwapGun2;
+            @SwapGun3.started += instance.OnSwapGun3;
+            @SwapGun3.performed += instance.OnSwapGun3;
+            @SwapGun3.canceled += instance.OnSwapGun3;
+            @SwapMeele.started += instance.OnSwapMeele;
+            @SwapMeele.performed += instance.OnSwapMeele;
+            @SwapMeele.canceled += instance.OnSwapMeele;
+            @UseHeal.started += instance.OnUseHeal;
+            @UseHeal.performed += instance.OnUseHeal;
+            @UseHeal.canceled += instance.OnUseHeal;
+            @SwapGrenade.started += instance.OnSwapGrenade;
+            @SwapGrenade.performed += instance.OnSwapGrenade;
+            @SwapGrenade.canceled += instance.OnSwapGrenade;
+            @Attack.started += instance.OnAttack;
+            @Attack.performed += instance.OnAttack;
+            @Attack.canceled += instance.OnAttack;
+            @Scope.started += instance.OnScope;
+            @Scope.performed += instance.OnScope;
+            @Scope.canceled += instance.OnScope;
+            @Receive.started += instance.OnReceive;
+            @Receive.performed += instance.OnReceive;
+            @Receive.canceled += instance.OnReceive;
+            @GetInCar.started += instance.OnGetInCar;
+            @GetInCar.performed += instance.OnGetInCar;
+            @GetInCar.canceled += instance.OnGetInCar;
+            @SwapFireMode.started += instance.OnSwapFireMode;
+            @SwapFireMode.performed += instance.OnSwapFireMode;
+            @SwapFireMode.canceled += instance.OnSwapFireMode;
+            @ShowInventory.started += instance.OnShowInventory;
+            @ShowInventory.performed += instance.OnShowInventory;
+            @ShowInventory.canceled += instance.OnShowInventory;
+        }
+
+        private void UnregisterCallbacks(ICombatActions instance)
+        {
+            @SwapGun1.started -= instance.OnSwapGun1;
+            @SwapGun1.performed -= instance.OnSwapGun1;
+            @SwapGun1.canceled -= instance.OnSwapGun1;
+            @SwapGun2.started -= instance.OnSwapGun2;
+            @SwapGun2.performed -= instance.OnSwapGun2;
+            @SwapGun2.canceled -= instance.OnSwapGun2;
+            @SwapGun3.started -= instance.OnSwapGun3;
+            @SwapGun3.performed -= instance.OnSwapGun3;
+            @SwapGun3.canceled -= instance.OnSwapGun3;
+            @SwapMeele.started -= instance.OnSwapMeele;
+            @SwapMeele.performed -= instance.OnSwapMeele;
+            @SwapMeele.canceled -= instance.OnSwapMeele;
+            @UseHeal.started -= instance.OnUseHeal;
+            @UseHeal.performed -= instance.OnUseHeal;
+            @UseHeal.canceled -= instance.OnUseHeal;
+            @SwapGrenade.started -= instance.OnSwapGrenade;
+            @SwapGrenade.performed -= instance.OnSwapGrenade;
+            @SwapGrenade.canceled -= instance.OnSwapGrenade;
+            @Attack.started -= instance.OnAttack;
+            @Attack.performed -= instance.OnAttack;
+            @Attack.canceled -= instance.OnAttack;
+            @Scope.started -= instance.OnScope;
+            @Scope.performed -= instance.OnScope;
+            @Scope.canceled -= instance.OnScope;
+            @Receive.started -= instance.OnReceive;
+            @Receive.performed -= instance.OnReceive;
+            @Receive.canceled -= instance.OnReceive;
+            @GetInCar.started -= instance.OnGetInCar;
+            @GetInCar.performed -= instance.OnGetInCar;
+            @GetInCar.canceled -= instance.OnGetInCar;
+            @SwapFireMode.started -= instance.OnSwapFireMode;
+            @SwapFireMode.performed -= instance.OnSwapFireMode;
+            @SwapFireMode.canceled -= instance.OnSwapFireMode;
+            @ShowInventory.started -= instance.OnShowInventory;
+            @ShowInventory.performed -= instance.OnShowInventory;
+            @ShowInventory.canceled -= instance.OnShowInventory;
+        }
+
+        public void RemoveCallbacks(ICombatActions instance)
+        {
+            if (m_Wrapper.m_CombatActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICombatActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CombatActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CombatActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CombatActions @Combat => new CombatActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1202,5 +1599,20 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnProne(InputAction.CallbackContext context);
         void OnStand(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
+    }
+    public interface ICombatActions
+    {
+        void OnSwapGun1(InputAction.CallbackContext context);
+        void OnSwapGun2(InputAction.CallbackContext context);
+        void OnSwapGun3(InputAction.CallbackContext context);
+        void OnSwapMeele(InputAction.CallbackContext context);
+        void OnUseHeal(InputAction.CallbackContext context);
+        void OnSwapGrenade(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
+        void OnScope(InputAction.CallbackContext context);
+        void OnReceive(InputAction.CallbackContext context);
+        void OnGetInCar(InputAction.CallbackContext context);
+        void OnSwapFireMode(InputAction.CallbackContext context);
+        void OnShowInventory(InputAction.CallbackContext context);
     }
 }

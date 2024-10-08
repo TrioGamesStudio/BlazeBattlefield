@@ -6,19 +6,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class PopupButton : MonoBehaviour
+public class ItemPopupButton : MonoBehaviour
 {
-    [SerializeField] private Button UseCurrentItemButton;
     [SerializeField] private Button PopUpButton;
     [SerializeField] private Button PopInButton;
     [SerializeField] private GameObject PopView;
     [SerializeField] private Button SelectButtonPrefab;
     private List<Button> selectBtnList = new();
     public Action UseItem;
+    public int itemCount = 3;
 
     private void Awake()
     {
-        UseCurrentItemButton.onClick.AddListener(UseCurrentItem);
         PopUpButton.onClick.AddListener(PopUp);
         PopInButton.onClick.AddListener(PopIn);
 
@@ -26,49 +25,46 @@ public class PopupButton : MonoBehaviour
 
         SelectButtonPrefab.gameObject.SetActive(false);
     }
-
     private void ReloadView(int selectCount)
     {
         foreach (var btn in selectBtnList)
         {
             Destroy(btn.gameObject);
         }
-
         selectBtnList.Clear();
+        
         for (int i = 0; i < selectCount; i++)
         {
             var selectBtn = Instantiate(SelectButtonPrefab, PopView.transform);
             selectBtn.gameObject.SetActive(true);
             // assign callback for use item
-            selectBtn.onClick.AddListener(() => { Debug.Log("Add button callback", gameObject); });
+            selectBtn.onClick.AddListener(() =>
+            {
+                Debug.Log("Add button callback", gameObject);
+            });
+            
+            
             // update button information like sprite and count
             Sprite sprite = null;
             int count = Random.Range(0, 4);
-            SetupButtonVisual(selectBtn, sprite, count);
+            selectBtn.interactable = count != 0;
+            selectBtn.image.sprite = sprite != null ? sprite : selectBtn.image.sprite;
+            selectBtn.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"x{count}";
+            selectBtn.onClick.AddListener(() =>
+            {
+                // add event callback
+                // change this item to current item to use
+            });
             selectBtnList.Add(selectBtn);
         }
     }
 
-    private void SetupButtonVisual(Button button, Sprite sprite, int count)
-    {
-        button.interactable = count != 0;
-        button.image.sprite = sprite != null ? sprite : button.image.sprite;
-        button.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"x{count}";
-    }
-
     private void OnDestroy()
     {
-        UseCurrentItemButton.onClick.RemoveListener(UseCurrentItem);
         PopUpButton.onClick.RemoveListener(PopUp);
         PopInButton.onClick.RemoveListener(PopIn);
     }
 
-    private void UseCurrentItem()
-    {
-        Debug.Log("Use current item");
-    }
-
-    public int itemCount = 3;
 
     private void PopUp()
     {
