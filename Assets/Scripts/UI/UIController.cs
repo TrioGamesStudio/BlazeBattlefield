@@ -2,16 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-//using UnityEngine.UIElements;
-//using Image = UnityEngine.UI.Image;
-//using Button = UnityEngine.UI.Button;
 
 public class UIController : MonoBehaviour
 {
     [Header("UI Elements")]
-    public GameObject panel;        // The panel to show/hide
-    public Button showButton;       // Button to show/hide the panel
-    public GameObject background;   // Background UI element (Image or similar)
+    public GameObject panelMode;        
+    public GameObject panelTeamJoin;
+    public Button showButton;       
+    public GameObject background;
     public Image modeImage;
     public Sprite singleMode;
     public Sprite duoMode;
@@ -43,16 +41,7 @@ public class UIController : MonoBehaviour
     // Handles touch input to hide the panel if the touch is on the background but not on the button
     private void HandleTouchInput()
     {
-        //if (isPanelActive && Input.touchCount > 0)
-        //{
-        //    // Ignore if touch is on a UI element like the showButton
-        //    if (!IsPointerOverUI() && IsTouchOnBackground())
-        //    {
-        //        HidePanel();
-        //    }
-        //}
-
-        if (isPanelActive && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             if (IsTouchOnBackgroundOnly())
             {
@@ -96,14 +85,15 @@ public class UIController : MonoBehaviour
     public void ShowPanel()
     {
         if (isPanelActive) return;
-        panel.SetActive(true);
+        panelMode.SetActive(true);
         isPanelActive = true;
     }
 
     // Method to hide the panel and set it inactive
     public void HidePanel()
     {
-        panel.SetActive(false);
+        panelMode.SetActive(false);
+        panelTeamJoin.SetActive(false);
         isPanelActive = false;
     }
 
@@ -115,12 +105,6 @@ public class UIController : MonoBehaviour
             modeImage.sprite = duoMode;
         //isSingle = !isSingle;
     }
-
-    // Future expansion: Add additional methods for handling other input types, animations, etc.
-    // For example: 
-    // - AddPanelAnimation()
-    // - HandleKeyboardInput()
-    // - ShowDifferentUI()
 
     public void ShowHidePanel(GameObject panelUI)
     {
