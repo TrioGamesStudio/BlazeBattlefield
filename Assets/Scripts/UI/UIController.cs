@@ -121,4 +121,12 @@ public class UIController : MonoBehaviour
     // - AddPanelAnimation()
     // - HandleKeyboardInput()
     // - ShowDifferentUI()
+
+    public void ShowHidePanel(GameObject panelUI)
+    {
+        if (panelUI.activeSelf == false)
+        {
+            panelUI.SetActive(true);
+        }
+    }
 }
