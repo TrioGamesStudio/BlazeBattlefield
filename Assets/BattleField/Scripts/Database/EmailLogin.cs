@@ -309,8 +309,8 @@ public class EmailLogin : MonoBehaviour
                 id.text = $"ID: {result.User.UserId}";
 
                 //? gan userId cho saveLoadHander Firebase | FireStore
-                /* DataSaver.Instance.userId = result.User.UserId;
-                DataSaveLoadHander.Instance.userId = result.User.UserId; */
+                DataSaver.Instance.userId = result.User.UserId;
+                /* DataSaveLoadHander.Instance.userId = result.User.UserId; */
             }
             else {
                 showLogMsg("Please verify email!!");
@@ -339,7 +339,6 @@ public class EmailLogin : MonoBehaviour
     void showLogMsg_SingUP(string msg)
     {
         logTxt.text = msg;
-        //logTxt.GetComponent<Animation>().Play("FadeOutAnimation");
         StartCoroutine(TextFadeOut_SignUp(1f));
     }
     IEnumerator TextFadeOut_SignUp(float time) {
