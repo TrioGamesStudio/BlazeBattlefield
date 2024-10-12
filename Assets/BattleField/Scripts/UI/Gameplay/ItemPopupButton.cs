@@ -15,7 +15,9 @@ public class ItemPopupButton : MonoBehaviour
     private List<Button> selectBtnList = new();
     public Action UseItem;
     public int itemCount = 3;
-
+    [SerializeField] private float timer;
+    [SerializeField] private float popInTimeAfterPopUp = .25f;
+    [SerializeField] private GridLayoutGroup gridLayoutGroup;
     private void Awake()
     {
         PopUpButton.onClick.AddListener(PopUp);
@@ -71,11 +73,26 @@ public class ItemPopupButton : MonoBehaviour
         Debug.Log("PopUp");
         ReloadView(itemCount);
         PopView.SetActive(true);
+
+        timer = popInTimeAfterPopUp;
     }
 
     private void PopIn()
     {
         Debug.Log("PopIn");
         PopView.SetActive(false);
+    }
+
+    private void Update()
+    {
+        
+        if (timer < 0 && PopView.gameObject.activeSelf == true)
+        {
+            PopIn();
+        }
+        else
+        {
+            timer -= Time.deltaTime;
+        }
     }
 }

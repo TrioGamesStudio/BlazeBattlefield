@@ -405,8 +405,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ItemCollectUIPrefab: {fileID: 2743410636476871439}
-  View: {fileID: 8188126093395290241}
-  Content: {fileID: 769730067380866522}
+  view: {fileID: 0}
+  content: {fileID: 0}
+  toggleViewButton: {fileID: 0}
+  closeSprite: {fileID: 0}
+  openSprite: {fileID: 0}
   canCollect: 0
 --- !u!114 &1500312131253496716
 MonoBehaviour:
@@ -3004,6 +3007,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6857890024931376148, guid: 53f1b775f5d623940a88983eb88dad50,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 8593388171953344995, guid: 53f1b775f5d623940a88983eb88dad50,
         type: 3}

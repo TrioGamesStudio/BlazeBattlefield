@@ -4,69 +4,53 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class ItemCollectionUI : MonoBehaviour
 {
-    public ItemCollectUI ItemCollectUIPrefab;
-    public GameObject View;
-    [FormerlySerializedAs("Holder")] public GameObject Content;
+    [Header("UI References")]
+    [SerializeField] private ItemCollectUI ItemCollectUIPrefab;
+    [SerializeField] private GameObject view;
+    [SerializeField] private GameObject content;
+    [Header("Button")]
+    [SerializeField] private Button toggleViewButton;
+    [Header("Sprite")]
+    [SerializeField] private Sprite closeSprite;
+    [SerializeField] private Sprite openSprite;
+    [Header("Settings")]
+    [SerializeField] private bool canCollect = false;
+    
     private List<ItemCollectUI> poolItemUI = new();
     public static Action<List<ItemCollectUI.ItemData>> OnItemRefreshChange;
-    public bool canCollect = false;
 
     private void Awake()
     {
         ItemCollectUIPrefab.gameObject.SetActive(false);
         
         OnItemRefreshChange = ItemRefreshChange;
+        toggleViewButton.onClick.AddListener(ToggleView);
+
     }
 
     private void OnDestroy()
     {
         OnItemRefreshChange = null;
+        toggleViewButton.onClick.RemoveListener(ToggleView);
     }
-    // fake data
-    public class ItemRaw
-    {
-        public ItemRaw(string name, int count)
-        {
-            this.name = name;
-            this.count = count;
-        }
 
-        public string itemId;
-        public string name;
-        public int count;
-    }
-    [Button]
-    private void DemoTest()
+
+
+    private void ToggleView()
     {
+        bool isOpen = view.gameObject.activeSelf;
+        view.gameObject.SetActive(!isOpen);
+        // set sprite
+        Sprite buttonSprite = view.gameObject.activeSelf ? openSprite : closeSprite;
+        toggleViewButton.image.sprite = buttonSprite;
+
         
-        List<ItemRaw> itemList = new List<ItemRaw>()
-        {
-            new ItemRaw("Gun 1", 2),
-            new ItemRaw("Gun 2", 2),
-            new ItemRaw("Gun 3", 2),
-            new ItemRaw("Gun 4", 2),
-            new ItemRaw("Gun 5", 2),
-        };
-        List<ItemCollectUI.ItemData> itemDatas = new List<ItemCollectUI.ItemData>();
-        ItemCollectionUI.OnItemRefreshChange?.Invoke(itemDatas);
-        foreach (var item in itemList)
-        {
-            itemDatas.Add(
-                ItemCollectUI.ItemData.CreateInstance(null,
-                    item.name,
-                    item.count, () =>
-            {
-                // Inventory.Collect(item.itemID)
-                // hay dong bo lai list item cua nguoi choi khac
-            }));
-        }
-
-        ItemRefreshChange(itemDatas);
     }
-
+ 
     private void ItemRefreshChange(List<ItemCollectUI.ItemData> itemDatas)
     {
         foreach (var item in poolItemUI)
@@ -76,13 +60,13 @@ public class ItemCollectionUI : MonoBehaviour
         poolItemUI.Clear();
         
         bool isEmpty = itemDatas == null || itemDatas.Count == 0;
-        View.gameObject.SetActive(!isEmpty);
+        view.gameObject.SetActive(!isEmpty);
         if (isEmpty) return;
         
         foreach (var itemData in itemDatas)
         {
             // set item data to data
-            ItemCollectUI itemCollectUI = Instantiate(ItemCollectUIPrefab, Content.transform);
+            ItemCollectUI itemCollectUI = Instantiate(ItemCollectUIPrefab, content.transform);
             itemCollectUI.itemCount.text = itemData.count.ToString();
             itemCollectUI.itemName.text = itemData.name;
             itemCollectUI.icon.sprite = itemData.sprite;

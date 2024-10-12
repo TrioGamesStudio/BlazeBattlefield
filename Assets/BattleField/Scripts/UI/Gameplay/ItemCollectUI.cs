@@ -28,6 +28,7 @@ public class ItemCollectUI : MonoBehaviour, IPointerClickHandler
     }
     public Image background;
     public Image icon;
+    public Image durability;
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemCount;
     public Action OnCollectCallback;
