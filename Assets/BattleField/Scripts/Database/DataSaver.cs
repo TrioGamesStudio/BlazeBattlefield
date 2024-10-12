@@ -2,8 +2,6 @@ using System.Collections;
 using UnityEngine;
 using System;
 using Firebase.Database;
-using UnityEngine.UI;
-using TMPro;
 using UnityEngine.SceneManagement;
 
 [Serializable]
@@ -26,7 +24,10 @@ public class DataSaver : MonoBehaviour
 {
     public static DataSaver Instance;
 
+
     public string userId;
+    string userName;
+    public string UserName {get => userName;}
     public DataToSave dataToSave;
     DatabaseReference dbRef;
 
@@ -52,10 +53,18 @@ public class DataSaver : MonoBehaviour
         
     }
 
-    public DataToSave ReturnDataToSave(string username, int coins, int currLevel, int hightScore) {
-        return new DataToSave(username, coins, currLevel, hightScore);
+    public DataToSave ReturnDataToSave(string username, int currLevel, int hightScore, int coins) {
+        return new DataToSave(username, currLevel, hightScore, coins);
     }
 
+    public void SaveToSignup(string userName, string userId) {
+        DataToSave saveDataToSignup = ReturnDataToSave(userName, 1, 0, 0);
+        // chuyen dataToSave -> json
+        string json = JsonUtility.ToJson(saveDataToSignup);
+
+        // tao folder trong database realtime
+        dbRef.Child("Users").Child(userId).SetRawJsonValueAsync(json);
+    }
 
     #region  SAVE LOAD FIREBASE
     public void SaveData() {
@@ -64,14 +73,12 @@ public class DataSaver : MonoBehaviour
 
         // tao folder trong database realtime
         dbRef.Child("Users").Child(userId).SetRawJsonValueAsync(json);
-        
     }
 
     public void LoadData() {
         StartCoroutine(LoadDataCO());
 
         if(SceneManager.GetActiveScene().name == "Login") return;
-        //ShowInfo();
     }
 
     IEnumerator LoadDataCO() {

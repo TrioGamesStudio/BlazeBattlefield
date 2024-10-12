@@ -10,14 +10,16 @@ public class EmailLogin : MonoBehaviour
 {
     #region variables
     [Header("Login")]
-    public TMP_InputField LoginEmail;
+    public TMP_InputField loginEmail;
     public TMP_InputField loginPassword;
     [SerializeField] Button loginButton;
 
     [Header("Sign up")]
-    public TMP_InputField SignupEmail;
-    public TMP_InputField SignupPassword;
-    public TMP_InputField SignupPasswordConfirm;
+    public TMP_InputField signupEmail;
+    public TMP_InputField userName;
+    public TMP_InputField signupPassword;
+
+    public TMP_InputField signupPasswordConfirm;
     [SerializeField] Button signUpButton;
 
 
@@ -29,24 +31,26 @@ public class EmailLogin : MonoBehaviour
     [SerializeField] TextMeshProUGUI id;
     #endregion
 
-    [SerializeField] GameObject SaveLoadUI;
+    [SerializeField] GameObject PlayerInfoUI;
 
     private void Start() {
         loginButton.onClick.AddListener(Login);
         signUpButton.onClick.AddListener(SignUp);
 
-        SaveLoadUI.SetActive(false);
+        PlayerInfoUI.SetActive(false);
     }
 
     #region signup
 
-    public void SignUp()
+    void SignUp()
     {
         loadingScreen.SetActive(true);
 
         FirebaseAuth auth = FirebaseAuth.DefaultInstance;
-        string email = SignupEmail.text;
-        string password = SignupPassword.text;
+        string email = signupEmail.text;
+        string useName = userName.text;
+        string password = signupPassword.text;
+
         auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
             if (task.IsCanceled)
             {
@@ -65,23 +69,26 @@ public class EmailLogin : MonoBehaviour
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 result.User.DisplayName, result.User.UserId);
 
-            SignupEmail.text = "";
-            SignupPassword.text = "";
-            SignupPasswordConfirm.text = "";
+            signupEmail.text = "";
+            userName.text = "";
+            signupPassword.text = "";
+            signupPasswordConfirm.text = "";
 
             if (result.User.IsEmailVerified)
             {
-                showLogMsg_SingUP("Sign up Successful");
+                ShowLogMsg_SingUP("Sign up Successful");
             }
             else {
-                showLogMsg_SingUP("Please verify your email!!");
+                ShowLogMsg_SingUP("Please verify your email!!");
                 SendEmailVerification();
             }
+
             // save after having email and password
+            DataSaver.Instance.SaveToSignup(useName, result.User.UserId);
         });
     }
 
-    public void SendEmailVerification() {
+    void SendEmailVerification() {
         StartCoroutine(SendEmailForVerificationAsync());
     }
 
@@ -277,7 +284,7 @@ public class EmailLogin : MonoBehaviour
         loadingScreen.SetActive(true);
 
         FirebaseAuth auth = FirebaseAuth.DefaultInstance;
-        string email = LoginEmail.text;
+        string email = loginEmail.text;
         string password = loginPassword.text;
 
         Credential credential =
@@ -301,7 +308,7 @@ public class EmailLogin : MonoBehaviour
 
             if (result.User.IsEmailVerified)
             {
-                showLogMsg("Log in Successful");
+                ShowLogMsg("Log in Successful");
 
                 loginUi.SetActive(false);
                 SuccessUi.SetActive(true);
@@ -313,15 +320,17 @@ public class EmailLogin : MonoBehaviour
                 /* DataSaveLoadHander.Instance.userId = result.User.UserId; */
             }
             else {
-                showLogMsg("Please verify email!!");
+                ShowLogMsg("Please verify email!!");
             }
 
+            //Load data
+            DataSaver.Instance.LoadData();
         });
     }
     #endregion
 
     #region extra
-    void showLogMsg(string msg)
+    void ShowLogMsg(string msg)
     {
         logTxt.text = msg;
         //logTxt.GetComponent<Animation>().Play("FadeOutAnimation");
@@ -333,10 +342,10 @@ public class EmailLogin : MonoBehaviour
 
         SuccessUi.SetActive(false);
 
-        SaveLoadUI.SetActive(true);
+        PlayerInfoUI.SetActive(true);
     }
 
-    void showLogMsg_SingUP(string msg)
+    void ShowLogMsg_SingUP(string msg)
     {
         logTxt.text = msg;
         StartCoroutine(TextFadeOut_SignUp(1f));

@@ -14,7 +14,8 @@ public class ConfigData {
 
 public class RemoteConfig : MonoBehaviour
 {
-        public ConfigData allConfigData;
+    public ConfigData allConfigData;
+
     private void Awake()
     {
         print("json:" + JsonUtility.ToJson(allConfigData));
