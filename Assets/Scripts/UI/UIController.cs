@@ -14,7 +14,23 @@ public class UIController : MonoBehaviour
     public Sprite singleMode;
     public Sprite duoMode;
     private bool isPanelActive = false;
+    [SerializeField] private GameObject sessionButtonPrefab;  // Prefab to represent a session in UI
+    [SerializeField] private Transform sessionListContent;    // Parent transform for session buttons
     //bool isSingle = true;
+    public static UIController Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // Persist across scenes
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject); // Destroy duplicate
+        }
+    }
 
     void Start()
     {
@@ -112,5 +128,14 @@ public class UIController : MonoBehaviour
         {
             panelUI.SetActive(true);
         }
+    }
+
+    public void CreateRoomUI(string roomname, int playerCount, int maxPlayer)
+    {
+        GameObject sessionButton = Instantiate(sessionButtonPrefab, sessionListContent);
+        string infomation = $"{playerCount}/{maxPlayer}";
+        sessionButton.GetComponent<RoomPanelUI>().SetRoomButtonUI(infomation, roomname);
+        //bool isRoomFull = session.PlayerCount >= session.MaxPlayers;
+        //sessionButton.GetComponent<RoomButtonUI>().Deactive(isRoomFull);
     }
 }

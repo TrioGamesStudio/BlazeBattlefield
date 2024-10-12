@@ -10,7 +10,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     private NetworkRunner networkRunner;
     private const int MAX_PLAYER = 4;
-    private Mode currentMode = Mode.Solo;
+    //private Mode currentMode = Mode.Solo;
     //private const int TEAM_SIZE = 2;
     enum SceneBuildIndex
     {
@@ -27,11 +27,31 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         networkRunner = Instantiate(networkRunnerPrefab);
         networkRunner.AddCallbacks(this);
+        JoinLobby();
     }
 
     
     void Update()
     {
+
+    }
+
+    public async void JoinLobby()
+    {
+        // Call this to join the session lobby
+        var startTask = networkRunner.JoinSessionLobby(SessionLobby.Shared);
+
+        await startTask;
+
+        if (startTask.Result.Ok)
+        {
+            //sessionListText.text = "Joined lobby";
+            Debug.Log("Joined lobby");
+        }
+        else
+        {
+            //sessionListText.text = "Fail";
+        }
 
     }
 
@@ -87,6 +107,36 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             //StatusText.text = $"Connection Failed: {result.ShutdownReason}";
         }
+    }
+
+    public async void JoinRoomByName(string roomName)
+    {
+        var sceneInfo = new NetworkSceneInfo();
+        sceneInfo.AddSceneRef(SceneRef.FromIndex(4)); //Share room scene;
+        if (networkRunner == null)
+        {
+            networkRunner = Instantiate(networkRunnerPrefab);
+            networkRunner.AddCallbacks(this);
+        }
+        var result = await networkRunner.StartGame(new StartGameArgs()
+        {
+            GameMode = GameMode.Shared,
+            SessionName = roomName,
+            Scene = sceneInfo, // Assuming you have a separate battle room scene
+            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
+        });
+
+        if (result.Ok)
+        {
+            // all good
+            //createRoomButton.gameObject.SetActive(false);
+            //sessionListContent.parent.parent.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError($"Failed to Start: {result.ShutdownReason}");
+        }
+
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
@@ -172,6 +222,21 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
         //throw new NotImplementedException();
+        Debug.Log("Session list updated!");
+
+        // Clear the existing list display
+        //sessionListText.text = "Available Sessions:\n";
+
+        // Loop through available sessions and display them
+        foreach (var session in sessionList)
+        {
+            //sessionListText.text += $"Session Name: {session.Name}, Player Count: {session.PlayerCount}/{session.MaxPlayers}\n";
+            string roomName = session.Name;
+            int playerCount = session.PlayerCount;
+            int maxPlayer = session.MaxPlayers;
+
+            UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer);
+        }
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
