@@ -13,6 +13,8 @@ public class UIController : MonoBehaviour
     public Image modeImage;
     public Sprite singleMode;
     public Sprite duoMode;
+    public ModeButton soloButton;
+    public ModeButton duoButton;
     private bool isPanelActive = false;
     [SerializeField] private GameObject sessionButtonPrefab;  // Prefab to represent a session in UI
     [SerializeField] private Transform sessionListContent;    // Parent transform for session buttons
@@ -116,9 +118,19 @@ public class UIController : MonoBehaviour
     public void SwitchMode(bool single)
     {
         if (single)
+        {
             modeImage.sprite = singleMode;
+            soloButton.Highlight();
+            duoButton.UnHightLight();
+        }
+            
         else
+        {
             modeImage.sprite = duoMode;
+            soloButton.UnHightLight();
+            duoButton.Highlight();
+
+        }
         //isSingle = !isSingle;
     }
 

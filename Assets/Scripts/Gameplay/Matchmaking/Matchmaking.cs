@@ -11,6 +11,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private PlayerController playerControllerPrefab;
     [SerializeField] private List<Transform> memberPos = new();
+    [SerializeField] private GameObject localPlayer;
     private NetworkRunner networkRunner;
     private const int MAX_PLAYER = 4;
     public Dictionary<PlayerRef, PlayerController> players = new();
@@ -73,6 +74,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public async void QuickPlay()
     {
+        if (networkRunner == null)
+        {
+            networkRunner = Instantiate(networkRunnerPrefab);
+            networkRunner.AddCallbacks(this);
+        }
         var sceneInfo = new NetworkSceneInfo();
         int playSceneIndex = (int)SceneBuildIndex.PlayScene;
         sceneInfo.AddSceneRef(SceneRef.FromIndex(playSceneIndex));
@@ -98,7 +104,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public async void CreateRoom()
     {
         string teamcode = UnityEngine.Random.Range(100, 999).ToString();
-
+        if (networkRunner == null)
+        {
+            networkRunner = Instantiate(networkRunnerPrefab);
+            networkRunner.AddCallbacks(this);
+        }
         var startArguments = new StartGameArgs()
         {
             GameMode = GameMode.Shared,
@@ -122,6 +132,31 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         else
         {
             //StatusText.text = $"Connection Failed: {result.ShutdownReason}";
+        }
+    }
+
+    public async void LeaveRoom()
+    {
+        if (networkRunner != null)
+        {
+            Debug.Log("Leaving room...");
+
+            // Shuts down the runner and leaves the current session
+            await networkRunner.Shutdown();
+
+            Debug.Log("You have left the room.");
+            currentMode = Mode.Solo;
+            UIController.Instance.SwitchMode(true);
+            networkRunner = null;
+            localPlayer.SetActive(true);
+
+            // Optionally update the UI, e.g., re-enable room creation UI or show session list
+            // FindObjectOfType<UIManager>().TurnOnCreateRoomButton();
+            // sessionListContent.parent.parent.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("Network runner is not initialized or you are not in a session.");
         }
     }
 
@@ -158,8 +193,10 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        
         if (currentMode == Mode.Duo)
         {
+            localPlayer.SetActive(false);
             //throw new NotImplementedException();
             if (player == runner.LocalPlayer)
             {
@@ -167,7 +204,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 PlayerController playerObject = runner.Spawn(playerControllerPrefab, spawnPosition, Quaternion.identity, player);
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
                 players[player] = playerObject.GetComponent<PlayerController>();
-                //players[player].Setup();
+                players[player].TurnOnTeamMemberPanel();
                 Debug.Log("New player joined " + player.ToString());
                 Debug.Log("Player count " + runner.ActivePlayers.Count());
                 //players[player].SetRoomID(runner.SessionInfo.Name);
@@ -268,7 +305,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        //throw new NotImplementedException();
+        localPlayer.SetActive(true);
     }
 
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)

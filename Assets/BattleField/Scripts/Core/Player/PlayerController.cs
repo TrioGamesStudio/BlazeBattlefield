@@ -15,7 +15,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private Camera CameraPrefab;
     [Header("Scriptable Object")]
     [SerializeField] private PlayerData playerData;
-    
+    [SerializeField] private GameObject teamMemberPanel;
 
     public static PlayerController LocalPlayer;
 
@@ -69,5 +69,10 @@ public class PlayerController : NetworkBehaviour
             InputPlayerHandler.SwitchMovementController(soldier.movement);
             InputPlayerHandler.SwitchCameraController(camera);
         }
+    }
+
+    public void TurnOnTeamMemberPanel()
+    {
+        teamMemberPanel.SetActive(true);
     }
 }
