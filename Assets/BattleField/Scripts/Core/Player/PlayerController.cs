@@ -25,21 +25,21 @@ public class PlayerController : NetworkBehaviour
     {
         InputPlayerHandler = GetComponent<InputPlayerHandler>();
     }
-    public override void Spawned()
-    {
-        base.Spawned();
-        // call in every client object
-        transform.name = "Player_" + playerIndentify;
-        // Just add input for Local Player
-        if (HasStateAuthority)
-        {
-            InputReader.Instance.Enable();
-            // inputPlayerMovement.EnableInput();
-            InputPlayerHandler.enabled = true;
-            LocalPlayer = this;
-        }
+    //public override void Spawned()
+    //{
+    //    base.Spawned();
+    //    // call in every client object
+    //    transform.name = "Player_" + playerIndentify;
+    //    // Just add input for Local Player
+    //    if (HasStateAuthority)
+    //    {
+    //        InputReader.Instance.Enable();
+    //        // inputPlayerMovement.EnableInput();
+    //        InputPlayerHandler.enabled = true;
+    //        LocalPlayer = this;
+    //    }
      
-    }
+    //}
 
     public void Setup()
     {

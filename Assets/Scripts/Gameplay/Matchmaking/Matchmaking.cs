@@ -4,13 +4,19 @@ using UnityEngine;
 using Fusion;
 using Fusion.Sockets;
 using System;
+using System.Linq;
 
 public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 {
     [SerializeField] private NetworkRunner networkRunnerPrefab;
+    [SerializeField] private PlayerController playerControllerPrefab;
+    [SerializeField] private List<Transform> memberPos = new();
     private NetworkRunner networkRunner;
     private const int MAX_PLAYER = 4;
-    //private Mode currentMode = Mode.Solo;
+    public Dictionary<PlayerRef, PlayerController> players = new();
+
+    private Vector3 spawnPosition;
+    private Mode currentMode = Mode.Solo;
     //private const int TEAM_SIZE = 2;
     enum SceneBuildIndex
     {
@@ -34,6 +40,16 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     void Update()
     {
 
+    }
+
+    public void SetSoloMode()
+    {
+        currentMode = Mode.Solo;
+    }
+
+    public void SetDuoMode()
+    {
+        currentMode = Mode.Duo;
     }
 
     public async void JoinLobby()
@@ -111,6 +127,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public async void JoinRoomByName(string roomName)
     {
+        currentMode = Mode.Duo;
         var sceneInfo = new NetworkSceneInfo();
         sceneInfo.AddSceneRef(SceneRef.FromIndex(4)); //Share room scene;
         if (networkRunner == null)
@@ -137,6 +154,66 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             Debug.LogError($"Failed to Start: {result.ShutdownReason}");
         }
 
+    }
+
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    {
+        if (currentMode == Mode.Duo)
+        {
+            //throw new NotImplementedException();
+            if (player == runner.LocalPlayer)
+            {
+                spawnPosition = memberPos[runner.ActivePlayers.Count() - 1].position;
+                PlayerController playerObject = runner.Spawn(playerControllerPrefab, spawnPosition, Quaternion.identity, player);
+                runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
+                players[player] = playerObject.GetComponent<PlayerController>();
+                //players[player].Setup();
+                Debug.Log("New player joined " + player.ToString());
+                Debug.Log("Player count " + runner.ActivePlayers.Count());
+                //players[player].SetRoomID(runner.SessionInfo.Name);
+                //players[player].SetHealthBarColor(Color.green);
+            }
+            else
+            {
+                // Handle remote player
+                StartCoroutine(WaitForPlayerObject(runner, player));
+            }
+        }
+        else
+        {
+            PlayerController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
+            runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
+        }
+
+    }
+
+    private IEnumerator WaitForPlayerObject(NetworkRunner runner, PlayerRef player)
+    {
+        NetworkObject playerObject = null;
+        float timeout = 5f; // 5 seconds timeout
+        float elapsedTime = 0f;
+
+        while (playerObject == null && elapsedTime < timeout)
+        {
+            playerObject = runner.GetPlayerObject(player);
+            if (playerObject != null)
+            {
+                players[player] = playerObject.GetComponent<PlayerController>();
+                Debug.Log($"Remote player {player} added to players list");
+                Debug.Log("Players dictionanry" + players.Count);
+                //UpdatePlayButtonInteractability();
+                //players[player].SetRoomID(runner.SessionInfo.Name);
+                //players[player].SetHealthBarColor(Color.blue);
+                yield break;
+            }
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        if (playerObject == null)
+        {
+            Debug.LogWarning($"Timeout waiting for player object for player {player}");
+        }
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
@@ -185,11 +262,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     }
 
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
-    {
-        //throw new NotImplementedException();
-    }
-
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         //throw new NotImplementedException();
     }
