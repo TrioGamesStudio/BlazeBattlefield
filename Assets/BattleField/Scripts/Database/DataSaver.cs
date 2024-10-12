@@ -8,15 +8,15 @@ using UnityEngine.SceneManagement;
 public class DataToSave {
     public string userName;
     public int currLevel;
-    public int coins;
     public int highScore;
+    public int coins;
     
     public DataToSave() {}
-    public DataToSave(string userName, int coins, int currLevel, int highScore) {
+    public DataToSave(string userName, int currLevel, int highScore, int coins) {
         this.userName = userName;
-        this.coins = coins;
         this.currLevel = currLevel;
         this.highScore = highScore;
+        this.coins = coins;
     }
 }
 
@@ -29,6 +29,8 @@ public class DataSaver : MonoBehaviour
     string userName;
     public string UserName {get => userName;}
     public DataToSave dataToSave;
+
+    //others
     DatabaseReference dbRef;
 
     // buttons
