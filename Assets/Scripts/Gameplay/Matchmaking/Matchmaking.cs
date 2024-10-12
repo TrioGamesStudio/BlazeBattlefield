@@ -59,6 +59,36 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         }
     }
 
+    public async void CreateRoom()
+    {
+        string teamcode = UnityEngine.Random.Range(100, 999).ToString();
+
+        var startArguments = new StartGameArgs()
+        {
+            GameMode = GameMode.Shared,
+            SessionName = teamcode,
+            PlayerCount = 2,
+        };
+
+        //StatusText.text = startArguments.GameMode == GameMode.Single ? "Starting single-player..." : "Connecting...";
+
+        var result = await networkRunner.StartGame(startArguments);
+
+        if (result.Ok)
+        {
+            //StatusText.text = "";
+            //teamcodeText.text = teamcode;
+            //createRoomButton.gameObject.SetActive(false);
+            //sessionListContent.parent.parent.gameObject.SetActive(false);
+            //FindObjectOfType<UIManager>().TurnOffCreateRoomButton();
+            Debug.Log("Team room name: " + networkRunner.SessionInfo.Name);
+        }
+        else
+        {
+            //StatusText.text = $"Connection Failed: {result.ShutdownReason}";
+        }
+    }
+
     public void OnConnectedToServer(NetworkRunner runner)
     {
         //throw new NotImplementedException();
