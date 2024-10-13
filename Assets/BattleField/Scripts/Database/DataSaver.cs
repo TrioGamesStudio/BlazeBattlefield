@@ -11,7 +11,9 @@ public class DataToSave {
     public int highScore;
     public int coins;
     
-    public DataToSave() {}
+    public DataToSave() {
+        
+    }
     public DataToSave(string userName, int currLevel, int highScore, int coins) {
         this.userName = userName;
         this.currLevel = currLevel;
@@ -24,10 +26,7 @@ public class DataSaver : MonoBehaviour
 {
     public static DataSaver Instance;
 
-
     public string userId;
-    string userName;
-    public string UserName {get => userName;}
     public DataToSave dataToSave;
 
     //others

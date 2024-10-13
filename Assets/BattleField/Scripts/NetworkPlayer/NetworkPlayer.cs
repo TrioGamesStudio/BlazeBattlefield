@@ -153,7 +153,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             }
 
             // lay gia tri Gamemanager.playerNickName gan vao
-            //=>RPC_SetNickName(GameManager.playerNickName);
+            string userName = DataSaver.Instance.dataToSave.userName;
+            RPC_SetNickName(userName);
             /* RPC_SetNickName(PlayerPrefs.GetString("PlayerNickName_Local")); */
 
             // kiem tra PlayerPref player (Object.InputAuthority.PlayerID) -> le = green | chan = red
@@ -202,7 +203,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
     }
 
     //? phuong thuc de local player send data cua rieng no len stateAuthority
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.StateAuthority)]
     public void RPC_SetNickName(string nickName, RpcInfo info = default) {
         Debug.Log($"[RPC] Set nickName {nickName} for localPlayer");
         this.nickName_Network = nickName;

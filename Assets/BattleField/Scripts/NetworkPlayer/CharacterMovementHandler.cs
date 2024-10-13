@@ -12,6 +12,10 @@ public class CharacterMovementHandler : NetworkBehaviour
     Vector3 aimForwardVector;
     Vector2 movementInput;
 
+    //locomotion
+    [SerializeField] float walkSpeed = 0f;
+    [SerializeField] Animator anim;
+
     // request after falling
     [SerializeField] float fallHightToRespawn = -10f;
     [SerializeField] bool isRespawnRequested = false;
@@ -22,12 +26,15 @@ public class CharacterMovementHandler : NetworkBehaviour
     //...
     NetworkInGameMessages networkInGameMessages;
     NetworkPlayer networkPlayer;
+    
+
     //HPHandler hPHandler;
     private void Awake() {
         networkCharacterController = GetComponent<NetworkCharacterController>();
         localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
         networkInGameMessages = GetComponent<NetworkInGameMessages>();
         networkPlayer = GetComponent<NetworkPlayer>();
+        anim = GetComponentInChildren<Animator>();
         //hPHandler = GetComponent<HPHandler>();
     }
 
@@ -77,9 +84,13 @@ public class CharacterMovementHandler : NetworkBehaviour
         }
 
         // animator
-
-
+        Vector2 walkVector = new Vector2(networkCharacterController.Velocity.x,
+                                            networkCharacterController.Velocity.z);
+        walkVector.Normalize(); // ko cho lon hon 1
         
+        walkSpeed = Mathf.Lerp(walkSpeed, Mathf.Clamp01(walkVector.magnitude), Runner.DeltaTime * 10f);
+        anim.SetFloat("walkSpeed", walkSpeed);  // xet gia tri float "walkSpeed" trong animator
+
         CheckFallToRespawn();
     }
 
