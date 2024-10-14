@@ -204,6 +204,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             currentMode = Mode.Solo;
             UIController.Instance.SwitchMode(true);
             networkRunner = null;
+            readyButton.gameObject.SetActive(false);
+            playButton.gameObject.SetActive(true);
+            playButton.interactable = true;
             localPlayer.SetActive(true);
             JoinLobby();
 
