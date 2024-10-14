@@ -327,6 +327,34 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         }
     }
 
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+    {
+        players.Remove(player);
+        //throw new NotImplementedException();
+    }
+
+
+    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
+    {
+        //throw new NotImplementedException();
+        Debug.Log("Session list updated!");
+
+        // Clear the existing list display
+        //sessionListText.text = "Available Sessions:\n";
+
+        UIController.Instance.ClearSessionButtons();
+        // Loop through available sessions and display them
+        foreach (var session in sessionList)
+        {
+            //sessionListText.text += $"Session Name: {session.Name}, Player Count: {session.PlayerCount}/{session.MaxPlayers}\n";
+            string roomName = session.Name;
+            int playerCount = session.PlayerCount;
+            int maxPlayer = session.MaxPlayers;
+
+            UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer);
+        }
+    }
+
     public void OnConnectedToServer(NetworkRunner runner)
     {
         //throw new NotImplementedException();
@@ -377,11 +405,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         //throw new NotImplementedException();
     }
 
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-    {
-        //throw new NotImplementedException();
-    }
-
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)
     {
         //throw new NotImplementedException();
@@ -400,27 +423,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public void OnSceneLoadStart(NetworkRunner runner)
     {
         //throw new NotImplementedException();
-    }
-
-    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
-    {
-        //throw new NotImplementedException();
-        Debug.Log("Session list updated!");
-
-        // Clear the existing list display
-        //sessionListText.text = "Available Sessions:\n";
-
-        UIController.Instance.ClearSessionButtons();
-        // Loop through available sessions and display them
-        foreach (var session in sessionList)
-        {
-            //sessionListText.text += $"Session Name: {session.Name}, Player Count: {session.PlayerCount}/{session.MaxPlayers}\n";
-            string roomName = session.Name;
-            int playerCount = session.PlayerCount;
-            int maxPlayer = session.MaxPlayers;
-
-            UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer);
-        }
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
