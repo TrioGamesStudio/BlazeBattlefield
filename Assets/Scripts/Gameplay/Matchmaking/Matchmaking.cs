@@ -38,8 +38,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     void Start()
     {
         readyButton.onClick.AddListener(ToggleReady);
-        networkRunner = Instantiate(networkRunnerPrefab);
-        networkRunner.AddCallbacks(this);
+        
         JoinLobby();
     }
 
@@ -75,6 +74,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public async void JoinLobby()
     {
+        if (networkRunner == null)
+        {
+            networkRunner = Instantiate(networkRunnerPrefab);
+            networkRunner.AddCallbacks(this);
+        }
         // Call this to join the session lobby
         var startTask = networkRunner.JoinSessionLobby(SessionLobby.Shared);
 
@@ -201,6 +205,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             UIController.Instance.SwitchMode(true);
             networkRunner = null;
             localPlayer.SetActive(true);
+            JoinLobby();
 
             // Optionally update the UI, e.g., re-enable room creation UI or show session list
             // FindObjectOfType<UIManager>().TurnOnCreateRoomButton();
