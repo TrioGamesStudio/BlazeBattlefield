@@ -159,6 +159,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public async void CreateRoom()
     {
+        players.Clear();
         string teamcode = UnityEngine.Random.Range(100, 999).ToString();
         if (networkRunner == null)
         {
@@ -223,6 +224,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public async void JoinRoomByName(string roomName)
     {
         currentMode = Mode.Duo;
+        players.Clear();
         var sceneInfo = new NetworkSceneInfo();
         sceneInfo.AddSceneRef(SceneRef.FromIndex(4)); //Share room scene;
         if (networkRunner == null)
