@@ -15,13 +15,13 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private Camera CameraPrefab;
     [Header("Scriptable Object")]
     [SerializeField] private PlayerData playerData;
-    [SerializeField] private GameObject teamMemberPanel;
-    [Networked] public NetworkBool IsReady { get; set; }
-    [Networked] public NetworkBool IsRoomOwner { get; set; }
-    [Networked] public NetworkString<_128> RoomID { get; set; }
+    //[SerializeField] private GameObject teamMemberPanel;
+    //[Networked] public NetworkBool IsReady { get; set; }
+    //[Networked] public NetworkBool IsRoomOwner { get; set; }
+    //[Networked] public NetworkString<_128> RoomID { get; set; }
     public static PlayerController LocalPlayer;
     private InputPlayerHandler InputPlayerHandler;
-    private Matchmaking matchmaking;
+    //private Matchmaking matchmaking;
 
     private void Awake()
     {
@@ -42,9 +42,9 @@ public class PlayerController : NetworkBehaviour
         //    LocalPlayer = this;
         //}
 
-        IsReady = false;
+        //IsReady = false;
         //IsRoomOwner = false;
-        matchmaking = FindObjectOfType<Matchmaking>();
+        //matchmaking = FindObjectOfType<Matchmaking>();
     }
 
     public void Setup()
@@ -77,41 +77,41 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    public void TurnOnTeamMemberPanel()
-    {
-        teamMemberPanel.SetActive(true);
-    }
+    //public void TurnOnTeamMemberPanel()
+    //{
+    //    teamMemberPanel.SetActive(true);
+    //}
 
-    public void ToggleReady()
-    {
-        //if (Object.HasInputAuthority)
-        {
-            RPC_SetReady(!IsReady);
-        }
-    }
+    //public void ToggleReady()
+    //{
+    //    //if (Object.HasInputAuthority)
+    //    {
+    //        RPC_SetReady(!IsReady);
+    //    }
+    //}
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_SetReady(NetworkBool isReady)
-    {
-        IsReady = isReady;
-        matchmaking.UpdatePlayButtonInteractability();
-    }
+    //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    //public void RPC_SetReady(NetworkBool isReady)
+    //{
+    //    IsReady = isReady;
+    //    matchmaking.UpdatePlayButtonInteractability();
+    //}
 
-    public void SetAsRoomOwner()
-    {
-        if (Object.HasStateAuthority)
-        {
-            IsRoomOwner = true;
-            //PlayerPrefs.SetInt("IsRoomOwner", 1);
-        }
-    }
+    //public void SetAsRoomOwner()
+    //{
+    //    if (Object.HasStateAuthority)
+    //    {
+    //        IsRoomOwner = true;
+    //        //PlayerPrefs.SetInt("IsRoomOwner", 1);
+    //    }
+    //}
 
-    public void SetAsRoomMember()
-    {
-        if (Object.HasStateAuthority)
-        {
-            IsRoomOwner = false;
-            //PlayerPrefs.SetInt("IsRoomOwner", 0);
-        }
-    }
+    //public void SetAsRoomMember()
+    //{
+    //    if (Object.HasStateAuthority)
+    //    {
+    //        IsRoomOwner = false;
+    //        //PlayerPrefs.SetInt("IsRoomOwner", 0);
+    //    }
+    //}
 }

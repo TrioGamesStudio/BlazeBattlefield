@@ -7,18 +7,19 @@ using System;
 using System.Linq;
 using UnityEngine.UI;
 using TMPro;
+using System.Threading.Tasks;
 
 public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 {
     [SerializeField] private NetworkRunner networkRunnerPrefab;
-    [SerializeField] private PlayerController playerControllerPrefab;
+    [SerializeField] private PlayerRoomController playerControllerPrefab;
     [SerializeField] private List<Transform> memberPos = new();
     [SerializeField] private GameObject localPlayer;
     [SerializeField] private Button readyButton;
     [SerializeField] private Button playButton;
     private NetworkRunner networkRunner;
     private const int MAX_PLAYER = 4;
-    public Dictionary<PlayerRef, PlayerController> players = new();
+    public Dictionary<PlayerRef, PlayerRoomController> players = new();
 
     private Vector3 spawnPosition;
     private Mode currentMode = Mode.Solo;
@@ -42,11 +43,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         JoinLobby();
     }
 
-    
-    void Update()
-    {
-
-    }
 
     public void SetSoloMode()
     {
@@ -60,11 +56,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void ToggleReady()
     {
-        PlayerController localPlayer = players.Values.FirstOrDefault(p => p.Object.HasInputAuthority);
+        PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => p.Object.HasInputAuthority);
         if (localPlayer != null)
         {
             localPlayer.ToggleReady();
-            readyButton.GetComponentInChildren<TextMeshProUGUI>().text = localPlayer.IsReady ? "Unready" : "Ready";
+            readyButton.GetComponentInChildren<TextMeshProUGUI>().text = localPlayer.IsReady ? "CANCEL" : "READY";
         }
     }
 
@@ -122,6 +118,38 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         else
         {
             Debug.LogError($"Failed to Start: {result.ShutdownReason}");
+        }
+    }
+
+    public async void QuickPlayTeam()
+    {
+        networkRunner.RemoveCallbacks(this);
+        if (networkRunner.IsSharedModeMasterClient)
+        {
+            // Set battle room for non-owner players
+            foreach (var player in players.Where(p => p.Value.Object.HasInputAuthority == false))
+            {
+                Debug.Log("Set battle name ne");
+                //player.Value.SetBattleRoom();
+                await Task.Delay(2000);
+            }
+            //TransitionToBattleRoom();
+            //networkRunner.RemoveCallbacks(this);
+            // Leave current team room
+            playButton.gameObject.SetActive(false);
+            if (networkRunner != null && networkRunner.IsRunning)
+            {
+                await networkRunner.Shutdown();
+                //Destroy(networkRunner.gameObject);  // Destroy the runner instance
+                networkRunner = null;  // Set the reference to null
+                Debug.Log("Leaved team room");
+            }
+            // Ensure that the runner is no longer running before starting the next session
+            //if (!networkRunner.IsRunning)
+            {
+                //FindObjectOfType<BattleRoomManager>().TransitionToBattleRoom();
+            }
+
         }
     }
 
@@ -225,12 +253,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             if (player == runner.LocalPlayer)
             {
                 spawnPosition = memberPos[runner.ActivePlayers.Count() - 1].position;
-                PlayerController playerObject = runner.Spawn(playerControllerPrefab, spawnPosition, Quaternion.identity, player);
+                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, spawnPosition, Quaternion.identity, player);
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
-                players[player] = playerObject.GetComponent<PlayerController>();
-                players[player].TurnOnTeamMemberPanel();
+                players[player] = playerObject.GetComponent<PlayerRoomController>();
                 Debug.Log("New player joined " + player.ToString());
                 Debug.Log("Player count " + runner.ActivePlayers.Count());
+                players[player].TurnOnTeamMemberPanel();
                 //players[player].SetRoomID(runner.SessionInfo.Name);
                 //players[player].SetHealthBarColor(Color.green);
             }
@@ -258,7 +286,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         }
         else
         {
-            PlayerController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
+            PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
             runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
         }
 
@@ -275,9 +303,10 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             playerObject = runner.GetPlayerObject(player);
             if (playerObject != null)
             {
-                players[player] = playerObject.GetComponent<PlayerController>();
+                players[player] = playerObject.GetComponent<PlayerRoomController>();
                 Debug.Log($"Remote player {player} added to players list");
                 Debug.Log("Players dictionanry" + players.Count);
+                players[player].TurnOnTeamMemberPanel();
                 UpdatePlayButtonInteractability();
                 //players[player].SetRoomID(runner.SessionInfo.Name);
                 //players[player].SetHealthBarColor(Color.blue);
