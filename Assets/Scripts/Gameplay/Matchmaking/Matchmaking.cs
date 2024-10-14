@@ -311,7 +311,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
                 Debug.Log($"Remote player {player} added to players list");
                 Debug.Log("Players dictionanry" + players.Count);
-                players[player].TurnOnTeamMemberPanel();
+                //players[player].TurnOnTeamMemberPanel();
                 UpdatePlayButtonInteractability();
                 //players[player].SetRoomID(runner.SessionInfo.Name);
                 //players[player].SetHealthBarColor(Color.blue);
@@ -330,6 +330,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         players.Remove(player);
+        UpdatePlayButtonInteractability();
         //throw new NotImplementedException();
     }
 
