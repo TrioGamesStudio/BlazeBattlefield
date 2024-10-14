@@ -5,6 +5,8 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Linq;
+using UnityEngine.UI;
+using TMPro;
 
 public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 {
@@ -12,6 +14,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private PlayerController playerControllerPrefab;
     [SerializeField] private List<Transform> memberPos = new();
     [SerializeField] private GameObject localPlayer;
+    [SerializeField] private Button readyButton;
+    [SerializeField] private Button playButton;
     private NetworkRunner networkRunner;
     private const int MAX_PLAYER = 4;
     public Dictionary<PlayerRef, PlayerController> players = new();
@@ -32,6 +36,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     
     void Start()
     {
+        readyButton.onClick.AddListener(ToggleReady);
         networkRunner = Instantiate(networkRunnerPrefab);
         networkRunner.AddCallbacks(this);
         JoinLobby();
@@ -51,6 +56,25 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public void SetDuoMode()
     {
         currentMode = Mode.Duo;
+    }
+
+    public void ToggleReady()
+    {
+        PlayerController localPlayer = players.Values.FirstOrDefault(p => p.Object.HasInputAuthority);
+        if (localPlayer != null)
+        {
+            localPlayer.ToggleReady();
+            readyButton.GetComponentInChildren<TextMeshProUGUI>().text = localPlayer.IsReady ? "Unready" : "Ready";
+        }
+    }
+
+    public void UpdatePlayButtonInteractability()
+    {
+        Debug.Log("Update play button interactablility");
+        bool allPlayersReady = players.Values.All(p => p.IsReady || p.IsRoomOwner);
+        playButton.interactable = allPlayersReady;
+        //playButton.interactable = !playButton.interactable;
+
     }
 
     public async void JoinLobby()
@@ -215,6 +239,22 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 // Handle remote player
                 StartCoroutine(WaitForPlayerObject(runner, player));
             }
+
+            if (runner.IsSharedModeMasterClient && player == runner.LocalPlayer)
+            {
+                players[player].SetAsRoomOwner();
+                playButton.gameObject.SetActive(true);
+                UpdatePlayButtonInteractability();
+            }
+            else if (player == runner.LocalPlayer)
+            {
+                players[player].SetAsRoomMember();
+                readyButton.gameObject.SetActive(true);
+                readyButton.GetComponentInChildren<TextMeshProUGUI>().text = "Ready";
+            }
+
+            if (runner.IsSharedModeMasterClient)
+                UpdatePlayButtonInteractability();
         }
         else
         {
@@ -238,7 +278,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 players[player] = playerObject.GetComponent<PlayerController>();
                 Debug.Log($"Remote player {player} added to players list");
                 Debug.Log("Players dictionanry" + players.Count);
-                //UpdatePlayButtonInteractability();
+                UpdatePlayButtonInteractability();
                 //players[player].SetRoomID(runner.SessionInfo.Name);
                 //players[player].SetHealthBarColor(Color.blue);
                 yield break;
