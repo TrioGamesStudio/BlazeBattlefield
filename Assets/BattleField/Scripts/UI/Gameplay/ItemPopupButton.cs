@@ -8,24 +8,38 @@ using Random = UnityEngine.Random;
 
 public class ItemPopupButton : MonoBehaviour
 {
+    [Header("Prefabs")]
+    [SerializeField] private Button SelectButtonPrefab;
+    [Header("Buttons")]
     [SerializeField] private Button PopUpButton;
     [SerializeField] private Button PopInButton;
+    [Header("Views")]
     [SerializeField] private GameObject PopView;
-    [SerializeField] private Button SelectButtonPrefab;
-    private List<Button> selectBtnList = new();
-    public Action UseItem;
-    public int itemCount = 3;
+    [Header("Auto Close Settings")]
     [SerializeField] private float timer;
     [SerializeField] private float popInTimeAfterPopUp = .25f;
-    [SerializeField] private GridLayoutGroup gridLayoutGroup;
+    
+    
+    private List<Button> selectBtnList = new();
+    public Action UseItem;
+    private int itemCount = 3;
+    private bool isShowView = false;
+    
     private void Awake()
     {
         PopUpButton.onClick.AddListener(PopUp);
         PopInButton.onClick.AddListener(PopIn);
 
         PopView.SetActive(false);
-
+        PopInButton.gameObject.SetActive(false);
         SelectButtonPrefab.gameObject.SetActive(false);
+        isShowView = false;
+    }
+
+    private void OnDestroy()
+    {
+        PopUpButton.onClick.RemoveListener(PopUp);
+        PopInButton.onClick.RemoveListener(PopIn);
     }
     private void ReloadView(int selectCount)
     {
@@ -39,7 +53,6 @@ public class ItemPopupButton : MonoBehaviour
         {
             var selectBtn = Instantiate(SelectButtonPrefab, PopView.transform);
             selectBtn.gameObject.SetActive(true);
-            // assign callback for use item
             selectBtn.onClick.AddListener(() =>
             {
                 Debug.Log("Add button callback", gameObject);
@@ -49,9 +62,10 @@ public class ItemPopupButton : MonoBehaviour
             // update button information like sprite and count
             Sprite sprite = null;
             int count = Random.Range(0, 4);
+            
             selectBtn.interactable = count != 0;
             selectBtn.image.sprite = sprite != null ? sprite : selectBtn.image.sprite;
-            selectBtn.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"x{count}";
+            selectBtn.transform.GetComponentInChildren<TextMeshProUGUI>().text = $"x{count}";
             selectBtn.onClick.AddListener(() =>
             {
                 // add event callback
@@ -61,38 +75,41 @@ public class ItemPopupButton : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        PopUpButton.onClick.RemoveListener(PopUp);
-        PopInButton.onClick.RemoveListener(PopIn);
-    }
 
 
     private void PopUp()
     {
         Debug.Log("PopUp");
+        
         ReloadView(itemCount);
         PopView.SetActive(true);
+        ShowTwoPopButton(true, false);
 
         timer = popInTimeAfterPopUp;
+        isShowView = true;
     }
 
     private void PopIn()
     {
         Debug.Log("PopIn");
+        ShowTwoPopButton(false, true);
         PopView.SetActive(false);
+        isShowView = false;
     }
 
+    private void ShowTwoPopButton(bool showPopIn, bool showPopUp)
+    {
+        PopInButton.gameObject.SetActive(showPopIn);
+        PopUpButton.gameObject.SetActive(showPopUp);
+    }
     private void Update()
     {
-        
-        if (timer < 0 && PopView.gameObject.activeSelf == true)
+        if (isShowView == false) return;
+        timer -= Time.deltaTime;
+        if (timer < 0)
         {
             PopIn();
-        }
-        else
-        {
-            timer -= Time.deltaTime;
+            timer = popInTimeAfterPopUp;
         }
     }
 }
