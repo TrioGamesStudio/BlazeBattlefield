@@ -305,7 +305,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        localPlayer.SetActive(true);
+        //throw new NotImplementedException();
     }
 
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)
@@ -336,6 +336,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         // Clear the existing list display
         //sessionListText.text = "Available Sessions:\n";
 
+        UIController.Instance.ClearSessionButtons();
         // Loop through available sessions and display them
         foreach (var session in sessionList)
         {

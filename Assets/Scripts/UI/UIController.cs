@@ -150,4 +150,13 @@ public class UIController : MonoBehaviour
         //bool isRoomFull = session.PlayerCount >= session.MaxPlayers;
         //sessionButton.GetComponent<RoomButtonUI>().Deactive(isRoomFull);
     }
+
+    public void ClearSessionButtons()
+    {
+        // Iterate through all child objects (session buttons) of the sessionListContent and destroy them
+        foreach (Transform child in sessionListContent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 }
