@@ -18,6 +18,7 @@ public class RoomPanelUI : MonoBehaviour
 
     public void JoinRoom()
     {
+        UIController.Instance.HidePanel();
         FindObjectOfType<Matchmaking>().JoinRoomByName(roomName);
     }
 
