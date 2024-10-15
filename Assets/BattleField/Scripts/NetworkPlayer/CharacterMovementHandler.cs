@@ -1,6 +1,9 @@
 using UnityEngine;
 using Fusion;
 using UnityEngine.SceneManagement;
+using System;
+using System.Collections;
+
 public class CharacterMovementHandler : NetworkBehaviour
 {
     // other
@@ -8,9 +11,11 @@ public class CharacterMovementHandler : NetworkBehaviour
     LocalCameraHandler localCameraHandler;
 
     //input
-    private bool _jumpPressed;
-    Vector3 aimForwardVector;
+    private bool isJumped = false;
+    bool isJumping = false;
+
     Vector2 movementInput;
+    Vector3 aimForwardVector;
 
     //locomotion
     [SerializeField] float walkSpeed = 0f;
@@ -26,16 +31,18 @@ public class CharacterMovementHandler : NetworkBehaviour
     //...
     NetworkInGameMessages networkInGameMessages;
     NetworkPlayer networkPlayer;
-    
 
-    //HPHandler hPHandler;
+    HPHandler hPHandler;
+    CharacterInputHandler characterInputHandler;
+
     private void Awake() {
+        characterInputHandler = GetComponent<CharacterInputHandler>();
         networkCharacterController = GetComponent<NetworkCharacterController>();
         localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
         networkInGameMessages = GetComponent<NetworkInGameMessages>();
         networkPlayer = GetComponent<NetworkPlayer>();
         anim = GetComponentInChildren<Animator>();
-        //hPHandler = GetComponent<HPHandler>();
+        hPHandler = GetComponent<HPHandler>();
     }
 
 
@@ -44,13 +51,15 @@ public class CharacterMovementHandler : NetworkBehaviour
         if(SceneManager.GetActiveScene().name == "Ready") return;
 
         //? move input local
-        if (Input.GetButtonDown("Jump")) _jumpPressed = true;
-        movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        /* if (Input.GetButtonDown("Jump")) _jumpPressed = true;
+        movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")); */
+        movementInput = characterInputHandler.Move;
+        isJumped = characterInputHandler.IsJumped;
+
         aimForwardVector = localCameraHandler.transform.forward;
     }
     
     public override void FixedUpdateNetwork() {
-        // Only move own player and not every other player. Each player controls its own player object.
         if (HasStateAuthority == false) return;
 
         // ko chay doan duoi neu dang fall or respawn
@@ -59,11 +68,18 @@ public class CharacterMovementHandler : NetworkBehaviour
                 Respawn();
                 return;
             }
+
             // ko cap nhat vi tri movement khi player death
-            //if(hPHandler.Networked_IsDead) return; 
+            if(hPHandler.Networked_IsDead) return;
         }
 
-        //xoay local player theo aimForwardVector -> dam bao localPlayer nhin thang se la huong aimForwardVector
+        Move(movementInput);
+        Jump();
+
+        CheckFallToRespawn();
+    }
+
+    void Move(Vector2 movementInput) {
         transform.forward = aimForwardVector;
 
         // khong cho xoay player len xuong quanh x
@@ -77,21 +93,26 @@ public class CharacterMovementHandler : NetworkBehaviour
 
         networkCharacterController.Move(moveDir);
 
-        //jump network
-        if(_jumpPressed) {
-            networkCharacterController.Jump();
-            _jumpPressed = !_jumpPressed;
-        }
-
         // animator
         Vector2 walkVector = new Vector2(networkCharacterController.Velocity.x,
-                                            networkCharacterController.Velocity.z);
-        walkVector.Normalize(); // ko cho lon hon 1
+                                        networkCharacterController.Velocity.z);
         
+        walkVector.Normalize(); // ko cho lon hon 1
         walkSpeed = Mathf.Lerp(walkSpeed, Mathf.Clamp01(walkVector.magnitude), Runner.DeltaTime * 10f);
-        anim.SetFloat("walkSpeed", walkSpeed);  // xet gia tri float "walkSpeed" trong animator
 
-        CheckFallToRespawn();
+        anim.SetFloat("walkSpeed", walkSpeed);
+    }
+
+    void Jump() {
+        if(!isJumping && isJumped) {
+            isJumping = true;
+            StartCoroutine(JumpCO(0.5f));
+        }
+    }
+    IEnumerator JumpCO(float time) {
+        networkCharacterController.Jump();
+        yield return new WaitForSeconds(time);
+        isJumping = false;
     }
 
     private void CheckFallToRespawn() {
@@ -116,7 +137,7 @@ public class CharacterMovementHandler : NetworkBehaviour
 
         networkCharacterController.Teleport(Utils.GetRandomSpawnPoint());
         
-        //hPHandler.OnRespawned_ResetHPIsDead(); // khoi tao lai gia tri HP isDeath - false
+        hPHandler.OnRespawned_ResetHPIsDead(); // khoi tao lai gia tri HP isDeath - false
         ////isRespawnRequested = false;
         RPC_SetNetworkedIsDead(false);
         Debug.Log($"_____Ending Respawn");
@@ -125,7 +146,7 @@ public class CharacterMovementHandler : NetworkBehaviour
     
     public void RequestRespawn() {
         Debug.Log($"_____Requested Respawn");
-        //isRespawnRequested = true;
+        /* isRespawnRequested = true; */
         RPC_SetNetworkedIsDead(true);
     }
 
@@ -133,4 +154,5 @@ public class CharacterMovementHandler : NetworkBehaviour
     public void RPC_SetNetworkedIsDead(bool isRespawnRequested) {
         this.isRespawnRequested_ = isRespawnRequested;
     }
+
 }

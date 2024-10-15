@@ -1,16 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using Fusion;
 using TMPro;
-using System.Linq;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 {
     // player name
     [Networked]
-    public NetworkString<_16> nickName_Network{get; set;} // state authority set bien nay
+    public NetworkString<_16> nickName_Network{get; set;}
     bool isPublicJoinMessageSent = false;
 
     NetworkInGameMessages networkInGameMessages;
@@ -18,11 +17,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
     ChangeDetector changeDetector;
 
     public static NetworkPlayer Local { get; set; }
-    public Transform playerModel;   //transform parent chua cac transform child can dat ten cu the
+    public Transform playerModel;
     
     // camera
     [SerializeField] private LocalCameraHandler localCameraHandler;
-    public LocalCameraHandler LocalCameraHandler => localCameraHandler; /* NetworkPlayer.Local.LocalCameraHandler..GetComponentInChildren<InGameMessagesUIHandler>() */
+    public LocalCameraHandler LocalCameraHandler => localCameraHandler;
 
     // UI chua crossHair, red image get damage
     [SerializeField] GameObject localUI; // game object = PlayerUICanvas (canvas cua ca player)
@@ -49,29 +48,17 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
     public string SceneToStart { get => sceneToStart;}
 
     //Spawner spawner;
+    NetworkRunner networkRunner;
 
     private void Awake() {
         localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
         networkInGameMessages = GetComponent<NetworkInGameMessages>();
-        //spawner = FindObjectOfType<Spawner>();
+        /* spawner = FindObjectOfType<Spawner>(); */
+        networkRunner = FindObjectOfType<NetworkRunner>();
 
         DontDestroyOnLoad(this.gameObject);
     }
 
-
-    private void Update() {
-        if(Input.GetKeyDown(KeyCode.U)) {
-            /* foreach (var player in Runner.ActivePlayers)
-            {
-                PlayerRef playerRef = player;
-                NetworkObject playerObject = Runner.GetPlayerObject(playerRef);
-                if(playerObject != null && playerObject.TryGetComponent<NetworkPlayer>(out var nameComponent)) {
-                    Debug.Log($"playerID - {playerRef.PlayerId} | name - {nameComponent.nickName_Network}");
-                    NetDict.Add(playerRef.PlayerId, nameComponent.nickName_Network.ToString());
-                }
-            } */
-        }
-    }
 
     //? nhung thay doi cua bien Network
     public override void Render() {
@@ -97,9 +84,9 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         OnIsEnemyChanged();
         
         //? khi spawn chan FixUpdateNetwork in CharactermovementHandler run - coll 45 -> player spawn
-        /* if(Object.HasStateAuthority) {
+        if(Object.HasStateAuthority) {
             GetComponent<CharacterMovementHandler>().RequestRespawn();
-        } */
+        }
 
         // kiem tra co dang spawn tai ready scene hay khong
         bool isReadyScene = SceneManager.GetActiveScene().name == "Ready";
@@ -110,7 +97,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             // kiem tra Ready scene de ON MainCam OF LocalCam
             if(isReadyScene) {
                 // (this.sceneToStart) networkPlayer <- spawner.cs <- dropdownscenename.cs
-                //if(Runner.IsSharedModeMasterClient) sceneToStart = spawner.gameMap.ToString();
+                /* if(Runner.IsSharedModeMasterClient) sceneToStart = spawner.gameMap.ToString(); */
 
                 Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
 
@@ -165,9 +152,10 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             //todo testing PlayerLeft
             Runner.SetPlayerObject(Object.InputAuthority, Object);
 
+
             // gan playerPref vao trong dictionary
-            // NetDict.Add(Object.InputAuthority.PlayerId, nickName_Network.ToString());
-            //RPC_SendNetDict(Object.InputAuthority.PlayerId, nickName_Network.ToString());
+            /* NetDict.Add(Object.InputAuthority.PlayerId, nickName_Network.ToString());
+            RPC_SendNetDict(Object.InputAuthority.PlayerId, nickName_Network.ToString()); */
 
             //TODO KO HIEN THI NICKNAME O TAT CA CAC SCENE KHI DUOC SPAWN RA
             /* nickName_TM.gameObject.SetActive(false); */
@@ -179,7 +167,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         }
 
         //? set player as a player object -> khi player left se chi hien dung ten player roi
-        /* Runner.SetPlayerObject(Object.InputAuthority, Object); */
+        Runner.SetPlayerObject(Object.InputAuthority, Object);
 
         /* Debug.Log($"_____Set ObjectNetwork = " + Object.GetComponent<NetworkPlayer>().nickName_Network.ToString()); */
         /* var name = GameManager.Instance.playerNickName; */
@@ -195,7 +183,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
     }
 
     private void OnIsEnemyChanged() {
-        //if(spawner.customLobbyName != "OurLobbyID_Team") return;
+        /* if(spawner.customLobbyName != "OurLobbyID_Team") return; */
 
         if(isEnemy_Network) {
             nickName_TM.color = Color.red;
@@ -238,18 +226,10 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         if(LocalDict.TryGetValue(player.PlayerId, out var value)) {
             networkInGameMessages.SendInGameRPCMessage(value.ToString(), " -> Left room");
         }
-        
-        if(player == Object.InputAuthority) {
+
+        if(player == Object.StateAuthority) {
             Runner.Despawn(Object);
             Debug.Log($"___NetworkPlayer Left Room");
-        }
-    }
-
-    // testing manual left using U button down
-    IEnumerator PlayerLeftRoomManualCO(PlayerRef player) {
-        yield return new WaitForSeconds(0f);
-        if(NetDict.TryGet(player.PlayerId, out var value)) {
-            networkInGameMessages.SendInGameRPCMessage(value.ToString(), " -> Left Maual Testing");
         }
     }
 
@@ -297,18 +277,18 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
     void AddNetworkedDictionary() {
         foreach (var player in Runner.ActivePlayers)
-            {
-                PlayerRef playerRef = player;
-                NetworkObject playerObject = Runner.GetPlayerObject(playerRef);
-                if(playerObject != null && playerObject.TryGetComponent<NetworkPlayer>(out var nameComponent)) {
-                    Debug.Log($"playerID - {playerRef.PlayerId} | name - {nameComponent.nickName_Network}");
-                    NetDict.Add(playerRef.PlayerId, nameComponent.nickName_Network.ToString());
-                }
+        {
+            PlayerRef playerRef = player;
+            NetworkObject playerObject = Runner.GetPlayerObject(playerRef);
+            if(playerObject != null && playerObject.TryGetComponent<NetworkPlayer>(out var nameComponent)) {
+                Debug.Log($"playerID - {playerRef.PlayerId} | name - {nameComponent.nickName_Network}");
+                NetDict.Add(playerRef.PlayerId, nameComponent.nickName_Network.ToString());
             }
+        }
 
-            LocalDict.Clear();
-            foreach (var item in NetDict) {
-                LocalDict.Add(item.Key, item.Value.ToString());
-            }
+        LocalDict.Clear();
+        foreach (var item in NetDict) {
+            LocalDict.Add(item.Key, item.Value.ToString());
+        }
     }
 }

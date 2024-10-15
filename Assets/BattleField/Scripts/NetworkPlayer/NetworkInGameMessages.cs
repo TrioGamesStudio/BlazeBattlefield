@@ -17,10 +17,6 @@ public class NetworkInGameMessages : NetworkBehaviour
     void RPC_InMessage(string message, RpcInfo info = default) {
         Debug.Log($"[RPC] InGameMessage {message}");
 
-        // InGameMessagesUIHandler.cs nam trong camera (localCamera.cs)
-        // camera object da out khoi player Object khi spwan ra
-        // this class (nam trong player object) muon truy cap InGameMessagesUIHandler.cs
-        // phai thong qua NetworkPlayer.cs de dung localCamera CHA lay thuoc tinh InGameMessagesUIHandler.cs CON
         if(inGameMessagesUIHandler == null) {
             inGameMessagesUIHandler = NetworkPlayer.Local.LocalCameraHandler
                                     .GetComponentInChildren<InGameMessagesUIHandler>();
