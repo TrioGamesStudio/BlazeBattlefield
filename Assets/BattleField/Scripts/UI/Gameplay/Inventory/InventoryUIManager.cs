@@ -11,12 +11,26 @@ public class InventoryUIManager : MonoBehaviour
     public WeaponEquipUI.WeaponInformation Melee;
     
     public WeaponEquipUI WeaponEquipUI;
-   
+    public GameObject view;
     private void Awake()
     {
-        WeaponEquipUI.BindWeaponData(Gun1);
-        WeaponEquipUI.RefreshWeaponInformation();
+        // WeaponEquipUI.BindWeaponData(Gun1);
+        // WeaponEquipUI.RefreshWeaponInformation();
+
+        view.gameObject.SetActive(false);
+        InputCombatControl.ShowInventory += ShowInventory;
     }
+
+    private void OnDestroy()
+    {
+        InputCombatControl.ShowInventory -= ShowInventory;
+    }
+
+    private void ShowInventory()
+    {
+        view.SetActive(!view.activeSelf);
+    }
+    
     [Button]
     public void Test()
     {

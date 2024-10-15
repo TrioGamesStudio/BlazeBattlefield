@@ -42,7 +42,7 @@ public class WeaponEquipUI : MonoBehaviour
         ammoTypeName.text = bindWeaponData.ammoType;
         currentGunAmmo.text = bindWeaponData.currentAmmo+"/";
         reserveGunAmmo.text = bindWeaponData.totalAmmo;
-        gunIconImg.sprite = bindWeaponData.icon ?? null;
+        gunIconImg.sprite = bindWeaponData.icon;
 
     }
 
