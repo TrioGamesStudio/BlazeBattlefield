@@ -80,20 +80,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             networkRunner.AddCallbacks(this);
         }
         // Call this to join the session lobby
-        var startTask = networkRunner.JoinSessionLobby(SessionLobby.Shared);
-
-        await startTask;
-
-        if (startTask.Result.Ok)
-        {
-            //sessionListText.text = "Joined lobby";
-            Debug.Log("Joined lobby");
-        }
-        else
-        {
-            //sessionListText.text = "Fail";
-        }
-
+        await networkRunner.JoinSessionLobby(SessionLobby.Shared);
     }
 
     public async void QuickPlay()
@@ -179,11 +166,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (result.Ok)
         {
-            //StatusText.text = "";
-            //teamcodeText.text = teamcode;
-            //createRoomButton.gameObject.SetActive(false);
-            //sessionListContent.parent.parent.gameObject.SetActive(false);
-            //FindObjectOfType<UIManager>().TurnOffCreateRoomButton();
             Debug.Log("Team room name: " + networkRunner.SessionInfo.Name);
         }
         else
@@ -199,20 +181,14 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             Debug.Log("Leaving room...");
             if (players[networkRunner.LocalPlayer].IsRoomOwner)
             {
-                Debug.Log("Room owner leave room");
-                //PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => p != players[networkRunner.LocalPlayer]);
-                PlayerRoomController localPlayer = players.Values.First(p => p.Object.HasInputAuthority == false);
+                PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => p.Object.HasInputAuthority == false);
                 if (localPlayer != null)
                 {
-                    Debug.Log("LOCAL PLAYER" + localPlayer);
-                    Debug.Log("Set team member as room owner");
-                    localPlayer.RPC_SetAsRoomOwner();                   
+                   localPlayer.RPC_SetAsRoomOwner();
                 }
             }
-            else
-            {
-                Debug.Log("Team member leave room");
-            }
+
+            // Waiting for setup new room owner if needed
             await Task.Delay(1000);
             // Shuts down the runner and leaves the current session
             await networkRunner.Shutdown();
@@ -351,12 +327,13 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         players.Remove(player);
+        // Setup when team member become room owner
         if (players[runner.LocalPlayer].IsRoomOwner)
         {
+            players[runner.LocalPlayer].gameObject.transform.position = memberPos[0].position;
             readyButton.gameObject.SetActive(false);
         }
         UpdatePlayButtonInteractability();
-        //throw new NotImplementedException();
     }
 
 
@@ -372,7 +349,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         // Loop through available sessions and display them
         foreach (var session in sessionList)
         {
-            //sessionListText.text += $"Session Name: {session.Name}, Player Count: {session.PlayerCount}/{session.MaxPlayers}\n";
             string roomName = session.Name;
             int playerCount = session.PlayerCount;
             int maxPlayer = session.MaxPlayers;
