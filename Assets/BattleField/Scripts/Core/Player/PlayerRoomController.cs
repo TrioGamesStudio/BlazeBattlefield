@@ -11,6 +11,7 @@ public class PlayerRoomController : NetworkBehaviour
     [SerializeField] private GameObject teamMemberPanel;
     public static PlayerController LocalPlayer;
     private Matchmaking matchmaking;
+    string localRoomId;
     // Start is called before the first frame update
     void Start()
     {
@@ -58,7 +59,7 @@ public class PlayerRoomController : NetworkBehaviour
         {
             Debug.Log("Set room owner");
             IsRoomOwner = true;
-            //PlayerPrefs.SetInt("IsRoomOwner", 1);
+            PlayerPrefs.SetInt("IsRoomOwner", 1);
         }
     }
 
@@ -67,7 +68,41 @@ public class PlayerRoomController : NetworkBehaviour
         if (Object.HasStateAuthority)
         {
             IsRoomOwner = false;
-            //PlayerPrefs.SetInt("IsRoomOwner", 0);
+            PlayerPrefs.SetInt("IsRoomOwner", 0);
         }
     }
+
+    public void SetRoomID(string roomID)
+    {
+        if (Object.HasStateAuthority)
+        {
+            RoomID = roomID;
+            localRoomId = roomID;
+            Debug.Log("SET ROOM ID");
+            PlayerPrefs.SetString("RoomID", roomID); // Save player room
+        }
+    }
+
+    #region Team 
+
+    public void SetBattleRoom()
+    {
+        //if (Object.HasStateAuthority)
+        {
+            RPC_SetBattleRoom();
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SetBattleRoom()
+    {
+        //BattleRoomName = roomName;
+        //Debug.Log(BattleRoomName.ToString());
+        //IsReady = isReady;
+        Debug.Log("Join team battle room call from remote to local");
+        matchmaking.RPC_TransitionAllToBattleRoom();
+    }
+
+
+    #endregion
 }

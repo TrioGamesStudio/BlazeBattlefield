@@ -83,6 +83,14 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         await networkRunner.JoinSessionLobby(SessionLobby.Shared);
     }
 
+    public void StartGame()
+    {
+        if (currentMode == Mode.Solo)
+            QuickPlay();
+        else
+            QuickPlayTeam();
+    }
+
     public async void QuickPlay()
     {
         if (networkRunner == null)
@@ -120,27 +128,48 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             // Set battle room for non-owner players
             foreach (var player in players.Where(p => p.Value.Object.HasInputAuthority == false))
             {
-                Debug.Log("Set battle name ne");
-                //player.Value.SetBattleRoom();
-                await Task.Delay(2000);
+                //Debug.Log("Set battle name ne");
+                player.Value.SetBattleRoom();
+                await Task.Delay(3000);
             }
             //TransitionToBattleRoom();
             //networkRunner.RemoveCallbacks(this);
             // Leave current team room
-            playButton.gameObject.SetActive(false);
+            //playButton.gameObject.SetActive(false);
             if (networkRunner != null && networkRunner.IsRunning)
             {
                 await networkRunner.Shutdown();
                 //Destroy(networkRunner.gameObject);  // Destroy the runner instance
                 networkRunner = null;  // Set the reference to null
-                Debug.Log("Leaved team room");
+                Debug.Log("Room owner leaved team room");
             }
             // Ensure that the runner is no longer running before starting the next session
             //if (!networkRunner.IsRunning)
             {
-                //FindObjectOfType<BattleRoomManager>().TransitionToBattleRoom();
+                FindObjectOfType<MatchmakingTeam>().StartGame();
             }
 
+        }
+    }
+
+    public async void RPC_TransitionAllToBattleRoom()
+    {
+        Debug.Log("Team member join battle room");
+        playButton.gameObject.SetActive(false);
+        readyButton.gameObject.SetActive(false);
+        //TransitionToBattleRoom();
+
+        networkRunner.RemoveCallbacks(this);
+        if (networkRunner != null && networkRunner.IsRunning)
+        {
+            await networkRunner.Shutdown();
+            Destroy(networkRunner.gameObject);  // Destroy the runner instance
+            networkRunner = null;  // Set the reference to null
+            Debug.Log("Leaved team room");
+        }
+        //if (!networkRunner.IsRunning)
+        {
+            FindObjectOfType<MatchmakingTeam>().StartGame();
         }
     }
 
@@ -261,7 +290,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 Debug.Log("New player joined " + player.ToString());
                 Debug.Log("Player count " + runner.ActivePlayers.Count());
                 players[player].TurnOnTeamMemberPanel();
-                //players[player].SetRoomID(runner.SessionInfo.Name);
+                players[player].SetRoomID(runner.SessionInfo.Name);
                 //players[player].SetHealthBarColor(Color.green);
             }
             else
@@ -310,7 +339,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 Debug.Log("Players dictionanry" + players.Count);
                 //players[player].TurnOnTeamMemberPanel();
                 UpdatePlayButtonInteractability();
-                //players[player].SetRoomID(runner.SessionInfo.Name);
+                players[player].SetRoomID(runner.SessionInfo.Name);
                 //players[player].SetHealthBarColor(Color.blue);
                 yield break;
             }
