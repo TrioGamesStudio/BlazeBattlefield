@@ -197,7 +197,23 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (networkRunner != null)
         {
             Debug.Log("Leaving room...");
-
+            if (players[networkRunner.LocalPlayer].IsRoomOwner)
+            {
+                Debug.Log("Room owner leave room");
+                //PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => p != players[networkRunner.LocalPlayer]);
+                PlayerRoomController localPlayer = players.Values.First(p => p.Object.HasInputAuthority == false);
+                if (localPlayer != null)
+                {
+                    Debug.Log("LOCAL PLAYER" + localPlayer);
+                    Debug.Log("Set team member as room owner");
+                    localPlayer.RPC_SetAsRoomOwner();                   
+                }
+            }
+            else
+            {
+                Debug.Log("Team member leave room");
+            }
+            await Task.Delay(1000);
             // Shuts down the runner and leaves the current session
             await networkRunner.Shutdown();
 
@@ -280,7 +296,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
             if (runner.IsSharedModeMasterClient && player == runner.LocalPlayer)
             {
-                players[player].SetAsRoomOwner();
+                players[player].RPC_SetAsRoomOwner();
                 playButton.gameObject.SetActive(true);
                 UpdatePlayButtonInteractability();
             }
@@ -335,6 +351,10 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         players.Remove(player);
+        if (players[runner.LocalPlayer].IsRoomOwner)
+        {
+            readyButton.gameObject.SetActive(false);
+        }
         UpdatePlayButtonInteractability();
         //throw new NotImplementedException();
     }

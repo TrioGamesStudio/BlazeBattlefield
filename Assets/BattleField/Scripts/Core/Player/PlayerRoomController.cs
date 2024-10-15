@@ -51,10 +51,12 @@ public class PlayerRoomController : NetworkBehaviour
         matchmaking.UpdatePlayButtonInteractability();
     }
 
-    public void SetAsRoomOwner()
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SetAsRoomOwner()
     {
         if (Object.HasStateAuthority)
         {
+            Debug.Log("Set room owner");
             IsRoomOwner = true;
             //PlayerPrefs.SetInt("IsRoomOwner", 1);
         }
