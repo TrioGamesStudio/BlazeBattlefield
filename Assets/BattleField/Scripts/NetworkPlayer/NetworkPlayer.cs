@@ -55,7 +55,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         networkInGameMessages = GetComponent<NetworkInGameMessages>();
         /* spawner = FindObjectOfType<Spawner>(); */
         networkRunner = FindObjectOfType<NetworkRunner>();
-        Local = this;
+        //Local = this;
         DontDestroyOnLoad(this.gameObject);
     }
 
@@ -92,7 +92,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         bool isReadyScene = SceneManager.GetActiveScene().name == "MainLobby";
 
         if(this.Object.HasStateAuthority) {
-            //Local = this;
+            Local = this;
 
             // kiem tra Ready scene de ON MainCam OF LocalCam
             if(isReadyScene) {
