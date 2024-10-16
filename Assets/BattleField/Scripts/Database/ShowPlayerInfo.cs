@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 //gameobject = 
 public class ShowPlayerInfo : MonoBehaviour
@@ -17,7 +18,11 @@ public class ShowPlayerInfo : MonoBehaviour
     [SerializeField] Button saveButton;
     [SerializeField] Button loadButton;
     [SerializeField] Button gotoLobby;
+    [SerializeField] Button quickPlay;
 
+
+    const string MAINLOBBY = "MainLobby";
+    const string WORLD1 = "World1";
 
     //ohters
     DataSaver _dataSaver;
@@ -29,6 +34,8 @@ public class ShowPlayerInfo : MonoBehaviour
         saveButton.onClick.AddListener(SaveManualTest);
         loadButton.onClick.AddListener(LoadMaunalTest);
         gotoLobby.onClick.AddListener(GoToLobby);
+        quickPlay.onClick.AddListener(GoToQickBattle);
+
 
         StartCoroutine(ShowPlayerDataCo(0.5f));
     }
@@ -55,7 +62,17 @@ public class ShowPlayerInfo : MonoBehaviour
 
     IEnumerator LoadToMainLobby(float time) {
         yield return new WaitForSeconds(time);
-        SceneManager.LoadSceneAsync("MainLobby");
+        SceneManager.LoadSceneAsync(MAINLOBBY);
+    }
+
+    private void GoToQickBattle()
+    {
+        StartCoroutine(LoadToQuickBattle(0.5f));
+    }
+
+    IEnumerator LoadToQuickBattle(float time) {
+        yield return new WaitForSeconds(time);
+        SceneManager.LoadSceneAsync(WORLD1);
     }
     
     void ShowInfo() {
