@@ -5,6 +5,7 @@ using Firebase.Extensions;
 using Firebase.Auth;
 using Firebase;
 using UnityEngine.UI;
+using System.Net.Mail;
 
 public class EmailLogin : MonoBehaviour
 {
@@ -33,11 +34,19 @@ public class EmailLogin : MonoBehaviour
 
     [SerializeField] GameObject PlayerInfoUI;
 
+    const string MAILKEY = "mail";
+    const string PASSKEY = "pass";
     private void Start() {
         loginButton.onClick.AddListener(Login);
         signUpButton.onClick.AddListener(SignUp);
 
         PlayerInfoUI.SetActive(false);
+
+        // show mail and pass if PlayerPrefs having key "mail" "pass"
+        if(PlayerPrefs.HasKey(MAILKEY) && PlayerPrefs.HasKey(PASSKEY)) {
+            loginEmail.text = PlayerPrefs.GetString(MAILKEY);
+            loginPassword.text = PlayerPrefs.GetString(PASSKEY);
+        }
     }
 
     #region signup
@@ -325,6 +334,7 @@ public class EmailLogin : MonoBehaviour
 
             //Load data
             DataSaver.Instance.LoadData();
+            SetPlayerPref(email, password);
         });
     }
     #endregion
@@ -355,6 +365,12 @@ public class EmailLogin : MonoBehaviour
         logTxt.text = "";
 
         SuccessUi.SetActive(false);
+    }
+
+    void SetPlayerPref(string mail, string password) {
+        PlayerPrefs.SetString(MAILKEY, mail);
+        PlayerPrefs.SetString(PASSKEY, password);
+        PlayerPrefs.Save();
     }
     #endregion
 
