@@ -14,8 +14,8 @@ public class HPHandler : NetworkBehaviour
     [Networked]
     public NetworkString<_16> Networked_Killer { get; set; }
 
-    [Networked]
-    public int deadCount {get; set;}
+    //[Networked]
+    //public int deadCount {get; set;}
 
     bool isInitialized = false;
     const byte startingHP = 5;
@@ -53,7 +53,7 @@ public class HPHandler : NetworkBehaviour
     }
     void Start() {
         if(!isSkipSettingStartValues) {
-            deadCount = 0;
+            //deadCount = 0;
         }
 
         ResetMeshRenders();
@@ -115,7 +115,7 @@ public class HPHandler : NetworkBehaviour
             StartCoroutine(ServerRespawnCountine());
             /* RPC_SetNetworkedIsDead(true); */ // can use
 
-            deadCount ++;
+            //deadCount ++;
             weaponHandler.killCount ++;
         }
     }

@@ -9,7 +9,7 @@ public class PlayerRoomController : NetworkBehaviour
     [Networked] public NetworkBool IsRoomOwner { get; set; }
     [Networked] public NetworkString<_128> RoomID { get; set; }
     [SerializeField] private GameObject teamMemberPanel;
-    public static PlayerController LocalPlayer;
+    public static PlayerRoomController LocalPlayer;
     private Matchmaking matchmaking;
     string localRoomId;
     // Start is called before the first frame update
