@@ -23,7 +23,7 @@ public class CharacterMovementHandler : NetworkBehaviour
 
     // request after falling
     [SerializeField] float fallHightToRespawn = -10f;
-    [SerializeField] bool isRespawnRequested = false;
+    //[SerializeField] bool isRespawnRequested = false;
 
     [Networked]
     public bool isRespawnRequested_{get; set;} = false;
@@ -48,7 +48,7 @@ public class CharacterMovementHandler : NetworkBehaviour
 
     void Update() {
         //lock input to move and jump if Ready scene
-        if(SceneManager.GetActiveScene().name == "Ready") return;
+        if(SceneManager.GetActiveScene().name == "MainLobby") return;
 
         //? move input local
         /* if (Input.GetButtonDown("Jump")) _jumpPressed = true;
@@ -61,9 +61,9 @@ public class CharacterMovementHandler : NetworkBehaviour
     
     public override void FixedUpdateNetwork() {
         if (HasStateAuthority == false) return;
-
+        if (SceneManager.GetActiveScene().name == "MainLobby") return;
         // ko chay doan duoi neu dang fall or respawn
-        if(Object.HasStateAuthority) {
+        if (Object.HasStateAuthority) {
             if(isRespawnRequested_) {
                 Respawn();
                 return;
