@@ -78,6 +78,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         Debug.Log("New player join battle scene ne");
         roomID = PlayerPrefs.GetString("RoomID");
+        
         if (player == runner.LocalPlayer)
         {
             Debug.Log("SPAWN PLAYER");
@@ -102,15 +103,57 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                 players[player].IsRoomOwner = false;
             }
 
-            if (teams.ContainsKey(players[player].RoomID.ToString()))
+            int isAutoMatch = PlayerPrefs.GetInt("IsAutoMatch");
+            if (isAutoMatch == 1)
             {
-                teams[players[player].RoomID.ToString()].Add(player);
+                players[player].SetAutoMatch(true);
             }
             else
             {
-                List<PlayerRef> listPlayers = new();
-                listPlayers.Add(player);
-                teams[players[player].RoomID.ToString()] = listPlayers;
+                players[player].SetAutoMatch(false);
+            }
+
+            if (players[player].IsAutoMatch)
+            {
+                if (teams.ContainsKey("Auto-Match"))
+                {
+                    teams["Auto-Match"].Add(player);
+                }
+                else
+                {
+                    List<PlayerRef> listPlayers = new();
+                    listPlayers.Add(player);
+                    teams["Auto-Match"] = listPlayers;
+                }
+            }
+            else
+            {
+                if (teams.ContainsKey(players[player].RoomID.ToString()))
+                {
+                    teams[players[player].RoomID.ToString()].Add(player);
+                }
+                else
+                {
+                    List<PlayerRef> listPlayers = new();
+                    listPlayers.Add(player);
+                    teams[players[player].RoomID.ToString()] = listPlayers;
+                }
+            }
+
+            foreach (var team in teams)
+            {
+                // Print the team name (key)
+                Debug.Log($"TEAM: {team.Key}");
+
+                // Print all players in the team (value)
+                foreach (var member in team.Value)
+                {
+                    // Assuming PlayerRef has some properties to print, like an ID or Name
+                    Debug.Log($"PlAYER IN TEAM: {member.PlayerId}"); // Replace with actual player properties
+                }
+
+                // Add a separator for clarity
+                Debug.Log("---------------------------");
             }
         }
         else
@@ -132,16 +175,49 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             if (playerObject != null)
             {
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
-                if (teams.ContainsKey(players[player].RoomID.ToString()))
+                if (players[player].IsAutoMatch)
                 {
-                    teams[players[player].RoomID.ToString()].Add(player);
+                    if (teams.ContainsKey("Auto-Match"))
+                    {
+                        teams["Auto-Match"].Add(player);
+                    }
+                    else
+                    {
+                        List<PlayerRef> listPlayers = new();
+                        listPlayers.Add(player);
+                        teams["Auto-Match"] = listPlayers;
+                    }
                 }
                 else
                 {
-                    List<PlayerRef> listPlayers = new();
-                    listPlayers.Add(player);
-                    teams[players[player].RoomID.ToString()] = listPlayers;
+                    if (teams.ContainsKey(players[player].RoomID.ToString()))
+                    {
+                        teams[players[player].RoomID.ToString()].Add(player);
+                    }
+                    else
+                    {
+                        List<PlayerRef> listPlayers = new();
+                        listPlayers.Add(player);
+                        teams[players[player].RoomID.ToString()] = listPlayers;
+                    }
                 }
+
+                foreach (var team in teams)
+                {
+                    // Print the team name (key)
+                    Debug.Log($"TEAM: {team.Key}");
+
+                    // Print all players in the team (value)
+                    foreach (var member in team.Value)
+                    {
+                        // Assuming PlayerRef has some properties to print, like an ID or Name
+                        Debug.Log($"PlAYER IN TEAM: {member.PlayerId}"); // Replace with actual player properties
+                    }
+
+                    // Add a separator for clarity
+                    Debug.Log("---------------------------");
+                }
+
                 //if (players[player].RoomID == roomID)
                 {
                     //players[player].SetHealthBarColor(Color.blue);

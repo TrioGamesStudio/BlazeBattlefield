@@ -7,6 +7,7 @@ public class PlayerRoomController : NetworkBehaviour
 {
     [Networked] public NetworkBool IsReady { get; set; }
     [Networked] public NetworkBool IsRoomOwner { get; set; }
+    [Networked] public NetworkBool IsAutoMatch { get; set; }
     [Networked] public NetworkString<_128> RoomID { get; set; }
     [SerializeField] private GameObject teamMemberPanel;
     public static PlayerRoomController LocalPlayer;
@@ -28,6 +29,7 @@ public class PlayerRoomController : NetworkBehaviour
     {
         base.Spawned();
         IsReady = false;
+        //IsAutoMatch = false;
         //IsRoomOwner = false;
         matchmaking = FindObjectOfType<Matchmaking>();
     }
@@ -105,4 +107,26 @@ public class PlayerRoomController : NetworkBehaviour
 
 
     #endregion
+
+    public void SetAutoMatch(bool isAutoMatch)
+    {
+        if (Object.HasStateAuthority)
+        {
+            //IsAutoMatch = isAutoMatch;
+            //Debug.Log("SET AUTO MATCH");
+            //PlayerPrefs.SetString("RoomID", roomID); // Save player room
+            if (isAutoMatch == true)
+                PlayerPrefs.SetInt("IsAutoMatch", 1);
+            else
+                PlayerPrefs.SetInt("IsAutoMatch", 0);
+            RPC_SetAutoMatch(isAutoMatch);
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_SetAutoMatch(bool isAutoMatch)
+    {
+        IsAutoMatch = isAutoMatch;      
+        Debug.Log("SET AUTO MATCH");
+    }
 }

@@ -23,6 +23,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     private Vector3 spawnPosition;
     private Mode currentMode = Mode.Solo;
+    public bool isAutoMatch;
     //private const int TEAM_SIZE = 2;
     enum SceneBuildIndex
     {
@@ -291,7 +292,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 Debug.Log("Player count " + runner.ActivePlayers.Count());
                 players[player].TurnOnTeamMemberPanel();
                 players[player].SetRoomID(runner.SessionInfo.Name);
+                players[player].SetAutoMatch(isAutoMatch);
                 //players[player].SetHealthBarColor(Color.green);
+
             }
             else
             {
