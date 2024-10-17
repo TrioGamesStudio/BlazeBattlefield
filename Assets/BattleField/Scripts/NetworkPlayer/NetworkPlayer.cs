@@ -98,8 +98,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             if(isReadyScene) {
                 // (this.sceneToStart) networkPlayer <- spawner.cs <- dropdownscenename.cs
                 /* if(Runner.IsSharedModeMasterClient) sceneToStart = spawner.gameMap.ToString(); */
-                Debug.Log("MAIN LOBBY SCENE NE");
-                Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
+                //Debug.Log("MAIN LOBBY SCENE NE");
+                //Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
 
                 // OF localCam
                 localCameraHandler.gameObject.SetActive(false);
