@@ -15,12 +15,13 @@ public class UIController : MonoBehaviour
     public Sprite duoMode;
     public ModeButton soloButton;
     public ModeButton duoButton;
+    public Toggle toggle;
     private bool isPanelActive = false;
     [SerializeField] private GameObject sessionButtonPrefab;  // Prefab to represent a session in UI
     [SerializeField] private Transform sessionListContent;    // Parent transform for session buttons
     //bool isSingle = true;
     public static UIController Instance { get; private set; }
-
+    private Matchmaking matchmaking;
     private void Awake()
     {
         if (Instance == null)
@@ -32,16 +33,25 @@ public class UIController : MonoBehaviour
         {
             Destroy(gameObject); // Destroy duplicate
         }
+        matchmaking = FindObjectOfType<Matchmaking>();
     }
 
     void Start()
     {
         InitializeUI();
+        toggle.onValueChanged.AddListener(OnAutoMatchToggleChanged);
     }
 
     void Update()
     {
         HandleTouchInput();
+    }
+
+    // Method to handle the Toggle UI value change
+    private void OnAutoMatchToggleChanged(bool isOn)
+    {
+        matchmaking.IsAutoMatch = isOn;
+        Debug.Log("isAutoMatch set to: " + isOn);
     }
 
     // Initializes the button listeners and ensures the panel is hidden initially

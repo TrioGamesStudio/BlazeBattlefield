@@ -20,10 +20,24 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     private NetworkRunner networkRunner;
     private const int MAX_PLAYER = 4;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
-
+    private PlayerRoomController localPlayerRoomController;
     private Vector3 spawnPosition;
     private Mode currentMode = Mode.Solo;
-    public bool isAutoMatch;
+    private bool isAutoMatch;
+    public bool IsAutoMatch
+    {
+        get { return isAutoMatch; }
+        set
+        {
+            if (isAutoMatch != value) // Check if the value actually changed
+            {
+                isAutoMatch = value;
+                if (localPlayerRoomController != null)
+                    localPlayerRoomController.SetAutoMatch(isAutoMatch);
+            }
+        }
+    }
+   
     //private const int TEAM_SIZE = 2;
     enum SceneBuildIndex
     {
@@ -293,6 +307,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 players[player].TurnOnTeamMemberPanel();
                 players[player].SetRoomID(runner.SessionInfo.Name);
                 players[player].SetAutoMatch(isAutoMatch);
+                localPlayerRoomController = players[player];
                 //players[player].SetHealthBarColor(Color.green);
 
             }
@@ -366,6 +381,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             readyButton.gameObject.SetActive(false);
         }
         UpdatePlayButtonInteractability();
+        //localPlayerRoomController = null;
     }
 
 
