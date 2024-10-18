@@ -19,7 +19,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     public TextMeshProUGUI StatusText;
     private const int MAX_PLAYER = 4;
     string roomID;
-
+    string teamID = "";
+    string roomAutoMatch;
     //[SerializeField] private GameHandler gameManagerPrefab;
     //private GameHandler gameManager;
 
@@ -115,19 +116,25 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 
             if (players[player].IsAutoMatch)
             {
-                if (teams.ContainsKey("Auto-Match"))
+                if (runner.IsSharedModeMasterClient)
                 {
-                    teams["Auto-Match"].Add(player);
-                }
-                else
-                {
-                    List<PlayerRef> listPlayers = new();
-                    listPlayers.Add(player);
-                    teams["Auto-Match"] = listPlayers;
-                }
+                    roomAutoMatch = GenerateRoomName();
+                    players[player].SetTeamID(roomAutoMatch);
+                    if (teams.ContainsKey(roomAutoMatch))
+                    {
+                        teams[roomAutoMatch].Add(player);
+                    }
+                    else
+                    {
+                        List<PlayerRef> listPlayers = new();
+                        listPlayers.Add(player);
+                        teams[roomAutoMatch] = listPlayers;
+                    }
+                }              
             }
             else
             {
+                players[player].SetTeamID(roomID);
                 if (teams.ContainsKey(players[player].RoomID.ToString()))
                 {
                     teams[players[player].RoomID.ToString()].Add(player);
@@ -155,12 +162,30 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                 // Add a separator for clarity
                 Debug.Log("---------------------------");
             }
+            StartCoroutine(WaitForTeamID(runner, player));
         }
         else
         {
             // Handle remote player
             StartCoroutine(WaitForPlayerObject(runner, player));
         }
+
+        Debug.Log("______PLAYER COUNT: " + runner.ActivePlayers.Count());
+    }
+
+    public string GenerateRoomName()
+    {
+        string roomAutoMatch;
+
+        do
+        {
+            // Generate a random room name
+            roomAutoMatch = "AutoMatch" + UnityEngine.Random.Range(0, 10);
+        }
+        // Continue generating until the room name is either not in the dictionary or has fewer than 2 players
+        while (teams.ContainsKey(roomAutoMatch) && teams[roomAutoMatch].Count >= 2);
+
+        return roomAutoMatch;
     }
 
     private IEnumerator WaitForPlayerObject(NetworkRunner runner, PlayerRef player)
@@ -177,16 +202,22 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
                 if (players[player].IsAutoMatch)
                 {
-                    if (teams.ContainsKey("Auto-Match"))
+                    if (runner.IsSharedModeMasterClient)
                     {
-                        teams["Auto-Match"].Add(player);
-                    }
-                    else
-                    {
-                        List<PlayerRef> listPlayers = new();
-                        listPlayers.Add(player);
-                        teams["Auto-Match"] = listPlayers;
-                    }
+                        if (teams.ContainsKey(roomAutoMatch) && teams[roomAutoMatch].Count >= 2)
+                            roomAutoMatch = GenerateRoomName();
+                        players[player].SetTeamID(roomAutoMatch);
+                        if (teams.ContainsKey(roomAutoMatch))
+                        {
+                            teams[roomAutoMatch].Add(player);
+                        }
+                        else
+                        {
+                            List<PlayerRef> listPlayers = new();
+                            listPlayers.Add(player);
+                            teams[roomAutoMatch] = listPlayers;
+                        }
+                    }        
                 }
                 else
                 {
@@ -201,6 +232,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                         teams[players[player].RoomID.ToString()] = listPlayers;
                     }
                 }
+
+                StartCoroutine(CheckTeamMate(player));
 
                 foreach (var team in teams)
                 {
@@ -222,6 +255,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                 {
                     //players[player].SetHealthBarColor(Color.blue);
                 }
+                //Debug.Log("______PLAYER COUNT: " + players.Count);
                 yield break;
             }
             elapsedTime += Time.deltaTime;
@@ -232,6 +266,39 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             Debug.LogWarning($"Timeout waiting for player object for player {player}");
         }
+        
+    }
+
+    private IEnumerator CheckTeamMate(PlayerRef player)
+    {
+        yield return new WaitForSeconds(3);
+        if (players[player].TeamID.ToString() == teamID)
+        {
+            Debug.Log("####DONG DOI VAO ROI NEEEEEEEEEE");
+        }
+        else
+        {
+            Debug.Log("####Local team id: " + teamID + "Player team id " + players[player].TeamID.ToString());
+        }
+    }
+
+    private IEnumerator WaitForTeamID(NetworkRunner runner, PlayerRef player)
+    {
+        //NetworkObject playerObject = null;
+        float timeout = 5f; // 5 seconds timeout
+        float elapsedTime = 0f;
+        while (teamID == "" && elapsedTime < timeout)
+        {
+            teamID = players[player].TeamID.ToString();
+            if (teamID != "")
+            {
+                Debug.Log("******TEAM ID OF LOCAL PLAYER: " + teamID);
+                yield break;
+            }               
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)

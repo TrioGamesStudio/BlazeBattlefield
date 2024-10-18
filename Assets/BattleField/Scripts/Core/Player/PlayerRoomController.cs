@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using System;
 
 public class PlayerRoomController : NetworkBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerRoomController : NetworkBehaviour
     [Networked] public NetworkBool IsRoomOwner { get; set; }
     [Networked] public NetworkBool IsAutoMatch { get; set; }
     [Networked] public NetworkString<_128> RoomID { get; set; }
+    [Networked] public NetworkString<_128> TeamID { get; set; }
     [SerializeField] private GameObject teamMemberPanel;
     public static PlayerRoomController LocalPlayer;
     private Matchmaking matchmaking;
@@ -128,5 +130,19 @@ public class PlayerRoomController : NetworkBehaviour
     {
         IsAutoMatch = isAutoMatch;      
         Debug.Log("SET AUTO MATCH");
+    }
+
+    public void SetTeamID(string teamID)
+    {
+        //if (Object.HasStateAuthority)
+        {
+            RPC_SetTeamID(teamID);
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_SetTeamID(string teamID)
+    {
+        TeamID = teamID;
     }
 }
