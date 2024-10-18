@@ -275,6 +275,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         if (players[player].TeamID.ToString() == teamID)
         {
             Debug.Log("####DONG DOI VAO ROI NEEEEEEEEEE");
+            players[player].SetTeamMateTag();
         }
         else
         {

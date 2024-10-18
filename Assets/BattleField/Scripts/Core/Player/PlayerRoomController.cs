@@ -145,4 +145,9 @@ public class PlayerRoomController : NetworkBehaviour
     {
         TeamID = teamID;
     }
+
+    public void SetTeamMateTag()
+    {
+        gameObject.tag = "TeamMate";
+    }
 }
