@@ -245,6 +245,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             playButton.gameObject.SetActive(true);
             playButton.interactable = true;
             localPlayer.SetActive(true);
+            UIController.Instance.SwitchMode(true);
             JoinLobby();
 
             // Optionally update the UI, e.g., re-enable room creation UI or show session list
@@ -278,6 +279,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (result.Ok)
         {
+            UIController.Instance.SwitchMode(false);
             // all good
             //createRoomButton.gameObject.SetActive(false);
             //sessionListContent.parent.parent.gameObject.SetActive(false);
