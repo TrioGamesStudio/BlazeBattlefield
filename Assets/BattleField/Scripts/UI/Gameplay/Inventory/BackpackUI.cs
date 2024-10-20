@@ -9,18 +9,26 @@ public class BackpackUI : BaseTest<ItemData>
         base.Init();
         instance = this;
     }
-    protected override ItemCollectUI CreateUI(ItemData customObject)
+    protected override void ConfigureItemUI(ItemData customObject, ItemCollectUI itemCollectUI)
     {
-        var itemCollectUI = poolItemsUI.Get();
         itemCollectUI.SetItemName(customObject.itemName);
         itemCollectUI.SetItemCount(customObject.count);
         itemCollectUI.SetOnClickEvent(OnClickButton);
-        return itemCollectUI;
     }
 
 
     private void OnClickButton()
     {
         Debug.Log("Show two button");
+    }
+
+    public override void RemoveItem(ItemData customObject)
+    {
+        AddItemToDictionary(customObject.indentifyID, customObject);
+    }
+
+    public override void AddItem(ItemData customObject)
+    {
+        RemoveItemFromDictionary(customObject.indentifyID, customObject);
     }
 }

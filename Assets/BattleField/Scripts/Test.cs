@@ -7,7 +7,8 @@ public class Test : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Item") == false) return;
-        ItemCollectionUI.instance.AddItem(other.gameObject);
+        Debug.Log("Enter");
+        ItemCollectionUI.instance.AddItem(other.GetComponent<ItemInGame>());
         // if (other.CompareTag("ItemBound") == false) return;
         // Debug.Log("Trigger",gameObject);
         // ItemCollectionUI.instance.BindItems(other.GetComponent<BoundItems>());
@@ -15,7 +16,8 @@ public class Test : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Item") == false) return;
-        ItemCollectionUI.instance.RemoveItem(other.gameObject);
+        Debug.Log("Exit");
+        ItemCollectionUI.instance.RemoveItem(other.GetComponent<ItemInGame>());
         // if (other.CompareTag("ItemBound") == false) return;
         // Debug.Log("Exit",gameObject);
         // ItemCollectionUI.instance.BindItems(null);

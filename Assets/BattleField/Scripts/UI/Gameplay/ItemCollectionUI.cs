@@ -1,10 +1,4 @@
-using System;
-using System.Collections;
-using NaughtyAttributes;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 
@@ -41,18 +35,14 @@ public class ItemCollectionUI : BaseTest<ItemInGame>
     private void Hide() => view.gameObject.SetActive(false);
 
 
-    protected override ItemCollectUI CreateUI(ItemInGame itemInGame)
+    protected override void ConfigureItemUI(ItemInGame itemInGame, ItemCollectUI itemCollectUI)
     {
-        ItemCollectUI itemCollectUI = poolItemsUI.Get();
         itemCollectUI.SetItemCount(itemInGame.GetItemCount());
         itemCollectUI.SetItemName(itemInGame.GetItemName());
-        // itemCollectUI.icon.sprite = itemInGame.sprite;
 
         itemCollectUI.SetOnClickEvent(() => { ButtonClick(itemInGame); });
 
         itemCollectUI.gameObject.SetActive(true);
-        usingList.Add(itemCollectUI);
-        return itemCollectUI;
     }
 
     private void ButtonClick(ItemInGame itemInGame)
@@ -62,9 +52,19 @@ public class ItemCollectionUI : BaseTest<ItemInGame>
         itemInGame.OnCollect();
     }
 
-    protected override void SetupWhenAddItem(ItemInGame customObject)
+    protected override void OnItemAdded(ItemInGame customObject)
     {
-        base.SetupWhenAddItem(customObject);
-        customObject.OnRemoveUICallback = () => RemoveItemFromDictionary(customObject);
+        base.OnItemAdded(customObject);
+        customObject.OnRemoveUICallback = () => RemoveItem(customObject);
+    }
+
+    public override void RemoveItem(ItemInGame customObject)
+    {
+        AddItemToDictionary(customObject.GetKey(), customObject);
+    }
+
+    public override void AddItem(ItemInGame customObject)
+    {
+        RemoveItemFromDictionary(customObject.GetKey(), customObject);
     }
 }

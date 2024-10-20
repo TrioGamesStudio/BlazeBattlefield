@@ -31,20 +31,27 @@ public class ItemInGame : NetworkBehaviour
     {
         return itemData.count;
     }
+
+    public string GetKey()
+    {
+        return itemData.indentifyID;
+    }
 }
 [Serializable]
 public struct ItemData
 {
+    public string indentifyID;
     public int count;
     public string itemName;
     public ItemDataSO ItemDataSO;
 
     // Constructor
-    public ItemData(ItemDataSO ItemDataSO,int count)
+    public ItemData(ItemDataSO _ItemDataSO,int _count)
     {
-        this.ItemDataSO = ItemDataSO;
+        indentifyID = Guid.NewGuid().ToString();
+        ItemDataSO = _ItemDataSO;
         itemName = ItemDataSO.ItemName;
-        this.count = count;
+        count = _count;
     }
 
     

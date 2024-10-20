@@ -1,25 +1,31 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+public interface I_Data
+{
+    string GetID();
+}
 public abstract class BaseTest<CustomObject> : MonoBehaviour
 {
     protected UnityPool<ItemCollectUI> poolItemsUI;
-    protected Dictionary<CustomObject, ItemCollectUI> dictionary;
-    [SerializeField] protected List<ItemCollectUI> usingList;
+    protected Dictionary<string, ItemCollectUI> activeItemUIs;
+    //[SerializeField] protected List<ItemCollectUI> usingList;
     [SerializeField] protected ItemCollectUI itemCollectUIPrefab;
     [SerializeField] protected GameObject content;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         Init();
     }
-
+    protected virtual void OnDestroy()
+    {
+        ClearAllItems();
+    }
     protected virtual void Init()
     {
         Debug.Log("Init UI Game Item", gameObject);
         poolItemsUI = new UnityPool<ItemCollectUI>(itemCollectUIPrefab, 15, content.transform);
-        dictionary = new();
-        usingList = new();
+        activeItemUIs = new();
+        itemCollectUIPrefab.gameObject.SetActive(false);
 
         if (content == null)
         {
@@ -31,42 +37,46 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
             Debug.LogError("Item UI Prefab is null", gameObject);
         }
 
-        itemCollectUIPrefab.gameObject.SetActive(false);
     }
-    
-    public void RemoveItem(GameObject _gameObject)
+    public void ClearAllItems()
     {
-        var itemInGame = _gameObject.GetComponent<CustomObject>();
-        RemoveItemFromDictionary(itemInGame);
+        // clear all
+        foreach(var item in activeItemUIs.Values)
+        {
+            item.OnRelease();
+        }
+        activeItemUIs.Clear();
+        poolItemsUI.Clear();
     }
 
-    public virtual void AddItem(GameObject _gameObject)
-    {
-        var customObject = _gameObject.GetComponent<CustomObject>();
-        if (customObject == null) return;
-        AddItemToDictionary(customObject);
-    }
-    private void AddItemToDictionary(CustomObject itemInGame)
-    {
-        dictionary.Add(itemInGame, CreateUI(itemInGame));
-        SetupWhenAddItem(itemInGame);
-    }
-    protected abstract ItemCollectUI CreateUI(CustomObject customObject);
+    public abstract void RemoveItem(CustomObject customObject);
 
-    protected virtual void RemoveItemFromDictionary(CustomObject customObject)
+    public abstract void AddItem(CustomObject customObject);
+    protected abstract void ConfigureItemUI(CustomObject customObject, ItemCollectUI itemCollectUI);
+
+    protected virtual void AddItemToDictionary(string key, CustomObject customObject)
     {
         if (customObject == null) return;
-        if (!dictionary.TryGetValue(customObject, out var ui)) return;
+        if (activeItemUIs.ContainsKey(key) == false) return;
+        var itemUI = poolItemsUI.Get();
+        activeItemUIs.Add(key, itemUI);
+        ConfigureItemUI(customObject, itemUI);
+        OnItemAdded(customObject);
+    }
+    protected virtual void RemoveItemFromDictionary(string key, CustomObject customObject)
+    {
+        if (customObject == null) return;
+        if (!activeItemUIs.TryGetValue(key, out var ui)) return;
+        activeItemUIs.Remove(key);
         ui.OnRelease();
-        dictionary.Remove(customObject);
-        SetWhenRemoveItem(customObject);
+        OnItemRemoved(customObject);
     }
     
-    protected virtual void SetupWhenAddItem(CustomObject customObject)
+    protected virtual void OnItemAdded(CustomObject customObject)
     {
     }
 
-    protected virtual void SetWhenRemoveItem(CustomObject customObject)
+    protected virtual void OnItemRemoved(CustomObject customObject)
     {
     }
 }
