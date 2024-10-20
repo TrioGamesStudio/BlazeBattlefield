@@ -152,7 +152,7 @@ public class WeaponHandler : NetworkBehaviour
         if(Physics.Raycast(spawnPointRaycastCam,aimForwardVector, out var hit, 100, collisionLayers)) {
             // neu hitInfo do this.gameObject ban ra thi return
             if(hit.transform.GetComponent<WeaponHandler>() == this) return;
-            // neu la dong doi thi return
+            // neu hitInfo la dong doi thi khong tru mau
             if (hit.transform.CompareTag("TeamMate")) return;
             float hitDis = 100f;
             bool isHitOtherRemotePlayers = false;
