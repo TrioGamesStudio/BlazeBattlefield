@@ -340,10 +340,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         }
         else
         {
-            PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
-            runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
+            if (player == runner.LocalPlayer)
+            {
+                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
+                runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
+            }
         }
-
     }
 
     private IEnumerator WaitForPlayerObject(NetworkRunner runner, PlayerRef player)
