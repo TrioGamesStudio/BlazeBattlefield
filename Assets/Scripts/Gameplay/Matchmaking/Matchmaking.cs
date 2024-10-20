@@ -18,7 +18,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private Button readyButton;
     [SerializeField] private Button playButton;
     private NetworkRunner networkRunner;
-    private const int MAX_PLAYER = 4;
+    private const int MAX_PLAYER = 2;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     private PlayerRoomController localPlayerRoomController;
     private Vector3 spawnPosition;
@@ -125,6 +125,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (result.Ok)
         {
+            UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
             // all good
             Debug.Log("Match room name: " + networkRunner.SessionInfo.Name);
 
@@ -344,6 +345,17 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
+            }
+            int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
+            string text = "Waiting other player: " + remainPlayer + " remain";
+            FindObjectOfType<UIController>().SetText(text);
+            if (runner.ActivePlayers.Count() == MAX_PLAYER) // Assuming PlayerCount is 2
+            {
+                FindObjectOfType<UIController>().StartCountdown();
+                //StartCoroutine(Wait(runner));
+                //TransitionToBattleScene(runner);
+                //LoadScene();
+                //StartCoroutine(LoadScene());
             }
         }
     }

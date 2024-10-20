@@ -147,21 +147,21 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                 }
             }
 
-            foreach (var team in teams)
-            {
-                // Print the team name (key)
-                Debug.Log($"TEAM: {team.Key}");
+            //foreach (var team in teams)
+            //{
+            //    // Print the team name (key)
+            //    Debug.Log($"TEAM: {team.Key}");
 
-                // Print all players in the team (value)
-                foreach (var member in team.Value)
-                {
-                    // Assuming PlayerRef has some properties to print, like an ID or Name
-                    Debug.Log($"PlAYER IN TEAM: {member.PlayerId}"); // Replace with actual player properties
-                }
+            //    // Print all players in the team (value)
+            //    foreach (var member in team.Value)
+            //    {
+            //        // Assuming PlayerRef has some properties to print, like an ID or Name
+            //        Debug.Log($"PlAYER IN TEAM: {member.PlayerId}"); // Replace with actual player properties
+            //    }
 
-                // Add a separator for clarity
-                Debug.Log("---------------------------");
-            }
+            //    // Add a separator for clarity
+            //    Debug.Log("---------------------------");
+            //}
             StartCoroutine(WaitForTeamID(runner, player));
         }
         else
@@ -170,7 +170,14 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             StartCoroutine(WaitForPlayerObject(runner, player));
         }
 
-        Debug.Log("______PLAYER COUNT: " + runner.ActivePlayers.Count());
+        //Debug.Log("______PLAYER COUNT: " + runner.ActivePlayers.Count());
+        int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
+        string text = "Waiting other player: " + remainPlayer + " remain";
+        FindObjectOfType<UIController>().SetText(text);
+        if (runner.ActivePlayers.Count() == MAX_PLAYER) // Assuming PlayerCount is 2
+        {
+            FindObjectOfType<UIController>().StartCountdown();
+        }
     }
 
     public string GenerateRoomName()

@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System;
+using TMPro;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
@@ -17,6 +21,9 @@ public class UIController : MonoBehaviour
     public ModeButton duoButton;
     public Toggle toggleModeButton;
     public Button joinTeamButton;
+    public TextMeshProUGUI informationText;
+    public GameObject mainLobbyPanel;
+    public GameObject worldPanel;
     private bool isPanelActive = false;
     [SerializeField] private GameObject sessionButtonPrefab;  // Prefab to represent a session in UI
     [SerializeField] private Transform sessionListContent;    // Parent transform for session buttons
@@ -47,6 +54,7 @@ public class UIController : MonoBehaviour
 
     void Update()
     {
+        if (SceneManager.GetActiveScene().name != "MainLobby") return;
         HandleTouchInput();
     }
 
@@ -157,6 +165,11 @@ public class UIController : MonoBehaviour
         }
     }
 
+    public void ShowHideUI(GameObject panelUI)
+    {
+       panelUI.SetActive(!panelUI.activeSelf);
+    }
+
     public void OnOffPanel()
     {
         joinTeamButton.interactable = !joinTeamButton.interactable;
@@ -178,5 +191,38 @@ public class UIController : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+
+    public  void SetText(string text)
+    {
+        informationText.text = text;
+    }
+
+    public void StartCountdown()
+    {
+        StartCoroutine(CountdownCoroutine());
+    }
+
+    private IEnumerator CountdownCoroutine()
+    {
+        int countdownValue = 3;  // Start from 3
+        yield return new WaitForSeconds(1f);
+        while (countdownValue > 0)
+        {
+            yield return new WaitForSeconds(1f);             // Wait for 1 second
+            informationText.text = countdownValue.ToString();  // Update the countdown text
+            //countdownText.gameObject.SetActive(true);        // Show the countdown UI        
+            countdownValue--;
+        }
+
+        // Countdown finished
+        informationText.text = "GO!";
+        yield return new WaitForSeconds(1f);  // Keep "GO!" for 1 second
+
+        // Hide the countdown UI
+        informationText.gameObject.SetActive(false);
+
+        // Load the battle scene
+        //TransitionToBattleScene(runner);
     }
 }
