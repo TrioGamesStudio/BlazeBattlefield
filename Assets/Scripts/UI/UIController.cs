@@ -15,7 +15,7 @@ public class UIController : MonoBehaviour
     public Sprite duoMode;
     public ModeButton soloButton;
     public ModeButton duoButton;
-    public Toggle toggle;
+    public Toggle toggleModeButton;
     private bool isPanelActive = false;
     [SerializeField] private GameObject sessionButtonPrefab;  // Prefab to represent a session in UI
     [SerializeField] private Transform sessionListContent;    // Parent transform for session buttons
@@ -39,7 +39,8 @@ public class UIController : MonoBehaviour
     void Start()
     {
         InitializeUI();
-        toggle.onValueChanged.AddListener(OnAutoMatchToggleChanged);
+        toggleModeButton.onValueChanged.AddListener(OnAutoMatchToggleChanged);
+        toggleModeButton.interactable = false;
     }
 
     void Update()
@@ -132,6 +133,7 @@ public class UIController : MonoBehaviour
             modeImage.sprite = singleMode;
             soloButton.Highlight();
             duoButton.UnHightLight();
+            toggleModeButton.interactable = false;
         }
             
         else
@@ -139,6 +141,7 @@ public class UIController : MonoBehaviour
             modeImage.sprite = duoMode;
             soloButton.UnHightLight();
             duoButton.Highlight();
+            toggleModeButton.interactable = true;
 
         }
         //isSingle = !isSingle;
