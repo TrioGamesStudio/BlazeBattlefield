@@ -4,7 +4,7 @@ public static class Utils
 {
     //random spawnPoint Player
     public static Vector3 GetRandomSpawnPoint() {
-        return new Vector3(Random.Range(-2, 0), 5, Random.Range(-2, -2));
+        return new Vector3(Random.Range(-2, 0), 35, Random.Range(-2, -2));
     }
 
     // random spawnPoint Weapons
