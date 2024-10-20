@@ -68,6 +68,8 @@ public class PlayerController : NetworkBehaviour
             // Link input to soldier and cameraLook
             InputPlayerHandler.SwitchMovementController(soldier.movement);
             InputPlayerHandler.SwitchCameraController(camera);
+
+            soldier.SetupCollectCube();
         }
     }
 }

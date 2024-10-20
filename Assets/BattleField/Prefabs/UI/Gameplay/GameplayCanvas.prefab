@@ -404,13 +404,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4436892ace083134fb95a6bddb176da1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemCollectUIPrefab: {fileID: 2743410636476871439}
-  view: {fileID: 0}
+  usingList: []
+  itemCollectUIPrefab: {fileID: 0}
   content: {fileID: 0}
+  view: {fileID: 0}
   toggleViewButton: {fileID: 0}
-  closeSprite: {fileID: 0}
-  openSprite: {fileID: 0}
-  canCollect: 0
 --- !u!114 &1500312131253496716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4115,18 +4113,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4e6ab744f26a5f40b5b0c1aa3af3e33, type: 3}
---- !u!114 &2743410636476871439 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5399144129872371210, guid: d4e6ab744f26a5f40b5b0c1aa3af3e33,
-    type: 3}
-  m_PrefabInstance: {fileID: 7854015562716212485}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98b95c85a41a39547b8d5d1138b33596, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &8224186375287061628 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2224000199599149433, guid: d4e6ab744f26a5f40b5b0c1aa3af3e33,

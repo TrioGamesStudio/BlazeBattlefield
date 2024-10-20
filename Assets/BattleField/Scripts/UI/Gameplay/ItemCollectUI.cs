@@ -6,37 +6,50 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemCollectUI : MonoBehaviour, IPointerClickHandler
+public class ItemCollectUI : MonoBehaviour, IPoolCallback<ItemCollectUI>
 {
-    [Serializable]
-    public class ItemData
-    {
-        public static ItemData CreateInstance(Sprite sprite,string name,int count, Action callback)
-        {
-            var itemData = new ItemData();
-            itemData.sprite = sprite;
-            itemData.name = name;
-            itemData.count = count;
-            itemData.collectCallback = callback;
-            return itemData;
-        }
+    [SerializeField] private Image background;
+    [SerializeField] private Image icon;
+    [SerializeField] private Image durability;
+    [SerializeField] private TextMeshProUGUI itemName;
+    [SerializeField] private TextMeshProUGUI itemCount;
+    [SerializeField] private Button OnClickButton;
+    private Action OnClickButtonCallback;
+    public Action<ItemCollectUI> OnCallback { get; set; }
 
-        public Sprite sprite;
-        public string name;
-        public int count;
-        public Action collectCallback;
-    }
-    public Image background;
-    public Image icon;
-    public Image durability;
-    public TextMeshProUGUI itemName;
-    public TextMeshProUGUI itemCount;
-    public Action OnCollectCallback;
-    public void OnPointerClick(PointerEventData eventData)
+    private void Awake()
     {
-        // Debug.Log($"UI Collect: '{itemName.text}' '{itemCount.text}'",gameObject);
-        OnCollectCallback?.Invoke();
-        // Inventory.Collect(item.id)
+        OnClickButton.onClick.AddListener(RaiseCallback);
+    }
+
+    private void OnDestroy()
+    {
+        OnClickButton.onClick.RemoveListener(RaiseCallback);
+    }
+
+    public void OnRelease()
+    {
+        OnCallback?.Invoke(this);
+    }
+
+    public void SetItemName(string itemNameStr)
+    {
+        itemName.text = itemNameStr;
+    }
+
+    public void SetItemCount(int count)
+    {
+        itemCount.text = count.ToString();
+    }
+
+    public void SetOnClickEvent(Action callback)
+    {
+        this.OnClickButtonCallback = callback;
+    }
+
+    private void RaiseCallback()
+    {
+        OnClickButtonCallback?.Invoke();
     }
 }
 
