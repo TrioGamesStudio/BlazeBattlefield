@@ -56,8 +56,16 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
 
     protected virtual void AddItemToDictionary(string key, CustomObject customObject)
     {
-        if (customObject == null) return;
-        if (activeItemUIs.ContainsKey(key) == false) return;
+        if (customObject == null)
+        {
+            Debug.Log("Item Null");
+            return;
+        }
+        if (activeItemUIs.ContainsKey(key))
+        {
+            Debug.Log("Is Contain Key");
+            return;
+        }
         var itemUI = poolItemsUI.Get();
         activeItemUIs.Add(key, itemUI);
         ConfigureItemUI(customObject, itemUI);
@@ -65,8 +73,16 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
     }
     protected virtual void RemoveItemFromDictionary(string key, CustomObject customObject)
     {
-        if (customObject == null) return;
-        if (!activeItemUIs.TryGetValue(key, out var ui)) return;
+        if (customObject == null)
+        {
+            Debug.Log("Item Null");
+            return;
+        }
+        if (!activeItemUIs.TryGetValue(key, out var ui))
+        {
+            Debug.Log("Not Contain Key");
+            return;
+        }
         activeItemUIs.Remove(key);
         ui.OnRelease();
         OnItemRemoved(customObject);

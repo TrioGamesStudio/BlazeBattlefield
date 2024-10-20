@@ -16,6 +16,7 @@ public class Backpack : MonoBehaviour
     public void AddItemToInventory(ItemData itemData)
     {
         itemVen.Add(itemData);
+        BackpackUI.instance.AddItem(itemData);
     }
 
     public void Drop(ItemData itemData)

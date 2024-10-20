@@ -60,11 +60,11 @@ public class ItemCollectionUI : BaseTest<ItemInGame>
 
     public override void RemoveItem(ItemInGame customObject)
     {
-        AddItemToDictionary(customObject.GetKey(), customObject);
+        RemoveItemFromDictionary(customObject.GetKey(), customObject);
     }
 
     public override void AddItem(ItemInGame customObject)
     {
-        RemoveItemFromDictionary(customObject.GetKey(), customObject);
+        AddItemToDictionary(customObject.GetKey(), customObject);
     }
 }
