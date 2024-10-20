@@ -16,6 +16,7 @@ public class UIController : MonoBehaviour
     public ModeButton soloButton;
     public ModeButton duoButton;
     public Toggle toggleModeButton;
+    public Button joinTeamButton;
     private bool isPanelActive = false;
     [SerializeField] private GameObject sessionButtonPrefab;  // Prefab to represent a session in UI
     [SerializeField] private Transform sessionListContent;    // Parent transform for session buttons
@@ -40,6 +41,7 @@ public class UIController : MonoBehaviour
     {
         InitializeUI();
         toggleModeButton.onValueChanged.AddListener(OnAutoMatchToggleChanged);
+        joinTeamButton.onClick.AddListener(() => ShowHidePanel(panelTeamJoin));
         toggleModeButton.interactable = false;
     }
 
@@ -153,6 +155,11 @@ public class UIController : MonoBehaviour
         {
             panelUI.SetActive(true);
         }
+    }
+
+    public void OnOffPanel()
+    {
+        joinTeamButton.interactable = !joinTeamButton.interactable;
     }
 
     public void CreateRoomUI(string roomname, int playerCount, int maxPlayer)

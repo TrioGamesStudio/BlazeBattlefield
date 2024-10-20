@@ -211,6 +211,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (result.Ok)
         {
             Debug.Log("Team room name: " + networkRunner.SessionInfo.Name);
+            UIController.Instance.OnOffPanel();
         }
         else
         {
@@ -246,6 +247,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             playButton.interactable = true;
             localPlayer.SetActive(true);
             UIController.Instance.SwitchMode(true);
+            UIController.Instance.OnOffPanel();
             JoinLobby();
 
             // Optionally update the UI, e.g., re-enable room creation UI or show session list
@@ -280,10 +282,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (result.Ok)
         {
             UIController.Instance.SwitchMode(false);
-            // all good
-            //createRoomButton.gameObject.SetActive(false);
-            //sessionListContent.parent.parent.gameObject.SetActive(false);
-        }
+            UIController.Instance.OnOffPanel();
+        // all good
+        //createRoomButton.gameObject.SetActive(false);
+        //sessionListContent.parent.parent.gameObject.SetActive(false);
+    }
         else
         {
             Debug.LogError($"Failed to Start: {result.ShutdownReason}");
