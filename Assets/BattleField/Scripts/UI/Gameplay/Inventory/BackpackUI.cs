@@ -19,10 +19,10 @@ public class BackpackUI : BaseTest<ItemData>
         itemCollectUI.SetOnClickEvent(() =>
         {
             var newIndex = itemCollectUI.transform.GetSiblingIndex();
-            // click same item
-            if(newIndex == currentItemIndex)
+            bool isItemActive = newIndex == currentItemIndex;
+            if(isItemActive)
             {
-                backpackButtonGroupUI.Hide();
+                ResetBackpackButtonGroup();
                 return;
             }
             currentItemIndex = newIndex;
@@ -39,6 +39,7 @@ public class BackpackUI : BaseTest<ItemData>
     }
     private void ResetBackpackButtonGroup()
     {
+        Debug.Log("Hide backpack button group",gameObject);
         backpackButtonGroupUI.Hide();
         currentItemIndex = -1;
     }
