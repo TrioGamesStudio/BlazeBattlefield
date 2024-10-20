@@ -161,6 +161,7 @@ MonoBehaviour:
   braking: 10
   maxSpeed: 2
   rotationSpeed: 15
+  viewRotationSpeed: 50
 --- !u!114 &2133801189745206521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,7 +315,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
