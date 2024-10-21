@@ -6,7 +6,7 @@ public class ItemInGame : NetworkBehaviour
 {
     public Action OnRemoveUICallback;
     private ItemData itemData;
-
+    
     public void Setup(ItemDataSO itemDataSo,int count)
     {
         itemData = new ItemData(itemDataSo,count);
@@ -24,7 +24,7 @@ public class ItemInGame : NetworkBehaviour
 
     public string GetItemName()
     {
-        return itemData.itemName;
+        return itemData.ItemDataSO.ItemName;
     }
 
     public int GetItemCount()
@@ -42,17 +42,12 @@ public struct ItemData
 {
     public string indentifyID;
     public int count;
-    public string itemName;
     public ItemDataSO ItemDataSO;
-
     // Constructor
     public ItemData(ItemDataSO _ItemDataSO,int _count)
     {
         indentifyID = Guid.NewGuid().ToString();
         ItemDataSO = _ItemDataSO;
-        itemName = ItemDataSO.ItemName;
         count = _count;
     }
-
-    
 }

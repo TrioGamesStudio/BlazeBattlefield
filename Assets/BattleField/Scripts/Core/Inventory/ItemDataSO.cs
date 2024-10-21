@@ -7,4 +7,5 @@ public class ItemDataSO : ScriptableObject
     public ItemType ItemType;
     public string ItemName;
     public Sprite icon;
+    public int WeaponSlot;
 }

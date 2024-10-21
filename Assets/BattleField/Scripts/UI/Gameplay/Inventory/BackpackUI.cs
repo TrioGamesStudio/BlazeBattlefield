@@ -14,7 +14,7 @@ public class BackpackUI : BaseTest<ItemData>
     }
     protected override void ConfigureItemUI(ItemData customObject, ItemCollectUI itemCollectUI)
     {
-        itemCollectUI.SetItemName(customObject.itemName);
+        itemCollectUI.SetItemName(customObject.ItemDataSO.ItemName);
         itemCollectUI.SetItemCount(customObject.count);
         itemCollectUI.SetOnClickEvent(() =>
         {
