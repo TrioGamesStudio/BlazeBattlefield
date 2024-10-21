@@ -352,12 +352,15 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             if (runner.ActivePlayers.Count() == MAX_PLAYER) // Assuming PlayerCount is 2
             {
                 FindObjectOfType<UIController>().StartCountdown();
-                //StartCoroutine(Wait(runner));
-                //TransitionToBattleScene(runner);
-                //LoadScene();
-                //StartCoroutine(LoadScene());
+                StartCoroutine(ReleasePlayer());
             }
         }
+    }
+
+    private IEnumerator ReleasePlayer()
+    {
+        yield return new WaitForSeconds(4f);
+        FindObjectOfType<WaitingArea>()?.ReleasePlayer();
     }
 
     private IEnumerator WaitForPlayerObject(NetworkRunner runner, PlayerRef player)
@@ -391,15 +394,18 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-    {
-        players.Remove(player);
+    {      
         // Setup when team member become room owner
-        if (players[runner.LocalPlayer].IsRoomOwner)
+        if (players.ContainsKey(runner.LocalPlayer))
         {
-            players[runner.LocalPlayer].gameObject.transform.position = memberPos[0].position;
-            readyButton.gameObject.SetActive(false);
+            if (players[runner.LocalPlayer].IsRoomOwner)
+            {
+                players[runner.LocalPlayer].gameObject.transform.position = memberPos[0].position;
+                readyButton.gameObject.SetActive(false);
+            }
+            UpdatePlayButtonInteractability();
         }
-        UpdatePlayButtonInteractability();
+        players.Remove(player);
         //localPlayerRoomController = null;
     }
 

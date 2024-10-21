@@ -174,10 +174,17 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
         string text = "Waiting other player: " + remainPlayer + " remain";
         FindObjectOfType<UIController>().SetText(text);
-        if (runner.ActivePlayers.Count() == MAX_PLAYER) // Assuming PlayerCount is 2
+        if (runner.ActivePlayers.Count() == MAX_PLAYER && runner.IsSharedModeMasterClient) // Assuming PlayerCount is 2
         {
             FindObjectOfType<UIController>().StartCountdown();
+            StartCoroutine(ReleasePlayer());
         }
+    }
+
+    private IEnumerator ReleasePlayer()
+    {
+        yield return new WaitForSeconds(4f);
+        FindObjectOfType<WaitingArea>()?.ReleasePlayer();
     }
 
     public string GenerateRoomName()

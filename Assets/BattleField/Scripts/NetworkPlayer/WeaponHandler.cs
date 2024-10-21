@@ -200,7 +200,7 @@ public class WeaponHandler : NetworkBehaviour
         string targetTeamID = "";
         if (hit.transform.GetComponent<PlayerRoomController>() != null)
             targetTeamID = hit.transform.GetComponent<PlayerRoomController>()?.TeamID.ToString();
-        return playerTeamID == targetTeamID;
+        return playerTeamID == targetTeamID && playerTeamID != "";
     }
 
     // fire particle on aimPoint
