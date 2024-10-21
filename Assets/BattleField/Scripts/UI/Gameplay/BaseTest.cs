@@ -49,9 +49,9 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
         poolItemsUI.Clear();
     }
 
-    public abstract void RemoveItem(CustomObject customObject);
+    public abstract void RemoveItemUI(CustomObject customObject);
 
-    public abstract void AddItem(CustomObject customObject);
+    public abstract void AddItemUI(CustomObject customObject);
     protected abstract void ConfigureItemUI(CustomObject customObject, ItemCollectUI itemCollectUI);
 
     protected virtual void AddItemToDictionary(string key, CustomObject customObject)

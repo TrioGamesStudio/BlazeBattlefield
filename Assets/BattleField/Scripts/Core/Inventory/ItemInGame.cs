@@ -50,4 +50,5 @@ public struct ItemData
         ItemDataSO = _ItemDataSO;
         count = _count;
     }
+    
 }

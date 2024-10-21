@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Fusion;
@@ -16,9 +17,12 @@ public class Backpack : MonoBehaviour
     public void AddItemToInventory(ItemData itemData)
     {
         itemVen.Add(itemData);
-        BackpackUI.instance.AddItem(itemData);
+        BackpackUI.instance.AddItemUI(itemData);
     }
+    public void DropAll(ItemData itemData)
+    {
 
+    }
     public void Drop(ItemData itemData)
     {
         itemVen.Remove(itemData);

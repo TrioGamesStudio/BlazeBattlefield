@@ -55,15 +55,15 @@ public class ItemCollectionUI : BaseTest<ItemInGame>
     protected override void OnItemAdded(ItemInGame customObject)
     {
         base.OnItemAdded(customObject);
-        customObject.OnRemoveUICallback = () => RemoveItem(customObject);
+        customObject.OnRemoveUICallback = () => RemoveItemUI(customObject);
     }
 
-    public override void RemoveItem(ItemInGame customObject)
+    public override void RemoveItemUI(ItemInGame customObject)
     {
         RemoveItemFromDictionary(customObject.GetKey(), customObject);
     }
 
-    public override void AddItem(ItemInGame customObject)
+    public override void AddItemUI(ItemInGame customObject)
     {
         AddItemToDictionary(customObject.GetKey(), customObject);
     }
