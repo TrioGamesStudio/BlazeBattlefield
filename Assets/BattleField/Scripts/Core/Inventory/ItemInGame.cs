@@ -50,5 +50,9 @@ public struct ItemData
         ItemDataSO = _ItemDataSO;
         count = _count;
     }
-    
+
+    internal string GetName()
+    {
+        throw new NotImplementedException();
+    }
 }

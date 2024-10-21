@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,25 +12,41 @@ public class DropAmountUI : MonoBehaviour
     [SerializeField] private Button DecreaseButton;
     [SerializeField] private Button CancelButton;
     [SerializeField] private Button OkButton;
-    private Action<float> OnDropCallback;
+    [SerializeField] private TextMeshProUGUI itemName;
+    [SerializeField] private TextMeshProUGUI currentCountDrop;
+    [SerializeField] private TextMeshProUGUI maxCount;
+    public Action<float> OnDropCallback;
+
     private void Awake()
     {
         IncreaseButton.onClick.AddListener(Increase);
         DecreaseButton.onClick.AddListener(Decrease);
         CancelButton.onClick.AddListener(Cancel);
+        OkButton.onClick.AddListener(Drop);
+
+        amountSlider.onValueChanged.AddListener(HandleSliderValueChange);
     }
     private void OnDestroy()
     {
         IncreaseButton.onClick.RemoveListener(Increase);
         DecreaseButton.onClick.RemoveListener(Decrease);
         CancelButton.onClick.RemoveListener(Cancel);
+        OkButton.onClick.RemoveListener(Drop);
+
+        amountSlider.onValueChanged.RemoveListener(HandleSliderValueChange);
+
     }
-    public void Setup(ItemData itemData, Action<float> _OnDropCallback)
+    private void HandleSliderValueChange(float value)
+    {
+        currentCountDrop.text = value.ToString();
+    }
+    public void Setup(ItemData itemData)
     {
         amountSlider.minValue = 1;
         amountSlider.maxValue = itemData.count;
         amountSlider.value = amountSlider.minValue;
-        OnDropCallback = _OnDropCallback;
+        itemName.text = itemData.ItemDataSO.ItemName;
+        maxCount.text = itemData.count.ToString();
     }
 
     public void Show()

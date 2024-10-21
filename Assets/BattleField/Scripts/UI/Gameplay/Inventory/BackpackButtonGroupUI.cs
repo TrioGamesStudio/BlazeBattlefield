@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class BackpackButtonGroupUI : MonoBehaviour
@@ -7,11 +8,20 @@ public class BackpackButtonGroupUI : MonoBehaviour
     public Button dropAllButton;
     public Button useButton;
     public Button equipButton;
-
-    public void ShowByType(ItemData itemData, int index)
+    private ItemData currentItemData;
+    public ItemData GetCurrentItem()
+    {
+        return currentItemData;
+    }
+    public void ShowByIndex(int index)
     {
         transform.gameObject.SetActive(true);
         transform.SetSiblingIndex(index + 1);
+    }
+    public void SetCurrentItem(ItemData customObject)
+    {
+        currentItemData = customObject;
+
     }
     public void Hide()
     {
@@ -25,4 +35,6 @@ public class BackpackButtonGroupUI : MonoBehaviour
         useButton.onClick.RemoveAllListeners();
         equipButton.onClick.RemoveAllListeners();
     }
+
+   
 }

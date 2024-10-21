@@ -11,8 +11,21 @@ public class BackpackUI : BaseTest<ItemData>
     {
         base.Init();
         instance = this;
-        backpackButtonGroupUI.gameObject.SetActive(false);
+        backpackButtonGroupUI.Hide();
+        dropAmountUI.Hide();
+        SetupButtonListeners();
     }
+    private void SetupButtonListeners()
+    {
+        backpackButtonGroupUI.dropButton.onClick.AddListener(HandleDropButton);
+        backpackButtonGroupUI.dropAllButton.onClick.AddListener(HandleDropAllButton);
+        backpackButtonGroupUI.useButton.onClick.AddListener(Use);
+        backpackButtonGroupUI.equipButton.onClick.AddListener(Equip);
+
+        dropAmountUI.OnDropCallback = OnDropConfirmed;
+
+    }
+
     protected override void ConfigureItemUI(ItemData customObject, ItemCollectUI itemCollectUI)
     {
         itemCollectUI.SetItemName(customObject.ItemDataSO.ItemName);
@@ -20,39 +33,49 @@ public class BackpackUI : BaseTest<ItemData>
         itemCollectUI.SetOnClickEvent(() =>
         {
             var newIndex = itemCollectUI.transform.GetSiblingIndex();
-            bool isItemActive = newIndex == currentItemIndex;
-            if (isItemActive)
-            {
-                ResetBackpackButtonGroup();
-                return;
-            }
-            currentItemIndex = newIndex;
-            backpackButtonGroupUI.ShowByType(customObject, currentItemIndex);
-
-            backpackButtonGroupUI.RemoveAllRegister();
-
-            backpackButtonGroupUI.dropButton.onClick.AddListener(() =>
-            {
-                // Show popup
-                dropAmountUI.Setup(customObject, (x) =>
-                {
-                    Debug.Log("Remove: " + x);
-                });
-                dropAmountUI.Show();
-            });
-            backpackButtonGroupUI.dropAllButton.onClick.AddListener(() =>
-            {
-                Debug.Log("Drop All", gameObject);
-                RemoveItemUI(customObject);
-                Backpack.instance.Drop(customObject);
-                ItemGeneratorManager.instance.CreateItemInWorld(customObject.ItemDataSO);
-            });
-            backpackButtonGroupUI.useButton.onClick.AddListener(Use);
-            backpackButtonGroupUI.equipButton.onClick.AddListener(Equip);
-
+            SelectItem(newIndex,customObject);
         });
     }
-    private void ResetBackpackButtonGroup()
+    public void SelectItem(int index, ItemData customObject)
+    {
+        if (index == currentItemIndex)
+        {
+            ResetSelection();
+            return;
+        }
+
+        currentItemIndex = index;
+        UpdateUIForSelectedItem(customObject);
+    }
+    private void UpdateUIForSelectedItem(ItemData customObject)
+    {
+        backpackButtonGroupUI.ShowByIndex(currentItemIndex);
+        backpackButtonGroupUI.SetCurrentItem(customObject);
+    }
+
+
+    private void HandleDropButton()
+    {
+        var customObject = backpackButtonGroupUI.GetCurrentItem();
+        dropAmountUI.Setup(customObject);
+        dropAmountUI.Show();
+    }
+    private void OnDropConfirmed(float amount)
+    {
+        Debug.Log("Drop item: " + amount);
+        dropAmountUI.Hide();
+    }
+    private void HandleDropAllButton()
+    {
+        Debug.Log("Drop All", gameObject);
+        var customObject = backpackButtonGroupUI.GetCurrentItem();
+
+        RemoveItemUI(customObject);
+        Backpack.instance.Drop(customObject);
+        ItemGeneratorManager.instance.CreateItemInWorld(customObject.ItemDataSO);
+    }
+
+    private void ResetSelection()
     {
         Debug.Log("Hide backpack button group", gameObject);
         backpackButtonGroupUI.Hide();
@@ -60,14 +83,6 @@ public class BackpackUI : BaseTest<ItemData>
         currentItemIndex = -1;
     }
 
-    private void Drop()
-    {
-        Debug.Log("Drop");
-    }
-    private void DropAll()
-    {
-        Debug.Log("Drop All");
-    }
     private void Use()
     {
         Debug.Log("Use");
@@ -79,12 +94,12 @@ public class BackpackUI : BaseTest<ItemData>
     public override void RemoveItemUI(ItemData customObject)
     {
         RemoveItemFromDictionary(customObject.indentifyID, customObject);
-        ResetBackpackButtonGroup();
+        ResetSelection();
     }
 
     public override void AddItemUI(ItemData customObject)
     {
         AddItemToDictionary(customObject.indentifyID, customObject);
-        ResetBackpackButtonGroup();
+        ResetSelection();
     }
 }
