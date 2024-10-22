@@ -24,7 +24,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
     public LocalCameraHandler LocalCameraHandler => localCameraHandler;
 
     // UI chua crossHair, red image get damage
-    [SerializeField] GameObject localUI; // game object = PlayerUICanvas (canvas cua ca player)
+    public GameObject localUI; // game object = PlayerUICanvas (canvas cua ca player)
 
     // TESTING PLAYER DATA LIST ACTIVED PLAYERS
     [Networked]

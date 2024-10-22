@@ -112,9 +112,9 @@ public class HPHandler : NetworkBehaviour
             Debug.Log($"{Time.time} {transform.name} is dead by {damageCausedByPlayerNickName}");
             /* RPC_SetNetworkedKiller(damageCausedByPlayerNickName); */ // can use
             isPublicDeathMessageSent = false;
-            StartCoroutine(ServerRespawnCountine());
+            //StartCoroutine(ServerRespawnCountine()); //Phuc comment: not allow player respawn
             /* RPC_SetNetworkedIsDead(true); */ // can use
-
+            RPC_ShowResult();
             //deadCount ++;
             weaponHandler.killCount ++;
         }
@@ -136,6 +136,8 @@ public class HPHandler : NetworkBehaviour
         Debug.Log("xet respawn sau 2s");
         characterMovementHandler.RequestRespawn();
     }
+
+
 
     //RPC
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -248,5 +250,12 @@ public class HPHandler : NetworkBehaviour
         RPC_SetNetworkedHP(startingHP, null);
 
         /* RPC_SetNetworkedIsDead(false); */    // can use
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_ShowResult()
+    {
+        UIController.Instance.ShowResultPanel();
+        networkPlayer.localUI.SetActive(false);
     }
 }
