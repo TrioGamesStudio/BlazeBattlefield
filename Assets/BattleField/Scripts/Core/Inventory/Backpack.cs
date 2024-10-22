@@ -26,10 +26,31 @@ public class Backpack : MonoBehaviour
     public void Drop(ItemData itemData)
     {
         itemVen.Remove(itemData);
+        ItemGeneratorManager.instance.CreateItemInWorld(itemData.ItemDataSO,itemData.count);
+
     }
     public bool CanCollect()
     {
         return true;
+    }
+
+    public void DropItemAmount(ItemData currentItem, int dropAmount)
+    {
+        if(dropAmount == currentItem.count)
+        {
+            // 
+            Debug.Log("with new item after, maybe it will have more information, prepare for it", gameObject);
+            BackpackUI.instance.RemoveItemUI(currentItem);
+            ItemGeneratorManager.instance.CreateItemInWorld(currentItem.ItemDataSO,currentItem.count);
+        }
+        else if(dropAmount < currentItem.count)
+        {
+            currentItem.count -= dropAmount;
+            Debug.Log($"Drop {currentItem.ItemDataSO.name} {currentItem.count}");
+            BackpackUI.instance.UpdateUI(currentItem.indentifyID, currentItem);
+            ItemGeneratorManager.instance.CreateItemInWorld(currentItem.ItemDataSO, dropAmount);
+
+        }
     }
 }
 

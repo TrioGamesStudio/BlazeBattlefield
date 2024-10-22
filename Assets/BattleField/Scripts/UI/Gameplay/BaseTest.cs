@@ -41,7 +41,7 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
     public void ClearAllItems()
     {
         // clear all
-        foreach(var item in activeItemUIs.Values)
+        foreach (var item in activeItemUIs.Values)
         {
             item.OnRelease();
         }
@@ -87,7 +87,15 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
         ui.OnRelease();
         OnItemRemoved(customObject);
     }
-    
+    public void UpdateUI(string key,CustomObject customObject)
+    {
+        if (!activeItemUIs.TryGetValue(key, out var ui))
+        {
+            Debug.Log("Not Contain Key");
+            return;
+        }
+        ConfigureItemUI(customObject, ui);
+    }
     protected virtual void OnItemAdded(CustomObject customObject)
     {
     }
@@ -95,4 +103,5 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
     protected virtual void OnItemRemoved(CustomObject customObject)
     {
     }
+
 }

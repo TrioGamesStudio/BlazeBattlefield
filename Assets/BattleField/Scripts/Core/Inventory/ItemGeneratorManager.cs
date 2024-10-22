@@ -12,12 +12,20 @@ public class ItemGeneratorManager : NetworkBehaviour
     {
         instance = this;
     }
-    public ItemInGame CreateItemInWorld(ItemDataSO itemDataSO)
+    public ItemInGame CreateRandomCountItemInWorld(ItemDataSO itemDataSO)
     {
         ItemInGame item = Runner.Spawn(itemDataSO.modelPrefab, RandomPosition(), Quaternion.identity);
         item.Setup(itemDataSO, Random.Range(1, 5));
         return item;
     }
+    public ItemInGame CreateItemInWorld(ItemDataSO itemDataSO,int count)
+    {
+        ItemInGame item = Runner.Spawn(itemDataSO.modelPrefab, RandomPosition(), Quaternion.identity);
+        item.Setup(itemDataSO, count);
+        return item;
+    }
+
+
     public ItemInGame CreateRandomItemInWorld()
     {
         ItemDataSO itemDataSO = itemDataList[Random.Range(0, itemDataList.Count)];

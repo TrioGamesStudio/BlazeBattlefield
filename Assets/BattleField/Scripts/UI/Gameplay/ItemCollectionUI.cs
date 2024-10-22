@@ -17,8 +17,10 @@ public class ItemCollectionUI : BaseTest<ItemInGame>
         instance = this;
     }
 
-    private void OnDestroy()
+
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         toggleViewButton.onClick.RemoveListener(ToggleView);
     }
 
@@ -67,4 +69,6 @@ public class ItemCollectionUI : BaseTest<ItemInGame>
     {
         AddItemToDictionary(customObject.GetKey(), customObject);
     }
+
+    
 }

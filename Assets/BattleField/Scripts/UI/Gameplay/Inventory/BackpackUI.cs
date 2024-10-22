@@ -57,24 +57,28 @@ public class BackpackUI : BaseTest<ItemData>
     private void HandleDropButton()
     {
         var customObject = backpackButtonGroupUI.GetCurrentItem();
-        dropAmountUI.Setup(customObject);
+        dropAmountUI.SetupView(customObject);
         dropAmountUI.Show();
     }
-    private void OnDropConfirmed(float amount)
+    private void OnDropConfirmed(int dropAmount)
     {
-        Debug.Log("Drop item: " + amount);
+        Debug.Log("Drop item: " + dropAmount);
+        var currentItem = backpackButtonGroupUI.GetCurrentItem();
+        Backpack.instance.DropItemAmount(currentItem,dropAmount);
         dropAmountUI.Hide();
     }
+ 
     private void HandleDropAllButton()
     {
         Debug.Log("Drop All", gameObject);
         var customObject = backpackButtonGroupUI.GetCurrentItem();
-
-        RemoveItemUI(customObject);
         Backpack.instance.Drop(customObject);
-        ItemGeneratorManager.instance.CreateItemInWorld(customObject.ItemDataSO);
+        RemoveItemUI(customObject);
     }
+    private void DropAll()
+    {
 
+    }
     private void ResetSelection()
     {
         Debug.Log("Hide backpack button group", gameObject);

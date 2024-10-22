@@ -15,7 +15,7 @@ public class DropAmountUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI itemName;
     [SerializeField] private TextMeshProUGUI currentCountDrop;
     [SerializeField] private TextMeshProUGUI maxCount;
-    public Action<float> OnDropCallback;
+    public Action<int> OnDropCallback;
 
     private void Awake()
     {
@@ -40,7 +40,7 @@ public class DropAmountUI : MonoBehaviour
     {
         currentCountDrop.text = value.ToString();
     }
-    public void Setup(ItemData itemData)
+    public void SetupView(ItemData itemData)
     {
         amountSlider.minValue = 1;
         amountSlider.maxValue = itemData.count;
@@ -75,6 +75,6 @@ public class DropAmountUI : MonoBehaviour
     }
     public void Drop()
     {
-        OnDropCallback?.Invoke(amountSlider.value);
+        OnDropCallback?.Invoke((int)amountSlider.value);
     }
 }
