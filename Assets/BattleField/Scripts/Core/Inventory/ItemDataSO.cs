@@ -9,4 +9,6 @@ public class ItemDataSO : ScriptableObject
     public string ItemName;
     public Sprite icon;
     public int WeaponSlot;
+    public bool canStackable;
+    public int maxCountPerStack = 1;
 }

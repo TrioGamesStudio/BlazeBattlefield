@@ -28,8 +28,8 @@ public class BackpackUI : BaseTest<ItemData>
 
     protected override void ConfigureItemUI(ItemData customObject, ItemCollectUI itemCollectUI)
     {
-        itemCollectUI.SetItemName(customObject.ItemDataSO.ItemName);
-        itemCollectUI.SetItemCount(customObject.count);
+        itemCollectUI.SetItemName(customObject.GetItemName());
+        itemCollectUI.SetItemCount(customObject.GetCount());
         itemCollectUI.SetOnClickEvent(() =>
         {
             var newIndex = itemCollectUI.transform.GetSiblingIndex();
@@ -97,13 +97,13 @@ public class BackpackUI : BaseTest<ItemData>
     }
     public override void RemoveItemUI(ItemData customObject)
     {
-        RemoveItemFromDictionary(customObject.indentifyID, customObject);
+        RemoveItemFromDictionary(customObject.GetIndentifyID(), customObject);
         ResetSelection();
     }
 
     public override void AddItemUI(ItemData customObject)
     {
-        AddItemToDictionary(customObject.indentifyID, customObject);
+        AddItemToDictionary(customObject.GetIndentifyID(), customObject);
         ResetSelection();
     }
 }

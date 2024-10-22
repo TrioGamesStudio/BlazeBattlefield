@@ -42,11 +42,14 @@ public class DropAmountUI : MonoBehaviour
     }
     public void SetupView(ItemData itemData)
     {
+        int currentCount = itemData.GetCount();
+        string _itemName = itemData.GetItemName();
+
         amountSlider.minValue = 1;
-        amountSlider.maxValue = itemData.count;
+        amountSlider.maxValue = currentCount;
         amountSlider.value = amountSlider.minValue;
-        itemName.text = itemData.ItemDataSO.ItemName;
-        maxCount.text = itemData.count.ToString();
+        itemName.text = _itemName;
+        maxCount.text = currentCount.ToString();
     }
 
     public void Show()

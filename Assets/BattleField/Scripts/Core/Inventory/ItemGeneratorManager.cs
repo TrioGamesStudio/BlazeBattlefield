@@ -15,7 +15,7 @@ public class ItemGeneratorManager : NetworkBehaviour
     public ItemInGame CreateRandomCountItemInWorld(ItemDataSO itemDataSO)
     {
         ItemInGame item = Runner.Spawn(itemDataSO.modelPrefab, RandomPosition(), Quaternion.identity);
-        item.Setup(itemDataSO, Random.Range(1, 5));
+        item.Setup(itemDataSO, Random.Range(1, itemDataSO.maxCountPerStack - 1));
         return item;
     }
     public ItemInGame CreateItemInWorld(ItemDataSO itemDataSO,int count)

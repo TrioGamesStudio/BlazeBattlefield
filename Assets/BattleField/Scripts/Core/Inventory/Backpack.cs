@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Fusion;
 using NaughtyAttributes;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Backpack : MonoBehaviour
 {
@@ -16,8 +17,31 @@ public class Backpack : MonoBehaviour
 
     public void AddItemToInventory(ItemData itemData)
     {
-        itemVen.Add(itemData);
-        BackpackUI.instance.AddItemUI(itemData);
+        foreach(var item in itemVen)
+        {
+            if (item.IsCountZero())
+            {
+                Debug.Log("Stack all over");
+                break;
+            }
+            if (item.CanStack(itemData))
+            {
+                Debug.Log("Start Stack");
+                item.Stack(itemData);
+                BackpackUI.instance.UpdateUI(item.GetIndentifyID(), item);
+            }
+        }
+        if (!itemData.IsCountZero())
+        {
+            Debug.Log("After stacking, also have remaining count to add backpack", gameObject);
+            itemVen.Add(itemData);
+            BackpackUI.instance.AddItemUI(itemData);
+        }
+        else
+        {
+            Debug.Log("Add all item into backpack");
+        }
+        
     }
     public void DropAll(ItemData itemData)
     {
@@ -26,7 +50,7 @@ public class Backpack : MonoBehaviour
     public void Drop(ItemData itemData)
     {
         itemVen.Remove(itemData);
-        ItemGeneratorManager.instance.CreateItemInWorld(itemData.ItemDataSO,itemData.count);
+        ItemGeneratorManager.instance.CreateItemInWorld(itemData.GetItemDataSO(),itemData.GetCount());
 
     }
     public bool CanCollect()
@@ -36,19 +60,24 @@ public class Backpack : MonoBehaviour
 
     public void DropItemAmount(ItemData currentItem, int dropAmount)
     {
-        if(dropAmount == currentItem.count)
+        int currentCount = currentItem.GetCount();
+        string itemName = currentItem.GetItemName();
+        string indentifyID = currentItem.GetIndentifyID();
+        ItemDataSO itemDataSo = currentItem.GetItemDataSO();
+        
+        if (dropAmount == currentCount)
         {
             // 
             Debug.Log("with new item after, maybe it will have more information, prepare for it", gameObject);
             BackpackUI.instance.RemoveItemUI(currentItem);
-            ItemGeneratorManager.instance.CreateItemInWorld(currentItem.ItemDataSO,currentItem.count);
+            ItemGeneratorManager.instance.CreateItemInWorld(itemDataSo, currentCount);
         }
-        else if(dropAmount < currentItem.count)
+        else if(dropAmount < currentCount)
         {
-            currentItem.count -= dropAmount;
-            Debug.Log($"Drop {currentItem.ItemDataSO.name} {currentItem.count}");
-            BackpackUI.instance.UpdateUI(currentItem.indentifyID, currentItem);
-            ItemGeneratorManager.instance.CreateItemInWorld(currentItem.ItemDataSO, dropAmount);
+            currentItem.Decrease(dropAmount);
+            Debug.Log($"Drop {itemName} {currentCount}");
+            BackpackUI.instance.UpdateUI(indentifyID, currentItem);
+            ItemGeneratorManager.instance.CreateItemInWorld(itemDataSo, dropAmount);
 
         }
     }
