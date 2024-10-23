@@ -8,9 +8,11 @@ using System.Linq;
 using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 {
+    public Matchmaking Instance;
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private PlayerRoomController playerControllerPrefab;
     [SerializeField] private List<Transform> memberPos = new();
@@ -49,8 +51,32 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         Solo,
         Duo
     }
-    
-    void Start()
+
+    private void Awake()
+    {
+        // Check if there is already a canvas with this tag to avoid duplicates
+        if (FindObjectsOfType<Matchmaking>().Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        //// Make this GameObject persistent across scenes
+        //DontDestroyOnLoad(gameObject);
+        // Check if instance already exists and destroy if duplicate
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            // Set the instance to this object
+            Instance = this;
+            // Optionally, make the object persistent across scenes
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+        void Start()
     {
         readyButton.onClick.AddListener(ToggleReady);
         
@@ -261,6 +287,14 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         }
     }
 
+    public async void BackToLobby()
+    {
+        await networkRunner.Shutdown();
+        SceneManager.LoadScene("MainLobby");
+        UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
+        JoinLobby();
+    }
+
     public async void JoinRoomByName(string roomName)
     {
         currentMode = Mode.Duo;
@@ -394,7 +428,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-    {      
+    {
+        players.Remove(player);
         // Setup when team member become room owner
         if (players.ContainsKey(runner.LocalPlayer))
         {
@@ -405,7 +440,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             }
             UpdatePlayButtonInteractability();
         }
-        players.Remove(player);
+
         //localPlayerRoomController = null;
     }
 
