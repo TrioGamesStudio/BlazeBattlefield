@@ -59,7 +59,7 @@ public class ItemPopupButton : MonoBehaviour
             });
             
             
-            // update button information like sprite and currentCount
+            // update button information like sprite and quantity
             Sprite sprite = null;
             int count = Random.Range(0, 4);
             

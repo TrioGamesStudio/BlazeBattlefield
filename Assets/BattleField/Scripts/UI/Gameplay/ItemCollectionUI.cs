@@ -39,8 +39,8 @@ public class ItemCollectionUI : BaseTest<ItemInGame>
 
     protected override void ConfigureItemUI(ItemInGame itemInGame, ItemCollectUI itemCollectUI)
     {
-        itemCollectUI.SetItemCount(itemInGame.GetItemCount());
-        itemCollectUI.SetItemName(itemInGame.GetItemName());
+        itemCollectUI.SetItemCount(itemInGame.ItemCount);
+        itemCollectUI.SetItemName(itemInGame.ItemName);
 
         itemCollectUI.SetOnClickEvent(() => { ButtonClick(itemInGame); });
 
@@ -51,23 +51,23 @@ public class ItemCollectionUI : BaseTest<ItemInGame>
     {
         Debug.Log("On ITem in UI clicked");
         if (Backpack.instance.CanCollect() == false) return;
-        itemInGame.OnCollect();
+        itemInGame.OnItemCollected();
     }
 
     protected override void OnItemAdded(ItemInGame customObject)
     {
         base.OnItemAdded(customObject);
-        customObject.OnRemoveUICallback = () => RemoveItemUI(customObject);
+        customObject.OnItemRemovedFromUICallback = () => RemoveItemUI(customObject);
     }
 
     public override void RemoveItemUI(ItemInGame customObject)
     {
-        RemoveItemFromDictionary(customObject.GetKey(), customObject);
+        RemoveItemFromDictionary(customObject.ItemIdentifier, customObject);
     }
 
     public override void AddItemUI(ItemInGame customObject)
     {
-        AddItemToDictionary(customObject.GetKey(), customObject);
+        AddItemToDictionary(customObject.ItemIdentifier, customObject);
     }
 
     

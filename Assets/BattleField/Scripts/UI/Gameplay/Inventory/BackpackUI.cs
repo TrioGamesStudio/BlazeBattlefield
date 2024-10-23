@@ -1,7 +1,7 @@
 ﻿using System;
 using Unity.VisualScripting;
 using UnityEngine;
-public class BackpackUI : BaseTest<ItemData>
+public class BackpackUI : BaseTest<ItemLocalData>
 {
     public static BackpackUI instance;
     public BackpackButtonGroupUI backpackButtonGroupUI;
@@ -22,21 +22,21 @@ public class BackpackUI : BaseTest<ItemData>
         backpackButtonGroupUI.useButton.onClick.AddListener(Use);
         backpackButtonGroupUI.equipButton.onClick.AddListener(Equip);
 
-        dropAmountUI.OnDropCallback = OnDropConfirmed;
+        dropAmountUI.OnDropItemCallback = OnDropConfirmed;
 
     }
 
-    protected override void ConfigureItemUI(ItemData customObject, ItemCollectUI itemCollectUI)
+    protected override void ConfigureItemUI(ItemLocalData customObject, ItemCollectUI itemCollectUI)
     {
-        itemCollectUI.SetItemName(customObject.GetItemName());
-        itemCollectUI.SetItemCount(customObject.GetCount());
+        itemCollectUI.SetItemName(customObject.ItemName);
+        itemCollectUI.SetItemCount(customObject.CurrentQuantity);
         itemCollectUI.SetOnClickEvent(() =>
         {
             var newIndex = itemCollectUI.transform.GetSiblingIndex();
             SelectItem(newIndex,customObject);
         });
     }
-    public void SelectItem(int index, ItemData customObject)
+    public void SelectItem(int index, ItemLocalData customObject)
     {
         if (index == currentItemIndex)
         {
@@ -47,7 +47,7 @@ public class BackpackUI : BaseTest<ItemData>
         currentItemIndex = index;
         UpdateUIForSelectedItem(customObject);
     }
-    private void UpdateUIForSelectedItem(ItemData customObject)
+    private void UpdateUIForSelectedItem(ItemLocalData customObject)
     {
         backpackButtonGroupUI.ShowByIndex(currentItemIndex);
         backpackButtonGroupUI.SetCurrentItem(customObject);
@@ -95,15 +95,15 @@ public class BackpackUI : BaseTest<ItemData>
     {
         Debug.Log("Equip");
     }
-    public override void RemoveItemUI(ItemData customObject)
+    public override void RemoveItemUI(ItemLocalData customObject)
     {
-        RemoveItemFromDictionary(customObject.GetIndentifyID(), customObject);
+        RemoveItemFromDictionary(customObject.ItemIdentifier, customObject);
         ResetSelection();
     }
 
-    public override void AddItemUI(ItemData customObject)
+    public override void AddItemUI(ItemLocalData customObject)
     {
-        AddItemToDictionary(customObject.GetIndentifyID(), customObject);
+        AddItemToDictionary(customObject.ItemIdentifier, customObject);
         ResetSelection();
     }
 }

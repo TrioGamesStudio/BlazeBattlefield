@@ -1,6 +1,7 @@
 ﻿using System;
 using Fusion;
 using UnityEngine;
+
 [Serializable]
 public struct ItemDataNetwork : INetworkStruct
 {
@@ -10,48 +11,72 @@ public struct ItemDataNetwork : INetworkStruct
 
 public class ItemInGame : NetworkBehaviour
 {
-    public Action OnRemoveUICallback;
-    [SerializeField] private ItemData itemData;
-    [Networked,SerializeField] private ItemDataNetwork ItemDataNetwork { get; set; }
+    public Action OnItemRemovedFromUICallback;
+    [SerializeField] private ItemLocalData localItemData;
 
+    [Networked, SerializeField, OnChangedRender(nameof(OnNetworkedItemDataChanged))]
+    private ItemDataNetwork NetworkedItemData { get; set; }
+
+    public bool IsDisplayedInUI = false;
+    public string ItemName => localItemData.ItemName;
+    public int ItemCount => localItemData.CurrentQuantity;
+    public string ItemIdentifier => localItemData.ItemIdentifier;
     public override void Spawned()
     {
         base.Spawned();
-        Setup(ItemDataNetwork);
+        InitializeLocalItemData();
     }
 
-    public void Setup(ItemDataNetwork _ItemDataNetwork)
+    private void InitializeLocalItemData()
     {
-        ItemDataNetwork = _ItemDataNetwork;
-        var dataSO = ItemGeneratorManager.instance.GetItemDataSO(ItemDataNetwork.ItemDataSOName.ToString());
+        var dataSO = ItemGeneratorManager.instance.GetItemDataSO(NetworkedItemData.ItemDataSOName.ToString());
         if (dataSO == null) return;
-        itemData = new ItemData(dataSO,
-            ItemDataNetwork.CurrentCount);
-        // itemData = new ItemData(itemDataSo, count);
+        localItemData = new ItemLocalData(dataSO,
+            NetworkedItemData.CurrentCount);
     }
 
-    public void OnCollect()
+    public void SetItemNetworkData(ItemDataNetwork _ItemDataNetwork)
     {
-        // add copy off data
-        Backpack.instance.AddItemToInventory(itemData);
-        // remove ui show in screen
-        OnRemoveUICallback?.Invoke();
-        // Destroy game object
+        NetworkedItemData = _ItemDataNetwork;
+    }
+
+    private void OnNetworkedItemDataChanged()
+    {
+        UpdateLocalItemCount();
+        UpdateUIIfNeeded();
+    }
+    private void UpdateLocalItemCount()
+    {
+        localItemData.SetQuantity(NetworkedItemData.CurrentCount);
+    }
+
+    private void UpdateUIIfNeeded()
+    {
+        if (!IsDisplayedInUI) return;
+
+        ItemCollectionUI.instance.UpdateUI(
+            localItemData.ItemIdentifier,
+            this);
+    }
+    public void OnItemCollected()
+    {
+        AddToBackpack();
+        RemoveFromUI();
+        DespawnItem();
+    }
+
+    private void AddToBackpack()
+    {
+        Backpack.instance.AddItemToInventory(localItemData);
+    }
+
+    private void RemoveFromUI()
+    {
+        OnItemRemovedFromUICallback?.Invoke();
+    }
+
+    private void DespawnItem()
+    {
         Runner.Despawn(Object);
-    }
-
-    public string GetItemName()
-    {
-        return itemData.GetItemName();
-    }
-
-    public int GetItemCount()
-    {
-        return itemData.GetCount();
-    }
-
-    public string GetKey()
-    {
-        return itemData.GetIndentifyID();
     }
 }

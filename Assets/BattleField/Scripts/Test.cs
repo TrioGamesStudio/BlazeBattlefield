@@ -8,7 +8,9 @@ public class Test : MonoBehaviour
     {
         if (other.CompareTag("Item") == false) return;
         Debug.Log("Enter");
-        ItemCollectionUI.instance.AddItemUI(other.GetComponent<ItemInGame>());
+        var itemInGame = other.GetComponent<ItemInGame>();
+        itemInGame.IsDisplayedInUI = true;
+        ItemCollectionUI.instance.AddItemUI(itemInGame);
         // if (other.CompareTag("ItemBound") == false) return;
         // Debug.Log("Trigger",gameObject);
         // ItemCollectionUI.instance.BindItems(other.GetComponent<BoundItems>());
@@ -17,7 +19,9 @@ public class Test : MonoBehaviour
     {
         if (other.CompareTag("Item") == false) return;
         Debug.Log("Exit");
-        ItemCollectionUI.instance.RemoveItemUI(other.GetComponent<ItemInGame>());
+        var itemInGame = other.GetComponent<ItemInGame>();
+        itemInGame.IsDisplayedInUI = false;
+        ItemCollectionUI.instance.RemoveItemUI(itemInGame);
         // if (other.CompareTag("ItemBound") == false) return;
         // Debug.Log("Exit",gameObject);
         // ItemCollectionUI.instance.BindItems(null);

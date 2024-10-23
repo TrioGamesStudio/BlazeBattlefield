@@ -8,8 +8,8 @@ public class BackpackButtonGroupUI : MonoBehaviour
     public Button dropAllButton;
     public Button useButton;
     public Button equipButton;
-    private ItemData currentItemData;
-    public ItemData GetCurrentItem()
+    private ItemLocalData currentItemData;
+    public ItemLocalData GetCurrentItem()
     {
         return currentItemData;
     }
@@ -18,7 +18,7 @@ public class BackpackButtonGroupUI : MonoBehaviour
         transform.gameObject.SetActive(true);
         transform.SetSiblingIndex(index + 1);
     }
-    public void SetCurrentItem(ItemData customObject)
+    public void SetCurrentItem(ItemLocalData customObject)
     {
         currentItemData = customObject;
 

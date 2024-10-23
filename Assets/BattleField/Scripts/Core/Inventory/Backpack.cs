@@ -4,26 +4,26 @@ using UnityEngine;
 public class Backpack : MonoBehaviour
 {
     public static Backpack instance;
-    [SerializeField] private List<ItemData> itemVen = new();
+    [SerializeField] private List<ItemLocalData> itemVen = new();
     private void Awake()
     {
         instance = this;
     }
 
-    public void AddItemToInventory(ItemData itemData)
+    public void AddItemToInventory(ItemLocalData itemData)
     {
         foreach(var item in itemVen)
         {
             if (item.IsCountZero())
             {
-                Debug.Log("Stack all over");
+                Debug.Log("StackWith all over");
                 break;
             }
-            if (item.CanStack(itemData))
+            if (item.CanStackWith(itemData))
             {
-                Debug.Log("Start Stack");
-                item.Stack(itemData);
-                BackpackUI.instance.UpdateUI(item.GetIndentifyID(), item);
+                Debug.Log("Start StackWith");
+                item.StackWith(itemData);
+                BackpackUI.instance.UpdateUI(item.ItemIdentifier, item);
             }
         }
         if (!itemData.IsCountZero())
@@ -38,17 +38,17 @@ public class Backpack : MonoBehaviour
         }
         
     }
-    public void DropAll(ItemData itemData)
+    public void DropAll(ItemLocalData itemData)
     {
 
     }
-    public void Drop(ItemData itemData)
+    public void Drop(ItemLocalData itemData)
     {
         itemVen.Remove(itemData);
         CreateItemInWorld(itemData);
     }
 
-    private void CreateItemInWorld(ItemData itemData)
+    private void CreateItemInWorld(ItemLocalData itemData)
     {
         ItemGeneratorManager.instance.CreateFromItemData(itemData);
     }
@@ -58,12 +58,12 @@ public class Backpack : MonoBehaviour
         return true;
     }
 
-    public void DropItemAmount(ItemData currentItem, int dropAmount)
+    public void DropItemAmount(ItemLocalData currentItem, int dropAmount)
     {
-        int currentCount = currentItem.GetCount();
-        string itemName = currentItem.GetItemName();
-        string indentifyID = currentItem.GetIndentifyID();
-        ItemDataSO itemDataSo = currentItem.GetItemDataSO();
+        int currentCount = currentItem.CurrentQuantity;
+        string itemName = currentItem.ItemName;
+        string indentifyID = currentItem.ItemIdentifier;
+        ItemDataSO itemDataSo = currentItem.ItemData;
         Vector3 position = PlayerController.LocalPlayer.GetSoilderPosition();
         if (dropAmount == currentCount)
         {
@@ -75,11 +75,11 @@ public class Backpack : MonoBehaviour
         }
         else if(dropAmount < currentCount)
         {
-            currentItem.Decrease(dropAmount);
+            currentItem.ModifyQuantity(-dropAmount);
             Debug.Log($"Drop {itemName} {currentCount}");
             BackpackUI.instance.UpdateUI(indentifyID, currentItem);
             // ItemGeneratorManager.instance.CreateItemInWorld(itemDataSo, position, dropAmount);
-            currentItem.SetCount(dropAmount);
+            currentItem.SetQuantity(dropAmount);
             CreateItemInWorld(currentItem);
 
         }
