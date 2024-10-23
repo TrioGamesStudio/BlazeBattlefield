@@ -13,10 +13,19 @@ public class ItemInGame : NetworkBehaviour
     public Action OnRemoveUICallback;
     [SerializeField] private ItemData itemData;
     [Networked,SerializeField] private ItemDataNetwork ItemDataNetwork { get; set; }
+
+    public override void Spawned()
+    {
+        base.Spawned();
+        Setup(ItemDataNetwork);
+    }
+
     public void Setup(ItemDataNetwork _ItemDataNetwork)
     {
         ItemDataNetwork = _ItemDataNetwork;
-        itemData = new ItemData(ItemGeneratorManager.instance.GetItemDataSO(ItemDataNetwork.ItemDataSOName.ToString()),
+        var dataSO = ItemGeneratorManager.instance.GetItemDataSO(ItemDataNetwork.ItemDataSOName.ToString());
+        if (dataSO == null) return;
+        itemData = new ItemData(dataSO,
             ItemDataNetwork.CurrentCount);
         // itemData = new ItemData(itemDataSo, count);
     }

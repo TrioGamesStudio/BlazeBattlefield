@@ -1,4 +1,5 @@
 using Fusion;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class ItemGrenerator : NetworkBehaviour
@@ -10,12 +11,16 @@ public class ItemGrenerator : NetworkBehaviour
     {
         base.Spawned();
         Debug.Log("Spawned");
+        if (Runner.IsSharedModeMasterClient == false) return;
         for (int i = 0; i < count; i++)
         {
             ItemGeneratorManager.instance.CreateRandomItemFromSource();
         }
     }
-
-    
+    [Button]
+    public void Create()
+    {
+        ItemGeneratorManager.instance.CreateRandomItemFromSource();
+    }
 
 }
