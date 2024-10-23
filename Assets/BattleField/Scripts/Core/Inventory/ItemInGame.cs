@@ -109,5 +109,10 @@ public class ItemData
     {
         return currentCount == 0;
     }
+
+    public void SetCount(int dropAmount)
+    {
+        currentCount = dropAmount;
+    }
 }
 

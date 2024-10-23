@@ -12,7 +12,7 @@ public class ItemGrenerator : NetworkBehaviour
         Debug.Log("Spawned");
         for (int i = 0; i < count; i++)
         {
-            ItemInGame itemInGame = ItemGeneratorManager.instance.CreateRandomItemInWorld();
+            ItemGeneratorManager.instance.CreateRandomItemFromSource();
         }
     }
 

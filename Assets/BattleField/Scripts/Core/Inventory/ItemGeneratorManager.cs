@@ -13,38 +13,17 @@ public class ItemGeneratorManager : NetworkBehaviour
     {
         instance = this;
     }
-    public ItemInGame CreateRandomCountItemInWorld(ItemDataSO itemDataSO)
-    {
-        ItemInGame item = CreateItem(itemDataSO, RandomPosition());
-        item.Setup(itemDataSO, Random.Range(1, itemDataSO.maxCountPerStack - 1));
-        return item;
-    }
-    public ItemInGame CreateItemRandomPositionInWorld(ItemDataSO itemDataSO, int count)
-    {
-        ItemInGame item = CreateItem(itemDataSO, RandomPosition());
-        item.Setup(itemDataSO, count);
-        return item;
-    }
-    public ItemInGame CreateItemInWorld(ItemDataSO itemDataSO, Vector3 position, int count)
-    {
 
-        ItemInGame item = CreateItem(itemDataSO, position);
-        item.Setup(itemDataSO, count);
-        return item;
-    }
-
-    public ItemInGame CreateRandomItemInWorld()
+    public ItemDataSO GetItemDataSO(string name)
     {
-        ItemDataSO itemDataSO = itemDataList[Random.Range(0, itemDataList.Count)];
-        if (itemDataSO == null)
+        if (itemDict.TryGetValue(name, out var value))
         {
-            Debug.Log("Item Data SO null", gameObject);
-            return null;
+            return value;
         }
-        ItemInGame item = CreateItem(itemDataSO, RandomPosition());
-        item.Setup(itemDataSO, Random.Range(1, 5));
-        return item;
+
+        return null;
     }
+    
     private Vector3 RandomPosition()
     {
         return new Vector3(Random.Range(-1f, 1), 0, Random.Range(-1f, 1));
@@ -53,15 +32,7 @@ public class ItemGeneratorManager : NetworkBehaviour
     {
         itemDict.Clear();
     }
-    private ItemInGame CreateItem(ItemDataSO itemDataSO, Vector3 position)
-    {
-        if(CanSpawn(position, out var correctSpawnPosition))
-        {
-            ItemInGame item = Runner.Spawn(itemDataSO.modelPrefab, correctSpawnPosition, Quaternion.identity);
-            return item;
-        }
-        return null;
-    }
+  
     private void OnDrawGizmos()
     {
         Ray ray = new Ray(transform.position, Vector3.down);
@@ -85,5 +56,39 @@ public class ItemGeneratorManager : NetworkBehaviour
             return true;
         }
         return false;
+    }
+
+    public void CreateFromItemData(ItemData itemData)
+    {
+        if(CanSpawn(PlayerController.LocalPlayer.GetSoilderPosition(), out var correctSpawnPosition))
+        {
+            ItemInGame item = Runner.Spawn(itemData.GetItemDataSO().modelPrefab, correctSpawnPosition, Quaternion.identity);
+            item.Setup(itemData.GetItemDataSO(),itemData.GetCount());
+        }
+    }
+    public void CreateFromItemData(ItemDataSO itemDataSo, int count, Vector3 spawnPosition)
+    {
+        if(CanSpawn(spawnPosition, out var correctSpawnPosition))
+        {
+            ItemInGame item = Runner.Spawn(itemDataSo.modelPrefab, correctSpawnPosition, Quaternion.identity);
+            item.Setup(itemDataSo,count);
+        }
+    }
+
+    private void CreateItemINGame(ItemData itemData, Vector3 correctSpawnPosition)
+    {
+        
+    }
+  
+
+    public void CreateRandomItemFromSource()
+    {
+        ItemDataSO itemDataSO = itemDataList[Random.Range(0, itemDataList.Count)];
+        if (itemDataSO == null)
+        {
+            Debug.Log("Item Data SO null", gameObject);
+            return;
+        }
+        CreateFromItemData(itemDataSO, Random.Range(1, itemDataSO.maxCountPerStack),RandomPosition());
     }
 }
