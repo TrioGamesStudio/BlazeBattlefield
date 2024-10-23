@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Fusion;
-using NaughtyAttributes;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class Backpack : MonoBehaviour
 {
@@ -50,7 +45,7 @@ public class Backpack : MonoBehaviour
     public void Drop(ItemData itemData)
     {
         itemVen.Remove(itemData);
-        ItemGeneratorManager.instance.CreateItemInWorld(itemData.GetItemDataSO(),itemData.GetCount());
+        ItemGeneratorManager.instance.CreateItemRandomPositionInWorld(itemData.GetItemDataSO(),itemData.GetCount());
 
     }
     public bool CanCollect()
@@ -64,20 +59,20 @@ public class Backpack : MonoBehaviour
         string itemName = currentItem.GetItemName();
         string indentifyID = currentItem.GetIndentifyID();
         ItemDataSO itemDataSo = currentItem.GetItemDataSO();
-        
+        Vector3 position = PlayerController.LocalPlayer.GetSoilderPosition();
         if (dropAmount == currentCount)
         {
             // 
             Debug.Log("with new item after, maybe it will have more information, prepare for it", gameObject);
             BackpackUI.instance.RemoveItemUI(currentItem);
-            ItemGeneratorManager.instance.CreateItemInWorld(itemDataSo, currentCount);
+            ItemGeneratorManager.instance.CreateItemInWorld(itemDataSo, position, currentCount);
         }
         else if(dropAmount < currentCount)
         {
             currentItem.Decrease(dropAmount);
             Debug.Log($"Drop {itemName} {currentCount}");
             BackpackUI.instance.UpdateUI(indentifyID, currentItem);
-            ItemGeneratorManager.instance.CreateItemInWorld(itemDataSo, dropAmount);
+            ItemGeneratorManager.instance.CreateItemInWorld(itemDataSo, position, dropAmount);
 
         }
     }
