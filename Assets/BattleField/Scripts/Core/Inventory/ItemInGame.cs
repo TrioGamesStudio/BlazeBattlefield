@@ -1,11 +1,10 @@
 ﻿using System;
 using Fusion;
 using UnityEngine;
-[Serializable]
 public class ItemInGame : NetworkBehaviour
 {
     public Action OnRemoveUICallback;
-    private ItemData itemData;
+    [SerializeField] private ItemData itemData;
 
     public void Setup(ItemDataSO itemDataSo, int count)
     {

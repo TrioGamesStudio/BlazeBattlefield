@@ -65,6 +65,7 @@ public class Backpack : MonoBehaviour
             // 
             Debug.Log("with new item after, maybe it will have more information, prepare for it", gameObject);
             BackpackUI.instance.RemoveItemUI(currentItem);
+            itemVen.Remove(currentItem);
             ItemGeneratorManager.instance.CreateItemInWorld(itemDataSo, position, currentCount);
         }
         else if(dropAmount < currentCount)
