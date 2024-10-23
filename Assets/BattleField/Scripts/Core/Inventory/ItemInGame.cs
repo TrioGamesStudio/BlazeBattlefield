@@ -1,11 +1,18 @@
 ﻿using System;
 using Fusion;
 using UnityEngine;
+[Serializable]
+public struct ItemDataNetwork : INetworkStruct
+{
+    public NetworkString<_8> ItemDataSOName;
+    public int CurrentCount;
+}
+
 public class ItemInGame : NetworkBehaviour
 {
     public Action OnRemoveUICallback;
     [SerializeField] private ItemData itemData;
-
+    [Networked,SerializeField] private ItemDataNetwork ItemDataNetwork { get; set; }
     public void Setup(ItemDataSO itemDataSo, int count)
     {
         itemData = new ItemData(itemDataSo, count);
