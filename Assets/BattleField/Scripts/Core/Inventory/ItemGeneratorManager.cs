@@ -12,6 +12,10 @@ public class ItemGeneratorManager : NetworkBehaviour
     private void Awake()
     {
         instance = this;
+        foreach (var item in itemDataList)
+        {
+            itemDict.Add(item.name,item);
+        }
     }
 
     public ItemDataSO GetItemDataSO(string name)
@@ -63,7 +67,7 @@ public class ItemGeneratorManager : NetworkBehaviour
         if(CanSpawn(PlayerController.LocalPlayer.GetSoilderPosition(), out var correctSpawnPosition))
         {
             ItemInGame item = Runner.Spawn(itemData.GetItemDataSO().modelPrefab, correctSpawnPosition, Quaternion.identity);
-            item.Setup(itemData.GetItemDataSO(),itemData.GetCount());
+            item.Setup(CreateItemDataNetwork(itemData.GetItemDataSO().name,itemData.GetCount()));
         }
     }
     public void CreateFromItemData(ItemDataSO itemDataSo, int count, Vector3 spawnPosition)
@@ -71,13 +75,16 @@ public class ItemGeneratorManager : NetworkBehaviour
         if(CanSpawn(spawnPosition, out var correctSpawnPosition))
         {
             ItemInGame item = Runner.Spawn(itemDataSo.modelPrefab, correctSpawnPosition, Quaternion.identity);
-            item.Setup(itemDataSo,count);
+            item.Setup(CreateItemDataNetwork(itemDataSo.name,count));
         }
     }
 
-    private void CreateItemINGame(ItemData itemData, Vector3 correctSpawnPosition)
+    public ItemDataNetwork CreateItemDataNetwork(string name,int count)
     {
-        
+        ItemDataNetwork itemDataNetwork = new ItemDataNetwork();
+        itemDataNetwork.ItemDataSOName = name;
+        itemDataNetwork.CurrentCount = count;
+        return itemDataNetwork;
     }
   
 
