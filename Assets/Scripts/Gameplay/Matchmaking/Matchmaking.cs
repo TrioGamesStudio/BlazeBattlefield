@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 
 public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 {
-    public Matchmaking Instance;
+    public static Matchmaking Instance;
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private PlayerRoomController playerControllerPrefab;
     [SerializeField] private List<Transform> memberPos = new();
@@ -26,6 +26,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     private Vector3 spawnPosition;
     private Mode currentMode = Mode.Solo;
     private bool isAutoMatch;
+    private int alivePlayer;
+    private PlayerRoomController localSoloPlayer;
     public bool IsAutoMatch
     {
         get { return isAutoMatch; }
@@ -152,6 +154,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (result.Ok)
         {
             UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
+            localPlayer.gameObject.SetActive(false);
             // all good
             Debug.Log("Match room name: " + networkRunner.SessionInfo.Name);
 
@@ -292,6 +295,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         await networkRunner.Shutdown();
         SceneManager.LoadScene("MainLobby");
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
+        localPlayer.gameObject.SetActive(true);
         JoinLobby();
     }
 
@@ -348,6 +352,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 players[player].SetRoomID(runner.SessionInfo.Name);
                 players[player].SetAutoMatch(isAutoMatch);
                 localPlayerRoomController = players[player];
+               
                 //players[player].SetHealthBarColor(Color.green);
 
             }
@@ -379,12 +384,15 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
+                localSoloPlayer = playerObject.GetComponent<PlayerRoomController>();
+                playerObject.GetComponent<PlayerRoomController>().SetPlayerRef(player);
             }
             int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
             string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(text);
             if (runner.ActivePlayers.Count() == MAX_PLAYER) // Assuming PlayerCount is 2
             {
+                alivePlayer = runner.ActivePlayers.Count();
                 FindObjectOfType<UIController>().StartCountdown();
                 StartCoroutine(ReleasePlayer());
             }
@@ -462,6 +470,18 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             int maxPlayer = session.MaxPlayers;
 
             UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer);
+        }
+    }
+
+    public void CheckWin(PlayerRef player)
+    {
+        alivePlayer--;
+        Debug.Log("Check win ne");
+        if (alivePlayer == 1 && player != networkRunner.LocalPlayer)
+        {
+            Debug.Log("WINNNNN!!!!");
+            localSoloPlayer.GetComponent<NetworkPlayer>().localUI.SetActive(false);
+            FindObjectOfType<WorldUI>().ShowHideWinUI();
         }
     }
 

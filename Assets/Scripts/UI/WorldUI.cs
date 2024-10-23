@@ -7,17 +7,25 @@ using UnityEngine.UI;
 public class WorldUI : MonoBehaviour
 {
     public GameObject panelResult;
+    public GameObject panelResultWin;
     public Button lobbyButton;
+    public Button lobbyButtonWin;
     public TextMeshProUGUI informationText;
 
     private void Start()
     {
         lobbyButton.onClick.AddListener(BackToLobby);
+        lobbyButtonWin.onClick.AddListener(BackToLobby);
     }
 
     public void ShowHideUI()
     {
         panelResult.SetActive(!panelResult.activeSelf);
+    }
+
+    public void ShowHideWinUI()
+    {
+        panelResultWin.SetActive(!panelResult.activeSelf);
     }
 
     public void SetText(string text)

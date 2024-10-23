@@ -114,6 +114,9 @@ public class HPHandler : NetworkBehaviour
             isPublicDeathMessageSent = false;
             //StartCoroutine(ServerRespawnCountine()); //Phuc comment: not allow player respawn
             /* RPC_SetNetworkedIsDead(true); */ // can use
+            PlayerRef player = GetComponent<PlayerRoomController>().ThisPlayerRef;
+            Debug.Log("====Player ref " + player);
+            Matchmaking.Instance.CheckWin(player);
             RPC_ShowResult();
             //deadCount ++;
             weaponHandler.killCount ++;

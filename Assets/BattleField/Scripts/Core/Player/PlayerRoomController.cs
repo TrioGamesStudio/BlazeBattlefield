@@ -14,6 +14,7 @@ public class PlayerRoomController : NetworkBehaviour
     [SerializeField] private GameObject teamMemberPanel;
     public static PlayerRoomController LocalPlayer;
     private Matchmaking matchmaking;
+    [Networked] public PlayerRef ThisPlayerRef { get; set; }
     string localRoomId;
     // Start is called before the first frame update
     void Start()
@@ -28,8 +29,9 @@ public class PlayerRoomController : NetworkBehaviour
     }
 
     public override void Spawned()
-    {
+    { 
         base.Spawned();
+        //thisPlayerRef = Runner.LocalPlayer;
         IsReady = false;
         //IsAutoMatch = false;
         //IsRoomOwner = false;
@@ -149,5 +151,11 @@ public class PlayerRoomController : NetworkBehaviour
     public void SetTeamMateTag()
     {
         gameObject.tag = "TeamMate";
+    }
+
+    public void SetPlayerRef(PlayerRef player)
+    {
+        ThisPlayerRef = player;
+        Debug.Log("///SETUP PLAYERREF: " + ThisPlayerRef);
     }
 }
