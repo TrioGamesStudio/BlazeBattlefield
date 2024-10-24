@@ -10,12 +10,16 @@ public class ItemGrenerator : NetworkBehaviour
     public override void Spawned()
     {
         base.Spawned();
-        Debug.Log("Spawned");
-        if (Runner.IsSharedModeMasterClient == false) return;
-        for (int i = 0; i < count; i++)
+
+        if (Runner.IsSinglePlayer || Runner.IsSharedModeMasterClient)
         {
-            ItemGeneratorManager.instance.CreateRandomItemFromSource();
+            Debug.Log("Spawned");
+            for (int i = 0; i < count; i++)
+            {
+                ItemGeneratorManager.instance.CreateRandomItemFromSource();
+            }
         }
+        
     }
     [Button]
     public void Create()

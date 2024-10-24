@@ -4,6 +4,7 @@ using UnityEngine;
 [Serializable]
 public class ItemLocalData
 {
+    // itemIdentifier using for key of UI, it just using in local
     [SerializeField]
     private readonly string itemIdentifier;
     [SerializeField] private int quantity;

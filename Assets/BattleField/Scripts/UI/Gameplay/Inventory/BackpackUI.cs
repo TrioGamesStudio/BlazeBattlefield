@@ -36,7 +36,7 @@ public class BackpackUI : BaseTest<ItemLocalData>
             SelectItem(newIndex,customObject);
         });
     }
-    public void SelectItem(int index, ItemLocalData customObject)
+    private void SelectItem(int index, ItemLocalData customObject)
     {
         if (index == currentItemIndex)
         {

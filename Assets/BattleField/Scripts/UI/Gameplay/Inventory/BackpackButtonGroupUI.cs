@@ -9,20 +9,27 @@ public class BackpackButtonGroupUI : MonoBehaviour
     public Button useButton;
     public Button equipButton;
     private ItemLocalData currentItemData;
+
     public ItemLocalData GetCurrentItem()
     {
         return currentItemData;
     }
+
     public void ShowByIndex(int index)
     {
         transform.gameObject.SetActive(true);
         transform.SetSiblingIndex(index + 1);
     }
+
     public void SetCurrentItem(ItemLocalData customObject)
     {
         currentItemData = customObject;
+        var ItemType = customObject.ItemData.ItemType;
 
+        
     }
+
+
     public void Hide()
     {
         transform.gameObject.SetActive(false);
@@ -35,6 +42,4 @@ public class BackpackButtonGroupUI : MonoBehaviour
         useButton.onClick.RemoveAllListeners();
         equipButton.onClick.RemoveAllListeners();
     }
-
-   
 }

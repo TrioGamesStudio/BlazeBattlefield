@@ -27,10 +27,21 @@ public class ItemInGame : NetworkBehaviour
         InitializeLocalItemData();
     }
 
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        base.Despawned(runner, hasState);
+        if (!IsDisplayedInUI) return;
+        ItemCollectionUI.instance.RemoveItemUI(this);
+    }
+
     private void InitializeLocalItemData()
     {
         var dataSO = ItemGeneratorManager.instance.GetItemDataSO(NetworkedItemData.ItemDataSOName.ToString());
-        if (dataSO == null) return;
+        if (dataSO == null)
+        {
+            Debug.LogWarning("Item Data SO is null",gameObject);
+            return;
+        }
         localItemData = new ItemLocalData(dataSO,
             NetworkedItemData.CurrentCount);
     }
@@ -38,6 +49,7 @@ public class ItemInGame : NetworkBehaviour
     public void SetItemNetworkData(ItemDataNetwork _ItemDataNetwork)
     {
         NetworkedItemData = _ItemDataNetwork;
+        InitializeLocalItemData();
     }
 
     private void OnNetworkedItemDataChanged()
@@ -47,11 +59,13 @@ public class ItemInGame : NetworkBehaviour
     }
     private void UpdateLocalItemCount()
     {
+        // for now, just have quantity
         localItemData.SetQuantity(NetworkedItemData.CurrentCount);
     }
 
     private void UpdateUIIfNeeded()
     {
+        // if local client displaying it in UI, then update it
         if (!IsDisplayedInUI) return;
 
         ItemCollectionUI.instance.UpdateUI(
@@ -77,6 +91,14 @@ public class ItemInGame : NetworkBehaviour
 
     private void DespawnItem()
     {
-        Runner.Despawn(Object);
+        RPCDespawnItem();
+    }
+    [Rpc(RpcSources.All,RpcTargets.StateAuthority)]
+    private void RPCDespawnItem()
+    {
+        if (Object.HasStateAuthority) 
+        {
+            Runner.Despawn(Object);
+        }
     }
 }
