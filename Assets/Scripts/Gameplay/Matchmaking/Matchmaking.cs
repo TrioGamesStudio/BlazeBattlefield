@@ -20,13 +20,13 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private Button readyButton;
     [SerializeField] private Button playButton;
     private NetworkRunner networkRunner;
-    private const int MAX_PLAYER = 2;
+    private const int MAX_PLAYER = 3;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     private PlayerRoomController localPlayerRoomController;
     private Vector3 spawnPosition;
     private Mode currentMode = Mode.Solo;
     private bool isAutoMatch;
-    private int alivePlayer;
+    public int alivePlayer;
     private PlayerRoomController localSoloPlayer;
     public bool IsAutoMatch
     {

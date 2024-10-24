@@ -11,15 +11,16 @@ public class WorldUI : MonoBehaviour
     public Button lobbyButton;
     public Button lobbyButtonWin;
     public TextMeshProUGUI informationText;
-
+    public TextMeshProUGUI topText;
     private void Start()
     {
         lobbyButton.onClick.AddListener(BackToLobby);
         lobbyButtonWin.onClick.AddListener(BackToLobby);
     }
 
-    public void ShowHideUI()
+    public void ShowHideUI(int alivePlayer)
     {
+        topText.text = "TOP " + alivePlayer;
         panelResult.SetActive(!panelResult.activeSelf);
     }
 

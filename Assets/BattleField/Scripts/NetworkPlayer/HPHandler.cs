@@ -116,8 +116,8 @@ public class HPHandler : NetworkBehaviour
             /* RPC_SetNetworkedIsDead(true); */ // can use
             PlayerRef player = GetComponent<PlayerRoomController>().ThisPlayerRef;
             Debug.Log("====Player ref " + player);
-            Matchmaking.Instance.CheckWin(player);
-            RPC_ShowResult();
+            RPC_ShowResult(Matchmaking.Instance.alivePlayer);
+            Matchmaking.Instance.CheckWin(player);  
             //deadCount ++;
             weaponHandler.killCount ++;
         }
@@ -256,9 +256,9 @@ public class HPHandler : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    void RPC_ShowResult()
+    void RPC_ShowResult(int alivePlayer)
     {
-        UIController.Instance.ShowResultPanel();
+        UIController.Instance.ShowResultPanel(alivePlayer);
         networkPlayer.localUI.SetActive(false);
     }
 }

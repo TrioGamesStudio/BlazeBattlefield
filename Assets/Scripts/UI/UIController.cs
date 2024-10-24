@@ -238,8 +238,8 @@ public class UIController : MonoBehaviour
     //    Debug.Log("BACK TO LOBBY NE");
     //}
 
-    public void ShowResultPanel()
+    public void ShowResultPanel(int alivePlayer)
     {
-        FindObjectOfType<WorldUI>().ShowHideUI();
+        FindObjectOfType<WorldUI>().ShowHideUI(alivePlayer);
     }
 }
