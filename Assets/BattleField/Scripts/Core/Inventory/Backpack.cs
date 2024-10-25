@@ -1,8 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+public enum AmmoType
+{
+    None,        
+    Ammo556,     
+    Ammo762,     
+    Ammo9mm,     
+    ShotgunShell,
+    Ammo12Gauge  
+}
 public class Backpack : MonoBehaviour
 {
+
+
+
     public static Backpack instance;
     [SerializeField] private List<ItemLocalData> itemVen = new();
     private void Awake()
@@ -23,14 +34,14 @@ public class Backpack : MonoBehaviour
             {
                 Debug.Log("Start StackWith");
                 item.StackWith(itemData);
-                BackpackUI.instance.UpdateUI(item.ItemIdentifier, item);
+                //BackpackUI.instance.UpdateUI(item.ItemIdentifier, item);
             }
         }
         if (!itemData.IsCountZero())
         {
             Debug.Log("After stacking, also have remaining count to add backpack", gameObject);
             itemVen.Add(itemData);
-            BackpackUI.instance.AddItemUI(itemData);
+            //BackpackUI.instance.AddItemUI(itemData);
         }
         else
         {
@@ -69,7 +80,7 @@ public class Backpack : MonoBehaviour
         {
             // 
             Debug.Log("with new item after, maybe it will have more information, prepare for it", gameObject);
-            BackpackUI.instance.RemoveItemUI(currentItem);
+            //BackpackUI.instance.RemoveItemUI(currentItem);
             itemVen.Remove(currentItem);
             CreateItemInWorld(currentItem);
         }
@@ -77,7 +88,7 @@ public class Backpack : MonoBehaviour
         {
             currentItem.ModifyQuantity(-dropAmount);
             Debug.Log($"Drop {itemName} {currentCount}");
-            BackpackUI.instance.UpdateUI(indentifyID, currentItem);
+            //BackpackUI.instance.UpdateUI(indentifyID, currentItem);
             // ItemGeneratorManager.instance.CreateItemInWorld(itemDataSo, position, dropAmount);
             currentItem.SetQuantity(dropAmount);
             CreateItemInWorld(currentItem);

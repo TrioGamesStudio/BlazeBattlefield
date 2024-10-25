@@ -31,7 +31,7 @@ public class ItemInGame : NetworkBehaviour
     {
         base.Despawned(runner, hasState);
         if (!IsDisplayedInUI) return;
-        ItemCollectionUI.instance.RemoveItemUI(this);
+        //ItemCollectionUI.instance.RemoveItemUI(this);
     }
 
     private void InitializeLocalItemData()
@@ -68,9 +68,9 @@ public class ItemInGame : NetworkBehaviour
         // if local client displaying it in UI, then update it
         if (!IsDisplayedInUI) return;
 
-        ItemCollectionUI.instance.UpdateUI(
-            localItemData.ItemIdentifier,
-            this);
+        //ItemCollectionUI.instance.UpdateUI(
+        //    localItemData.ItemIdentifier,
+        //    this);
     }
     public void OnItemCollected()
     {

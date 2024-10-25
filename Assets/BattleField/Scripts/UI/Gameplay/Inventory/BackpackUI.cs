@@ -1,7 +1,7 @@
 ﻿using System;
 using Unity.VisualScripting;
 using UnityEngine;
-public class BackpackUI : BaseTest<ItemLocalData>
+public class BackpackUI : BaseTest<RunTimeItem>
 {
     public static BackpackUI instance;
     public BackpackButtonGroupUI backpackButtonGroupUI;
@@ -26,17 +26,17 @@ public class BackpackUI : BaseTest<ItemLocalData>
 
     }
 
-    protected override void ConfigureItemUI(ItemLocalData customObject, ItemCollectUI itemCollectUI)
+    protected override void ConfigureItemUI(RunTimeItem customObject, ItemCollectUI itemCollectUI)
     {
-        itemCollectUI.SetItemName(customObject.ItemName);
-        itemCollectUI.SetItemCount(customObject.CurrentQuantity);
+        itemCollectUI.SetItemName(customObject.GetItemName());
+        itemCollectUI.SetItemCount(customObject.GetQuantity());
         itemCollectUI.SetOnClickEvent(() =>
         {
             var newIndex = itemCollectUI.transform.GetSiblingIndex();
             SelectItem(newIndex,customObject);
         });
     }
-    private void SelectItem(int index, ItemLocalData customObject)
+    private void SelectItem(int index, RunTimeItem customObject)
     {
         if (index == currentItemIndex)
         {
@@ -45,12 +45,12 @@ public class BackpackUI : BaseTest<ItemLocalData>
         }
 
         currentItemIndex = index;
-        UpdateUIForSelectedItem(customObject);
+        //UpdateUIForSelectedItem(customObject);
     }
-    private void UpdateUIForSelectedItem(ItemLocalData customObject)
+    private void UpdateUIForSelectedItem(RunTimeItem customObject)
     {
         backpackButtonGroupUI.ShowByIndex(currentItemIndex);
-        backpackButtonGroupUI.SetCurrentItem(customObject);
+        //backpackButtonGroupUI.SetCurrentItem(customObject);
     }
 
 
@@ -73,7 +73,7 @@ public class BackpackUI : BaseTest<ItemLocalData>
         Debug.Log("Drop All", gameObject);
         var customObject = backpackButtonGroupUI.GetCurrentItem();
         Backpack.instance.Drop(customObject);
-        RemoveItemUI(customObject);
+        //RemoveItemUI(customObject);
     }
     private void DropAll()
     {
@@ -95,15 +95,15 @@ public class BackpackUI : BaseTest<ItemLocalData>
     {
         Debug.Log("Equip");
     }
-    public override void RemoveItemUI(ItemLocalData customObject)
+    public override void RemoveItemUI(RunTimeItem customObject)
     {
-        RemoveItemFromDictionary(customObject.ItemIdentifier, customObject);
+        RemoveItemFromDictionary(customObject.GetUniqueID(), customObject);
         ResetSelection();
     }
 
-    public override void AddItemUI(ItemLocalData customObject)
+    public override void AddItemUI(RunTimeItem customObject)
     {
-        AddItemToDictionary(customObject.ItemIdentifier, customObject);
+        AddItemToDictionary(customObject.GetUniqueID(), customObject);
         ResetSelection();
     }
 }

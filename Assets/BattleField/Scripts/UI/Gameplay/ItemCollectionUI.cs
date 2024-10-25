@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-public class ItemCollectionUI : BaseTest<ItemInGame>
+public class ItemCollectionUI : BaseTest<RunTimeItem>
 {
     public static ItemCollectionUI instance;
 
@@ -37,38 +38,51 @@ public class ItemCollectionUI : BaseTest<ItemInGame>
     private void Hide() => view.gameObject.SetActive(false);
 
 
-    protected override void ConfigureItemUI(ItemInGame itemInGame, ItemCollectUI itemCollectUI)
+    protected override void ConfigureItemUI(RunTimeItem itemInGame, ItemCollectUI itemCollectUI)
     {
-        itemCollectUI.SetItemCount(itemInGame.ItemCount);
-        itemCollectUI.SetItemName(itemInGame.ItemName);
+        itemCollectUI.SetItemCount(itemInGame.GetQuantity());
+        itemCollectUI.SetItemName(itemInGame.GetItemName());
 
-        itemCollectUI.SetOnClickEvent(() => { ButtonClick(itemInGame); });
-
+        itemCollectUI.SetOnClickEvent(() => 
+        { 
+            RemoveItemUI(itemInGame);
+            BackpackUI.instance.AddItemUI(itemInGame);
+            ButtonClick(itemInGame);
+        });
+        itemInGame.OnRemoveItemUI = RemoveItemUI;
         itemCollectUI.gameObject.SetActive(true);
     }
 
-    private void ButtonClick(ItemInGame itemInGame)
+    private void ButtonClick(RunTimeItem itemInGame)
     {
         Debug.Log("On ITem in UI clicked");
         if (Backpack.instance.CanCollect() == false) return;
-        itemInGame.OnItemCollected();
+        itemInGame.Collect();
     }
 
-    protected override void OnItemAdded(ItemInGame customObject)
+    protected override void OnItemAdded(RunTimeItem customObject)
     {
         base.OnItemAdded(customObject);
-        customObject.OnItemRemovedFromUICallback = () => RemoveItemUI(customObject);
     }
 
-    public override void RemoveItemUI(ItemInGame customObject)
+    public override void RemoveItemUI(RunTimeItem customObject)
     {
-        RemoveItemFromDictionary(customObject.ItemIdentifier, customObject);
+        RemoveItemFromDictionary(customObject.GetUniqueID(), customObject);
     }
 
-    public override void AddItemUI(ItemInGame customObject)
+    public override void AddItemUI(RunTimeItem customObject)
     {
-        AddItemToDictionary(customObject.ItemIdentifier, customObject);
+        AddItemToDictionary(customObject.GetUniqueID(), customObject);
     }
 
     
+}
+public interface RunTimeItem
+{
+    public Action<RunTimeItem> OnRemoveItemUI { get; set; }
+    public bool isDisplayedUI { get; set; }
+    string GetItemName();
+    int GetQuantity();
+    void Collect();
+    string GetUniqueID();
 }
