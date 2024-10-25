@@ -114,10 +114,21 @@ public class HPHandler : NetworkBehaviour
             isPublicDeathMessageSent = false;
             //StartCoroutine(ServerRespawnCountine()); //Phuc comment: not allow player respawn
             /* RPC_SetNetworkedIsDead(true); */ // can use
-            PlayerRef player = GetComponent<PlayerRoomController>().ThisPlayerRef;
-            Debug.Log("====Player ref " + player);
-            RPC_ShowResult(Matchmaking.Instance.alivePlayer);
-            Matchmaking.Instance.CheckWin(player);  
+            if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
+            {
+                PlayerRef player = GetComponent<PlayerRoomController>().ThisPlayerRef;
+                Debug.Log("====Player ref " + player);
+                RPC_ShowResult(Matchmaking.Instance.alivePlayer);    
+                Matchmaking.Instance.CheckWin(player);
+            }
+            else
+            {
+                PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
+                //FindObjectOfType<GameHandler>().Eliminate(playerRoomController.RoomID.ToString(), playerRoomController);
+                RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
+                RPC_ShowResultDuo();
+            }
+
             //deadCount ++;
             weaponHandler.killCount ++;
         }
@@ -231,7 +242,6 @@ public class HPHandler : NetworkBehaviour
         localGun.gameObject.SetActive(false);   // khi death tat luon local gun
         hitboxRoot.HitboxRootActive = false; // ko de nhan them damage
         characterMovementHandler.CharacterControllerEnable(false);
-
         Instantiate(deathParticlePf, transform.position + Vector3.up * 1, Quaternion.identity);
     }
 
@@ -260,5 +270,20 @@ public class HPHandler : NetworkBehaviour
     {
         UIController.Instance.ShowResultPanel(alivePlayer);
         networkPlayer.localUI.SetActive(false);
+    }
+
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    void RPC_EliminatePlayer(string teamID, PlayerRoomController playerRoomController)
+    {
+        FindObjectOfType<GameHandler>().Eliminate(teamID, playerRoomController);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_ShowResultDuo()
+    {
+        GetComponent<PlayerRoomController>().IsAlive = false;
+        Debug.Log(":::Player shut down");
+        FindObjectOfType<GameHandler>().CheckLose(GetComponent<PlayerRoomController>().TeamID.ToString());
     }
 }

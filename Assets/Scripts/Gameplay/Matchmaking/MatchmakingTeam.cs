@@ -17,10 +17,11 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     private NetworkRunner networkRunner;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     public TextMeshProUGUI StatusText;
-    private const int MAX_PLAYER = 4;
+    private const int MAX_PLAYER = 3;
     string roomID;
     string teamID = "";
     string roomAutoMatch;
+    bool isDone = false;
     //[SerializeField] private GameHandler gameManagerPrefab;
     //private GameHandler gameManager;
 
@@ -67,6 +68,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (result.Ok)
         {
+            UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
             Debug.Log("Joined team battle room: " + networkRunner.SessionInfo.Name);
         }
         else
@@ -87,6 +89,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);  
             players[player] = playerObject.GetComponent<PlayerRoomController>();
             players[player].SetRoomID(roomID);
+            players[player].SetLocalPlayer();
             //players[player].SetHealthBarColor(Color.green);
             Debug.Log("New player joined " + player.ToString());
             Debug.Log("Player count " + runner.ActivePlayers.Count());
@@ -173,18 +176,28 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         //Debug.Log("______PLAYER COUNT: " + runner.ActivePlayers.Count());
         int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
         string text = "Waiting other player: " + remainPlayer + " remain";
+        
         FindObjectOfType<UIController>().SetText(text);
-        if (runner.ActivePlayers.Count() == MAX_PLAYER && runner.IsSharedModeMasterClient) // Assuming PlayerCount is 2
+        if (remainPlayer == 0 && !isDone) // Assuming PlayerCount is 2
         {
+            isDone = true;
             FindObjectOfType<UIController>().StartCountdown();
             StartCoroutine(ReleasePlayer());
+            //if (player == runner.LocalPlayer)
+            StartCoroutine(InitializeTeams());
         }
     }
 
     private IEnumerator ReleasePlayer()
     {
         yield return new WaitForSeconds(4f);
-        FindObjectOfType<WaitingArea>()?.ReleasePlayer();
+        FindObjectOfType<WaitingArea>()?.ReleasePlayer();   
+    }
+
+    private IEnumerator InitializeTeams()
+    {
+        yield return new WaitForSeconds(4f);
+        FindObjectOfType<GameHandler>().InitializeTeams();
     }
 
     public string GenerateRoomName()

@@ -11,28 +11,31 @@ public class PlayerRoomController : NetworkBehaviour
     [Networked] public NetworkBool IsAutoMatch { get; set; }
     [Networked] public NetworkString<_128> RoomID { get; set; }
     [Networked] public NetworkString<_128> TeamID { get; set; }
+    [Networked] public NetworkBool IsAlive { get; set; }
     [SerializeField] private GameObject teamMemberPanel;
     public static PlayerRoomController LocalPlayer;
     private Matchmaking matchmaking;
     [Networked] public PlayerRef ThisPlayerRef { get; set; }
     string localRoomId;
+    public bool isLocalPlayer = false;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public override void Spawned()
-    { 
+    {
         base.Spawned();
         //thisPlayerRef = Runner.LocalPlayer;
         IsReady = false;
+        IsAlive = true;
         //IsAutoMatch = false;
         //IsRoomOwner = false;
         matchmaking = FindObjectOfType<Matchmaking>();
@@ -130,7 +133,7 @@ public class PlayerRoomController : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_SetAutoMatch(bool isAutoMatch)
     {
-        IsAutoMatch = isAutoMatch;      
+        IsAutoMatch = isAutoMatch;
         Debug.Log("SET AUTO MATCH");
     }
 
@@ -157,5 +160,23 @@ public class PlayerRoomController : NetworkBehaviour
     {
         ThisPlayerRef = player;
         Debug.Log("///SETUP PLAYERREF: " + ThisPlayerRef);
+    }
+
+    public void SetLocalPlayer()
+    {
+        isLocalPlayer = true;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_ShowWin()
+    {
+        Debug.Log("===WIN ROIIIIII");
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_ShowLose(int rank)
+    {
+        Debug.Log("===No teammate remain -> Defeat " + "Top " + rank);
+
     }
 }

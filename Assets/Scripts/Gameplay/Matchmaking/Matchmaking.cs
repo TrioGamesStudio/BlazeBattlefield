@@ -24,7 +24,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     private PlayerRoomController localPlayerRoomController;
     private Vector3 spawnPosition;
-    private Mode currentMode = Mode.Solo;
+    public Mode currentMode = Mode.Solo;
     private bool isAutoMatch;
     public int alivePlayer;
     private PlayerRoomController localSoloPlayer;
@@ -48,7 +48,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         PlayScene = 2,
     }
 
-    enum Mode
+    public enum Mode
     {
         Solo,
         Duo
