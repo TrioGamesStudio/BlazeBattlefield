@@ -1,7 +1,7 @@
 ﻿using Fusion;
 using System;
 
-public abstract class ItemNetworkBase : NetworkBehaviour , RunTimeItem
+public abstract class ItemNetworkBase : NetworkBehaviour, RunTimeItem
 {
     
     [Networked] public int quantity { get; set; }
@@ -10,16 +10,6 @@ public abstract class ItemNetworkBase : NetworkBehaviour , RunTimeItem
 
     public string displayName;
    
-
-
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    protected void DestroyRPC()
-    {
-        if (HasStateAuthority)
-        {
-            Runner.Despawn(Object);
-        }
-    }
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
         base.Despawned(runner, hasState);
@@ -44,4 +34,18 @@ public abstract class ItemNetworkBase : NetworkBehaviour , RunTimeItem
     {
         return Object.NetworkTypeId.ToString();
     }
+    public void DestroyItem()
+    {
+        DestroyRPC();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void DestroyRPC()
+    {
+        if (HasStateAuthority)
+        {
+            Runner.Despawn(Object);
+        }
+    }
+ 
 }

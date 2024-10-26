@@ -8,6 +8,5 @@ public class HealthItem : ItemNetworkBase
     public override void Collect()
     {
         StorageManager.instance.AddHealth(HealingItemType, quantity);
-        DestroyRPC();
     }
 }

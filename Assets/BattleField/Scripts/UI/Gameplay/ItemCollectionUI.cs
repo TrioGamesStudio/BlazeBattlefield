@@ -45,20 +45,17 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
 
         itemCollectUI.SetOnClickEvent(() => 
         { 
+            if (Backpack.instance.CanCollect() == false) return;
             RemoveItemUI(itemInGame);
-            BackpackUI.instance.AddItemUI(itemInGame);
-            ButtonClick(itemInGame);
+            //BackpackUI.instance.AddItemUI(itemInGame);
+
+            itemInGame.Collect();
+            itemInGame.DestroyItem();
         });
         itemInGame.OnRemoveItemUI = RemoveItemUI;
         itemCollectUI.gameObject.SetActive(true);
     }
 
-    private void ButtonClick(RunTimeItem itemInGame)
-    {
-        Debug.Log("On ITem in UI clicked");
-        if (Backpack.instance.CanCollect() == false) return;
-        itemInGame.Collect();
-    }
 
     protected override void OnItemAdded(RunTimeItem customObject)
     {
@@ -84,5 +81,6 @@ public interface RunTimeItem
     string GetItemName();
     int GetQuantity();
     void Collect();
+    void DestroyItem();
     string GetUniqueID();
 }

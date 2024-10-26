@@ -11,7 +11,6 @@ public class AmmoItem : ItemNetworkBase
     public override void Collect()
     {
         StorageManager.instance.AddAmmo(ammoType, quantity);
-        DestroyRPC();
     }
 
 }

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
-
 public class StorageManager : MonoBehaviour
 {
+   
     public static StorageManager instance;
     private void Awake()
     {
@@ -12,6 +13,7 @@ public class StorageManager : MonoBehaviour
 
     private Dictionary<AmmoType, int> ammoInfomation;
     private Dictionary<HealingItemType, int> healthInfomation;
+
     private void Init()
     {
         ammoInfomation = new()
@@ -51,14 +53,16 @@ public class StorageManager : MonoBehaviour
     {
         healthInfomation[heallingItemType] -= quantity;
     }
+
+
 }
 
 public enum HealingItemType
 {
-    None,          
-    Bandage,       
-    FirstAidKit,   
-    Medkit,        
-    EnergyDrink,   
-    Painkiller     
+    None,
+    Bandage,
+    FirstAidKit,
+    Medkit,
+    EnergyDrink,
+    Painkiller
 }
