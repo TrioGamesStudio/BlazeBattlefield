@@ -42,6 +42,11 @@ public class ItemCollectUI : MonoBehaviour, IPoolCallback<ItemCollectUI>
         itemCount.text = count.ToString();
     }
 
+    public void SetIcon(Sprite icon)
+    {
+        this.icon.sprite = icon;
+    }
+
     public void SetOnClickEvent(Action callback)
     {
         this.OnClickButtonCallback = callback;
@@ -52,4 +57,3 @@ public class ItemCollectUI : MonoBehaviour, IPoolCallback<ItemCollectUI>
         OnClickButtonCallback?.Invoke();
     }
 }
-

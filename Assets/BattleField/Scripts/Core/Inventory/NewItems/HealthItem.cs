@@ -7,6 +7,6 @@ public class HealthItem : ItemNetworkBase
     public HealingItemType HealingItemType;
     public override void Collect()
     {
-        StorageManager.instance.AddHealth(HealingItemType, quantity);
+        StorageManager.instance.UpdateHealth(HealingItemType, quantity, true);
     }
 }

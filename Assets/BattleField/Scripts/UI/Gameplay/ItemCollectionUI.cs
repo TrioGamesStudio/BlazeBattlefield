@@ -76,8 +76,8 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
 }
 public interface RunTimeItem
 {
-    public Action<RunTimeItem> OnRemoveItemUI { get; set; }
     public bool isDisplayedUI { get; set; }
+    public Action<RunTimeItem> OnRemoveItemUI { get; set; }
     string GetItemName();
     int GetQuantity();
     void Collect();

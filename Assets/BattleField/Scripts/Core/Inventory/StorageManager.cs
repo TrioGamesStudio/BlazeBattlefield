@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class StorageManager : MonoBehaviour
 {
-   
+
     public static StorageManager instance;
     private void Awake()
     {
@@ -11,50 +11,56 @@ public class StorageManager : MonoBehaviour
         Init();
     }
 
-    private Dictionary<AmmoType, int> ammoInfomation;
-    private Dictionary<HealingItemType, int> healthInfomation;
+    private Dictionary<AmmoType, int> ammoInformation;
+    private Dictionary<HealingItemType, int> healthInformation;
 
     private void Init()
     {
-        ammoInfomation = new()
+        ammoInformation = new()
         {
-            {AmmoType.Ammo556,0 },
-            {AmmoType.Ammo762,0 },
-            {AmmoType.Ammo9mm,0 },
-            {AmmoType.ShotgunShell,0 },
-            {AmmoType.Ammo12Gauge,0 },
+            {AmmoType.Ammo556, 0},
+            {AmmoType.Ammo762, 0},
+            {AmmoType.Ammo9mm, 0},
+            {AmmoType.ShotgunShell, 0},
+            {AmmoType.Ammo12Gauge, 0},
         };
 
-        healthInfomation = new()
+        healthInformation = new()
         {
-            {HealingItemType.Bandage,0 },
-            {HealingItemType.FirstAidKit,0 },
-            {HealingItemType.Medkit,0 },
+            {HealingItemType.Bandage, 0},
+            {HealingItemType.FirstAidKit, 0},
+            {HealingItemType.Medkit, 0},
         };
     }
-    public void AddAmmo(AmmoType ammoType, int quantity)
+
+
+    private void UpdateItem<T>(Dictionary<T, int> itemDictionary, T itemType, int quantity, bool isAdding)
     {
-        ammoInfomation[ammoType] += quantity;
-        Debug.Log($"Current ammo: {ammoType.ToString()} couting is : {ammoInfomation[ammoType]}!!");
+        if (itemDictionary.ContainsKey(itemType))
+        {
+            itemDictionary[itemType] += isAdding ? quantity : -quantity;
+            Debug.Log($"Current {typeof(T).Name}: {itemType} count is: {itemDictionary[itemType]}");
+        }
+        else
+        {
+            Debug.LogWarning($"{typeof(T).Name} type {itemType} not found in dictionary.");
+        }
+
+        if (itemDictionary[itemType] <= 0)
+        {
+            Debug.LogError("item is zero");
+        }
     }
 
-    public void RemoveAmmo(AmmoType ammoType, int quantity)
+    public void UpdateAmmo(AmmoType ammoType, int quantity, bool isAdding)
     {
-        ammoInfomation[ammoType] -= quantity;
+        UpdateItem(ammoInformation, ammoType, quantity, isAdding);
     }
 
-    public void AddHealth(HealingItemType heallingItemType, int quantity)
+    public void UpdateHealth(HealingItemType healingItemType, int quantity, bool isAdding)
     {
-        healthInfomation[heallingItemType] += quantity;
-        Debug.Log($"Current ammo: {heallingItemType.ToString()} couting is : {healthInfomation[heallingItemType]}!!");
+        UpdateItem(healthInformation, healingItemType, quantity, isAdding);
     }
-
-    public void RemoveHealth(HealingItemType heallingItemType, int quantity)
-    {
-        healthInfomation[heallingItemType] -= quantity;
-    }
-
-
 }
 
 public enum HealingItemType
