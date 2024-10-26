@@ -12,7 +12,7 @@ public class Test : MonoBehaviour
         //itemInGame.IsDisplayedInUI = true;
 
         if (other.CompareTag("Item") == false) return;
-        var RunTimeItem = other.GetComponent<ItemNetworkBase>();
+        var RunTimeItem = other.GetComponent<RunTimeItem>();
         //InteractItem(RunTimeItem);
         RunTimeItem.isDisplayedUI = true;
         ItemCollectionUI.instance.AddItemUI(RunTimeItem);
@@ -27,19 +27,11 @@ public class Test : MonoBehaviour
         //ItemCollectionUI.instance.RemoveItemUI(itemInGame);
 
         if (other.CompareTag("Item") == false) return;
-        var RunTimeItem = other.GetComponent<ItemNetworkBase>();
+        var RunTimeItem = other.GetComponent<RunTimeItem>();
         RunTimeItem.isDisplayedUI = false;
         //InteractItem(RunTimeItem);
         ItemCollectionUI.instance.RemoveItemUI(RunTimeItem);
 
     }
-    private void InteractItem(AmmoItem ammo)
-    {
-        if(ammo == null)
-        {
-            Debug.Log("This RunTimeItem is null");
-            return;
-        }
-        
-    }
+    
 }

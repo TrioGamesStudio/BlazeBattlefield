@@ -3,14 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AmmoItem : ItemNetworkBase
+public class AmmoItem : ItemNetworkBase<AmmoType, AmmoItemConfig>
 {
-    public AmmoType ammoType;
-
 
     public override void Collect()
     {
-        StorageManager.instance.UpdateAmmo(ammoType, quantity,true);
+        StorageManager.instance.UpdateAmmo(_enumType, quantity, true);
     }
 
 }

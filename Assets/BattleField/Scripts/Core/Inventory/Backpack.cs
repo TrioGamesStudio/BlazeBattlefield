@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 public enum AmmoType
 {
-    None,        
-    Ammo556,     
-    Ammo762,     
-    Ammo9mm,     
-    ShotgunShell,
-    Ammo12Gauge  
+    None = 0,        
+    Ammo556 = 5,     
+    Ammo762 = 10,     
+    Ammo9mm = 15,     
+    ShotgunShell = 20,
+    Ammo12Gauge  = 25
 }
 public class Backpack : MonoBehaviour
 {

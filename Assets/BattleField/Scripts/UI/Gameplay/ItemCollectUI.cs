@@ -14,7 +14,7 @@ public class ItemCollectUI : MonoBehaviour, IPoolCallback<ItemCollectUI>
     [SerializeField] private TextMeshProUGUI itemName;
     [SerializeField] private TextMeshProUGUI itemCount;
     [SerializeField] private Button OnClickButton;
-    private Action OnClickButtonCallback;
+    private event Action OnClickButtonCallback;
     public Action<ItemCollectUI> OnCallback { get; set; }
 
     private void Awake()

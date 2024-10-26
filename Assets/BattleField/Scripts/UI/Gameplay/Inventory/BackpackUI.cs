@@ -4,15 +4,30 @@ using System.Collections.Generic;
 using UnityEngine;
 public class ItemBackpackUI : ItemCollectUI
 {
-    public int quantity;
-    public ItemConfig<Enum> itemConfig;
+    public ItemBPData _ItemBPData;
+    public struct ItemBPData
+    {
+        public ItemType itemType;
+        public int quantity;
+        public int enumIndex;
+    }
+    public void SetItemBPData(ItemType itemType, int quantity, int enumIndex)
+    {
+        _ItemBPData.itemType = itemType;
+        _ItemBPData.quantity = quantity;
+        _ItemBPData.enumIndex = enumIndex;
+    }
 }
 public class BackpackUI : MonoBehaviour
 {
+    public static BackpackUI instance;
     protected UnityPool<ItemCollectUI> poolItemsUI;
     [SerializeField] protected ItemBackpackUI itemCollectUIPrefab;
     [SerializeField] protected GameObject content;
     [SerializeField] protected HealthItemData healthItemData;
+    [SerializeField] protected BackpackButtonGroupUI buttonGroupUI;
+    [SerializeField] protected DropAmountUI dropAmountUI;
+    [SerializeField] protected int dropCount;
     private void Awake()
     {
         itemCollectUIPrefab.gameObject.SetActive(false);
@@ -25,9 +40,38 @@ public class BackpackUI : MonoBehaviour
         {
             var itemConfig = healthItemData.GetItemDataConfig(healthItem.Key);
             int maxQuantityOfStack = itemConfig.maxStack;
-            var itemBackpackUI = poolItemsUI.Get();
-            itemBackpackUI.quan
+            var itemBackpackUI = GetUIItem();
+            itemBackpackUI.SetItemCount(healthItem.Value);
+            itemBackpackUI.SetItemName(itemConfig.displayName);
+
+            itemBackpackUI.SetItemBPData(itemConfig.ItemType, healthItem.Value, (int)healthItem.Key);
+            itemBackpackUI.SetOnClickEvent(() =>
+            {
+                SetCurrentItem(itemBackpackUI);
+                buttonGroupUI.ShowByIndex(itemBackpackUI.transform.GetSiblingIndex());
+            });
         }
+    }
+    ItemBackpackUI.ItemBPData ItemBPData;
+    public void SetCurrentItem(ItemBackpackUI itemBackpackUI)
+    {
+        ItemBPData = itemBackpackUI._ItemBPData;
+    }
+    private void OnDrop(ItemType itemType, int enumIndex, int quantity)
+    {
+        if(itemType == ItemType.Health)
+        {
+            StorageManager.instance.UpdateHealth((HealingItemType)enumIndex, quantity, false);
+        }
+        else if(itemType == ItemType.Ammo)
+        {
+            StorageManager.instance.UpdateAmmo((AmmoType)enumIndex, quantity, false);
+        }
+    }
+    private ItemBackpackUI GetUIItem()
+    {
+        var itemBackpackUI = poolItemsUI.Get();
+        return itemBackpackUI as ItemBackpackUI;
     }
     public HealingItemType HealingItemType;
 

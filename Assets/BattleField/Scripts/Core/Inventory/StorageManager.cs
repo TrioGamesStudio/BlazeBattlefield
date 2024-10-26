@@ -61,14 +61,15 @@ public class StorageManager : MonoBehaviour
     {
         UpdateItem(healthInformation, healingItemType, quantity, isAdding);
     }
+
 }
 
 public enum HealingItemType
 {
-    None,
-    Bandage,
-    FirstAidKit,
-    Medkit,
-    EnergyDrink,
-    Painkiller
+    None = 0,
+    Bandage = 5,
+    FirstAidKit = 10,
+    Medkit = 15,
+    EnergyDrink = 20,
+    Painkiller = 25
 }

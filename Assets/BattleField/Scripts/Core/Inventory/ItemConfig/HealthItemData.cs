@@ -7,7 +7,7 @@ public class HealthItemData : ItemConfigSettings<HealingItemType, HealthItemConf
 {
     //public override HealthItemConfig GetItemDataConfig(HealingItemType _EnumType)
     //{
-    //    return ExtensionHelper.Get(itemConfigs, _EnumType);
+    //    return ExtensionHelper.GetUIItem(itemConfigs, _EnumType);
     //}
 }
 [Serializable]

@@ -13,7 +13,7 @@ public class ItemConfigSettings<_EnumType,ItemDataConfig> : ScriptableObject whe
     {
         foreach (var itemData in itemConfigs)
         {
-            if (itemData.ItemType.Equals(itemType))
+            if (itemData.SubItemType.Equals(itemType))
                 return itemData;
         }
         Debug.LogError($"Item Type {itemType} is does not definetions on List");
@@ -24,7 +24,9 @@ public class ItemConfigSettings<_EnumType,ItemDataConfig> : ScriptableObject whe
 [Serializable]
 public class ItemConfig<T> where T : Enum
 {
+    public string displayName;
     public Sprite Icon;
-    public T ItemType;
+    public T SubItemType;
     public int maxStack;
+    public ItemType ItemType;
 }

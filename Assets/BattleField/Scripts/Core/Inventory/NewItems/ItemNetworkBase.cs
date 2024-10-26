@@ -1,15 +1,19 @@
 ﻿using Fusion;
 using System;
 
-public abstract class ItemNetworkBase : NetworkBehaviour, RunTimeItem
+public abstract class ItemNetworkBase<_EnumType,T> : NetworkBehaviour, RunTimeItem where _EnumType : Enum where T : ItemConfig<_EnumType>
 {
     
     [Networked] public int quantity { get; set; }
     public Action<RunTimeItem> OnRemoveItemUI { get; set; }
     public bool isDisplayedUI { get; set; }
 
-    public string displayName;
-   
+    public ItemConfigSettings<_EnumType,T> ItemConfigSettings;
+    public _EnumType _enumType;
+    public override void Spawned()
+    {
+        base.Spawned();
+    }
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
         base.Despawned(runner, hasState);
@@ -20,7 +24,7 @@ public abstract class ItemNetworkBase : NetworkBehaviour, RunTimeItem
     }
     public string GetItemName()
     {
-        return displayName;
+        return ItemConfigSettings.GetItemDataConfig(_enumType).displayName;
     }
 
     public int GetQuantity()
