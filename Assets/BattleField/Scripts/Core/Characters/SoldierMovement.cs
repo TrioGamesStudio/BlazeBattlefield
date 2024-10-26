@@ -7,7 +7,7 @@ public class SoldierMovement : NetworkMovementBase
 {
     [SerializeField] private NetworkCharacterController controller;
 
-    [SerializeField] private float jumpForce = 5f;
+    //[SerializeField] private float jumpForce = 5f;
     [SerializeField] private float speed = 5f;
     [SerializeField] private bool isJumpPressed;
     [SerializeField] private Vector3 moveInput;

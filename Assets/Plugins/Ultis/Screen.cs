@@ -34,11 +34,13 @@ namespace Jagapippi.AutoScreen
         public static Resolution currentResolution => UnityScreen.currentResolution;
         public static Resolution[] resolutions => UnityScreen.resolutions;
 
+        [System.Obsolete]
         public static void SetResolution(int width, int height, FullScreenMode fullscreenMode, int preferredRefreshRate = 0)
         {
             UnityScreen.SetResolution(width, height, fullscreenMode, preferredRefreshRate);
         }
 
+        [System.Obsolete]
         public static void SetResolution(int width, int height, bool fullscreen, int preferredRefreshRate = 0)
         {
             UnityScreen.SetResolution(width, height, fullscreen, preferredRefreshRate);
