@@ -15,7 +15,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private Camera CameraPrefab;
     [Header("Scriptable Object")]
     [SerializeField] private PlayerData playerData;
-    
+    [SerializeField] private Soldier soldier;
 
     public static PlayerController LocalPlayer;
 
@@ -63,11 +63,24 @@ public class PlayerController : NetworkBehaviour
         {
             Camera.main.gameObject.SetActive(false);
             var camera = Instantiate(CameraPrefab).GetComponent<LocalCameraBase>();
-            var soldier = Runner.Spawn(SoldierPrefab, Vector3.zero,Quaternion.identity);
+            soldier = Runner.Spawn(SoldierPrefab, Vector3.zero,Quaternion.identity);
             camera.SetTarget(soldier.cameraPositionTransform);    
             // Link input to soldier and cameraLook
             InputPlayerHandler.SwitchMovementController(soldier.movement);
             InputPlayerHandler.SwitchCameraController(camera);
+
+            soldier.SetupCollectCube();
         }
+    }
+
+    public Vector3 GetSoilderPosition()
+    {
+        if(soldier == null)
+        {
+            Debug.LogError("Solider need to be spawned",gameObject);
+            return Vector3.zero;
+        }
+
+        return soldier.transform.position;
     }
 }
