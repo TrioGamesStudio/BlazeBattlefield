@@ -152,7 +152,9 @@ public class WeaponHandler : NetworkBehaviour
         if(Physics.Raycast(spawnPointRaycastCam,aimForwardVector, out var hit, 100, collisionLayers)) {
             // neu hitInfo do this.gameObject ban ra thi return
             if(hit.transform.GetComponent<WeaponHandler>() == this) return;
-
+            // neu hitInfo la dong doi thi khong tru mau
+            //if (hit.transform.CompareTag("TeamMate")) return;
+            if (IsTeammate(hit)) return;
             float hitDis = 100f;
             bool isHitOtherRemotePlayers = false;
 
@@ -190,6 +192,15 @@ public class WeaponHandler : NetworkBehaviour
 
         // lam cho ai ban theo tan suat random khoang time
         aiFireRate = Random.Range(0.1f, 1.5f);
+    }
+
+    private bool IsTeammate(RaycastHit hit)
+    {
+        string playerTeamID = GetComponent<PlayerRoomController>().TeamID.ToString();
+        string targetTeamID = "";
+        if (hit.transform.GetComponent<PlayerRoomController>() != null)
+            targetTeamID = hit.transform.GetComponent<PlayerRoomController>()?.TeamID.ToString();
+        return playerTeamID == targetTeamID && playerTeamID != "";
     }
 
     // fire particle on aimPoint

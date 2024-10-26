@@ -55,7 +55,7 @@ public class LocalCameraHandler : NetworkBehaviour
         //? xet cho local cam
         if(cameraAnchorPoint == null) return;
         if(!localCamera.enabled) return;
-        
+        //if (!Object.HasStateAuthority) return;
         Utils.SetRenderLayerInChildren(NetworkPlayer.Local.playerModel, LayerMask.NameToLayer("LocalPlayerModel"));
 
         localCamera.transform.position = cameraAnchorPoint.position; // localCam di theo | ko phai nam ben trong

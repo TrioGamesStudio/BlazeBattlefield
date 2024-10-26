@@ -29,7 +29,7 @@ public class ModeButton : MonoBehaviour
     }
 
     // Highlight the Single button and deactivate Duo's highlight
-    private void Highlight()
+    public void Highlight()
     {
         singleHighlight.SetActive(true);
     }
