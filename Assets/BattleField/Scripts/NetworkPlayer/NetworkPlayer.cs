@@ -24,7 +24,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
     public LocalCameraHandler LocalCameraHandler => localCameraHandler;
 
     // UI chua crossHair, red image get damage
-    [SerializeField] GameObject localUI; // game object = PlayerUICanvas (canvas cua ca player)
+    public GameObject localUI; // game object = PlayerUICanvas (canvas cua ca player)
 
     // TESTING PLAYER DATA LIST ACTIVED PLAYERS
     [Networked]
@@ -55,7 +55,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         networkInGameMessages = GetComponent<NetworkInGameMessages>();
         /* spawner = FindObjectOfType<Spawner>(); */
         networkRunner = FindObjectOfType<NetworkRunner>();
-
+        //Local = this;
         DontDestroyOnLoad(this.gameObject);
     }
 
@@ -89,7 +89,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         }
 
         // kiem tra co dang spawn tai ready scene hay khong
-        bool isReadyScene = SceneManager.GetActiveScene().name == "Ready";
+        bool isReadyScene = SceneManager.GetActiveScene().name == "MainLobby";
 
         if(this.Object.HasStateAuthority) {
             Local = this;
@@ -98,12 +98,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             if(isReadyScene) {
                 // (this.sceneToStart) networkPlayer <- spawner.cs <- dropdownscenename.cs
                 /* if(Runner.IsSharedModeMasterClient) sceneToStart = spawner.gameMap.ToString(); */
-
-                Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
+                //Debug.Log("MAIN LOBBY SCENE NE");
+                //Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
 
                 // OF localCam
                 localCameraHandler.gameObject.SetActive(false);
-
+                localCameraHandler.localCamera.enabled = false;
                 // OF localPlayer UI
                 localUI.SetActive(false);
 
@@ -251,7 +251,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         Debug.Log($"_____OnSceneLoaded() NetworkPlayer.cs");
         isPublicJoinMessageSent = false;
 
-        if(scene.name != "Ready") {
+        if(scene.name != "MainLobby") {
             // thong bao cho host biet can phai Spawned code
             if(Object.HasStateAuthority && Object.HasInputAuthority) {
                 Spawned();

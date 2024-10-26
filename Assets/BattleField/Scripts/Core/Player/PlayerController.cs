@@ -15,30 +15,36 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private Camera CameraPrefab;
     [Header("Scriptable Object")]
     [SerializeField] private PlayerData playerData;
-    
-
+    //[SerializeField] private GameObject teamMemberPanel;
+    //[Networked] public NetworkBool IsReady { get; set; }
+    //[Networked] public NetworkBool IsRoomOwner { get; set; }
+    //[Networked] public NetworkString<_128> RoomID { get; set; }
     public static PlayerController LocalPlayer;
-
-   
     private InputPlayerHandler InputPlayerHandler;
+    //private Matchmaking matchmaking;
+
     private void Awake()
     {
         InputPlayerHandler = GetComponent<InputPlayerHandler>();
     }
+
     public override void Spawned()
     {
         base.Spawned();
         // call in every client object
-        transform.name = "Player_" + playerIndentify;
-        // Just add input for Local Player
-        if (HasStateAuthority)
-        {
-            InputReader.Instance.Enable();
-            // inputPlayerMovement.EnableInput();
-            InputPlayerHandler.enabled = true;
-            LocalPlayer = this;
-        }
-     
+        //transform.name = "Player_" + playerIndentify;
+        //// Just add input for Local Player
+        //if (HasStateAuthority)
+        //{
+        //    InputReader.Instance.Enable();
+        //    // inputPlayerMovement.EnableInput();
+        //    InputPlayerHandler.enabled = true;
+        //    LocalPlayer = this;
+        //}
+
+        //IsReady = false;
+        //IsRoomOwner = false;
+        //matchmaking = FindObjectOfType<Matchmaking>();
     }
 
     public void Setup()
@@ -70,4 +76,42 @@ public class PlayerController : NetworkBehaviour
             InputPlayerHandler.SwitchCameraController(camera);
         }
     }
+
+    //public void TurnOnTeamMemberPanel()
+    //{
+    //    teamMemberPanel.SetActive(true);
+    //}
+
+    //public void ToggleReady()
+    //{
+    //    //if (Object.HasInputAuthority)
+    //    {
+    //        RPC_SetReady(!IsReady);
+    //    }
+    //}
+
+    //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    //public void RPC_SetReady(NetworkBool isReady)
+    //{
+    //    IsReady = isReady;
+    //    matchmaking.UpdatePlayButtonInteractability();
+    //}
+
+    //public void SetAsRoomOwner()
+    //{
+    //    if (Object.HasStateAuthority)
+    //    {
+    //        IsRoomOwner = true;
+    //        //PlayerPrefs.SetInt("IsRoomOwner", 1);
+    //    }
+    //}
+
+    //public void SetAsRoomMember()
+    //{
+    //    if (Object.HasStateAuthority)
+    //    {
+    //        IsRoomOwner = false;
+    //        //PlayerPrefs.SetInt("IsRoomOwner", 0);
+    //    }
+    //}
 }
