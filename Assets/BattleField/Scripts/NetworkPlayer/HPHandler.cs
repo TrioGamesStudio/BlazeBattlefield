@@ -126,6 +126,7 @@ public class HPHandler : NetworkBehaviour
                 PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
                 //FindObjectOfType<GameHandler>().Eliminate(playerRoomController.RoomID.ToString(), playerRoomController);
                 RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
+                RPC_HideLocalPlayerUI();
                 RPC_ShowResultDuo();
             }
 
@@ -285,5 +286,11 @@ public class HPHandler : NetworkBehaviour
         GetComponent<PlayerRoomController>().IsAlive = false;
         Debug.Log(":::Player shut down");
         FindObjectOfType<GameHandler>().CheckLose(GetComponent<PlayerRoomController>().TeamID.ToString());
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_HideLocalPlayerUI()
+    {
+        networkPlayer.localUI.SetActive(false);
     }
 }

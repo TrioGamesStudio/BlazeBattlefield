@@ -149,8 +149,7 @@ public class UIController : MonoBehaviour
             soloButton.Highlight();
             duoButton.UnHightLight();
             toggleModeButton.interactable = false;
-        }
-            
+        }        
         else
         {
             modeImage.sprite = duoMode;
@@ -241,5 +240,11 @@ public class UIController : MonoBehaviour
     public void ShowResultPanel(int alivePlayer)
     {
         FindObjectOfType<WorldUI>().ShowHideUI(alivePlayer);
+    }
+
+    public void ResetUI()
+    {
+        SwitchMode(true);
+        joinTeamButton.interactable = true;
     }
 }

@@ -186,6 +186,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             //if (player == runner.LocalPlayer)
             StartCoroutine(InitializeTeams());
         }
+
+        //TODO: Not allow player shooting before release
     }
 
     private IEnumerator ReleasePlayer()
@@ -327,6 +329,17 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             yield return null;
         }
 
+    }
+
+    public async void BackToLobby()
+    {
+        await networkRunner.Shutdown();
+        SceneManager.LoadScene("MainLobby");
+        UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
+        Matchmaking.Instance.localPlayer.gameObject.SetActive(true);
+        UIController.Instance.ResetUI();
+        await Matchmaking.Instance.JoinLobby();
+        Matchmaking.Instance.JoinRoomByName(roomID);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)

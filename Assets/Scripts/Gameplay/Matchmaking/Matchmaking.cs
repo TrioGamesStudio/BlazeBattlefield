@@ -16,11 +16,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private PlayerRoomController playerControllerPrefab;
     [SerializeField] private List<Transform> memberPos = new();
-    [SerializeField] private GameObject localPlayer;
     [SerializeField] private Button readyButton;
     [SerializeField] private Button playButton;
     private NetworkRunner networkRunner;
     private const int MAX_PLAYER = 3;
+    public GameObject localPlayer;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     private PlayerRoomController localPlayerRoomController;
     private Vector3 spawnPosition;
@@ -78,11 +78,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             DontDestroyOnLoad(gameObject);
         }
     }
-        void Start()
+
+    void Start()
     {
         readyButton.onClick.AddListener(ToggleReady);
         
-        JoinLobby();
+        GotoLobby();
     }
 
 
@@ -115,7 +116,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     }
 
-    public async void JoinLobby()
+    public async void GotoLobby()
+    {
+        await JoinLobby();
+    }
+
+    public async Task JoinLobby()
     {
         if (networkRunner == null)
         {
@@ -124,6 +130,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         }
         // Call this to join the session lobby
         await networkRunner.JoinSessionLobby(SessionLobby.Shared);
+        currentMode = Mode.Solo;
     }
 
     public void StartGame()
@@ -278,7 +285,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             localPlayer.SetActive(true);
             UIController.Instance.SwitchMode(true);
             UIController.Instance.OnOffPanel();
-            JoinLobby();
+            await JoinLobby();
 
             // Optionally update the UI, e.g., re-enable room creation UI or show session list
             // FindObjectOfType<UIManager>().TurnOnCreateRoomButton();
@@ -296,7 +303,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         SceneManager.LoadScene("MainLobby");
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
         localPlayer.gameObject.SetActive(true);
-        JoinLobby();
+        await JoinLobby();
     }
 
     public async void JoinRoomByName(string roomName)

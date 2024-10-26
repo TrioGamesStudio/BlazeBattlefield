@@ -6,12 +6,17 @@ using UnityEngine.UI;
 
 public class WorldUI : MonoBehaviour
 {
-    public GameObject panelResult;
+    public GameObject panelResultLose;
     public GameObject panelResultWin;
+    public GameObject panelResultWinTeam;
+    public GameObject panelResultEliminate;
+    public GameObject panelResultLoseTeam;
     public Button lobbyButton;
     public Button lobbyButtonWin;
     public TextMeshProUGUI informationText;
     public TextMeshProUGUI topText;
+    public TextMeshProUGUI topTextTeam;
+
     private void Start()
     {
         lobbyButton.onClick.AddListener(BackToLobby);
@@ -21,12 +26,28 @@ public class WorldUI : MonoBehaviour
     public void ShowHideUI(int alivePlayer)
     {
         topText.text = "TOP " + alivePlayer;
-        panelResult.SetActive(!panelResult.activeSelf);
+        panelResultLose.SetActive(!panelResultLose.activeSelf);
+    }
+
+    public void ShowHideUIDefeatTeam(int alivePlayer)
+    {
+        topTextTeam.text = "TOP " + alivePlayer;
+        panelResultLoseTeam.SetActive(!panelResultLose.activeSelf);
     }
 
     public void ShowHideWinUI()
     {
-        panelResultWin.SetActive(!panelResult.activeSelf);
+        panelResultWin.SetActive(!panelResultLose.activeSelf);
+    }
+
+    public void ShowHideWinUITeam()
+    {
+        panelResultWinTeam.SetActive(!panelResultLose.activeSelf);
+    }
+
+    public void ShowHideEliminateUI()
+    {
+        panelResultEliminate.SetActive(true);
     }
 
     public void SetText(string text)
@@ -67,4 +88,11 @@ public class WorldUI : MonoBehaviour
         Debug.Log("BACK TO LOBBY NE");
         FindObjectOfType<Matchmaking>().BackToLobby();
     }
+
+    public void BackToLobbyTeam()
+    {
+        Debug.Log("TEAM MEMBER BACK TO LOBBY NE");
+        FindObjectOfType<MatchmakingTeam>().BackToLobby();
+    }
 }
+

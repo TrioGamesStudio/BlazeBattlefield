@@ -171,12 +171,14 @@ public class PlayerRoomController : NetworkBehaviour
     public void RPC_ShowWin()
     {
         Debug.Log("===WIN ROIIIIII");
+        FindObjectOfType<WorldUI>().ShowHideWinUITeam();
+        GetComponent<NetworkPlayer>().localUI.SetActive(false);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_ShowLose(int rank)
     {
         Debug.Log("===No teammate remain -> Defeat " + "Top " + rank);
-
+        FindObjectOfType<WorldUI>().ShowHideUIDefeatTeam(rank);
     }
 }
