@@ -6,54 +6,36 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemCollectUI : MonoBehaviour, IPoolCallback<ItemCollectUI>
+public class ItemCollectUI : MonoBehaviour, IPointerClickHandler
 {
-    [SerializeField] private Image background;
-    [SerializeField] private Image icon;
-    [SerializeField] private Image durability;
-    [SerializeField] private TextMeshProUGUI itemName;
-    [SerializeField] private TextMeshProUGUI itemCount;
-    [SerializeField] private Button OnClickButton;
-    private event Action OnClickButtonCallback;
-    public Action<ItemCollectUI> OnCallback { get; set; }
-
-    private void Awake()
+    [Serializable]
+    public class ItemData
     {
-        OnClickButton.onClick.AddListener(RaiseCallback);
+        public static ItemData CreateInstance(Sprite sprite,string name,int count, Action callback)
+        {
+            var itemData = new ItemData();
+            itemData.sprite = sprite;
+            itemData.name = name;
+            itemData.count = count;
+            itemData.collectCallback = callback;
+            return itemData;
+        }
+
+        public Sprite sprite;
+        public string name;
+        public int count;
+        public Action collectCallback;
     }
-
-    private void OnDestroy()
+    public Image background;
+    public Image icon;
+    public TextMeshProUGUI itemName;
+    public TextMeshProUGUI itemCount;
+    public Action OnCollectCallback;
+    public void OnPointerClick(PointerEventData eventData)
     {
-        OnClickButton.onClick.RemoveListener(RaiseCallback);
-    }
-
-    public void OnRelease()
-    {
-        OnCallback?.Invoke(this);
-    }
-
-    public void SetItemName(string itemNameStr)
-    {
-        itemName.text = itemNameStr;
-    }
-
-    public void SetItemCount(int count)
-    {
-        itemCount.text = count.ToString();
-    }
-
-    public void SetIcon(Sprite icon)
-    {
-        this.icon.sprite = icon;
-    }
-
-    public void SetOnClickEvent(Action callback)
-    {
-        this.OnClickButtonCallback = callback;
-    }
-
-    private void RaiseCallback()
-    {
-        OnClickButtonCallback?.Invoke();
+        // Debug.Log($"UI Collect: '{itemName.text}' '{itemCount.text}'",gameObject);
+        OnCollectCallback?.Invoke();
+        // Inventory.Collect(item.id)
     }
 }
+

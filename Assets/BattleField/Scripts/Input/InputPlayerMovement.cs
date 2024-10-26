@@ -24,7 +24,7 @@ public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovemen
         {
             MoveAction?.Invoke(Vector2.zero);
         }
-        // Debug.Log("Moving: " + context.ReadValue<Vector2>());
+        Debug.Log("Moving: " + context.ReadValue<Vector2>());
     }
 
     public void OnLook(InputAction.CallbackContext context)
@@ -38,7 +38,7 @@ public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovemen
         // {
         //     LookAction?.Invoke(Vector2.zero);
         // }
-        // Debug.Log("Looking: " + context.ReadValue<Vector2>());
+        Debug.Log("Looking: " + context.ReadValue<Vector2>());
     }
 
     public void OnJumping(InputAction.CallbackContext context)
