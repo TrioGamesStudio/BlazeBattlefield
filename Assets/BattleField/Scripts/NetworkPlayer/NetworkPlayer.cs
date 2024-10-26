@@ -153,7 +153,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             Runner.SetPlayerObject(Object.InputAuthority, Object);
 
 
-            // gan playerPref vao trong activeItemUIs
+            // gan playerPref vao trong dictionary
             /* NetDict.Add(Object.InputAuthority.PlayerId, nickName_Network.ToString());
             RPC_SendNetDict(Object.InputAuthority.PlayerId, nickName_Network.ToString()); */
 
