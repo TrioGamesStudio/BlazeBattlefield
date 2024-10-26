@@ -805,7 +805,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""id"": ""5ad5eb90-a114-4c28-b96d-5c4fd074f41a"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
@@ -827,7 +827,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""GetUIItem In Car"",
+                    ""name"": ""Get In Car"",
                     ""type"": ""Button"",
                     ""id"": ""01503eee-9b6f-43bd-82af-4433658641c0"",
                     ""expectedControlType"": """",
@@ -934,6 +934,17 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""74fa43ad-e391-4418-9c66-401def75d562"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""2b06f1ce-e3de-4cd4-80d0-92f017327b8b"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
@@ -961,7 +972,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""GetUIItem In Car"",
+                    ""action"": ""Get In Car"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1086,7 +1097,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Combat_Attack = m_Combat.FindAction("Attack", throwIfNotFound: true);
         m_Combat_Scope = m_Combat.FindAction("Scope", throwIfNotFound: true);
         m_Combat_Receive = m_Combat.FindAction("Receive", throwIfNotFound: true);
-        m_Combat_GetInCar = m_Combat.FindAction("GetUIItem In Car", throwIfNotFound: true);
+        m_Combat_GetInCar = m_Combat.FindAction("Get In Car", throwIfNotFound: true);
         m_Combat_SwapFireMode = m_Combat.FindAction("Swap Fire Mode", throwIfNotFound: true);
         m_Combat_ShowInventory = m_Combat.FindAction("Show Inventory", throwIfNotFound: true);
     }

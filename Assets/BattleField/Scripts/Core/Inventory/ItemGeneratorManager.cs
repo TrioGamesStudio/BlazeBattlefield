@@ -64,7 +64,7 @@ public class ItemGeneratorManager : NetworkBehaviour
 
     public void CreateFromItemData(ItemLocalData itemData)
     {
-        if(CanSpawn(PlayerController.LocalPlayer.GetSoilderPosition(), out var correctSpawnPosition))
+        if(CanSpawn(NetworkPlayer.Local.transform.position, out var correctSpawnPosition))
         {
             ItemInGame item = Runner.Spawn(itemData.ItemData.modelPrefab, correctSpawnPosition, Quaternion.identity);
             item.SetItemNetworkData(CreateItemDataNetwork(itemData.ItemData.name,itemData.CurrentQuantity));

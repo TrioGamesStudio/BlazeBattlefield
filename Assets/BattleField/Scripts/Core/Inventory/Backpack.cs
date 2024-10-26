@@ -75,7 +75,9 @@ public class Backpack : MonoBehaviour
         string itemName = currentItem.ItemName;
         string indentifyID = currentItem.ItemIdentifier;
         ItemDataSO itemDataSo = currentItem.ItemData;
-        Vector3 position = PlayerController.LocalPlayer.GetSoilderPosition();
+        // Vector3 position = PlayerController.LocalPlayer.transform.position;
+        Vector3 position = NetworkPlayer.Local.transform.position;
+
         if (dropAmount == currentCount)
         {
             // 
