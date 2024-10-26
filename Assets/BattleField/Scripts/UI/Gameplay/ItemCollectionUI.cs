@@ -1,105 +1,86 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.UI;
 
-public class ItemCollectionUI : MonoBehaviour
+
+public class ItemCollectionUI : BaseTest<RunTimeItem>
 {
-    public ItemCollectUI ItemCollectUIPrefab;
-    public GameObject View;
-    [FormerlySerializedAs("Holder")] public GameObject Content;
-    private List<ItemCollectUI> poolItemUI = new();
-    public static Action<List<ItemCollectUI.ItemData>> OnItemRefreshChange;
-    public bool canCollect = false;
+    public static ItemCollectionUI instance;
 
-    private void Awake()
+
+    [SerializeField] private GameObject view;
+    [SerializeField] private Button toggleViewButton;
+
+    protected override void Init()
     {
-        ItemCollectUIPrefab.gameObject.SetActive(false);
-        
-        OnItemRefreshChange = ItemRefreshChange;
+        base.Init();
+        toggleViewButton.onClick.AddListener(ToggleView);
+        instance = this;
     }
 
-    private void OnDestroy()
-    {
-        OnItemRefreshChange = null;
-    }
-    // fake data
-    public class ItemRaw
-    {
-        public ItemRaw(string name, int count)
-        {
-            this.name = name;
-            this.count = count;
-        }
 
-        public string itemId;
-        public string name;
-        public int count;
-    }
-    [Button]
-    private void DemoTest()
+    protected override void OnDestroy()
     {
-        
-        List<ItemRaw> itemList = new List<ItemRaw>()
-        {
-            new ItemRaw("Gun 1", 2),
-            new ItemRaw("Gun 2", 2),
-            new ItemRaw("Gun 3", 2),
-            new ItemRaw("Gun 4", 2),
-            new ItemRaw("Gun 5", 2),
-        };
-        List<ItemCollectUI.ItemData> itemDatas = new List<ItemCollectUI.ItemData>();
-        ItemCollectionUI.OnItemRefreshChange?.Invoke(itemDatas);
-        foreach (var item in itemList)
-        {
-            itemDatas.Add(
-                ItemCollectUI.ItemData.CreateInstance(null,
-                    item.name,
-                    item.count, () =>
-            {
-                // Inventory.Collect(item.itemID)
-                // hay dong bo lai list item cua nguoi choi khac
-            }));
-        }
-
-        ItemRefreshChange(itemDatas);
+        base.OnDestroy();
+        toggleViewButton.onClick.RemoveListener(ToggleView);
     }
 
-    private void ItemRefreshChange(List<ItemCollectUI.ItemData> itemDatas)
+
+    private void ToggleView()
     {
-        foreach (var item in poolItemUI)
-        {
-            Destroy(item.gameObject);
-        }
-        poolItemUI.Clear();
-        
-        bool isEmpty = itemDatas == null || itemDatas.Count == 0;
-        View.gameObject.SetActive(!isEmpty);
-        if (isEmpty) return;
-        
-        foreach (var itemData in itemDatas)
-        {
-            // set item data to data
-            ItemCollectUI itemCollectUI = Instantiate(ItemCollectUIPrefab, Content.transform);
-            itemCollectUI.itemCount.text = itemData.count.ToString();
-            itemCollectUI.itemName.text = itemData.name;
-            itemCollectUI.icon.sprite = itemData.sprite;
-            itemCollectUI.OnCollectCallback = () =>
-            {
-                if (canCollect)
-                {
-                    itemData.collectCallback?.Invoke();
-                    itemCollectUI.gameObject.SetActive(false);
-                }
-            };
-            itemCollectUI.gameObject.SetActive(true);
-
-            poolItemUI.Add(itemCollectUI);
-        }
-
+        bool isOpen = view.gameObject.activeSelf;
+        view.gameObject.SetActive(!isOpen);
+        // set sprite
     }
 
-  
+    private void Show() => view.gameObject.SetActive(true);
+
+    private void Hide() => view.gameObject.SetActive(false);
+
+
+    protected override void ConfigureItemUI(RunTimeItem itemInGame, ItemCollectUI itemCollectUI)
+    {
+        itemCollectUI.SetItemCount(itemInGame.GetQuantity());
+        itemCollectUI.SetItemName(itemInGame.GetItemName());
+
+        itemCollectUI.SetOnClickEvent(() => 
+        { 
+            if (Backpack.instance.CanCollect() == false) return;
+            RemoveItemUI(itemInGame);
+            //BackpackUI.instance.AddItemUI(itemInGame);
+
+            itemInGame.Collect();
+            itemInGame.DestroyItem();
+        });
+        itemInGame.OnRemoveItemUI = RemoveItemUI;
+        itemCollectUI.gameObject.SetActive(true);
+    }
+
+
+    protected override void OnItemAdded(RunTimeItem customObject)
+    {
+        base.OnItemAdded(customObject);
+    }
+
+    public override void RemoveItemUI(RunTimeItem customObject)
+    {
+        RemoveItemFromDictionary(customObject.GetUniqueID(), customObject);
+    }
+
+    public override void AddItemUI(RunTimeItem customObject)
+    {
+        AddItemToDictionary(customObject.GetUniqueID(), customObject);
+    }
+
+    
+}
+public interface RunTimeItem
+{
+    public bool isDisplayedUI { get; set; }
+    public Action<RunTimeItem> OnRemoveItemUI { get; set; }
+    string GetItemName();
+    int GetQuantity();
+    void Collect();
+    void DestroyItem();
+    string GetUniqueID();
 }
