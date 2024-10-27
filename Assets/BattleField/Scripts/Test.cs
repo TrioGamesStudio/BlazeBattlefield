@@ -1,37 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Test : MonoBehaviour
+using Fusion;
+[RequireComponent(typeof(Rigidbody))]
+public class Test : NetworkBehaviour
 {
+    private Rigidbody Rigidbody;
+    private void Awake()
+    {
+        Rigidbody = GetComponent<Rigidbody>();
+        Rigidbody.isKinematic = true;
+        Rigidbody.useGravity = false;
+    }
+
+    public override void Spawned()
+    {
+        base.Spawned();
+        if (!HasStateAuthority)
+        {
+            GetComponent<Test>().enabled = false;
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        //if (other.CompareTag("Item") == false) return;
-        //Debug.Log("Enter");
-        //var itemInGame = other.GetComponent<ItemInGame>();
-        //itemInGame.IsDisplayedInUI = true;
-
-        if (other.CompareTag("Item") == false) return;
-        var RunTimeItem = other.GetComponent<RunTimeItem>();
-        //InteractItem(RunTimeItem);
-        RunTimeItem.isDisplayedUI = true;
-        ItemCollectionUI.instance.AddItemUI(RunTimeItem);
+        CollectItem(other, true);
 
     }
+
     private void OnTriggerExit(Collider other)
     {
-        //if (other.CompareTag("Item") == false) return;
-        //Debug.Log("Exit");
-        //var itemInGame = other.GetComponent<ItemInGame>();
-        //itemInGame.IsDisplayedInUI = false;
-        //ItemCollectionUI.instance.RemoveItemUI(itemInGame);
-
-        if (other.CompareTag("Item") == false) return;
-        var RunTimeItem = other.GetComponent<RunTimeItem>();
-        RunTimeItem.isDisplayedUI = false;
-        //InteractItem(RunTimeItem);
-        ItemCollectionUI.instance.RemoveItemUI(RunTimeItem);
+        CollectItem(other, false);
 
     }
-    
+
+    private void CollectItem(Collider other, bool showing)
+    {
+        if (other.CompareTag("Item") == false) return;
+        var RunTimeItem = other.GetComponent<RunTimeItem>();
+        RunTimeItem.isDisplayedUI = showing;
+        
+        if (showing)
+        {
+            ItemCollectionUI.instance.AddItemUI(RunTimeItem);
+        }
+        else
+        {
+            ItemCollectionUI.instance.RemoveItemUI(RunTimeItem);
+        }
+    }
 }

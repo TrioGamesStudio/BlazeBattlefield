@@ -41,7 +41,7 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
     protected override void ConfigureItemUI(RunTimeItem itemInGame, ItemCollectUI itemCollectUI)
     {
         itemCollectUI.SetItemCount(itemInGame.GetQuantity());
-        itemCollectUI.SetItemName(itemInGame.GetItemName());
+        itemCollectUI.SetItemName($"Name: {itemInGame.GetItemName()} ({activeItemUIs.Count})");
 
         itemCollectUI.SetOnClickEvent(() => 
         { 
