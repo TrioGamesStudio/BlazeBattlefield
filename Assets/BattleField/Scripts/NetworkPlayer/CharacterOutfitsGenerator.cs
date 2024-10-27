@@ -7,7 +7,7 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
 {
     [Networked]
     public int skinsNumber_Network{get; set;}
-
+    [SerializeField] int defaultSkinsNumber = 12;
     [SerializeField] Transform skinsTrans;
     [SerializeField] List<Transform> skinsList;
 
@@ -18,6 +18,16 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
     public override void Spawned() {
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 
+        if(Object.HasInputAuthority) {
+            if(SceneManager.GetActiveScene().name == "MainLobby") {
+                RPC_RandomSKinsNumsGenerator(defaultSkinsNumber);
+            }
+            else {
+                int skinsNums = Random.Range(0, skinsList.Count);
+                RPC_RandomSKinsNumsGenerator(skinsNums);
+            }
+        }
+        
 
         OnSkinsChanged();
     }
@@ -27,16 +37,6 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
         {
             skinsList.Add(item);
         }
-    }
-
-
-    private void Start() {
-        if(Object.HasStateAuthority) {
-            //if(SceneManager.GetActiveScene().name == "MainLobby") return;
-            int skinsNums = Random.Range(0, skinsList.Count);
-            RPC_RandomSKinsNumsGenerator(skinsNums);
-        }
-        
     }
 
     public override void Render()
@@ -58,7 +58,6 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
 
     private void OnSkinsChanged()
     {
-        if(SceneManager.GetActiveScene().name == "MainLobby") return;
         // clear all GO in skinsTrans
         foreach (Transform item in skinsTrans) {
             item.gameObject.SetActive(false);
