@@ -128,8 +128,10 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             networkRunner = Instantiate(networkRunnerPrefab);
             networkRunner.AddCallbacks(this);
         }
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         // Call this to join the session lobby
         await networkRunner.JoinSessionLobby(SessionLobby.Shared);
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         currentMode = Mode.Solo;
     }
 
@@ -148,6 +150,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             networkRunner = Instantiate(networkRunnerPrefab);
             networkRunner.AddCallbacks(this);
         }
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         var sceneInfo = new NetworkSceneInfo();
         int playSceneIndex = (int)SceneBuildIndex.PlayScene;
         sceneInfo.AddSceneRef(SceneRef.FromIndex(playSceneIndex));
@@ -170,6 +173,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             Debug.LogError($"Failed to Start: {result.ShutdownReason}");
         }
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
     }
 
     public async void QuickPlayTeam()
@@ -177,6 +181,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         networkRunner.RemoveCallbacks(this);
         if (networkRunner.IsSharedModeMasterClient)
         {
+            UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
             // Set battle room for non-owner players
             foreach (var player in players.Where(p => p.Value.Object.HasInputAuthority == false))
             {
@@ -206,6 +211,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public async void RPC_TransitionAllToBattleRoom()
     {
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         Debug.Log("Team member join battle room");
         playButton.gameObject.SetActive(false);
         readyButton.gameObject.SetActive(false);
@@ -234,6 +240,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             networkRunner = Instantiate(networkRunnerPrefab);
             networkRunner.AddCallbacks(this);
         }
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         var startArguments = new StartGameArgs()
         {
             GameMode = GameMode.Shared,
@@ -254,6 +261,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             //StatusText.text = $"Connection Failed: {result.ShutdownReason}";
         }
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
     }
 
     public async void LeaveRoom()
@@ -310,8 +318,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         currentMode = Mode.Duo;
         players.Clear();
-        var sceneInfo = new NetworkSceneInfo();
-        sceneInfo.AddSceneRef(SceneRef.FromIndex(4)); //Share room scene;
+        //var sceneInfo = new NetworkSceneInfo();
+        //sceneInfo.AddSceneRef(SceneRef.FromIndex(4)); //Share room scene;
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         if (networkRunner == null)
         {
             networkRunner = Instantiate(networkRunnerPrefab);
@@ -321,8 +330,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.Shared,
             SessionName = roomName,
-            Scene = sceneInfo, // Assuming you have a separate battle room scene
-            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
+            //Scene = sceneInfo, // Assuming you have a separate battle room scene
+            //SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
 
         if (result.Ok)
@@ -337,7 +346,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             Debug.LogError($"Failed to Start: {result.ShutdownReason}");
         }
-
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)

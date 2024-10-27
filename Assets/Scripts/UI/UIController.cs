@@ -22,7 +22,6 @@ public class UIController : MonoBehaviour
     public ModeButton duoButton;
     public Toggle toggleModeButton;
     public Button joinTeamButton;
-    //public TextMeshProUGUI informationText;
     public GameObject mainLobbyPanel;
     public GameObject worldPanel;
     private bool isPanelActive = false;
@@ -30,7 +29,7 @@ public class UIController : MonoBehaviour
     public Transform sessionListContent;    // Parent transform for session buttons
     public GameObject panelResult;
     public Button lobbyButton;
-    //bool isSingle = true;
+    public GameObject loadingPanel;
     public static UIController Instance { get; private set; }
     private Matchmaking matchmaking;
     private void Awake()
@@ -208,6 +207,7 @@ public class UIController : MonoBehaviour
         //StartCoroutine(CountdownCoroutine());
         FindObjectOfType<WorldUI>().StartCountdown();
     }
+
 
     //private IEnumerator CountdownCoroutine()
     //{
