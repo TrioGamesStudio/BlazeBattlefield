@@ -3,7 +3,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System;
 
 //gameobject = 
 public class ShowPlayerInfo : MonoBehaviour
@@ -11,10 +10,12 @@ public class ShowPlayerInfo : MonoBehaviour
     // show info UI
     [SerializeField] TextMeshProUGUI userName;
     [SerializeField] TextMeshProUGUI currentLevel;
-    [SerializeField] TextMeshProUGUI coins;
-    [SerializeField] TextMeshProUGUI highScore;
+    [SerializeField] TextMeshProUGUI winSolo;
+    [SerializeField] TextMeshProUGUI winTeam;
+    [SerializeField] TextMeshProUGUI coin;
 
     // buttons
+    [Header("       Buttons")]
     [SerializeField] Button saveButton;
     [SerializeField] Button loadButton;
     [SerializeField] Button gotoLobby;
@@ -79,7 +80,8 @@ public class ShowPlayerInfo : MonoBehaviour
         // Debug.Log($"_____show player info");
         userName.text = "User name: " + DataSaver.Instance.dataToSave.userName;
         currentLevel.text = "Current Level: " + DataSaver.Instance.dataToSave.currLevel.ToString();
-        highScore.text = "High Score: " + DataSaver.Instance.dataToSave.highScore.ToString();
-        coins.text = "Coins: " + DataSaver.Instance.dataToSave.coins.ToString();
+        winSolo.text = "Win: " + DataSaver.Instance.dataToSave.winSolo.ToString();
+        winTeam.text = "Win Team: " + DataSaver.Instance.dataToSave.winTeam.ToString();
+        coin.text = "Coin: " + DataSaver.Instance.dataToSave.coins.ToString();
     }
 }
