@@ -104,6 +104,7 @@ public class WeaponHandler : NetworkBehaviour
     }
 
     public override void Render() {
+        if (changeDetector == null) return;
         foreach (var change in changeDetector.DetectChanges(this, out var previousBuffer, out var currentBuffer)) {
             switch (change) {
                 case nameof(isFiring):
