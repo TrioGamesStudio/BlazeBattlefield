@@ -31154,6 +31154,7 @@ GameObject:
   - component: {fileID: 4209804027836753055}
   - component: {fileID: 8736713430267502296}
   - component: {fileID: 4043879867669260240}
+  - component: {fileID: 4143770320003914217}
   m_Layer: 0
   m_Name: NetworkPlayerPFNew
   m_TagString: Player
@@ -31208,6 +31209,7 @@ MonoBehaviour:
   - {fileID: 4209804027836753055}
   - {fileID: 8736713430267502296}
   - {fileID: 4043879867669260240}
+  - {fileID: 4143770320003914217}
 --- !u!114 &4878325697303761598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31438,6 +31440,21 @@ MonoBehaviour:
     _value: 0
   teamMemberPanel: {fileID: 4443500529871716872}
   isLocalPlayer: 0
+--- !u!114 &4143770320003914217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6593664972719329374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e12aac5cebebec45a1b477751a17029, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _skinsNumber_Network: 0
+  skinsTrans: {fileID: 2974270429900100015}
+  skinsList: []
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0
