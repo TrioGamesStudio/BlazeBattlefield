@@ -42,7 +42,15 @@ public class GameHandler : MonoBehaviour
                 teamsOriginal[player.TeamID.ToString()] = listPlayers;
             }
         }
-
+        Debug.Log("===AFTER initialize");
+        foreach (var key in teams.Keys)
+        {
+            Debug.Log("===Key: " + key);
+            foreach (var playerRoom in teams[key])
+            {
+                Debug.Log("====Player team id: " + playerRoom.TeamID);
+            }
+        }
         Debug.Log("===Team count: " + teams.Count);
     }
 
@@ -104,12 +112,6 @@ public class GameHandler : MonoBehaviour
         {
             string teamID = teams.Keys.First();
             Debug.Log("===Victory team: " + teamID);
-            
-            // set winteam variable
-            DataSaver.Instance.dataToSave.winTeam += 1;
-
-            // save to firebase datatosave
-            DataSaver.Instance.SaveData();
 
             foreach(var playerRoomControl in teamsOriginal[teamID])
             {

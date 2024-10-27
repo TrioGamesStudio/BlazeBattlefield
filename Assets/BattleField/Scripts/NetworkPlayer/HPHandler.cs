@@ -116,10 +116,14 @@ public class HPHandler : NetworkBehaviour
             /* RPC_SetNetworkedIsDead(true); */ // can use
             if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
             {
-                PlayerRef player = GetComponent<PlayerRoomController>().ThisPlayerRef;
-                Debug.Log("====Player ref " + player);
-                RPC_ShowResult(Matchmaking.Instance.alivePlayer);    
-                Matchmaking.Instance.CheckWin(player);
+                //PlayerRef player = GetComponent<PlayerRoomController>().ThisPlayerRef;
+                //Debug.Log("====Player ref " + player);
+                //RPC_ShowResult(Matchmaking.Instance.alivePlayer);    
+                //Matchmaking.Instance.CheckWin(player);
+                PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
+                RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
+                RPC_HideLocalPlayerUI();
+                RPC_ShowResultDuo();
             }
             else
             {
