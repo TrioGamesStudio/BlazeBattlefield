@@ -69,6 +69,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         if (result.Ok)
         {
             UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
+            UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
             Debug.Log("Joined team battle room: " + networkRunner.SessionInfo.Name);
         }
         else
