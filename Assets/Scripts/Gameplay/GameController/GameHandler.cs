@@ -100,11 +100,17 @@ public class GameHandler : MonoBehaviour
 
     public void CheckWin()
     {
-
         if (teams.Count == 1) //Remain only one team
         {
             string teamID = teams.Keys.First();
             Debug.Log("===Victory team: " + teamID);
+            
+            // set winteam variable
+            DataSaver.Instance.dataToSave.winTeam += 1;
+
+            // save to firebase datatosave
+            DataSaver.Instance.SaveData();
+
             foreach(var playerRoomControl in teamsOriginal[teamID])
             {
                 if (playerRoomControl != null)

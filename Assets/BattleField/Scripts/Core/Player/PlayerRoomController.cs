@@ -171,6 +171,7 @@ public class PlayerRoomController : NetworkBehaviour
     public void RPC_ShowWin()
     {
         Debug.Log("===WIN ROIIIIII");
+        
         FindObjectOfType<WorldUI>().ShowHideWinUITeam();
         GetComponent<NetworkPlayer>().localUI.SetActive(false);
     }
