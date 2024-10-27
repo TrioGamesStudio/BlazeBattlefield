@@ -496,6 +496,13 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (alivePlayer == 1 && player != networkRunner.LocalPlayer)
         {
             Debug.Log("WINNNNN!!!!");
+
+            // save achivement winSolo
+            DataSaver.Instance.dataToSave.winSolo += 1;
+            
+            // save to firebase datatosave
+            DataSaver.Instance.SaveData();
+            
             localSoloPlayer.GetComponent<NetworkPlayer>().localUI.SetActive(false);
             FindObjectOfType<WorldUI>().ShowHideWinUI();
         }

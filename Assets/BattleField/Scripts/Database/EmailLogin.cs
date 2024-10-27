@@ -5,7 +5,6 @@ using Firebase.Extensions;
 using Firebase.Auth;
 using Firebase;
 using UnityEngine.UI;
-using System.Net.Mail;
 
 public class EmailLogin : MonoBehaviour
 {
@@ -358,13 +357,17 @@ public class EmailLogin : MonoBehaviour
     void ShowLogMsg_SingUP(string msg)
     {
         logTxt.text = msg;
-        StartCoroutine(TextFadeOut_SignUp(1f));
+        StartCoroutine(TextFadeOut_SignUp(2f));
     }
     IEnumerator TextFadeOut_SignUp(float time) {
         yield return new WaitForSeconds(time);
         logTxt.text = "";
 
         SuccessUi.SetActive(false);
+
+        yield return new WaitForSeconds(time);
+        signupUi.gameObject.SetActive(false);
+        loginUi.gameObject.SetActive(true);
     }
 
     void SetPlayerPref(string mail, string password) {
