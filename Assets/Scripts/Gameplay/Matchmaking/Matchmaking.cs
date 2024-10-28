@@ -234,7 +234,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public async void CreateRoom()
     {
-        players.Clear();
+        if (currentMode == Mode.Duo) return;
+        players.Clear();    
         string teamcode = UnityEngine.Random.Range(100, 999).ToString();
         if (networkRunner == null)
         {
@@ -242,6 +243,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             networkRunner.AddCallbacks(this);
         }
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+        currentMode = Mode.Duo;
         var startArguments = new StartGameArgs()
         {
             GameMode = GameMode.Shared,
@@ -267,6 +269,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public async void LeaveRoom()
     {
+        if (currentMode == Mode.Solo) return;
         if (networkRunner != null)
         {
             Debug.Log("Leaving room...");
