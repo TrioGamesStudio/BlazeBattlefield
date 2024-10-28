@@ -270,6 +270,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public async void LeaveRoom()
     {
         if (currentMode == Mode.Solo) return;
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         if (networkRunner != null)
         {
             Debug.Log("Leaving room...");
@@ -297,6 +298,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             localPlayer.SetActive(true);
             UIController.Instance.SwitchMode(true);
             UIController.Instance.OnOffPanel();
+            UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
             await JoinLobby();
 
             // Optionally update the UI, e.g., re-enable room creation UI or show session list
