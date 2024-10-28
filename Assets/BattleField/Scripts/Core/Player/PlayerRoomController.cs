@@ -171,8 +171,20 @@ public class PlayerRoomController : NetworkBehaviour
     public void RPC_ShowWin()
     {
         Debug.Log("===WIN ROIIIIII");
-        
-        FindObjectOfType<WorldUI>().ShowHideWinUITeam();
+        if (matchmaking.currentMode == Matchmaking.Mode.Duo)
+        {
+            FindObjectOfType<WorldUI>().ShowHideWinUITeam();
+            // set winteam variable
+            DataSaver.Instance.dataToSave.winTeam += 1;
+        }       
+        else
+        {
+            FindObjectOfType<WorldUI>().ShowHideWinUI();
+            // save achivement winSolo
+            DataSaver.Instance.dataToSave.winSolo += 1;
+        }
+        // save to firebase datatosave
+        DataSaver.Instance.SaveData();
         GetComponent<NetworkPlayer>().localUI.SetActive(false);
     }
 
@@ -180,6 +192,9 @@ public class PlayerRoomController : NetworkBehaviour
     public void RPC_ShowLose(int rank)
     {
         Debug.Log("===No teammate remain -> Defeat " + "Top " + rank);
-        FindObjectOfType<WorldUI>().ShowHideUIDefeatTeam(rank);
+        if (matchmaking.currentMode == Matchmaking.Mode.Duo)
+            FindObjectOfType<WorldUI>().ShowHideUIDefeatTeam(rank);
+        else
+            FindObjectOfType<WorldUI>().ShowHideUI(rank);
     }
 }

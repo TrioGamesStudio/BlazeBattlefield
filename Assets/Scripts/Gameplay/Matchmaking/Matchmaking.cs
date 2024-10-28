@@ -27,6 +27,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public Mode currentMode = Mode.Solo;
     private bool isAutoMatch;
     public int alivePlayer;
+    bool isDone = false;
     private PlayerRoomController localSoloPlayer;
     public bool IsAutoMatch
     {
@@ -402,15 +403,18 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
                 localSoloPlayer = playerObject.GetComponent<PlayerRoomController>();
                 playerObject.GetComponent<PlayerRoomController>().SetPlayerRef(player);
+                playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
             }
             int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
             string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(text);
-            if (runner.ActivePlayers.Count() == MAX_PLAYER) // Assuming PlayerCount is 2
+            if (runner.ActivePlayers.Count() == MAX_PLAYER && !isDone) // Assuming PlayerCount is 2
             {
+                isDone = true;
                 alivePlayer = runner.ActivePlayers.Count();
                 FindObjectOfType<UIController>().StartCountdown();
                 StartCoroutine(ReleasePlayer());
+                StartCoroutine(InitializeTeams());
             }
         }
     }
@@ -419,6 +423,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         yield return new WaitForSeconds(4f);
         FindObjectOfType<WaitingArea>()?.ReleasePlayer();
+    }
+
+    private IEnumerator InitializeTeams()
+    {
+        yield return new WaitForSeconds(6f);
+        FindObjectOfType<GameHandler>().InitializeTeams();
     }
 
     private IEnumerator WaitForPlayerObject(NetworkRunner runner, PlayerRef player)
