@@ -21,7 +21,6 @@ public class StorageManager : MonoBehaviour
             {AmmoType.Ammo556, 0},
             {AmmoType.Ammo762, 0},
             {AmmoType.Ammo9mm, 0},
-            {AmmoType.ShotgunShell, 0},
             {AmmoType.Ammo12Gauge, 0},
         };
 
@@ -70,6 +69,4 @@ public enum HealingItemType
     Bandage = 5,
     FirstAidKit = 10,
     Medkit = 15,
-    EnergyDrink = 20,
-    Painkiller = 25
 }

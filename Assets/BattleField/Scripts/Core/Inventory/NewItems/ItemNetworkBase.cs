@@ -1,6 +1,5 @@
 ﻿using Fusion;
 using System;
-
 public abstract class ItemNetworkBase<_EnumType,T> : NetworkBehaviour, RunTimeItem where _EnumType : Enum where T : ItemConfig<_EnumType>
 {
     

@@ -8,7 +8,7 @@ public class BackpackUI : MonoBehaviour
     protected UnityPool<ItemCollectUI> poolItemsUI;
     [SerializeField] protected ItemBackpackUI itemCollectUIPrefab;
     [SerializeField] protected GameObject content;
-    [SerializeField] protected HealthItemData healthItemData;
+    [SerializeField] protected ItemDefaultConfigs itemDefaultConfig;
     [SerializeField] protected BackpackButtonGroupUI buttonGroupUI;
     [SerializeField] protected DropAmountUI dropAmountUI;
     [SerializeField] protected int dropCount;
@@ -18,17 +18,22 @@ public class BackpackUI : MonoBehaviour
         poolItemsUI = new UnityPool<ItemCollectUI>(itemCollectUIPrefab,10, content.transform);
     }
 
-    public void UpdateHealthUI(Dictionary<HealingItemType,int> itemList)
+    public void UpdateHealthUI(ItemType itemType,Dictionary<Enum,int> storage)
     {
-        foreach(var healthItem in itemList)
+        foreach(var healthItem in storage)
         {
-            var itemConfig = healthItemData.GetItemDataConfig(healthItem.Key);
+            var itemConfig = itemDefaultConfig.FindItem(itemType, healthItem.Key);
+            if(itemConfig == null)
+            {
+                Debug.LogError("Item Config is null, please check it ", gameObject);
+                continue;
+            }
             int maxQuantityOfStack = itemConfig.maxStack;
             var itemBackpackUI = GetUIItem();
             itemBackpackUI.SetItemCount(healthItem.Value);
             itemBackpackUI.SetItemName(itemConfig.displayName);
 
-            itemBackpackUI.SetItemBPData(itemConfig.ItemType, healthItem.Value, (int)healthItem.Key);
+            itemBackpackUI.SetItemBPData(itemConfig.ItemType, healthItem.Value, itemConfig.GetEnumIndex());
             itemBackpackUI.SetOnClickEvent(() =>
             {
                 SetCurrentItem(itemBackpackUI);
@@ -62,13 +67,14 @@ public class BackpackUI : MonoBehaviour
     [Button]
     private void Test()
     {
-        var itemData = healthItemData.GetItemDataConfig(HealingItemType);
+        var itemData = itemDefaultConfig.FindItem(ItemType.Health,HealingItemType);
         if(itemData == null)
         {
             Debug.Log("Item Data is null");
         }
         else
         {
+            itemData.ShowDebug();
             Debug.Log("Item Data not null");
         }
     }

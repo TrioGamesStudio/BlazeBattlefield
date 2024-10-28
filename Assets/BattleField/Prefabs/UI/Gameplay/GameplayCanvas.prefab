@@ -3073,7 +3073,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemCollectUIPrefab: {fileID: 6353675800172628301}
   content: {fileID: 4332009162077189741}
-  healthItemData: {fileID: 11400000, guid: 070af35a617673345aa554bfdfd8d8d8, type: 2}
+  itemDefaultConfig: {fileID: 0}
   buttonGroupUI: {fileID: 7418114666516845425}
   dropAmountUI: {fileID: 6580366121413449648}
   dropCount: 0
@@ -8234,6 +8234,11 @@ MonoBehaviour:
   itemName: {fileID: 6977166765390018375}
   itemCount: {fileID: 379043921304928760}
   OnClickButton: {fileID: 2079851577310379731}
+  itemConfig:
+    displayName: 
+    Icon: {fileID: 0}
+    maxStack: 0
+    ItemType: 0
 --- !u!114 &379043921304928760 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1492044696912424540, guid: 1cad173e7c7eaa144819a52d1deb4a22,

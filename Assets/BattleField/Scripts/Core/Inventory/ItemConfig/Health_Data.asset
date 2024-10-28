@@ -13,8 +13,26 @@ MonoBehaviour:
   m_Name: Health_Data
   m_EditorClassIdentifier: 
   itemConfigs:
-  - Icon: {fileID: 0}
-    ItemType: 1
-    maxStack: 1
+  - displayName: Bandage
+    Icon: {fileID: 0}
+    SubItemType: 5
+    maxStack: 10
+    ItemType: 3
+    healthAmount: 15
+    usingTime: 0.8
+  - displayName: First Aid Kit
+    Icon: {fileID: 0}
+    SubItemType: 10
+    maxStack: 5
+    ItemType: 3
+    healthAmount: 70
+    usingTime: 1.5
+  - displayName: Med Kit
+    Icon: {fileID: 0}
+    SubItemType: 15
+    maxStack: 5
+    ItemType: 3
     healthAmount: 100
     usingTime: 2
+  ItemType: 0
+  ItemDefaultConfigs: {fileID: 11400000, guid: 3a7614a043a595f4197e5993d46e8d6f, type: 2}

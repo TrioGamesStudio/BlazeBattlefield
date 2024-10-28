@@ -1,4 +1,6 @@
-﻿public class ItemBackpackUI : ItemCollectUI
+﻿using System;
+
+public class ItemBackpackUI : ItemCollectUI
 {
     public ItemBPData _ItemBPData;
     public struct ItemBPData
@@ -13,4 +15,11 @@
         _ItemBPData.quantity = quantity;
         _ItemBPData.enumIndex = enumIndex;
     }
+
+    public void SetItemConfig(ItemConfig<Enum> newItemConfig)
+    {
+        itemConfig = newItemConfig;
+    }
+
+    public ItemConfig<Enum> itemConfig;
 }

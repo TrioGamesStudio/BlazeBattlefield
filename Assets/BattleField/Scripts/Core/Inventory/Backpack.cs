@@ -1,14 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-public enum AmmoType
-{
-    None = 0,        
-    Ammo556 = 5,     
-    Ammo762 = 10,     
-    Ammo9mm = 15,     
-    ShotgunShell = 20,
-    Ammo12Gauge  = 25
-}
+
 public class Backpack : MonoBehaviour
 {
 
@@ -107,5 +99,8 @@ public enum ItemType
     Ammo,
     Health,
     Grenade,
+    Ammor,
+    Helmet,
+    Backpack
 }
 

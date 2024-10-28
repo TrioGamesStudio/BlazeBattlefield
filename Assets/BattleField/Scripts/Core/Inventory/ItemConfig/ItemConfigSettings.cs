@@ -1,10 +1,15 @@
-﻿using System;
+﻿using Fusion;
+using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class ItemConfigSettings<_EnumType,ItemDataConfig> : ScriptableObject where _EnumType : Enum where ItemDataConfig : ItemConfig<_EnumType>
+public abstract class ItemConfigSettings<_EnumType,ItemDataConfig> : ScriptableObject where _EnumType : Enum where ItemDataConfig : ItemConfig<_EnumType>
 {
     public List<ItemDataConfig> itemConfigs;
+    public ItemType ItemType;
+    public ItemDefaultConfigs ItemDefaultConfigs;
     public virtual ItemDataConfig GetItemDataConfig(_EnumType _EnumType)
     {
         return Get(itemConfigs, _EnumType);
@@ -20,13 +25,24 @@ public class ItemConfigSettings<_EnumType,ItemDataConfig> : ScriptableObject whe
 
         return null;
     }
+    public abstract void GetDefaultSetting();
 }
 [Serializable]
-public class ItemConfig<T> where T : Enum
+public class ItemConfig<SubType> where SubType : Enum
 {
     public string displayName;
     public Sprite Icon;
-    public T SubItemType;
+    public SubType SubItemType;
     public int maxStack;
     public ItemType ItemType;
+
+    public virtual void ShowDebug()
+    {
+        Debug.Log($"Item Name: {displayName}, MaxStack {maxStack} MainType: {ItemType.ToString()} SubType:{SubItemType.ToString()}");
+    }
+
+    public virtual int GetEnumIndex()
+    {
+        return (int)(object)SubItemType;
+    }
 }

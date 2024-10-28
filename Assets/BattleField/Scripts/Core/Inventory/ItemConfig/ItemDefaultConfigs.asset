@@ -9,10 +9,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03d40f29fdf63874b9ca7c82e68305b9, type: 3}
-  m_Name: Ammo_Data
+  m_Script: {fileID: 11500000, guid: bc06159c375957a45ac70f86b7530355, type: 3}
+  m_Name: ItemDefaultConfigs
   m_EditorClassIdentifier: 
-  itemConfigs:
+  healthConfigs:
+  - displayName: Bandage
+    Icon: {fileID: 0}
+    SubItemType: 5
+    maxStack: 10
+    ItemType: 3
+    healthAmount: 15
+    usingTime: 0.8
+  - displayName: First Aid Kit
+    Icon: {fileID: 0}
+    SubItemType: 10
+    maxStack: 5
+    ItemType: 3
+    healthAmount: 70
+    usingTime: 1.5
+  - displayName: Med Kit
+    Icon: {fileID: 0}
+    SubItemType: 15
+    maxStack: 5
+    ItemType: 3
+    healthAmount: 100
+    usingTime: 2
+  ammoConfigs:
   - displayName: 5.56mm Ammo
     Icon: {fileID: 0}
     SubItemType: 5
@@ -33,5 +55,4 @@ MonoBehaviour:
     SubItemType: 20
     maxStack: 30
     ItemType: 2
-  ItemType: 0
-  ItemDefaultConfigs: {fileID: 11400000, guid: 3a7614a043a595f4197e5993d46e8d6f, type: 2}
+  itemType: 3
