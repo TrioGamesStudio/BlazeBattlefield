@@ -52,7 +52,7 @@ public class ItemCollectUI : MonoBehaviour, IPoolCallback<ItemCollectUI>
         this.OnClickButtonCallback = callback;
     }
 
-    private void RaiseCallback()
+    public void RaiseCallback()
     {
         OnClickButtonCallback?.Invoke();
     }

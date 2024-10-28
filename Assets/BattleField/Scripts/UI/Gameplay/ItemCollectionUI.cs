@@ -1,6 +1,8 @@
+using NaughtyAttributes;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 
 public class ItemCollectionUI : BaseTest<RunTimeItem>
@@ -45,7 +47,7 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
 
         itemCollectUI.SetOnClickEvent(() => 
         { 
-            if (Backpack.instance.CanCollect() == false) return;
+            //if (Backpack.instance.CanCollect() == false) return;
             RemoveItemUI(itemInGame);
             //BackpackUI.instance.AddItemUI(itemInGame);
 
@@ -72,7 +74,28 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
         AddItemToDictionary(customObject.GetUniqueID(), customObject);
     }
 
-    
+    [Button]
+    public void GetFirstItemDebug()
+    {
+        if (activeItemUIs.Count == 0)
+        {
+            Debug.Log("Bay gio khong co item nao trong danh sach thu thap", gameObject);
+            return;
+        }
+        var itemUI = GetFirestItem();
+        itemUI.RaiseCallback();
+        Debug.Log("Show first Item", itemUI.gameObject);
+    }
+
+    private ItemCollectUI GetFirestItem()
+    {
+        foreach (var item in activeItemUIs)
+        {
+            return item.Value;
+        }
+        return null;
+    }
+
 }
 public interface RunTimeItem
 {
