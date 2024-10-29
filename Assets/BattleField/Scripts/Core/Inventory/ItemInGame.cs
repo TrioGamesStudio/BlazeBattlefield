@@ -36,14 +36,14 @@ public class ItemInGame : NetworkBehaviour
 
     private void InitializeLocalItemData()
     {
-        var dataSO = ItemGeneratorManager.instance.GetItemDataSO(NetworkedItemData.ItemDataSOName.ToString());
-        if (dataSO == null)
-        {
-            Debug.LogWarning("Item Data SO is null",gameObject);
-            return;
-        }
-        localItemData = new ItemLocalData(dataSO,
-            NetworkedItemData.CurrentCount);
+        //var dataSO = ItemGeneratorManager.instance.GetItemDataSO(NetworkedItemData.ItemDataSOName.ToString());
+        //if (dataSO == null)
+        //{
+        //    Debug.LogWarning("Item Data SO is null",gameObject);
+        //    return;
+        //}
+        //localItemData = new ItemLocalData(dataSO,
+        //    NetworkedItemData.CurrentCount);
     }
 
     public void SetItemNetworkData(ItemDataNetwork _ItemDataNetwork)

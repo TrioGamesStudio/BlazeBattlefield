@@ -5,10 +5,37 @@ using UnityEngine.UI;
 
 public class BackpackButtonGroupUI : MonoBehaviour
 {
-    public Button dropButton;
-    public Button dropAllButton;
-    public Button useButton;
-    public Button equipButton;
+    [SerializeField] private Button dropButton;
+    [SerializeField] private Button dropAllButton;
+    [SerializeField] private Button useButton;
+    [SerializeField] private Button equipButton;
+    public event Action OnDropFullItem;
+    public event  Action OnDropItem;
+    private void Awake()
+    {
+        dropButton.onClick.AddListener(Drop);
+        dropAllButton.onClick.AddListener(DropAll);
+    }
+
+    private void OnDestroy()
+    {
+        dropButton.onClick.RemoveListener(Drop);
+        dropAllButton.onClick.RemoveListener(DropAll);
+    }
+
+    private void Drop()
+    {
+        OnDropItem?.Invoke();
+        BackpackUI.instance.HideButton();
+        BackpackUI.instance.HideDropAmount();
+    }
+
+    public void DropAll()
+    {
+        OnDropFullItem?.Invoke();
+        BackpackUI.instance.HideButton();
+        BackpackUI.instance.HideDropAmount();
+    }
 
     public void ShowByIndex(int index)
     {
@@ -16,7 +43,6 @@ public class BackpackButtonGroupUI : MonoBehaviour
         transform.SetSiblingIndex(index + 1);
     }
 
-    
     public void Hide()
     {
         transform.gameObject.SetActive(false);

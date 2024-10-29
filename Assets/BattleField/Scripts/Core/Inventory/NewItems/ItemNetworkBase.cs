@@ -1,18 +1,34 @@
 ﻿using Fusion;
+using NaughtyAttributes;
 using System;
+using static Fusion.Allocator;
+[Serializable]
+public class CustomData
+{
+    public string key;
+    public float value;
+}
 public abstract class ItemNetworkBase<_EnumType,T> : NetworkBehaviour, RunTimeItem where _EnumType : Enum where T : ItemConfig<_EnumType>
 {
-    
     [Networked] public int quantity { get; set; }
     public Action<RunTimeItem> OnRemoveItemUI { get; set; }
     public bool isDisplayedUI { get; set; }
 
     public ItemConfigSettings<_EnumType,T> ItemConfigSettings;
     public _EnumType _enumType;
+    public CustomData[] customDatas;
+    public ItemConfig<_EnumType> config;
     public override void Spawned()
     {
         base.Spawned();
+        SetConfig();
     }
+
+    public void SetConfig()
+    {
+        config = ItemConfigSettings.GetItemDataConfig(_enumType);
+    }
+
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
         base.Despawned(runner, hasState);
@@ -21,9 +37,10 @@ public abstract class ItemNetworkBase<_EnumType,T> : NetworkBehaviour, RunTimeIt
             OnRemoveItemUI?.Invoke(this);
         }
     }
+
     public string GetItemName()
     {
-        return ItemConfigSettings.GetItemDataConfig(_enumType).displayName;
+        return config.displayName;
     }
 
     public int GetQuantity()
@@ -31,8 +48,22 @@ public abstract class ItemNetworkBase<_EnumType,T> : NetworkBehaviour, RunTimeIt
         return quantity;
     }
 
-    public abstract void Collect();
+    public void Collect()
+    {
+        InventoryItem inventoryItem = new InventoryItem();
+        inventoryItem.maxStack = config.maxStack;
+        inventoryItem.displayName = config.displayName;
+        inventoryItem.Icon = config.Icon;
+        inventoryItem.amount = quantity;
+        inventoryItem.customDatas = customDatas;
+        inventoryItem._SubItemEnum = _enumType;
+        StorageManager.instance.Add(ItemConfigSettings.ItemType, _enumType, inventoryItem);
+        
+        OnRemoveItemUI?.Invoke(this);
+        DestroyItem();
+    }
 
+   
     public string GetUniqueID()
     {
         return Object.NetworkTypeId.ToString();

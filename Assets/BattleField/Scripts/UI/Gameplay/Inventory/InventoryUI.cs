@@ -13,7 +13,7 @@ public class InventoryUI : MonoBehaviour
     {
         // WeaponEquipUI.BindWeaponData(Gun1);
         // WeaponEquipUI.RefreshWeaponInformation();
-        // InputReader.Instance.Enable();
+        InputReader.Instance.Enable();
         view.gameObject.SetActive(false);
         InputCombatControl.ShowInventory += ShowInventory;
     }

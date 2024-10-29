@@ -5,62 +5,116 @@ using UnityEngine;
 public class BackpackUI : MonoBehaviour
 {
     public static BackpackUI instance;
-    protected UnityPool<ItemCollectUI> poolItemsUI;
+    protected UnityPool<ItemBackpackUI> poolItemsUI;
     [SerializeField] protected ItemBackpackUI itemCollectUIPrefab;
     [SerializeField] protected GameObject content;
     [SerializeField] protected ItemDefaultConfigs itemDefaultConfig;
     [SerializeField] protected BackpackButtonGroupUI buttonGroupUI;
     [SerializeField] protected DropAmountUI dropAmountUI;
     [SerializeField] protected int dropCount;
+    private Dictionary<ItemType, List<ItemBackpackUI>> _itemUIs = new();
     private void Awake()
     {
+        instance = this;
         itemCollectUIPrefab.gameObject.SetActive(false);
-        poolItemsUI = new UnityPool<ItemCollectUI>(itemCollectUIPrefab,10, content.transform);
+        poolItemsUI = new UnityPool<ItemBackpackUI>(itemCollectUIPrefab,10, content.transform);
+        HideButton();
+        StorageManager.OnAddItem = HandleItemAdded;
+        StorageManager.OnRemoveItem = HandleItemRemove;
+
+
+        buttonGroupUI.OnDropFullItem += DropItem;
+        buttonGroupUI.OnDropItem += DropItem;
+
+        dropAmountUI.OnDropItemCallback = OnDropAmountChange;
+    }
+    private void OnDestroy()
+    {
+        buttonGroupUI.OnDropFullItem -= DropItem;
+        buttonGroupUI.OnDropItem -= DropItem;
+
+        dropAmountUI.OnDropItemCallback = OnDropAmountChange;
+
     }
 
-    public void UpdateHealthUI(ItemType itemType,Dictionary<Enum,int> storage)
+
+
+    private void OnDropAmountChange(int newDropCount)
     {
-        foreach(var healthItem in storage)
+        dropCount = newDropCount;
+
+        Debug.Log("Drop With Count:" + newDropCount);
+    }
+
+    private void HandleItemAdded(InventoryItem item)
+    {
+        var ui = poolItemsUI.Get();
+        ui.Initialize(item);
+     
+        if (!_itemUIs.ContainsKey(item.ItemType))
+            _itemUIs[item.ItemType] = new List<ItemBackpackUI>();
+        _itemUIs[item.ItemType].Add(ui);
+        ui.gameObject.SetActive(true);
+    }
+
+    private void HandleItemRemove(InventoryItem item)
+    {
+        if (_itemUIs.TryGetValue(item.ItemType, out var uis) && uis.Count > 0)
         {
-            var itemConfig = itemDefaultConfig.FindItem(itemType, healthItem.Key);
-            if(itemConfig == null)
+            foreach(var itemUI in uis)
             {
-                Debug.LogError("Item Config is null, please check it ", gameObject);
-                continue;
+                if (itemUI.AreSameItem(item))
+                {
+                    var key = item.ItemType;
+                    uis.Remove(itemUI);
+                    itemUI.OnRelease();
+                    break;
+                }
             }
-            int maxQuantityOfStack = itemConfig.maxStack;
-            var itemBackpackUI = GetUIItem();
-            itemBackpackUI.SetItemCount(healthItem.Value);
-            itemBackpackUI.SetItemName(itemConfig.displayName);
+        }
+ 
+    }
 
-            itemBackpackUI.SetItemBPData(itemConfig.ItemType, healthItem.Value, itemConfig.GetEnumIndex());
-            itemBackpackUI.SetOnClickEvent(() =>
-            {
-                SetCurrentItem(itemBackpackUI);
-                buttonGroupUI.ShowByIndex(itemBackpackUI.transform.GetSiblingIndex());
-            });
-        }
-    }
-    ItemBackpackUI.ItemBPData ItemBPData;
-    public void SetCurrentItem(ItemBackpackUI itemBackpackUI)
+    private InventoryItem currentItem;
+
+    public void ShowDropAmount()
     {
-        ItemBPData = itemBackpackUI._ItemBPData;
+        dropAmountUI.gameObject.SetActive(true);
+        dropAmountUI.SetupView(currentItem);
     }
-    private void OnDrop(ItemType itemType, int enumIndex, int quantity)
+
+    public void HideDropAmount()
     {
-        if(itemType == ItemType.Health)
-        {
-            StorageManager.instance.UpdateHealth((HealingItemType)enumIndex, quantity, false);
-        }
-        else if(itemType == ItemType.Ammo)
-        {
-            StorageManager.instance.UpdateAmmo((AmmoType)enumIndex, quantity, false);
-        }
+        dropAmountUI.gameObject.SetActive(false);
+
     }
+
+    public void ShowButton(int transformIndex)
+    {
+        buttonGroupUI.gameObject.SetActive(true);
+        buttonGroupUI.transform.SetSiblingIndex(transformIndex);
+    }
+
+    public void HideButton()
+    {
+        buttonGroupUI.gameObject.SetActive(false);
+    }
+
+    public void SetCurrentItem(InventoryItem inventoryItem)
+    {
+        currentItem = inventoryItem;
+    }
+
+    private void DropItem()
+    {
+        StorageManager.instance.Remove(currentItem.ItemType, currentItem._SubItemEnum, currentItem);
+    }
+
+
     private ItemBackpackUI GetUIItem()
     {
         var itemBackpackUI = poolItemsUI.Get();
-        return itemBackpackUI as ItemBackpackUI;
+        return itemBackpackUI;
     }
     public HealingItemType HealingItemType;
 

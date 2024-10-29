@@ -40,10 +40,10 @@ public class DropAmountUI : MonoBehaviour
     {
         currentCountDrop.text = value.ToString();
     }
-    public void SetupView(ItemLocalData itemData)
+    public void SetupView(InventoryItem inventoryItem)
     {
-        int currentCount = itemData.CurrentQuantity;
-        string _itemName = itemData.ItemName;
+        int currentCount = inventoryItem.amount;
+        string _itemName = inventoryItem.displayName;
 
         amountSlider.minValue = 1;
         amountSlider.maxValue = currentCount;

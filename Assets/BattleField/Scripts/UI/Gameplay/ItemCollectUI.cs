@@ -6,30 +6,40 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemCollectUI : MonoBehaviour, IPoolCallback<ItemCollectUI>
+public class ItemCollectUI : BaseUIItem, IPoolCallback<ItemCollectUI>
 {
-    [SerializeField] private Image background;
-    [SerializeField] private Image icon;
-    [SerializeField] private Image durability;
-    [SerializeField] private TextMeshProUGUI itemName;
-    [SerializeField] private TextMeshProUGUI itemCount;
-    [SerializeField] private Button OnClickButton;
-    private event Action OnClickButtonCallback;
     public Action<ItemCollectUI> OnCallback { get; set; }
-
-    private void Awake()
-    {
-        OnClickButton.onClick.AddListener(RaiseCallback);
-    }
-
-    private void OnDestroy()
-    {
-        OnClickButton.onClick.RemoveListener(RaiseCallback);
-    }
 
     public void OnRelease()
     {
         OnCallback?.Invoke(this);
+    }
+
+    public void Initialize(RunTimeItem itemInGame)
+    {
+        SetItemCount(itemInGame.GetQuantity());
+        SetItemName($"Name: {itemInGame.GetItemName()}");
+    }
+}
+
+public class BaseUIItem : MonoBehaviour
+{
+    [SerializeField] protected Image background;
+    [SerializeField] protected Image icon;
+    [SerializeField] protected Image durability;
+    [SerializeField] protected TextMeshProUGUI itemName;
+    [SerializeField] protected TextMeshProUGUI itemCount;
+    [SerializeField] protected Button OnClickButton;
+    private event Action OnClickButtonCallback;
+
+    protected virtual void Awake()
+    {
+        OnClickButton.onClick.AddListener(RaiseCallback);
+    }
+
+    protected virtual void OnDestroy()
+    {
+        OnClickButton.onClick.RemoveListener(RaiseCallback);
     }
 
     public void SetItemName(string itemNameStr)
@@ -52,8 +62,9 @@ public class ItemCollectUI : MonoBehaviour, IPoolCallback<ItemCollectUI>
         this.OnClickButtonCallback = callback;
     }
 
-    public void RaiseCallback()
+    public virtual void RaiseCallback()
     {
         OnClickButtonCallback?.Invoke();
     }
+
 }

@@ -53,7 +53,7 @@ public class Backpack : MonoBehaviour
 
     private void CreateItemInWorld(ItemLocalData itemData)
     {
-        ItemGeneratorManager.instance.CreateFromItemData(itemData);
+        //ItemGeneratorManager.instance.CreateFromItemData(itemData);
     }
     
     public bool CanCollect()

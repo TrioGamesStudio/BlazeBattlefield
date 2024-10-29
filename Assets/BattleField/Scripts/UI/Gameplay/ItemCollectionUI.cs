@@ -42,8 +42,9 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
 
     protected override void ConfigureItemUI(RunTimeItem itemInGame, ItemCollectUI itemCollectUI)
     {
-        itemCollectUI.SetItemCount(itemInGame.GetQuantity());
-        itemCollectUI.SetItemName($"Name: {itemInGame.GetItemName()} ({activeItemUIs.Count})");
+        itemCollectUI.Initialize(itemInGame);
+        //itemCollectUI.SetItemCount(itemInGame.GetQuantity());
+        //itemCollectUI.SetItemName($"Name: {itemInGame.GetItemName()} ({activeItemUIs.Count})");
 
         itemCollectUI.SetOnClickEvent(() => 
         { 
@@ -52,7 +53,6 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
             //BackpackUI.instance.AddItemUI(itemInGame);
 
             itemInGame.Collect();
-            itemInGame.DestroyItem();
         });
         itemInGame.OnRemoveItemUI = RemoveItemUI;
         itemCollectUI.gameObject.SetActive(true);

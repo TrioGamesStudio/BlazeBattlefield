@@ -5,62 +5,64 @@ public class StorageManager : MonoBehaviour
 {
 
     public static StorageManager instance;
+
+
+    public static Action<InventoryItem> OnAddItem;
+    public static Action<InventoryItem> OnRemoveItem;
+    public static Action<InventoryItem> OnUpdateItem;
+    private Dictionary<(ItemType, Enum), List<InventoryItem>> bigData = new();
+
     private void Awake()
     {
         instance = this;
-        Init();
-    }
-
-    private Dictionary<AmmoType, int> ammoInformation;
-    private Dictionary<HealingItemType, int> healthInformation;
-
-    private void Init()
-    {
-        ammoInformation = new()
-        {
-            {AmmoType.Ammo556, 0},
-            {AmmoType.Ammo762, 0},
-            {AmmoType.Ammo9mm, 0},
-            {AmmoType.Ammo12Gauge, 0},
-        };
-
-        healthInformation = new()
-        {
-            {HealingItemType.Bandage, 0},
-            {HealingItemType.FirstAidKit, 0},
-            {HealingItemType.Medkit, 0},
-        };
     }
 
 
-    private void UpdateItem<T>(Dictionary<T, int> itemDictionary, T itemType, int quantity, bool isAdding)
-    {
-        if (itemDictionary.ContainsKey(itemType))
-        {
-            itemDictionary[itemType] += isAdding ? quantity : -quantity;
-            Debug.Log($"Current {typeof(T).Name}: {itemType} count is: {itemDictionary[itemType]}");
-        }
-        else
-        {
-            Debug.LogWarning($"{typeof(T).Name} type {itemType} not found in dictionary.");
-        }
 
-        if (itemDictionary[itemType] <= 0)
+    public void Add(ItemType itemType,Enum _enum, InventoryItem inventoryItem)
+    {
+        if (bigData.ContainsKey((itemType, _enum)) == false)
+            bigData.Add((itemType, _enum), new List<InventoryItem>());
+
+        if (bigData.TryGetValue((itemType, _enum), out var list))
         {
-            Debug.LogError("item is zero");
+            list.Add(inventoryItem);
+            OnAddItem(inventoryItem);
+            ShowItemInformation(inventoryItem);
         }
     }
 
-    public void UpdateAmmo(AmmoType ammoType, int quantity, bool isAdding)
+    private void ShowItemInformation(InventoryItem inventoryItem)
     {
-        UpdateItem(ammoInformation, ammoType, quantity, isAdding);
+        Debug.Log($"name{inventoryItem.displayName},amoumt {inventoryItem.amount},item type {inventoryItem.ItemType},max stack {inventoryItem.maxStack}");
+        foreach(var data in inventoryItem.customDatas)
+        {
+            Debug.Log($"Key {data.key} Value {data.value}");
+        }
     }
 
-    public void UpdateHealth(HealingItemType healingItemType, int quantity, bool isAdding)
+    public void Remove(ItemType itemType, Enum _enum, InventoryItem inventoryItem)
     {
-        UpdateItem(healthInformation, healingItemType, quantity, isAdding);
+        if (bigData.TryGetValue((itemType, _enum), out var list))
+        {
+            if (!list.Contains(inventoryItem)) return;
+            list.Remove(inventoryItem);
+            OnRemoveItem(inventoryItem);
+        }
     }
 
+
+}
+public class InventoryItem
+{
+    public ItemType ItemType;
+    public Enum _SubItemEnum;
+    public string displayName;
+    public Sprite Icon;
+    public int maxStack;
+    public int amount;
+    public CustomData[] customDatas;
+    public Action OnUpdateData;
 }
 
 public enum HealingItemType

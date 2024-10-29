@@ -1,25 +1,62 @@
 ﻿using System;
+using UnityEngine;
 
-public class ItemBackpackUI : ItemCollectUI
+public class ItemBackpackUI : BaseUIItem, IPoolCallback<ItemBackpackUI>
 {
-    public ItemBPData _ItemBPData;
-    public struct ItemBPData
+    public Action<ItemBackpackUI> OnCallback { get; set; }
+    private InventoryItem currentItem;
+    private bool isShow = false;
+    protected override void Awake()
     {
-        public ItemType itemType;
-        public int quantity;
-        public int enumIndex;
+        base.Awake();
+        OnClickButton.onClick.AddListener(ShowButtonBelowItemUI);
     }
-    public void SetItemBPData(ItemType itemType, int quantity, int enumIndex)
+    protected override void OnDestroy()
     {
-        _ItemBPData.itemType = itemType;
-        _ItemBPData.quantity = quantity;
-        _ItemBPData.enumIndex = enumIndex;
+        base.OnDestroy();
+        OnClickButton.onClick.RemoveListener(ShowButtonBelowItemUI);
+    }
+    private void ShowButtonBelowItemUI()
+    {
+        if (!isShow)
+        {
+            BackpackUI.instance.ShowButton(transform.GetSiblingIndex() + 1);
+            BackpackUI.instance.SetCurrentItem(currentItem);
+            isShow = true;
+        }
+        else
+        {
+            BackpackUI.instance.HideButton();
+            isShow = false;
+        }
     }
 
-    public void SetItemConfig(ItemConfig<Enum> newItemConfig)
+    public void OnRelease()
     {
-        itemConfig = newItemConfig;
+        currentItem.OnUpdateData = null;
+        currentItem = null;
+        OnCallback?.Invoke(this);
     }
 
-    public ItemConfig<Enum> itemConfig;
+    public void Initialize(InventoryItem item)
+    {
+        currentItem = item;
+        //currentItem.OnUpdateData = UpdateData;
+        UpdateData();
+    }
+
+    private void UpdateData()
+    {
+        if (currentItem == null) return;
+        Debug.Log($"Add to UI{currentItem.displayName},amoumt {currentItem.amount},item type {currentItem.ItemType},max stack {currentItem.maxStack}");
+
+        SetItemName(currentItem.displayName);
+        SetItemCount(currentItem.amount);
+    }
+
+    public bool AreSameItem(InventoryItem item)
+    {
+        return currentItem.Equals(item);
+    }
+
 }
