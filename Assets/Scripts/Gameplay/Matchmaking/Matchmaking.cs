@@ -28,6 +28,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     private bool isAutoMatch;
     public int alivePlayer;
     bool isDone = false;
+    public bool IsDone{get => isDone;}
     private PlayerRoomController localSoloPlayer;
     public bool IsAutoMatch
     {
@@ -42,7 +43,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             }
         }
     }
-   
+
     //private const int TEAM_SIZE = 2;
     enum SceneBuildIndex
     {
@@ -275,7 +276,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => p.Object.HasInputAuthority == false);
                 if (localPlayer != null)
                 {
-                   localPlayer.RPC_SetAsRoomOwner();
+                    localPlayer.RPC_SetAsRoomOwner();
                 }
             }
 
@@ -369,7 +370,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 players[player].SetRoomID(runner.SessionInfo.Name);
                 players[player].SetAutoMatch(isAutoMatch);
                 localPlayerRoomController = players[player];
-               
+            
                 //players[player].SetHealthBarColor(Color.green);
 
             }
@@ -423,6 +424,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         yield return new WaitForSeconds(4f);
         FindObjectOfType<WaitingArea>()?.ReleasePlayer();
+
+
     }
 
     private IEnumerator InitializeTeams()

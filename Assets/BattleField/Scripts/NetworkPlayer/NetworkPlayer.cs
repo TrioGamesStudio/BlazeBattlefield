@@ -141,6 +141,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
             // lay gia tri Gamemanager.playerNickName gan vao
             RPC_SetNickName(GameManager.playerNickName);
+
+            
             /* RPC_SetNickName(PlayerPrefs.GetString("PlayerNickName_Local")); */
 
             // kiem tra PlayerPref player (Object.InputAuthority.PlayerID) -> le = green | chan = red

@@ -12,6 +12,7 @@ public class InputName : MonoBehaviour
     void Start()
     {
         playButton.onClick.AddListener(SetName);
+        nameInputField.text = GameManager.names[Random.Range(0, GameManager.names.Length)];
     }
 
     public void SetName()
@@ -21,6 +22,7 @@ public class InputName : MonoBehaviour
 
     IEnumerator LoadToMainLobby(float time) {
         GameManager.playerNickName = nameInputField.text;
+        
         yield return new WaitForSeconds(time);
         SceneManager.LoadSceneAsync(MAINLOBBY);
     }
