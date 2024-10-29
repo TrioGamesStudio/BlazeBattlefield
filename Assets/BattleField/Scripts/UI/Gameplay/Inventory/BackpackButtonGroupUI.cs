@@ -9,8 +9,8 @@ public class BackpackButtonGroupUI : MonoBehaviour
     [SerializeField] private Button dropAllButton;
     [SerializeField] private Button useButton;
     [SerializeField] private Button equipButton;
-    public event Action OnDropFullItem;
-    public event  Action OnDropItem;
+    private event Action OnDropFullItem;
+    private event Action OnShowDropButton;
     private void Awake()
     {
         dropButton.onClick.AddListener(Drop);
@@ -25,27 +25,12 @@ public class BackpackButtonGroupUI : MonoBehaviour
 
     private void Drop()
     {
-        OnDropItem?.Invoke();
-        BackpackUI.instance.HideButton();
-        BackpackUI.instance.HideDropAmount();
+        OnShowDropButton?.Invoke();
     }
 
     public void DropAll()
     {
         OnDropFullItem?.Invoke();
-        BackpackUI.instance.HideButton();
-        BackpackUI.instance.HideDropAmount();
-    }
-
-    public void ShowByIndex(int index)
-    {
-        transform.gameObject.SetActive(true);
-        transform.SetSiblingIndex(index + 1);
-    }
-
-    public void Hide()
-    {
-        transform.gameObject.SetActive(false);
     }
 
     public void RemoveAllRegister()
@@ -54,5 +39,15 @@ public class BackpackButtonGroupUI : MonoBehaviour
         dropAllButton.onClick.RemoveAllListeners();
         useButton.onClick.RemoveAllListeners();
         equipButton.onClick.RemoveAllListeners();
+    }
+
+    public void SetOnDropFull(Action dropAllItem)
+    {
+        OnDropFullItem = dropAllItem;
+    }
+
+    public void SetOndropItemAmount(Action showDropAmount)
+    {
+        OnShowDropButton = showDropAmount;
     }
 }

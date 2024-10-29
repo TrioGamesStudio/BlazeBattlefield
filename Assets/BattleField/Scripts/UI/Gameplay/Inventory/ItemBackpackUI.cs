@@ -41,7 +41,7 @@ public class ItemBackpackUI : BaseUIItem, IPoolCallback<ItemBackpackUI>
     public void Initialize(InventoryItem item)
     {
         currentItem = item;
-        //currentItem.OnUpdateData = UpdateData;
+        currentItem.OnUpdateData = UpdateData;
         UpdateData();
     }
 

@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class ItemDatabase : NetworkBehaviour
 {
-    public List<NetworkObject> gameObjects;
     public static ItemDatabase instance;
+    [SerializeField] private List<NetworkObject> gameObjects;
     private Dictionary<(ItemType, Enum), NetworkObject> bigData = new();
 
     private void Awake()

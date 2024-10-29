@@ -12,47 +12,89 @@ public class BackpackUI : MonoBehaviour
     [SerializeField] protected BackpackButtonGroupUI buttonGroupUI;
     [SerializeField] protected DropAmountUI dropAmountUI;
     [SerializeField] protected int dropCount;
+    private InventoryItem currentItem;
+
     private Dictionary<ItemType, List<ItemBackpackUI>> _itemUIs = new();
+   
     private void Awake()
     {
         instance = this;
         itemCollectUIPrefab.gameObject.SetActive(false);
-        poolItemsUI = new UnityPool<ItemBackpackUI>(itemCollectUIPrefab,10, content.transform);
+        poolItemsUI = new UnityPool<ItemBackpackUI>(itemCollectUIPrefab, 10, content.transform);
         HideButton();
-        StorageManager.OnAddItem = HandleItemAdded;
-        StorageManager.OnRemoveItem = HandleItemRemove;
+        StorageManager.OnAddItem += HandleItemAdded;
+        StorageManager.OnRemoveItem += HandleItemRemove;
 
 
-        buttonGroupUI.OnDropFullItem += DropItem;
-        buttonGroupUI.OnDropItem += DropItem;
+        buttonGroupUI.SetOnDropFull(DropAllItem);
+        buttonGroupUI.SetOndropItemAmount(ShowDropAmount);
 
-        dropAmountUI.OnDropItemCallback = OnDropAmountChange;
+        dropAmountUI.SetAcceptDrop(OnAcceptDrop);
+
     }
     private void OnDestroy()
     {
-        buttonGroupUI.OnDropFullItem -= DropItem;
-        buttonGroupUI.OnDropItem -= DropItem;
+        StorageManager.OnAddItem -= HandleItemAdded;
+        StorageManager.OnRemoveItem -= HandleItemRemove;
 
-        dropAmountUI.OnDropItemCallback = OnDropAmountChange;
+        buttonGroupUI.SetOnDropFull(null);
+        buttonGroupUI.SetOndropItemAmount(null);
 
+        dropAmountUI.SetAcceptDrop(null);
+
+        
     }
 
 
-
-    private void OnDropAmountChange(int newDropCount)
+    public void ShowDropAmount()
     {
-        dropCount = newDropCount;
+        dropAmountUI.Show();
+        dropAmountUI.SetupView(currentItem);
+    }
 
+    private void OnAcceptDrop(int newDropCount)
+    {
+        if (newDropCount == 0) return;
+
+        dropCount = newDropCount;
+        if(dropCount == currentItem.amount)
+        {
+            DropAllItem();
+        }
+        else
+        {
+            ItemDatabase.instance.InventoryItemToWorld(currentItem, newDropCount);
+            currentItem.amount -= newDropCount;
+            currentItem?.OnUpdateData();
+        }
+        HideDropAmount();
+        HideButton();
         Debug.Log("Drop With Count:" + newDropCount);
     }
 
+    private void DropAllItem()
+    {
+        HideButton();
+        HideDropAmount();
+        ItemDatabase.instance.InventoryItemToWorld(currentItem, currentItem.amount);
+        StorageManager.instance.Remove(currentItem.ItemType, currentItem._SubItemEnum, currentItem);
+    }
+
+
     private void HandleItemAdded(InventoryItem item)
     {
+        if(item == null)
+        {
+            Debug.Log("This item is null", gameObject);
+            return;
+        }
+
         var ui = poolItemsUI.Get();
         ui.Initialize(item);
-     
+
         if (!_itemUIs.ContainsKey(item.ItemType))
             _itemUIs[item.ItemType] = new List<ItemBackpackUI>();
+       
         _itemUIs[item.ItemType].Add(ui);
         ui.gameObject.SetActive(true);
     }
@@ -61,7 +103,7 @@ public class BackpackUI : MonoBehaviour
     {
         if (_itemUIs.TryGetValue(item.ItemType, out var uis) && uis.Count > 0)
         {
-            foreach(var itemUI in uis)
+            foreach (var itemUI in uis)
             {
                 if (itemUI.AreSameItem(item))
                 {
@@ -72,16 +114,10 @@ public class BackpackUI : MonoBehaviour
                 }
             }
         }
- 
+
     }
 
-    private InventoryItem currentItem;
 
-    public void ShowDropAmount()
-    {
-        dropAmountUI.gameObject.SetActive(true);
-        dropAmountUI.SetupView(currentItem);
-    }
 
     public void HideDropAmount()
     {
@@ -104,32 +140,4 @@ public class BackpackUI : MonoBehaviour
         currentItem = inventoryItem;
     }
 
-    private void DropItem()
-    {
-        ItemDatabase.instance.InventoryItemToWorld(currentItem, currentItem.amount);
-        StorageManager.instance.Remove(currentItem.ItemType, currentItem._SubItemEnum, currentItem);
-    }
-
-
-    private ItemBackpackUI GetUIItem()
-    {
-        var itemBackpackUI = poolItemsUI.Get();
-        return itemBackpackUI;
-    }
-    public HealingItemType HealingItemType;
-
-    [Button]
-    private void Test()
-    {
-        var itemData = itemDefaultConfig.FindItem(ItemType.Health,HealingItemType);
-        if(itemData == null)
-        {
-            Debug.Log("Item Data is null");
-        }
-        else
-        {
-            itemData.ShowDebug();
-            Debug.Log("Item Data not null");
-        }
-    }
 }

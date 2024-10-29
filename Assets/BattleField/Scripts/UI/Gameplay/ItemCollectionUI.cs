@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
@@ -82,18 +83,10 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
             Debug.Log("Bay gio khong co item nao trong danh sach thu thap", gameObject);
             return;
         }
-        var itemUI = GetFirestItem();
+        if (activeItemUIs.Count == 0) return;
+        var itemUI = activeItemUIs.First().Value;
         itemUI.RaiseCallback();
         Debug.Log("Show first Item", itemUI.gameObject);
-    }
-
-    private ItemCollectUI GetFirestItem()
-    {
-        foreach (var item in activeItemUIs)
-        {
-            return item.Value;
-        }
-        return null;
     }
 
 }

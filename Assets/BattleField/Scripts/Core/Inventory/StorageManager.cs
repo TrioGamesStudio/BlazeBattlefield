@@ -17,7 +17,10 @@ public class StorageManager : MonoBehaviour
         instance = this;
     }
 
-
+    public void Split(InventoryItem inventoryItem, int amount)
+    {
+        
+    }
 
     public void Add(ItemType itemType,Enum _enum, InventoryItem inventoryItem)
     {

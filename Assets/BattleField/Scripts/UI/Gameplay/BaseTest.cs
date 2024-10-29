@@ -8,7 +8,7 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
 {
     protected UnityPool<ItemCollectUI> poolItemsUI;
     protected Dictionary<string, ItemCollectUI> activeItemUIs;
-    //[SerializeField] protected List<ItemCollectUI> usingList;
+    //[SerializeField] protected List<ItemCollectionUI> usingList;
     [SerializeField] protected ItemCollectUI itemCollectUIPrefab;
     [SerializeField] protected GameObject content;
 
