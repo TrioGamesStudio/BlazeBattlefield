@@ -827,7 +827,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""GetUIItem In Car"",
+                    ""name"": ""Get In Car"",
                     ""type"": ""Button"",
                     ""id"": ""01503eee-9b6f-43bd-82af-4433658641c0"",
                     ""expectedControlType"": """",
@@ -972,7 +972,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""GetUIItem In Car"",
+                    ""action"": ""Get In Car"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1097,7 +1097,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Combat_Attack = m_Combat.FindAction("Attack", throwIfNotFound: true);
         m_Combat_Scope = m_Combat.FindAction("Scope", throwIfNotFound: true);
         m_Combat_Receive = m_Combat.FindAction("Receive", throwIfNotFound: true);
-        m_Combat_GetInCar = m_Combat.FindAction("GetUIItem In Car", throwIfNotFound: true);
+        m_Combat_GetInCar = m_Combat.FindAction("Get In Car", throwIfNotFound: true);
         m_Combat_SwapFireMode = m_Combat.FindAction("Swap Fire Mode", throwIfNotFound: true);
         m_Combat_ShowInventory = m_Combat.FindAction("Show Inventory", throwIfNotFound: true);
     }

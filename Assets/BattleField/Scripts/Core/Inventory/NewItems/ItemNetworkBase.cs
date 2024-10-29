@@ -8,13 +8,22 @@ public class CustomData
     public string key;
     public float value;
 }
-public abstract class ItemNetworkBase<_EnumType,T> : NetworkBehaviour, RunTimeItem where _EnumType : Enum where T : ItemConfig<_EnumType>
+
+public interface ItemDataEnum
+{
+    Enum GetSubItemType();
+    ItemType GetItemType();
+
+    void SetQuantity(int newAmount);
+}
+
+public abstract class ItemNetworkBase<_EnumType, T> : NetworkBehaviour, ItemDataEnum, RunTimeItem where _EnumType : Enum where T : ItemConfig<_EnumType>
 {
     [Networked] public int quantity { get; set; }
     public Action<RunTimeItem> OnRemoveItemUI { get; set; }
     public bool isDisplayedUI { get; set; }
 
-    public ItemConfigSettings<_EnumType,T> ItemConfigSettings;
+    public ItemConfigSettings<_EnumType, T> ItemConfigSettings;
     public _EnumType _enumType;
     public CustomData[] customDatas;
     public ItemConfig<_EnumType> config;
@@ -58,12 +67,12 @@ public abstract class ItemNetworkBase<_EnumType,T> : NetworkBehaviour, RunTimeIt
         inventoryItem.customDatas = customDatas;
         inventoryItem._SubItemEnum = _enumType;
         StorageManager.instance.Add(ItemConfigSettings.ItemType, _enumType, inventoryItem);
-        
+
         OnRemoveItemUI?.Invoke(this);
         DestroyItem();
     }
 
-   
+
     public string GetUniqueID()
     {
         return Object.NetworkTypeId.ToString();
@@ -81,5 +90,28 @@ public abstract class ItemNetworkBase<_EnumType,T> : NetworkBehaviour, RunTimeIt
             Runner.Despawn(Object);
         }
     }
- 
+
+    public Enum GetSubItemType()
+    {
+        return _enumType;
+    }
+
+    public ItemType GetItemType()
+    {
+        return config.ItemType;
+    }
+
+    public void SetQuantity(int newAmount)
+    {
+        SetQuantityRPC(newAmount);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void SetQuantityRPC(int newAmount)
+    {
+        if (Object.HasStateAuthority)
+        {
+            quantity = newAmount;
+        }
+    }
 }

@@ -86,7 +86,6 @@ public class BackpackUI : MonoBehaviour
     public void HideDropAmount()
     {
         dropAmountUI.gameObject.SetActive(false);
-
     }
 
     public void ShowButton(int transformIndex)
@@ -107,6 +106,7 @@ public class BackpackUI : MonoBehaviour
 
     private void DropItem()
     {
+        ItemDatabase.instance.InventoryItemToWorld(currentItem, currentItem.amount);
         StorageManager.instance.Remove(currentItem.ItemType, currentItem._SubItemEnum, currentItem);
     }
 
