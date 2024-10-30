@@ -134,6 +134,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         // Call this to join the session lobby
         await networkRunner.JoinSessionLobby(SessionLobby.Shared);
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+        isDone = false;
         currentMode = Mode.Solo;
     }
 
@@ -314,6 +315,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         await networkRunner.Shutdown();
         SceneManager.LoadScene("MainLobby");
+        isDone = false;
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
         localPlayer.gameObject.SetActive(true);
         await JoinLobby();

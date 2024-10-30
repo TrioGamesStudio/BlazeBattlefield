@@ -178,16 +178,16 @@ public class PlayerRoomController : NetworkBehaviour
         {
             FindObjectOfType<WorldUI>().ShowHideWinUITeam();
             // set winteam variable
-            DataSaver.Instance.dataToSave.winTeam += 1;
+            //DataSaver.Instance.dataToSave.winTeam += 1;
         }       
         else
         {
             FindObjectOfType<WorldUI>().ShowHideWinUI();
             // save achivement winSolo
-            DataSaver.Instance.dataToSave.winSolo += 1;
+            //DataSaver.Instance.dataToSave.winSolo += 1;
         }
         // save to firebase datatosave
-        DataSaver.Instance.SaveData();
+        //DataSaver.Instance.SaveData();
         GetComponent<NetworkPlayer>().localUI.SetActive(false);
     }
 
