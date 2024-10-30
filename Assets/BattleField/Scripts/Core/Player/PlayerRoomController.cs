@@ -197,10 +197,12 @@ public class PlayerRoomController : NetworkBehaviour
         ShowCursor();
         Debug.Log("===No teammate remain -> Defeat " + "Top " + rank);
         if (matchmaking.currentMode == Matchmaking.Mode.Duo)
-            FindObjectOfType<WorldUI>().ShowHideUIDefeatTeam(rank);
-        else
         {
             FindObjectOfType<WorldUI>().HideEliminateUI();
+            FindObjectOfType<WorldUI>().ShowHideUIDefeatTeam(rank);
+        }          
+        else
+        {        
             FindObjectOfType<WorldUI>().ShowHideUI(rank);
         }          
     }
