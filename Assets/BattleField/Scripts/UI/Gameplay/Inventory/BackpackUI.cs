@@ -21,14 +21,15 @@ public class BackpackUI : MonoBehaviour
         instance = this;
         itemCollectUIPrefab.gameObject.SetActive(false);
         poolItemsUI = new UnityPool<ItemBackpackUI>(itemCollectUIPrefab, 10, content.transform);
-        HideButton();
         StorageManager.OnAddItem += HandleItemAdded;
         StorageManager.OnRemoveItem += HandleItemRemove;
 
 
+        HideButton();
         buttonGroupUI.SetOnDropFull(DropAllItem);
         buttonGroupUI.SetOndropItemAmount(ShowDropAmount);
-
+       
+        dropAmountUI.Hide();
         dropAmountUI.SetAcceptDrop(OnAcceptDrop);
     }
 
