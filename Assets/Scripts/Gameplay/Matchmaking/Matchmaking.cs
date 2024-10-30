@@ -410,6 +410,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 localSoloPlayer = playerObject.GetComponent<PlayerRoomController>();
                 playerObject.GetComponent<PlayerRoomController>().SetPlayerRef(player);
                 playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
+                playerObject.GetComponent<PlayerRoomController>().SetLocalPlayer();
             }
             int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
             string text = "Waiting other player: " + remainPlayer + " remain";
@@ -418,7 +419,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 isDone = true;
                 alivePlayer = runner.ActivePlayers.Count();
-                
                 FindObjectOfType<UIController>().StartCountdown();
                 StartCoroutine(ReleasePlayer());
                 StartCoroutine(InitializeTeams());
