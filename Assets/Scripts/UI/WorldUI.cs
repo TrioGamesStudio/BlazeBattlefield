@@ -17,11 +17,25 @@ public class WorldUI : MonoBehaviour
     public TextMeshProUGUI topText;
     public TextMeshProUGUI topTextTeam;
 
+    // buttons
+    [SerializeField] Button returnLobby;
+    [SerializeField] GameObject returnLobbyPanel;
+    bool isCursorShowed = false;
+
     private void Start()
     {
         lobbyButton.onClick.AddListener(BackToLobby);
         lobbyButtonWin.onClick.AddListener(BackToLobby);
+
+        returnLobby.onClick.AddListener(BackToLobby);
     }
+
+    private void Update() {
+        if(Input.GetKeyDown(KeyCode.Escape)) {
+            ToggleCursor();
+        }
+    }
+    
 
     public void ShowHideUI(int alivePlayer)
     {
@@ -93,6 +107,23 @@ public class WorldUI : MonoBehaviour
     {
         Debug.Log("TEAM MEMBER BACK TO LOBBY NE");
         FindObjectOfType<MatchmakingTeam>().BackToLobby();
+    }
+
+    // on off cursor
+    void ToggleCursor() {
+        isCursorShowed = !isCursorShowed;
+        if(isCursorShowed) ShowCursor();
+        else HideCursor();
+    }
+        
+    void ShowCursor() {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    void HideCursor() {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }
 
