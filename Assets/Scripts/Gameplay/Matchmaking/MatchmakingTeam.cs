@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 {
+    public static MatchmakingTeam Instance;
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private PlayerRoomController playerControllerPrefab;
     private NetworkRunner networkRunner;
@@ -22,6 +23,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     string teamID = "";
     string roomAutoMatch;
     bool isDone = false;
+    public bool IsDone { get => isDone; }
     //[SerializeField] private GameHandler gameManagerPrefab;
     //private GameHandler gameManager;
 
@@ -30,6 +32,30 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         PlayScene = 2,
     }
+
+    private void Awake()
+    {
+        // Check if there is already a canvas with this tag to avoid duplicates
+        if (FindObjectsOfType<MatchmakingTeam>().Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        // Check if instance already exists and destroy if duplicate
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            // Set the instance to this object
+            Instance = this;
+            // Optionally, make the object persistent across scenes
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -166,7 +192,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             //    // Add a separator for clarity
             //    Debug.Log("---------------------------");
             //}
-            StartCoroutine(WaitForTeamID(runner, player));
+            //StartCoroutine(WaitForTeamID(runner, player));
         }
         else
         {
@@ -199,7 +225,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 
     private IEnumerator InitializeTeams()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(6f);
         FindObjectOfType<GameHandler>().InitializeTeams();
     }
 
@@ -263,7 +289,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                     }
                 }
 
-                StartCoroutine(CheckTeamMate(player));
+                //StartCoroutine(CheckTeamMate(player));
 
                 foreach (var team in teams)
                 {
