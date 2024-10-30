@@ -59,9 +59,14 @@ public class WorldUI : MonoBehaviour
         panelResultWinTeam.SetActive(!panelResultLose.activeSelf);
     }
 
-    public void ShowHideEliminateUI()
+    public void ShowEliminateUI()
     {
         panelResultEliminate.SetActive(true);
+    }
+
+    public void HideEliminateUI()
+    {
+        panelResultEliminate.SetActive(false);
     }
 
     public void SetText(string text)

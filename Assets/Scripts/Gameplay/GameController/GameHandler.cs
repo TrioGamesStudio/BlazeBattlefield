@@ -102,7 +102,7 @@ public class GameHandler : MonoBehaviour
         {
             Debug.Log("===Team " + teamID + " remain " + teams[teamID].Count + " player");
             Debug.Log("===Remain teammate alive -> Watch or leave");
-            FindObjectOfType<WorldUI>().ShowHideEliminateUI();
+            FindObjectOfType<WorldUI>().ShowEliminateUI();
         }
         CheckWin();
     }

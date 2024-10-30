@@ -21,7 +21,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     private const int MAX_PLAYER = 4;
     string roomID;
     string teamID = "";
-    string roomAutoMatch;
+    string roomAutoMatch = "";
     bool isDone = false;
     public bool IsDone { get => isDone; }
     //[SerializeField] private GameHandler gameManagerPrefab;
@@ -260,7 +260,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                 {
                     if (runner.IsSharedModeMasterClient)
                     {
-                        if (teams.ContainsKey(roomAutoMatch) && teams[roomAutoMatch].Count >= 2)
+                        if (teams.ContainsKey(roomAutoMatch) && teams[roomAutoMatch].Count >= 2 || roomAutoMatch == "")
                             roomAutoMatch = GenerateRoomName();
                         players[player].SetTeamID(roomAutoMatch);
                         if (teams.ContainsKey(roomAutoMatch))

@@ -199,7 +199,10 @@ public class PlayerRoomController : NetworkBehaviour
         if (matchmaking.currentMode == Matchmaking.Mode.Duo)
             FindObjectOfType<WorldUI>().ShowHideUIDefeatTeam(rank);
         else
+        {
+            FindObjectOfType<WorldUI>().HideEliminateUI();
             FindObjectOfType<WorldUI>().ShowHideUI(rank);
+        }          
     }
 
     // on off cursor
