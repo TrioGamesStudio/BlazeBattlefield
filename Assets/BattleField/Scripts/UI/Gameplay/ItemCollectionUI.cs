@@ -48,11 +48,9 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
         //itemCollectUI.SetItemName($"Name: {itemInGame.GetItemName()} ({activeItemUIs.Count})");
 
         itemCollectUI.SetOnClickEvent(() => 
-        { 
-            //if (Backpack.instance.CanCollect() == false) return;
+        {
+            // need to check storage can collect item
             RemoveItemUI(itemInGame);
-            //BackpackUI.instance.AddItemUI(itemInGame);
-
             itemInGame.Collect();
         });
         itemInGame.OnRemoveItemUI = RemoveItemUI;
@@ -64,6 +62,7 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
     {
         base.OnItemAdded(customObject);
     }
+
 
     public override void RemoveItemUI(RunTimeItem customObject)
     {

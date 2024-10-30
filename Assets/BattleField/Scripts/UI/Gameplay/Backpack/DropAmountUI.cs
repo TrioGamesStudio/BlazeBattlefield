@@ -28,6 +28,7 @@ public class DropAmountUI : MonoBehaviour
     }
     private void OnDestroy()
     {
+        Debug.Log("Setup amount silder UI");
         IncreaseButton.onClick.RemoveListener(Increase);
         DecreaseButton.onClick.RemoveListener(Decrease);
         CancelButton.onClick.RemoveListener(Cancel);

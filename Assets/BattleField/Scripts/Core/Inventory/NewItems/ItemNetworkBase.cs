@@ -68,7 +68,6 @@ public abstract class ItemNetworkBase<_EnumType, T> : NetworkBehaviour, ItemData
         inventoryItem._SubItemEnum = _enumType;
         StorageManager.instance.Add(ItemConfigSettings.ItemType, _enumType, inventoryItem);
 
-        OnRemoveItemUI?.Invoke(this);
         DestroyItem();
     }
 

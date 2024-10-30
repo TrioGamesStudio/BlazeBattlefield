@@ -15,8 +15,8 @@ public class BackpackUI : MonoBehaviour
     private InventoryItem currentItem;
 
     private Dictionary<ItemType, List<ItemBackpackUI>> _itemUIs = new();
-   
-    private void Awake()
+
+    public void Setup()
     {
         instance = this;
         itemCollectUIPrefab.gameObject.SetActive(false);
@@ -30,8 +30,9 @@ public class BackpackUI : MonoBehaviour
         buttonGroupUI.SetOndropItemAmount(ShowDropAmount);
 
         dropAmountUI.SetAcceptDrop(OnAcceptDrop);
-
     }
+
+
     private void OnDestroy()
     {
         StorageManager.OnAddItem -= HandleItemAdded;
