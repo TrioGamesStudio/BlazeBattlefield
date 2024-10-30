@@ -19,7 +19,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private Button readyButton;
     [SerializeField] private Button playButton;
     private NetworkRunner networkRunner;
-    private const int MAX_PLAYER = 3;
+    private const int MAX_PLAYER = 2;
     public GameObject localPlayer;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     private PlayerRoomController localPlayerRoomController;
@@ -142,7 +142,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (currentMode == Mode.Solo)
             QuickPlay();
         else
-            QuickPlayTeam();
+            //QuickPlayTeam();
+            StartCoroutine(QuickPlayTeam());
     }
 
     public async void QuickPlay()
@@ -178,7 +179,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
     }
 
-    public async void QuickPlayTeam()
+    public IEnumerator QuickPlayTeam()
     {
         networkRunner.RemoveCallbacks(this);
         if (networkRunner.IsSharedModeMasterClient)
@@ -189,7 +190,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 //Debug.Log("Set battle name ne");
                 player.Value.SetBattleRoom();
-                await Task.Delay(3000);
+                //await Task.Delay(3000);
+                yield return new WaitForSeconds(3f); // 3 seconds delay
             }
             //TransitionToBattleRoom();
             //networkRunner.RemoveCallbacks(this);
@@ -197,7 +199,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             //playButton.gameObject.SetActive(false);
             if (networkRunner != null && networkRunner.IsRunning)
             {
-                await networkRunner.Shutdown();
+                //await networkRunner.Shutdown();
+                yield return networkRunner.Shutdown();
                 //Destroy(networkRunner.gameObject);  // Destroy the runner instance
                 networkRunner = null;  // Set the reference to null
                 Debug.Log("Room owner leaved team room");
@@ -247,7 +250,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.Shared,
             SessionName = teamcode,
-            PlayerCount = 2,
+            PlayerCount = MAX_PLAYER,
         };
 
         //StatusText.text = startArguments.GameMode == GameMode.Single ? "Starting single-player..." : "Connecting...";
@@ -281,7 +284,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             }
 
             // Waiting for setup new room owner if needed
-            await Task.Delay(1000);
+            //await Task.Delay(1000);
             // Shuts down the runner and leaves the current session
             await networkRunner.Shutdown();
 
@@ -413,6 +416,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 isDone = true;
                 alivePlayer = runner.ActivePlayers.Count();
+                
                 FindObjectOfType<UIController>().StartCountdown();
                 StartCoroutine(ReleasePlayer());
                 StartCoroutine(InitializeTeams());

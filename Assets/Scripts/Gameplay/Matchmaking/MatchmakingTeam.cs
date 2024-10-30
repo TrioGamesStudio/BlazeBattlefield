@@ -17,7 +17,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     private NetworkRunner networkRunner;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     public TextMeshProUGUI StatusText;
-    private const int MAX_PLAYER = 3;
+    private const int MAX_PLAYER = 4;
     string roomID;
     string teamID = "";
     string roomAutoMatch;
@@ -62,7 +62,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             //SessionName = "Battle",
             Scene = sceneInfo, // Assuming you have a separate battle room scene
             SessionProperties = customProps,
-            PlayerCount = 4,// Adjust based on your team sizes
+            PlayerCount = MAX_PLAYER,// Adjust based on your team sizes
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
 
