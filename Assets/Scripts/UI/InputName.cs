@@ -1,29 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class InputName : MonoBehaviour
 {
     public TMP_InputField nameInputField;
-    public Button playButton;
-    // Start is called before the first frame update
+    [SerializeField] Button playButton;
+    const string MAINLOBBY = "MainLobby";
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        playButton.onClick.AddListener(SetName);
+        nameInputField.text = GameManager.names[Random.Range(0, GameManager.names.Length)];
     }
 
     public void SetName()
     {
+        StartCoroutine(LoadToMainLobby(0.5f));
+    }
+
+    IEnumerator LoadToMainLobby(float time) {
         GameManager.playerNickName = nameInputField.text;
-        SceneManager.LoadScene("MainLobby");
+        
+        yield return new WaitForSeconds(time);
+        SceneManager.LoadSceneAsync(MAINLOBBY);
     }
 }

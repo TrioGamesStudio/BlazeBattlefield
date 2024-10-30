@@ -131,7 +131,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
                 //? bat local UI | canvas cua ca local player(crossHair, onDamageImage, messages rpc send)
                 localUI.SetActive(true); // con cua localCamera transform
 
-                //? OFF nickName if ko dang o readyScene
+                //? OFF nickName if KO dang o readyScene
                 nickName_TM.gameObject.SetActive(false);
 
                 //? disable mouse de play
@@ -140,14 +140,15 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             }
 
             // lay gia tri Gamemanager.playerNickName gan vao
-            string userName = DataSaver.Instance.dataToSave.userName;
-            RPC_SetNickName(userName);
+            RPC_SetNickName(GameManager.playerNickName);
+
+            
             /* RPC_SetNickName(PlayerPrefs.GetString("PlayerNickName_Local")); */
 
             // kiem tra PlayerPref player (Object.InputAuthority.PlayerID) -> le = green | chan = red
             /* if(Object.InputAuthority.PlayerId % 2 != 0) isEnemy = false;
-            else isEnemy = true; */
-            //=>RPC_SetIsEnemyChanged(isEnemy);
+            else isEnemy = true;
+            RPC_SetIsEnemyChanged(isEnemy); */
 
             //todo testing PlayerLeft
             Runner.SetPlayerObject(Object.InputAuthority, Object);

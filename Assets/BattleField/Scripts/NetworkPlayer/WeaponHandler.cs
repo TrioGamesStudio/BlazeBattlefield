@@ -79,6 +79,9 @@ public class WeaponHandler : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        if(SceneManager.GetActiveScene().name == "MainLobby") return;
+        if(!Matchmaking.Instance.IsDone) return;
+        
         Fire();
     }
 
