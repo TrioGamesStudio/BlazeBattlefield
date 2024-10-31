@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 
 public class ItemCollectionUI : BaseTest<RunTimeItem>
@@ -13,7 +12,6 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
 
     [SerializeField] private GameObject view;
     [SerializeField] private Button toggleViewButton;
-
     protected override void Init()
     {
         base.Init();
@@ -45,8 +43,8 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
     {
         itemCollectUI.Initialize(itemInGame);
         //itemCollectUI.SetItemCount(itemInGame.GetQuantity());
-        //itemCollectUI.SetItemName($"Name: {itemInGame.GetItemName()} ({activeItemUIs.Count})");
-
+        itemCollectUI.SetItemName($"Name: {itemInGame.GetItemName()} ({activeItemUIs.Count})");
+        itemCollectUI.gameObject.name = $"Item {activeItemUIs.Count}";
         itemCollectUI.SetOnClickEvent(() => 
         {
             // need to check storage can collect item
@@ -56,14 +54,7 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
         itemInGame.OnRemoveItemUI = RemoveItemUI;
         itemCollectUI.gameObject.SetActive(true);
     }
-
-
-    protected override void OnItemAdded(RunTimeItem customObject)
-    {
-        base.OnItemAdded(customObject);
-    }
-
-
+ 
     public override void RemoveItemUI(RunTimeItem customObject)
     {
         RemoveItemFromDictionary(customObject.GetUniqueID(), customObject);

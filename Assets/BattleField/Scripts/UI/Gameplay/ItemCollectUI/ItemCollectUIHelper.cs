@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -18,12 +19,12 @@ public class ItemCollectUIHelper : MonoBehaviour
     {
         ItemCollectionUI = GetComponent<ItemCollectionUI>();
         playerInputActions = new PlayerInputAction();
+        playerInputActions.Combat.Enable();
         playerInputActions.Combat.GetInCar.performed += GetInCar_performed;
 
-#if PLATFORM_ANDROID
+#if PLATFORM_ANDROID 
         informationText.gameObject.SetActive(false);
 #endif
-
 
     }
 
@@ -34,10 +35,17 @@ public class ItemCollectUIHelper : MonoBehaviour
 
     private void GetInCar_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
+        Collect();
+    }
+
+    [Button]
+    private void Collect()
+    {
         ItemCollectionUI.GetFirstItemDebug();
         canCollect = false;
         timer = defaultCollectTimer;
     }
+
 
     private void Update()
     {

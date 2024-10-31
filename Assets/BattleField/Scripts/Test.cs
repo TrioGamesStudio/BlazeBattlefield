@@ -19,6 +19,7 @@ public class Test : NetworkBehaviour
         if (!HasStateAuthority)
         {
             GetComponent<Test>().enabled = false;
+            ItemDatabase.instance.SetPlayerItemSpawnTransform(transform);
         }
     }
 
@@ -36,17 +37,40 @@ public class Test : NetworkBehaviour
 
     private void CollectItem(Collider other, bool showing)
     {
-        if (other.CompareTag("Item") == false) return;
-        var RunTimeItem = other.GetComponent<RunTimeItem>();
-        RunTimeItem.isDisplayedUI = showing;
+        if (other.CompareTag("BoundItem"))
+        {
+            var BoundItemsCollider = other.GetComponent<BoundItemsCollider>();
+            foreach(var item in BoundItemsCollider.GetList())
+            {
+                if(item == null)
+                {
+                    Debug.Log("Have item null when showing in UI", gameObject);
+                    continue;
+                }
+
+                var runTimeItem = item.GetComponent<RunTimeItem>();
+                if (showing)
+                {
+                    ItemCollectionUI.instance.AddItemUI(runTimeItem);
+                }
+                else
+                {
+                    ItemCollectionUI.instance.RemoveItemUI(runTimeItem);
+                }
+            }
+        }
+
+        //if (other.CompareTag("Item") == false) return;
+        //var RunTimeItem = other.GetComponent<RunTimeItem>();
+        //RunTimeItem.isDisplayedUI = showing;
         
-        if (showing)
-        {
-            ItemCollectionUI.instance.AddItemUI(RunTimeItem);
-        }
-        else
-        {
-            ItemCollectionUI.instance.RemoveItemUI(RunTimeItem);
-        }
+        //if (showing)
+        //{
+        //    ItemCollectionUI.instance.AddItemUI(RunTimeItem);
+        //}
+        //else
+        //{
+        //    ItemCollectionUI.instance.RemoveItemUI(RunTimeItem);
+        //}
     }
 }

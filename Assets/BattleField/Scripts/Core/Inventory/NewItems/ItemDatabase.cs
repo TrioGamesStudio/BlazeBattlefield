@@ -9,7 +9,7 @@ public class ItemDatabase : NetworkBehaviour
     public static ItemDatabase instance;
     [SerializeField] private List<NetworkObject> gameObjects;
     private Dictionary<(ItemType, Enum), NetworkObject> bigData = new();
-
+    private Transform PlayerObject;
     private void Awake()
     {
         instance = this;
@@ -31,15 +31,15 @@ public class ItemDatabase : NetworkBehaviour
         var key1 = inventoryItem.ItemType;
         var key2 = inventoryItem._SubItemEnum;
 
-        CreateItemInWorld(newAmount, key1, key2);
+        CreateItemInWorld(newAmount, key1, key2, PlayerObject.transform.position);
     }
 
-    private void CreateItemInWorld(int newAmount, ItemType key1, Enum key2)
+    private void CreateItemInWorld(int newAmount, ItemType key1, Enum key2, Vector3 position)
     {
         var itemPrefab = GetItemPrefab(key1, key2);
         if (itemPrefab == null) return;
 
-        var item = Runner.Spawn(itemPrefab, transform.position).GetComponent<ItemDataEnum>();
+        var item = Runner.Spawn(itemPrefab, position).GetComponent<ItemDataEnum>();
         item.SetQuantity(newAmount);
     }
 
@@ -61,5 +61,10 @@ public class ItemDatabase : NetworkBehaviour
                 bigData[(key1, key2)] = item;
             }
         }
+    }
+
+    public void SetPlayerItemSpawnTransform(Transform playerTransform)
+    {
+        PlayerObject = playerTransform;
     }
 }
