@@ -30,6 +30,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     bool isDone = false;
     public bool IsDone{get => isDone;}
     private PlayerRoomController localSoloPlayer;
+    public Dictionary<PlayerRef, string> matchSolo = new();
     public bool IsAutoMatch
     {
         get { return isAutoMatch; }
@@ -135,6 +136,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         await networkRunner.JoinSessionLobby(SessionLobby.Shared);
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         isDone = false;
+        playButton.interactable = true;
         currentMode = Mode.Solo;
     }
 
@@ -411,6 +413,13 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 playerObject.GetComponent<PlayerRoomController>().SetPlayerRef(player);
                 playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
                 playerObject.GetComponent<PlayerRoomController>().SetLocalPlayer();
+                players[player] = playerObject.GetComponent<PlayerRoomController>();
+                matchSolo[player] = players[player].TeamID.ToString();
+            }
+            else
+            {
+                // Handle remote player
+                StartCoroutine(WaitForPlayerObjectSolo(runner, player));
             }
             int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
             string text = "Waiting other player: " + remainPlayer + " remain";
@@ -471,9 +480,50 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         }
     }
 
+    private IEnumerator WaitForPlayerObjectSolo(NetworkRunner runner, PlayerRef player)
+    {
+        NetworkObject playerObject = null;
+        float timeout = 5f; // 5 seconds timeout
+        float elapsedTime = 0f;
+
+        while (playerObject == null && elapsedTime < timeout)
+        {
+            playerObject = runner.GetPlayerObject(player);
+            if (playerObject != null)
+            {
+                players[player] = playerObject.GetComponent<PlayerRoomController>();
+                matchSolo[player] = players[player].TeamID.ToString();
+                Debug.Log($"Remote player {player} added to players list");
+                Debug.Log("Players dictionanry" + players.Count);
+                yield break;
+            }
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        if (playerObject == null)
+        {
+            Debug.LogWarning($"Timeout waiting for player object for player {player}");
+        }
+    }
+
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
+
+        if (currentMode == Mode.Solo)
+        {
+            //NetworkObject playerObject = null;
+            //string teamID = players[player].TeamID.ToString();
+            //PlayerRoomController playerRoomController = players[player];
+            FindObjectOfType<GameHandler>().Eliminate(matchSolo[player], players[player]);
+            FindObjectOfType<GameHandler>().CheckWin();
+        }
+
         players.Remove(player);
+
+        if (player != runner.LocalPlayer)
+            players[runner.LocalPlayer].RPC_SetAsRoomOwner();
+
         // Setup when team member become room owner
         if (players.ContainsKey(runner.LocalPlayer))
         {
@@ -483,8 +533,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 readyButton.gameObject.SetActive(false);
             }
             UpdatePlayButtonInteractability();
-        }
-
+        }   
         //localPlayerRoomController = null;
     }
 
