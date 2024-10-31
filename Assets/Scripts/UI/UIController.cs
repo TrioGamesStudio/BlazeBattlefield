@@ -183,6 +183,7 @@ public class UIController : MonoBehaviour
         GameObject sessionButton = Instantiate(sessionButtonPrefab, sessionListContent);
         string infomation = $"{playerCount}/{maxPlayer}";
         sessionButton.GetComponent<RoomPanelUI>().SetRoomButtonUI(infomation, roomname);
+        sessionButton.GetComponent<RoomPanelUI>().Deactive(playerCount == maxPlayer);
         //bool isRoomFull = session.PlayerCount >= session.MaxPlayers;
         //sessionButton.GetComponent<RoomButtonUI>().Deactive(isRoomFull);
     }
