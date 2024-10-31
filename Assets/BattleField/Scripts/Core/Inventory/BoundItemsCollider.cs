@@ -9,6 +9,7 @@ public class BoundItemsCollider : MonoBehaviour
     [SerializeField] private List<BoundItem> ItemBases = new();
     [SerializeField] private bool IsDirty = false;
     private Bounds colliderBounds;
+    public Action<List<BoundItem>> OnChangedList;
     private void Awake()
     {
         boxCollider.isTrigger = true;
@@ -51,6 +52,8 @@ public class BoundItemsCollider : MonoBehaviour
         if (ItemBases.Contains(itemInGame)) return;
         ItemBases.Add(itemInGame);
         IsDirty = true;
+
+        OnChangedList?.Invoke(ItemBases);
     }
 
     public void RemoveItemFromBoundss(BoundItem itemInGame)
@@ -62,6 +65,7 @@ public class BoundItemsCollider : MonoBehaviour
         if(ItemBases.Count == 0)
         {
             Debug.Log("Destroy BoundItesmCollider");
+            OnChangedList = null;
             Destroy(gameObject);
         }
     }

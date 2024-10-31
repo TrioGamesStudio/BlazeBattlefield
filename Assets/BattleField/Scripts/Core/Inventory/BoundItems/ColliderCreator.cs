@@ -57,9 +57,9 @@ public class ColliderCreator : MonoBehaviour
                     var _boundItem = item.GetComponent<BoundItem>();
                     if (_boundItem == null) continue;
                     if (_boundItem.isInBound) continue;
-
+                    if (_boundItem.BoundItemsCollider != null) continue;
                     BoundItemsCollider.AddItemList(_boundItem);
-
+                    Debug.Log($"AddBound: Source {firstBoundItem.name} Add: {_boundItem.name}");
                     _boundItem.isInBound = true;
                     _boundItem.BoundItemsCollider = BoundItemsCollider;
 

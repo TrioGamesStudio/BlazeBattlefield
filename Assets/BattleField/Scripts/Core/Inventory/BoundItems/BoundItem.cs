@@ -38,15 +38,14 @@ public class BoundItem : NetworkBehaviour
             {
                 Vector3 spawnPosition = hit.point + new Vector3(0, _collider.size.y / 2, 0);
                 transform.position = spawnPosition;
-                Debug.LogWarning($"Method: {spawnPosition}");
-                Debug.Log("Set spawn Position", gameObject);
+                //Debug.LogWarning($"Method: {spawnPosition}");
+                //Debug.Log("Set spawn Position", gameObject);
             }
         }
     }
 
     private void OnDrawGizmos()
     {
-        if (Application.isEditor == false) return;
 
         if (Physics.Raycast(transform.position, Vector3.down, out var hit, float.MaxValue))
         {
@@ -56,7 +55,7 @@ public class BoundItem : NetworkBehaviour
             //Gizmos.DrawCube(hit.point + new Vector3(0, y, 0), _collider.size * transform.localScale.x);
             var spawnPos = hit.point + new Vector3(0, _collider.size.y / 2, 0);
             Gizmos.DrawWireCube(spawnPos, _collider.size);
-            Debug.Log($"Gizmo: {spawnPos}");
+            //Debug.Log($"Gizmo: {spawnPos}");
         }
     }
 }

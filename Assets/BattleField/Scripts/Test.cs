@@ -40,30 +40,21 @@ public class Test : NetworkBehaviour
         if (other.CompareTag("BoundItem"))
         {
             var BoundItemsCollider = other.GetComponent<BoundItemsCollider>();
-            foreach(var item in BoundItemsCollider.GetList())
+            if (showing)
             {
-                if(item == null)
-                {
-                    Debug.Log("Have item null when showing in UI", gameObject);
-                    continue;
-                }
-
-                var runTimeItem = item.GetComponent<RunTimeItem>();
-                if (showing)
-                {
-                    ItemCollectionUI.instance.AddItemUI(runTimeItem);
-                }
-                else
-                {
-                    ItemCollectionUI.instance.RemoveItemUI(runTimeItem);
-                }
+                BoundItemsCollider.OnChangedList = OnChangeShowList;
             }
+            else
+            {
+                BoundItemsCollider.OnChangedList = null;
+            }
+            OnShowItemList(showing, BoundItemsCollider.GetList());
         }
 
         //if (other.CompareTag("Item") == false) return;
         //var RunTimeItem = other.GetComponent<RunTimeItem>();
         //RunTimeItem.isDisplayedUI = showing;
-        
+
         //if (showing)
         //{
         //    ItemCollectionUI.instance.AddItemUI(RunTimeItem);
@@ -72,5 +63,30 @@ public class Test : NetworkBehaviour
         //{
         //    ItemCollectionUI.instance.RemoveItemUI(RunTimeItem);
         //}
+    }
+    private void OnChangeShowList(List<BoundItem> list)
+    {
+        OnShowItemList(true, list);
+    }
+    private void OnShowItemList(bool showing, List<BoundItem> list)
+    {
+        foreach (var item in list)
+        {
+            if (item == null)
+            {
+                Debug.Log("Have item null when showing in UI", gameObject);
+                continue;
+            }
+
+            var runTimeItem = item.GetComponent<RunTimeItem>();
+            if (showing)
+            {
+                ItemCollectionUI.instance.AddItemUI(runTimeItem);
+            }
+            else
+            {
+                ItemCollectionUI.instance.RemoveItemUI(runTimeItem);
+            }
+        }
     }
 }

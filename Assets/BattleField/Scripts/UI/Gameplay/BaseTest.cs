@@ -64,6 +64,7 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
         if (activeItemUIs.ContainsKey(key))
         {
             Debug.Log("Is Contain Key");
+            UpdateUI(key, customObject);
             return;
         }
         var itemUI = poolItemsUI.Get();
