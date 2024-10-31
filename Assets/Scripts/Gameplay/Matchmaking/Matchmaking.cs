@@ -504,7 +504,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             string roomName = session.Name;
             int playerCount = session.PlayerCount;
             int maxPlayer = session.MaxPlayers;
-            if (session.IsOpen)
+            if (session.IsOpen && roomName.Length <= 3)
                 UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer);
         }
     }
