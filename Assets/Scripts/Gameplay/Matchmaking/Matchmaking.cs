@@ -417,6 +417,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             FindObjectOfType<UIController>().SetText(text);
             if (runner.ActivePlayers.Count() == MAX_PLAYER && !isDone) // Assuming PlayerCount is 2
             {
+                runner.SessionInfo.IsOpen = false;
                 isDone = true;
                 alivePlayer = runner.ActivePlayers.Count();
                 FindObjectOfType<UIController>().StartCountdown();
@@ -503,8 +504,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             string roomName = session.Name;
             int playerCount = session.PlayerCount;
             int maxPlayer = session.MaxPlayers;
-
-            UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer);
+            if (session.IsOpen)
+                UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer);
         }
     }
 
