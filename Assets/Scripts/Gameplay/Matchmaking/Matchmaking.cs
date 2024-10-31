@@ -323,6 +323,14 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         await JoinLobby();
     }
 
+    public void BackToLobbyAll()
+    {
+        if (currentMode == Mode.Solo)
+            BackToLobby();
+        else
+            MatchmakingTeam.Instance.BackToLobby();
+    }
+
     public async void JoinRoomByName(string roomName)
     {
         currentMode = Mode.Duo;

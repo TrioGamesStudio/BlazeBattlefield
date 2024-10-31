@@ -105,7 +105,7 @@ public class WorldUI : MonoBehaviour
     private void BackToLobby()
     {
         Debug.Log("BACK TO LOBBY NE");
-        FindObjectOfType<Matchmaking>().BackToLobby();
+        FindObjectOfType<Matchmaking>().BackToLobbyAll();
     }
 
     public void BackToLobbyTeam()
