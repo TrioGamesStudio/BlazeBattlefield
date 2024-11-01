@@ -81,10 +81,12 @@ public class Test : NetworkBehaviour
             var runTimeItem = item.GetComponent<RunTimeItem>();
             if (showing)
             {
+                runTimeItem.isDisplayedUI = true;
                 ItemCollectionUI.instance.AddItemUI(runTimeItem);
             }
             else
             {
+                runTimeItem.isDisplayedUI = false;
                 ItemCollectionUI.instance.RemoveItemUI(runTimeItem);
             }
         }

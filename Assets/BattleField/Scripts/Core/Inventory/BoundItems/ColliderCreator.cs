@@ -44,10 +44,10 @@ public class ColliderCreator : MonoBehaviour
         }
 
         BoundItemsCollider BoundItemsCollider = GetBoundItems();
-        BoundItemsCollider.AddItemList(firstBoundItem);
-
+        //BoundItemsCollider.AddItemList(firstBoundItem);
+        //firstBoundItem.isInBound = true;
         var result = Physics.OverlapBox(firstBoundItem.transform.position, minSize / 2, Quaternion.identity);
-
+        Debug.Log("Source: " + firstBoundItem.name);
         if (result != null && result.Length > 0)
         {
             foreach (var item in result)
@@ -59,10 +59,10 @@ public class ColliderCreator : MonoBehaviour
                     if (_boundItem.isInBound) continue;
                     if (_boundItem.BoundItemsCollider != null) continue;
                     BoundItemsCollider.AddItemList(_boundItem);
-                    Debug.Log($"AddBound: Source {firstBoundItem.name} Add: {_boundItem.name}");
                     _boundItem.isInBound = true;
                     _boundItem.BoundItemsCollider = BoundItemsCollider;
 
+                    Debug.Log($"AddBound: Source {firstBoundItem.name} Add: {_boundItem.name}");
                     if (processingList.Contains(_boundItem))
                     {
                         processingList.Remove(_boundItem);
@@ -70,7 +70,15 @@ public class ColliderCreator : MonoBehaviour
                 }
             }
         }
-        BoundItemsCollider.BoundCollider();
+        // destroy if don't have anything
+        if (BoundItemsCollider.GetList().Count == 0)
+        {
+            Destroy(BoundItemsCollider.gameObject);
+        }
+        else
+        {
+            BoundItemsCollider.BoundCollider();
+        }
 
         isProcessing = false;
     }

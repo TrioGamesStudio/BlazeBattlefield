@@ -20,6 +20,7 @@ public class BoundItem : NetworkBehaviour
         ColliderCreator.instance.Add(this);
         SetItemNearGround();
     }
+
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
         base.Despawned(runner, hasState);
