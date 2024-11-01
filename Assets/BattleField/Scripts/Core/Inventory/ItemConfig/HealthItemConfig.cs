@@ -28,7 +28,6 @@ public class HealthItemConfig : ItemConfig<HealingItemType>
                 break;
             case HealingItemType.Medkit:
                 ItemConfigFactory.CreateHealthItem(this, HealingItemType.Medkit, "Med Kit", 5, 100, 2f);
-
                 break;
             default:
                 break;
