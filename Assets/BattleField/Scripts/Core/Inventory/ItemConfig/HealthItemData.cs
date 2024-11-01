@@ -12,18 +12,6 @@ public class HealthItemData : ItemConfigSettings<HealingItemType, HealthItemConf
         itemConfigs = new List<HealthItemConfig>(ItemDefaultConfigs.healthConfigs);
     }
 }
-[Serializable]
-public class HealthItemConfig : ItemConfig<HealingItemType>
-{
-    public float healthAmount;
-    public float usingTime;
-
-    public override void ShowDebug()
-    {
-        base.ShowDebug();
-        Debug.Log($"Additional: HealthAmount {healthAmount} usingTime {usingTime}");
-    }
-}
 public enum LevelType
 {
     Level_1,

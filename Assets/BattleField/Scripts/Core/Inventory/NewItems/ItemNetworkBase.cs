@@ -17,25 +17,16 @@ public interface ItemDataEnum
     void SetQuantity(int newAmount);
 }
 
-public abstract class ItemNetworkBase<_EnumType, T> : NetworkBehaviour, ItemDataEnum, RunTimeItem where _EnumType : Enum where T : ItemConfig<_EnumType>
+public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, ItemDataEnum, RunTimeItem where _EnumType : Enum where _Config : ItemConfig<_EnumType>
 {
     [Networked] public int quantity { get; set; }
     public Action<RunTimeItem> OnRemoveItemUI { get; set; }
     public bool isDisplayedUI { get; set; }
-
-    public ItemConfigSettings<_EnumType, T> ItemConfigSettings;
-    public _EnumType _enumType;
     public CustomData[] customDatas;
-    public ItemConfig<_EnumType> config;
+    public _Config config;
     public override void Spawned()
     {
         base.Spawned();
-        SetConfig();
-    }
-
-    public void SetConfig()
-    {
-        config = ItemConfigSettings.GetItemDataConfig(_enumType);
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -61,12 +52,13 @@ public abstract class ItemNetworkBase<_EnumType, T> : NetworkBehaviour, ItemData
     {
         InventoryItem inventoryItem = new InventoryItem();
         inventoryItem.maxStack = config.maxStack;
+        inventoryItem.ItemType = config.ItemType;
         inventoryItem.displayName = config.displayName;
         inventoryItem.Icon = config.Icon;
         inventoryItem.amount = quantity;
         inventoryItem.customDatas = customDatas;
-        inventoryItem._SubItemEnum = _enumType;
-        StorageManager.instance.Add(ItemConfigSettings.ItemType, _enumType, inventoryItem);
+        inventoryItem._SubItemEnum = config.SubItemType;
+        StorageManager.instance.Add(config.ItemType, config.SubItemType, inventoryItem);
 
         DestroyItem();
     }
@@ -92,7 +84,7 @@ public abstract class ItemNetworkBase<_EnumType, T> : NetworkBehaviour, ItemData
 
     public Enum GetSubItemType()
     {
-        return _enumType;
+        return config.SubItemType;
     }
 
     public ItemType GetItemType()

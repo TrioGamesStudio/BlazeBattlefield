@@ -14,11 +14,6 @@ public class AmmoItemData : ItemConfigSettings<AmmoType, AmmoItemConfig>
         itemConfigs = new List<AmmoItemConfig>(ItemDefaultConfigs.ammoConfigs);
     }
 }
-[Serializable]
-public class AmmoItemConfig : ItemConfig<AmmoType>
-{
-    
-}
 public enum AmmoType
 {
     None = 0,

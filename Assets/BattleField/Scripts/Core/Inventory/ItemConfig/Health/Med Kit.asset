@@ -9,10 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03d40f29fdf63874b9ca7c82e68305b9, type: 3}
-  m_Name: Ammo_Data
+  m_Script: {fileID: 11500000, guid: 0b1d2f76e61bbd44b923c4f2e778d6c3, type: 3}
+  m_Name: Med Kit
   m_EditorClassIdentifier: 
-  itemConfigs:
-  - {fileID: 11400000, guid: b97b856555403694196818e8f73a2b8f, type: 2}
-  ItemType: 0
-  ItemDefaultConfigs: {fileID: 11400000, guid: 3a7614a043a595f4197e5993d46e8d6f, type: 2}
+  displayName: Med Kit
+  Icon: {fileID: 0}
+  SubItemType: 15
+  maxStack: 5
+  ItemType: 3
+  healthAmount: 100
+  usingTime: 2

@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ItemDefaultConfigs", menuName = "Configs/ItemDefaults")]
-public class ItemDefaultConfigs : ScriptableObject
+[CreateAssetMenu(fileName = "ItemConfigDatabase", menuName = "Configs/ItemDefaults")]
+public class ItemConfigDatabase : ScriptableObject
 {
     public List<HealthItemConfig> healthConfigs;
     public List<AmmoItemConfig> ammoConfigs;
@@ -40,31 +40,5 @@ public class ItemDefaultConfigs : ScriptableObject
         return null;
     }
 
-
-
-    [Button]
-    private void LoadDefault()
-    {
-        switch (itemType)
-        {
-            case ItemType.Gun:
-                break;
-            case ItemType.Melee:
-                break;
-            case ItemType.Ammo:
-                ammoConfigs.Clear();
-                ammoConfigs = ItemConfigDefaultSettings.LoadAmmo();
-                break;
-            case ItemType.Health:
-                healthConfigs.Clear();
-                healthConfigs = ItemConfigDefaultSettings.LoadHealth();
-                break;
-            case ItemType.Grenade:
-                break;
-            default:
-                break;
-        }
-        
-    }
 }
 

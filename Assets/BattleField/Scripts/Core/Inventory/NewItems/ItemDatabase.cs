@@ -1,29 +1,27 @@
 using Fusion;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 public class ItemDatabase : NetworkBehaviour
 {
     public static ItemDatabase instance;
-    [SerializeField] private List<NetworkObject> gameObjects;
-    private Dictionary<(ItemType, Enum), NetworkObject> bigData = new();
+    [SerializeField] private ItemConfigDatabase ItemConfigDatabase;
+    [SerializeField] private ItemPrefabDatabase ItemPrefabDatabase;
     private Transform PlayerObject;
     private void Awake()
     {
         instance = this;
-        Convert();
+        ItemPrefabDatabase.Convert();
     }
 
-    public NetworkObject GetItemPrefab(ItemType key1,Enum key2) 
+    public NetworkObject GetItemPrefab(ItemType key1, Enum key2)
     {
-        if(bigData.TryGetValue((key1,key2),out var prefab))
-        {
-            return prefab;
-        }
-        Debug.LogError($"This item {key1.ToString()} {key2.ToString()} is null");
-        return null;
+        return ItemPrefabDatabase.GetItemPrefab(key1, key2);
+    }
+
+    public ItemConfig<Enum> GetItemConfig(ItemType itemType, Enum subItemType)
+    {
+        return ItemConfigDatabase.FindItem(itemType, subItemType);
     }
 
     public void InventoryItemToWorld(InventoryItem inventoryItem, int newAmount)
@@ -33,7 +31,6 @@ public class ItemDatabase : NetworkBehaviour
 
         CreateItemInWorld(newAmount, key1, key2, PlayerObject.transform.position);
     }
-
     private void CreateItemInWorld(int newAmount, ItemType key1, Enum key2, Vector3 position)
     {
         var itemPrefab = GetItemPrefab(key1, key2);
@@ -43,25 +40,7 @@ public class ItemDatabase : NetworkBehaviour
         item.SetQuantity(newAmount);
     }
 
-    private void Convert()
-    {
-        foreach(var item in gameObjects)
-        {
-            var itemEnum = item.GetComponent<ItemDataEnum>();
-            if (itemEnum == null)
-                continue;
-            var key1 = itemEnum.GetItemType();
-            var key2 = itemEnum.GetSubItemType();
-            if (!bigData.ContainsKey((key1, key2)))
-            {
-                bigData.Add((key1, key2), item);
-            }
-            else
-            {
-                bigData[(key1, key2)] = item;
-            }
-        }
-    }
+
 
     public void SetPlayerItemSpawnTransform(Transform playerTransform)
     {

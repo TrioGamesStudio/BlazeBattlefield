@@ -8,7 +8,7 @@ public class BackpackUI : MonoBehaviour
     protected UnityPool<ItemBackpackUI> poolItemsUI;
     [SerializeField] protected ItemBackpackUI itemCollectUIPrefab;
     [SerializeField] protected GameObject content;
-    [SerializeField] protected ItemDefaultConfigs itemDefaultConfig;
+    [SerializeField] protected ItemConfigDatabase itemDefaultConfig;
     [SerializeField] protected BackpackButtonGroupUI buttonGroupUI;
     [SerializeField] protected DropAmountUI dropAmountUI;
     [SerializeField] protected int dropCount;
