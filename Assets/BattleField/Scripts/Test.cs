@@ -19,8 +19,8 @@ public class Test : NetworkBehaviour
         if (!HasStateAuthority)
         {
             GetComponent<Test>().enabled = false;
-            ItemDatabase.instance.SetPlayerItemSpawnTransform(transform);
         }
+
     }
 
     private void OnTriggerEnter(Collider other)

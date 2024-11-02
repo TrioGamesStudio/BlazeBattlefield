@@ -85,4 +85,9 @@ public class DropAmountUI : MonoBehaviour
     {
         DropItemAction = onAcceptDrop;
     }
+
+    private void OnDisable()
+    {
+        amountSlider.SetValueWithoutNotify(0);
+    }
 }

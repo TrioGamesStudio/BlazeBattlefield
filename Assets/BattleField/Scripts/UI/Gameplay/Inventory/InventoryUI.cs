@@ -16,10 +16,12 @@ public class InventoryUI : MonoBehaviour
     {
         // WeaponEquipUI.BindWeaponData(Gun1);
         // WeaponEquipUI.RefreshWeaponInformation();
-        InputReader.Instance.Enable();
         isOpen = false;
-        CloseAll();
+        InputReader.Instance.Enable();
+        ShowInventoryElement(false);
+        
         InputCombatControl.ShowInventory += ShowInventory;
+        
         weaponUI.RaiseSetupUI();
         backpackUI.RaiseSetupUI();
         subPanelUI.RaiseSetupUI();
@@ -31,18 +33,26 @@ public class InventoryUI : MonoBehaviour
         InputCombatControl.ShowInventory -= ShowInventory;
     }
 
-    [Button]
-    private void CloseAll()
-    {
-        weaponUI.Hide();
-        backpackUI.Hide();
-        subPanelUI.Hide();
-    }
-
     private bool isOpen = false;
     private void ShowInventory()
     {
         if (isOpen)
+        {
+            ShowInventoryElement(true);
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+        }
+        else
+        {
+            ShowInventoryElement(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        isOpen = !isOpen;
+    }
+    private void ShowInventoryElement(bool isShow)
+    {
+        if (isShow)
         {
             weaponUI.Show();
             backpackUI.Show();
@@ -50,10 +60,14 @@ public class InventoryUI : MonoBehaviour
         }
         else
         {
-            CloseAll();
+            weaponUI.Hide();
+            backpackUI.Hide();
+            subPanelUI.Hide();
         }
-        isOpen = !isOpen;
+        
     }
 
+
+    
 
 }

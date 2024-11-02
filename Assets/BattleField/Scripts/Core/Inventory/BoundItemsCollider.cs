@@ -22,7 +22,7 @@ public class BoundItemsCollider : MonoBehaviour
         colliderBounds = new Bounds(ItemBases[0].transform.position, Vector3.zero);
         foreach (var t in ItemBases)
         {
-            Debug.Log("Bounding: " + t.transform.name);
+            //Debug.Log("Bounding: " + t.transform.name);
             colliderBounds.Encapsulate(t.transform.position);
         }
         boxCollider.center = colliderBounds.center;

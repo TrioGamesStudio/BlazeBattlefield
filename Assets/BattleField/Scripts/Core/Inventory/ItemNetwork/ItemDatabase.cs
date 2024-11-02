@@ -7,11 +7,18 @@ public class ItemDatabase : NetworkBehaviour
     public static ItemDatabase instance;
     [SerializeField] private ItemConfigDatabase ItemConfigDatabase;
     [SerializeField] private ItemPrefabDatabase ItemPrefabDatabase;
-    private Transform PlayerObject;
+    private Vector3 PlayerObject => NetworkPlayer.Local.transform.position;
     private void Awake()
     {
         instance = this;
         ItemPrefabDatabase.Convert();
+    }
+    public NetworkRunner runner;
+    public override void Spawned()
+    {
+        base.Spawned();
+
+        Debug.Log("ItemDatabase: "+NetworkPlayer.Local.transform.position);
     }
 
     public NetworkObject GetItemPrefab(ItemType key1, Enum key2)
@@ -29,7 +36,7 @@ public class ItemDatabase : NetworkBehaviour
         var key1 = inventoryItem.ItemType;
         var key2 = inventoryItem._SubItemEnum;
 
-        CreateItemInWorld(newAmount, key1, key2, PlayerObject.transform.position);
+        CreateItemInWorld(newAmount, key1, key2, PlayerObject);
     }
     private void CreateItemInWorld(int newAmount, ItemType key1, Enum key2, Vector3 position)
     {
@@ -41,9 +48,4 @@ public class ItemDatabase : NetworkBehaviour
     }
 
 
-
-    public void SetPlayerItemSpawnTransform(Transform playerTransform)
-    {
-        PlayerObject = playerTransform;
-    }
 }
