@@ -17,7 +17,7 @@ public class ColliderCreator : MonoBehaviour
 
     public void Add(BoundItem boundItem)
     {
-        if (!boundItem.isInBound)
+        if (boundItem.CanAddToBound())
         {
             processingList.Add(boundItem);
         }
@@ -38,14 +38,14 @@ public class ColliderCreator : MonoBehaviour
         BoundItem firstBoundItem = processingList[0];
         processingList.Remove(firstBoundItem);
 
-        if (firstBoundItem.isInBound)
+        if (firstBoundItem.CanAddToBound() == false)
         {
             return;
         }
 
         BoundItemsCollider BoundItemsCollider = GetBoundItems();
         //BoundItemsCollider.AddItemList(firstBoundItem);
-        //firstBoundItem.isInBound = true;
+        //firstBoundItem.isInBoundCollider = true;
         var result = Physics.OverlapBox(firstBoundItem.transform.position, minSize / 2, Quaternion.identity);
         Debug.Log("Source: " + firstBoundItem.name);
         if (result != null && result.Length > 0)
@@ -56,10 +56,9 @@ public class ColliderCreator : MonoBehaviour
                 {
                     var _boundItem = item.GetComponent<BoundItem>();
                     if (_boundItem == null) continue;
-                    if (_boundItem.isInBound) continue;
-                    if (_boundItem.BoundItemsCollider != null) continue;
+                    if (!_boundItem.CanAddToBound()) continue;
                     BoundItemsCollider.AddItemList(_boundItem);
-                    _boundItem.isInBound = true;
+                    _boundItem.IsInBoundCollider = true;
                     _boundItem.BoundItemsCollider = BoundItemsCollider;
 
                     Debug.Log($"AddBound: Source {firstBoundItem.name} Add: {_boundItem.name}");

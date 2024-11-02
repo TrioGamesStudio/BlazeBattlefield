@@ -13,7 +13,6 @@ public class ItemDatabase : NetworkBehaviour
         instance = this;
         ItemPrefabDatabase.Convert();
     }
-    public NetworkRunner runner;
     public override void Spawned()
     {
         base.Spawned();

@@ -1,7 +1,7 @@
 ﻿using Fusion;
-using NaughtyAttributes;
 using System;
-using static Fusion.Allocator;
+using System.Xml;
+using UnityEngine;
 [Serializable]
 public class CustomData
 {
@@ -24,9 +24,32 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     public bool isDisplayedUI { get; set; }
     public CustomData[] customDatas;
     public _Config config;
+    private BoundItem boundItem;
+
+    public string DisplayName { get; set; }
+    public int Quantity { get => quantity; set => quantity = value; }
+
+    private void Awake()
+    {
+        boundItem = GetComponent<BoundItem>();
+    }
     public override void Spawned()
     {
+        UniqueID = Object.Id.ToString();
+        DisplayName = config.displayName;
         base.Spawned();
+        Invoke(nameof(BoundItemSetup), .5f);
+    }
+
+    private void BoundItemSetup()
+    {
+        if(boundItem == null)
+        {
+            Debug.LogError("Bound item is null in item", gameObject);
+            return;
+        }
+
+        boundItem.SetToGround();
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -38,15 +61,6 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         }
     }
 
-    public string GetItemName()
-    {
-        return config.displayName;
-    }
-
-    public int GetQuantity()
-    {
-        return quantity;
-    }
 
     public void Collect()
     {
@@ -63,11 +77,8 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         DestroyItem();
     }
 
-
-    public string GetUniqueID()
-    {
-        return Object.NetworkTypeId.ToString();
-    }
+    public string UniqueID { get; set; }
+    
     public void DestroyItem()
     {
         DestroyRPC();
@@ -105,4 +116,5 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
             quantity = newAmount;
         }
     }
+
 }

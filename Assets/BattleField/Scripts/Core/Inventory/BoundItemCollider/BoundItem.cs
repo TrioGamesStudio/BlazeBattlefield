@@ -1,12 +1,17 @@
 using Fusion;
 using NaughtyAttributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BoundItem : NetworkBehaviour
 {
-    public bool isInBound = false;
+    [SerializeField] private bool isInBoundCollider = false;
+    [SerializeField] private bool allowAddToCollider = true;
+
+    public bool IsInBoundCollider { get => isInBoundCollider; set => isInBoundCollider =value; }
+    public bool AllowAddToCollider { get => allowAddToCollider; set => allowAddToCollider = value; }
     public BoundItemsCollider BoundItemsCollider;
     [SerializeField] private BoxCollider _collider;
     private void Awake()
@@ -17,8 +22,16 @@ public class BoundItem : NetworkBehaviour
     public override void Spawned()
     {
         base.Spawned();
-        ColliderCreator.instance.Add(this);
-        SetItemNearGround();
+    }
+
+    public void SetToGround()
+    {
+        if(allowAddToCollider)
+        {
+            SetItemNearGround();
+            ColliderCreator.instance.Add(this);
+        }
+        
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -58,5 +71,10 @@ public class BoundItem : NetworkBehaviour
             Gizmos.DrawWireCube(spawnPos, _collider.size);
             //Debug.Log($"Gizmo: {spawnPos}");
         }
+    }
+
+    public bool CanAddToBound()
+    {
+        return isInBoundCollider == false && allowAddToCollider && BoundItemsCollider == null;
     }
 }

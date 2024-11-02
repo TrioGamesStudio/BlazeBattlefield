@@ -43,7 +43,7 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
     {
         itemCollectUI.Initialize(itemInGame);
         //itemCollectUI.SetItemCount(itemInGame.GetQuantity());
-        itemCollectUI.SetItemName($"Name: {itemInGame.GetItemName()} ({activeItemUIs.Count})");
+        itemCollectUI.SetItemName($"Name: {itemInGame.DisplayName} ({activeItemUIs.Count})");
         itemCollectUI.gameObject.name = $"Item {activeItemUIs.Count}";
         itemCollectUI.SetOnClickEvent(() => 
         {
@@ -57,12 +57,12 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
  
     public override void RemoveItemUI(RunTimeItem customObject)
     {
-        RemoveItemFromDictionary(customObject.GetUniqueID(), customObject);
+        RemoveItemFromDictionary(customObject.UniqueID, customObject);
     }
 
     public override void AddItemUI(RunTimeItem customObject)
     {
-        AddItemToDictionary(customObject.GetUniqueID(), customObject);
+        AddItemToDictionary(customObject.UniqueID, customObject);
     }
 
     [Button]
@@ -84,9 +84,9 @@ public interface RunTimeItem
 {
     public bool isDisplayedUI { get; set; }
     public Action<RunTimeItem> OnRemoveItemUI { get; set; }
-    string GetItemName();
-    int GetQuantity();
+    string DisplayName { get; set; }
+    string UniqueID { get; set; }
+    int Quantity { get; set; }
     void Collect();
     void DestroyItem();
-    string GetUniqueID();
 }
