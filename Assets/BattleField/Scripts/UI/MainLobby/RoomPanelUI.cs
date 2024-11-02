@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class RoomPanelUI : MonoBehaviour
 {
@@ -22,8 +23,8 @@ public class RoomPanelUI : MonoBehaviour
         FindObjectOfType<Matchmaking>().JoinRoomByName(roomName);
     }
 
-    //public void Deactive(bool isFull)
-    //{
-    //    GetComponent<Button>().interactable = !isFull;
-    //}
+    public void Deactive(bool isFull)
+    {
+        GetComponentInChildren<Button>().interactable = !isFull;
+    }
 }

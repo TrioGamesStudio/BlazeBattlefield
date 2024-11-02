@@ -52,11 +52,14 @@ public class GameHandler : MonoBehaviour
             }
         }
         Debug.Log("===Team count: " + teams.Count);
+        if (teams.Count == 1)
+            CheckWin();
     }
 
     public void Eliminate(string teamID, PlayerRoomController player)
     {
-        Debug.Log("===Eliminate player" + player.TeamID + " in local");
+        //Debug.Log("===Eliminate player" + player.TeamID + " in local");
+        if (!teams.ContainsKey(teamID)) return;
         teams[teamID].Remove(player);
         if (teams[teamID].Count == 0)
         {
@@ -66,7 +69,7 @@ public class GameHandler : MonoBehaviour
                 Debug.Log("===Key: " + key);
                 foreach (var playerRoom in teams[key])
                 {
-                    Debug.Log("====Player team id: " + playerRoom.TeamID);
+                    //Debug.Log("====Player team id: " + playerRoom.TeamID);
                 }
             }
             teams.Remove(teamID);
@@ -76,7 +79,7 @@ public class GameHandler : MonoBehaviour
                 Debug.Log("===Key: " + key);
                 foreach (var playerRoom in teams[key])
                 {
-                    Debug.Log("====Player team id: " + playerRoom.TeamID);
+                    //Debug.Log("====Player team id: " + playerRoom.TeamID);
                 }
             }
             Debug.Log("===Remain team after remove " + teams.Count);
