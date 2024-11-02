@@ -33,10 +33,6 @@ public class StorageManager : MonoBehaviour
     private void ShowItemInformation(InventoryItem inventoryItem)
     {
         Debug.Log($"name{inventoryItem.displayName},amoumt {inventoryItem.amount},item type {inventoryItem.ItemType},max stack {inventoryItem.maxStack}");
-        foreach(var data in inventoryItem.customDatas)
-        {
-            Debug.Log($"Key {data.key} Value {data.value}");
-        }
     }
 
     public void Remove(ItemType itemType, Enum _enum, InventoryItem inventoryItem)
@@ -53,12 +49,22 @@ public class StorageManager : MonoBehaviour
 }
 public class InventoryItem
 {
+    public InventoryItem Create<T>(ItemConfig<T> itemConfig, int currentAmount) where T : Enum
+    {
+        ItemType = itemConfig.ItemType;
+        _SubItemEnum = itemConfig.SubItemType;
+        displayName = itemConfig.displayName;
+        Icon = itemConfig.Icon;
+        maxStack = itemConfig.maxStack;
+        amount = currentAmount;
+        return this;
+    }
+
     public ItemType ItemType;
     public Enum _SubItemEnum;
     public string displayName;
     public Sprite Icon;
     public int maxStack;
     public int amount;
-    public CustomData[] customDatas;
     public Action OnUpdateData;
 }

@@ -64,14 +64,14 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
 
     public void Collect()
     {
-        InventoryItem inventoryItem = new InventoryItem();
-        inventoryItem.maxStack = config.maxStack;
-        inventoryItem.ItemType = config.ItemType;
-        inventoryItem.displayName = config.displayName;
-        inventoryItem.Icon = config.Icon;
-        inventoryItem.amount = quantity;
-        inventoryItem.customDatas = customDatas;
-        inventoryItem._SubItemEnum = config.SubItemType;
+        InventoryItem inventoryItem = new();
+        inventoryItem.Create(config, quantity);
+        //inventoryItem.maxStack = config.maxStack;
+        //inventoryItem.ItemType = config.ItemType;
+        //inventoryItem.displayName = config.displayName;
+        //inventoryItem.Icon = config.Icon;
+        //inventoryItem.amount = quantity;
+        //inventoryItem._SubItemEnum = config.SubItemType;
         StorageManager.instance.Add(config.ItemType, config.SubItemType, inventoryItem);
 
         DestroyItem();
