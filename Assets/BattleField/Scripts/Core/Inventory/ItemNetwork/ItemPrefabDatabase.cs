@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ItemPrefabDatabase", menuName = "Configs/ItemPrefabDatabase")]
+[CreateAssetMenu(fileName = "ItemPrefabDatabase", menuName = "Config/ItemPrefabDatabase")]
 public class ItemPrefabDatabase: ScriptableObject
 {
 
@@ -23,19 +23,25 @@ public class ItemPrefabDatabase: ScriptableObject
     {
         foreach (var item in gameObjects)
         {
-            var itemEnum = item.GetComponent<ItemDataEnum>();
-            if (itemEnum == null)
-                continue;
-            var key1 = itemEnum.GetItemType();
-            var key2 = itemEnum.GetSubItemType();
-            if (!bigData.ContainsKey((key1, key2)))
-            {
-                bigData.Add((key1, key2), item);
-            }
-            else
-            {
-                bigData[(key1, key2)] = item;
-            }
+            CastToGeneralItem(item);
+        }
+    }
+
+    private void CastToGeneralItem(NetworkObject item)
+    {
+        var itemEnum = item.GetComponent<ItemDataEnum>();
+        if (itemEnum == null)
+            return;
+        var key1 = itemEnum.GetItemType();
+        var key2 = itemEnum.GetSubItemType();
+
+        if (!bigData.ContainsKey((key1, key2)))
+        {
+            bigData.Add((key1, key2), item);
+        }
+        else
+        {
+            bigData[(key1, key2)] = item;
         }
     }
 }

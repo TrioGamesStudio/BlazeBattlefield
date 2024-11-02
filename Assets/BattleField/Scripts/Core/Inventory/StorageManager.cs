@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 public class StorageManager : MonoBehaviour
 {
-
     public static StorageManager instance;
-
 
     public static Action<InventoryItem> OnAddItem;
     public static Action<InventoryItem> OnRemoveItem;
     public static Action<InventoryItem> OnUpdateItem;
+
     private Dictionary<(ItemType, Enum), List<InventoryItem>> bigData = new();
 
     private void Awake()
@@ -17,7 +16,7 @@ public class StorageManager : MonoBehaviour
         instance = this;
     }
 
-    public void Add(ItemType itemType,Enum _enum, InventoryItem inventoryItem)
+    public void Add(ItemType itemType, Enum _enum, InventoryItem inventoryItem)
     {
         if (bigData.ContainsKey((itemType, _enum)) == false)
             bigData.Add((itemType, _enum), new List<InventoryItem>());
@@ -45,26 +44,17 @@ public class StorageManager : MonoBehaviour
         }
     }
 
-
-}
-public class InventoryItem
-{
-    public InventoryItem Create<T>(ItemConfig<T> itemConfig, int currentAmount) where T : Enum
+    public void DropAll(InventoryItem currentItem)
     {
-        ItemType = itemConfig.ItemType;
-        _SubItemEnum = itemConfig.SubItemType;
-        displayName = itemConfig.displayName;
-        Icon = itemConfig.Icon;
-        maxStack = itemConfig.maxStack;
-        amount = currentAmount;
-        return this;
+        ItemDatabase.instance.InventoryItemToWorld(currentItem, currentItem.amount);
+        Remove(currentItem.ItemType, currentItem._SubItemEnum, currentItem);
     }
 
-    public ItemType ItemType;
-    public Enum _SubItemEnum;
-    public string displayName;
-    public Sprite Icon;
-    public int maxStack;
-    public int amount;
-    public Action OnUpdateData;
+    public void SplitItem(InventoryItem currentItem, int newDropCount)
+    {
+        ItemDatabase.instance.InventoryItemToWorld(currentItem, newDropCount);
+        currentItem.amount -= newDropCount;
+        currentItem?.OnUpdateData();
+    }
 }
+

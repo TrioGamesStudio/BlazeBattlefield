@@ -65,9 +65,7 @@ public class BackpackUI : MonoBehaviour
         }
         else
         {
-            ItemDatabase.instance.InventoryItemToWorld(currentItem, newDropCount);
-            currentItem.amount -= newDropCount;
-            currentItem?.OnUpdateData();
+            StorageManager.instance.SplitItem(currentItem, newDropCount);
         }
         HideDropAmount();
         HideButton();
@@ -78,8 +76,7 @@ public class BackpackUI : MonoBehaviour
     {
         HideButton();
         HideDropAmount();
-        ItemDatabase.instance.InventoryItemToWorld(currentItem, currentItem.amount);
-        StorageManager.instance.Remove(currentItem.ItemType, currentItem._SubItemEnum, currentItem);
+        StorageManager.instance.DropAll(currentItem);
     }
 
 

@@ -17,7 +17,7 @@ public class ItemDatabase : NetworkBehaviour
     {
         base.Spawned();
 
-        Debug.Log("ItemDatabase: "+NetworkPlayer.Local.transform.position);
+        Debug.Log("ItemDatabase: " + NetworkPlayer.Local.transform.position);
     }
 
     public NetworkObject GetItemPrefab(ItemType key1, Enum key2)
@@ -25,11 +25,13 @@ public class ItemDatabase : NetworkBehaviour
         return ItemPrefabDatabase.GetItemPrefab(key1, key2);
     }
 
+
     public ItemConfig<Enum> GetItemConfig(ItemType itemType, Enum subItemType)
     {
         return ItemConfigDatabase.FindItem(itemType, subItemType);
     }
 
+    // Use by inventory spawning
     public void InventoryItemToWorld(InventoryItem inventoryItem, int newAmount)
     {
         var key1 = inventoryItem.ItemType;
@@ -37,6 +39,14 @@ public class ItemDatabase : NetworkBehaviour
 
         CreateItemInWorld(newAmount, key1, key2, PlayerObject);
     }
+
+    // use for spawn by item config
+    public void GunConfigToWorld(GunItemConfig config, int quantity)
+    {
+        CreateItemInWorld(quantity, config.ItemType, config.SubItemType, PlayerObject);
+    }
+
+
     private void CreateItemInWorld(int newAmount, ItemType key1, Enum key2, Vector3 position)
     {
         var itemPrefab = GetItemPrefab(key1, key2);
@@ -46,5 +56,5 @@ public class ItemDatabase : NetworkBehaviour
         item.SetQuantity(newAmount);
     }
 
-
+    
 }
