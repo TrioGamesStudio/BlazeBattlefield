@@ -18,6 +18,8 @@ public class PlayerRoomController : NetworkBehaviour
     [Networked] public PlayerRef ThisPlayerRef { get; set; }
     string localRoomId;
     public bool isLocalPlayer = false;
+
+    //bool isCursorShowed = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -170,6 +172,7 @@ public class PlayerRoomController : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_ShowWin()
     {
+        ShowCursor();
         Debug.Log("===WIN ROIIIIII");
         if (matchmaking.currentMode == Matchmaking.Mode.Duo)
         {
@@ -191,10 +194,33 @@ public class PlayerRoomController : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_ShowLose(int rank)
     {
+        ShowCursor();
         Debug.Log("===No teammate remain -> Defeat " + "Top " + rank);
         if (matchmaking.currentMode == Matchmaking.Mode.Duo)
+        {
+            FindObjectOfType<WorldUI>().HideEliminateUI();
             FindObjectOfType<WorldUI>().ShowHideUIDefeatTeam(rank);
+        }          
         else
+        {        
             FindObjectOfType<WorldUI>().ShowHideUI(rank);
+        }          
     }
+
+    // on off cursor
+    /* void ToggleCursor() {
+        isCursorShowed = !isCursorShowed;
+        if(isCursorShowed) ShowCursor();
+        else HideCursor();
+    } */
+        
+    void ShowCursor() {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    /* void HideCursor() {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    } */
 }

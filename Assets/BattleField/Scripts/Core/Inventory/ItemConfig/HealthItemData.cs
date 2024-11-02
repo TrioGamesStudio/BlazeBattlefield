@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Internal;
+//using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 [CreateAssetMenu(fileName ="Health_Data",menuName ="Item/Health_Data")]
 public class HealthItemData : ItemConfigSettings<HealingItemType, HealthItemConfig>
