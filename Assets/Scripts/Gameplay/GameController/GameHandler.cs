@@ -52,11 +52,14 @@ public class GameHandler : MonoBehaviour
             }
         }
         Debug.Log("===Team count: " + teams.Count);
+        if (teams.Count == 1)
+            CheckWin();
     }
 
     public void Eliminate(string teamID, PlayerRoomController player)
     {
-        Debug.Log("===Eliminate player" + player.TeamID + " in local");
+        //Debug.Log("===Eliminate player" + player.TeamID + " in local");
+        if (!teams.ContainsKey(teamID)) return;
         teams[teamID].Remove(player);
         if (teams[teamID].Count == 0)
         {
@@ -66,7 +69,7 @@ public class GameHandler : MonoBehaviour
                 Debug.Log("===Key: " + key);
                 foreach (var playerRoom in teams[key])
                 {
-                    Debug.Log("====Player team id: " + playerRoom.TeamID);
+                    //Debug.Log("====Player team id: " + playerRoom.TeamID);
                 }
             }
             teams.Remove(teamID);
@@ -76,16 +79,17 @@ public class GameHandler : MonoBehaviour
                 Debug.Log("===Key: " + key);
                 foreach (var playerRoom in teams[key])
                 {
-                    Debug.Log("====Player team id: " + playerRoom.TeamID);
+                    //Debug.Log("====Player team id: " + playerRoom.TeamID);
                 }
             }
             Debug.Log("===Remain team after remove " + teams.Count);
         }
     }
 
-    public async void CheckLose(string teamID)
+    public IEnumerator CheckLose(string teamID)
     {
-        await Task.Delay(500);
+        //await Task.Delay(500);
+        yield return new WaitForSeconds(.5f);
         if (!teams.ContainsKey(teamID)) //All teammate eliminated
         //if (teams[teamID].Count == 0) 
         {
@@ -101,7 +105,7 @@ public class GameHandler : MonoBehaviour
         {
             Debug.Log("===Team " + teamID + " remain " + teams[teamID].Count + " player");
             Debug.Log("===Remain teammate alive -> Watch or leave");
-            FindObjectOfType<WorldUI>().ShowHideEliminateUI();
+            FindObjectOfType<WorldUI>().ShowEliminateUI();
         }
         CheckWin();
     }

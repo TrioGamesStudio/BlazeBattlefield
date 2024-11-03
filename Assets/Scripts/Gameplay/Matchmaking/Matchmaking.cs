@@ -19,7 +19,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private Button readyButton;
     [SerializeField] private Button playButton;
     private NetworkRunner networkRunner;
-    private const int MAX_PLAYER = 3;
+    private const int MAX_PLAYER = 2;
     public GameObject localPlayer;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     private PlayerRoomController localPlayerRoomController;
@@ -28,7 +28,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     private bool isAutoMatch;
     public int alivePlayer;
     bool isDone = false;
+    public bool IsDone{get => isDone;}
     private PlayerRoomController localSoloPlayer;
+    public Dictionary<PlayerRef, string> matchSolo = new();
     public bool IsAutoMatch
     {
         get { return isAutoMatch; }
@@ -42,7 +44,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             }
         }
     }
-   
+
     //private const int TEAM_SIZE = 2;
     enum SceneBuildIndex
     {
@@ -133,6 +135,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         // Call this to join the session lobby
         await networkRunner.JoinSessionLobby(SessionLobby.Shared);
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+        isDone = false;
+        playButton.interactable = true;
         currentMode = Mode.Solo;
     }
 
@@ -141,7 +145,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (currentMode == Mode.Solo)
             QuickPlay();
         else
-            QuickPlayTeam();
+            //QuickPlayTeam();
+            StartCoroutine(QuickPlayTeam());
     }
 
     public async void QuickPlay()
@@ -177,7 +182,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
     }
 
-    public async void QuickPlayTeam()
+    public IEnumerator QuickPlayTeam()
     {
         networkRunner.RemoveCallbacks(this);
         if (networkRunner.IsSharedModeMasterClient)
@@ -188,7 +193,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 //Debug.Log("Set battle name ne");
                 player.Value.SetBattleRoom();
-                await Task.Delay(3000);
+                //await Task.Delay(3000);
+                yield return new WaitForSeconds(3f); // 3 seconds delay
             }
             //TransitionToBattleRoom();
             //networkRunner.RemoveCallbacks(this);
@@ -196,7 +202,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             //playButton.gameObject.SetActive(false);
             if (networkRunner != null && networkRunner.IsRunning)
             {
-                await networkRunner.Shutdown();
+                //await networkRunner.Shutdown();
+                yield return networkRunner.Shutdown();
                 //Destroy(networkRunner.gameObject);  // Destroy the runner instance
                 networkRunner = null;  // Set the reference to null
                 Debug.Log("Room owner leaved team room");
@@ -234,7 +241,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public async void CreateRoom()
     {
-        players.Clear();
+        if (currentMode == Mode.Duo) return;
+        players.Clear();    
         string teamcode = UnityEngine.Random.Range(100, 999).ToString();
         if (networkRunner == null)
         {
@@ -242,11 +250,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             networkRunner.AddCallbacks(this);
         }
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+        currentMode = Mode.Duo;
         var startArguments = new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             SessionName = teamcode,
-            PlayerCount = 2,
+            PlayerCount = MAX_PLAYER,
         };
 
         //StatusText.text = startArguments.GameMode == GameMode.Single ? "Starting single-player..." : "Connecting...";
@@ -267,6 +276,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public async void LeaveRoom()
     {
+        if (currentMode == Mode.Solo) return;
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         if (networkRunner != null)
         {
             Debug.Log("Leaving room...");
@@ -275,12 +286,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => p.Object.HasInputAuthority == false);
                 if (localPlayer != null)
                 {
-                   localPlayer.RPC_SetAsRoomOwner();
+                    localPlayer.RPC_SetAsRoomOwner();
                 }
             }
 
             // Waiting for setup new room owner if needed
-            await Task.Delay(1000);
+            //await Task.Delay(1000);
             // Shuts down the runner and leaves the current session
             await networkRunner.Shutdown();
 
@@ -294,6 +305,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             localPlayer.SetActive(true);
             UIController.Instance.SwitchMode(true);
             UIController.Instance.OnOffPanel();
+            UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
             await JoinLobby();
 
             // Optionally update the UI, e.g., re-enable room creation UI or show session list
@@ -310,9 +322,18 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         await networkRunner.Shutdown();
         SceneManager.LoadScene("MainLobby");
+        isDone = false;
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
         localPlayer.gameObject.SetActive(true);
         await JoinLobby();
+    }
+
+    public void BackToLobbyAll()
+    {
+        if (currentMode == Mode.Solo)
+            BackToLobby();
+        else
+            MatchmakingTeam.Instance.BackToLobby();
     }
 
     public async void JoinRoomByName(string roomName)
@@ -369,7 +390,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 players[player].SetRoomID(runner.SessionInfo.Name);
                 players[player].SetAutoMatch(isAutoMatch);
                 localPlayerRoomController = players[player];
-               
+            
                 //players[player].SetHealthBarColor(Color.green);
 
             }
@@ -404,12 +425,21 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 localSoloPlayer = playerObject.GetComponent<PlayerRoomController>();
                 playerObject.GetComponent<PlayerRoomController>().SetPlayerRef(player);
                 playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
+                playerObject.GetComponent<PlayerRoomController>().SetLocalPlayer();
+                players[player] = playerObject.GetComponent<PlayerRoomController>();
+                matchSolo[player] = players[player].TeamID.ToString();
+            }
+            else
+            {
+                // Handle remote player
+                StartCoroutine(WaitForPlayerObjectSolo(runner, player));
             }
             int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
             string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(text);
             if (runner.ActivePlayers.Count() == MAX_PLAYER && !isDone) // Assuming PlayerCount is 2
             {
+                runner.SessionInfo.IsOpen = false;
                 isDone = true;
                 alivePlayer = runner.ActivePlayers.Count();
                 FindObjectOfType<UIController>().StartCountdown();
@@ -423,6 +453,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         yield return new WaitForSeconds(4f);
         FindObjectOfType<WaitingArea>()?.ReleasePlayer();
+
+
     }
 
     private IEnumerator InitializeTeams()
@@ -461,9 +493,50 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         }
     }
 
+    private IEnumerator WaitForPlayerObjectSolo(NetworkRunner runner, PlayerRef player)
+    {
+        NetworkObject playerObject = null;
+        float timeout = 5f; // 5 seconds timeout
+        float elapsedTime = 0f;
+
+        while (playerObject == null && elapsedTime < timeout)
+        {
+            playerObject = runner.GetPlayerObject(player);
+            if (playerObject != null)
+            {
+                players[player] = playerObject.GetComponent<PlayerRoomController>();
+                matchSolo[player] = players[player].TeamID.ToString();
+                Debug.Log($"Remote player {player} added to players list");
+                Debug.Log("Players dictionanry" + players.Count);
+                yield break;
+            }
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        if (playerObject == null)
+        {
+            Debug.LogWarning($"Timeout waiting for player object for player {player}");
+        }
+    }
+
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
+
+        if (currentMode == Mode.Solo)
+        {
+            //NetworkObject playerObject = null;
+            //string teamID = players[player].TeamID.ToString();
+            //PlayerRoomController playerRoomController = players[player];
+            FindObjectOfType<GameHandler>().Eliminate(matchSolo[player], players[player]);
+            FindObjectOfType<GameHandler>().CheckWin();
+        }
+
         players.Remove(player);
+
+        if (player != runner.LocalPlayer)
+            players[runner.LocalPlayer].RPC_SetAsRoomOwner();
+
         // Setup when team member become room owner
         if (players.ContainsKey(runner.LocalPlayer))
         {
@@ -473,8 +546,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 readyButton.gameObject.SetActive(false);
             }
             UpdatePlayButtonInteractability();
-        }
-
+        }   
         //localPlayerRoomController = null;
     }
 
@@ -494,8 +566,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             string roomName = session.Name;
             int playerCount = session.PlayerCount;
             int maxPlayer = session.MaxPlayers;
-
-            UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer);
+            if (session.IsOpen && roomName.Length <= 3)
+                UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer);
         }
     }
 

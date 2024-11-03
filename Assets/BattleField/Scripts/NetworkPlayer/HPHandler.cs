@@ -289,7 +289,7 @@ public class HPHandler : NetworkBehaviour
     {
         GetComponent<PlayerRoomController>().IsAlive = false;
         Debug.Log(":::Player shut down");
-        FindObjectOfType<GameHandler>().CheckLose(GetComponent<PlayerRoomController>().TeamID.ToString());
+        StartCoroutine(FindObjectOfType<GameHandler>().CheckLose(GetComponent<PlayerRoomController>().TeamID.ToString()));     
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
