@@ -23,6 +23,34 @@ public class StorageManager : MonoBehaviour
 
         if (bigData.TryGetValue((itemType, _enum), out var list))
         {
+            foreach(var item in list)
+            {
+                if (inventoryItem.amount == 0)
+                    break;
+
+                bool itemHasMoreSpace = item.amount < item.maxStack;
+                if (itemHasMoreSpace)
+                {
+                    
+                    int totalAmount = item.amount + inventoryItem.amount;
+                   
+                    if (totalAmount <= item.maxStack) // Can add all item
+                    {
+                        item.amount += inventoryItem.amount;
+                        inventoryItem.amount = 0;
+                    }
+                    else // need iterator more item // 7 + 5 = 12 => totalAmount - maxStack 
+                    {
+                        item.amount = item.maxStack;
+                        inventoryItem.amount = totalAmount- item.maxStack;
+                    }
+                    // callback in UI
+                    item.OnUpdateData();
+                }
+            }
+
+            if (inventoryItem.amount == 0) return;
+            // add new item to inventory
             list.Add(inventoryItem);
             OnAddItem(inventoryItem);
             ShowItemInformation(inventoryItem);
