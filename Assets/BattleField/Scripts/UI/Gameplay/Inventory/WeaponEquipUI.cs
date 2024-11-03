@@ -14,37 +14,29 @@ public class WeaponEquipUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI reserveGunAmmo;
     [SerializeField] private Image gunIconImg;
     [SerializeField] private Sprite defaultIcon;
-    private WeaponInformation bindWeaponData;
-    
-    [Serializable]
-    public class WeaponInformation
-    {
-        public string weaponName;
-        public string ammoType;
-        public string currentAmmo;
-        public string totalAmmo;
-        public Sprite icon;
-    }
+    private WeaponSlotHandler weaponSlothandler;
 
-    public void BindWeaponData(WeaponInformation currentWeapon)
+
+    public void BindWeaponData(WeaponSlotHandler weaponSlothandler)
     {
-        this.bindWeaponData = currentWeapon;
+        this.weaponSlothandler = weaponSlothandler;
     }
     public void RefreshWeaponInformation()
     {
-        if (bindWeaponData == null)
+        if (weaponSlothandler == null)
         {
             ResetGunInformation();
             return;
         }
-        
-        gunName.text = bindWeaponData.weaponName;
-        ammoTypeName.text = bindWeaponData.ammoType;
-        currentGunAmmo.text = bindWeaponData.currentAmmo+"/";
-        reserveGunAmmo.text = bindWeaponData.totalAmmo;
-        gunIconImg.sprite = bindWeaponData.icon;
+
+        gunName.text = weaponSlothandler.Config.displayName;
+        ammoTypeName.text = ItemDatabase.instance.GetItemConfig(ItemType.Ammo, weaponSlothandler.Config.ammoUsingType).displayName;
+        //currentGunAmmo.text = bindWeaponData.currentAmmo+"/";
+        //reserveGunAmmo.text = bindWeaponData.totalAmmo;
+        //gunIconImg.sprite = bindWeaponData.icon;
 
     }
+
 
     private void ResetGunInformation()
     {

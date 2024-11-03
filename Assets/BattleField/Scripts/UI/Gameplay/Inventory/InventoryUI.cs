@@ -12,26 +12,39 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private ViewUIHandler weaponUI;
     [SerializeField] private ViewUIHandler backpackUI;
     [SerializeField] private ViewUIHandler subPanelUI;
+    [Header("Shooting")]
+    private WeaponEquipUI[] weaponEquipUIs;
     private void Awake()
     {
-        // WeaponEquipUI.BindWeaponData(Gun1);
-        // WeaponEquipUI.RefreshWeaponInformation();
+        weaponEquipUIs = new WeaponEquipUI[4];
+
         isOpen = false;
         InputReader.Instance.Enable();
         ShowInventoryElement(false);
         
-        InputCombatControl.ShowInventory += ShowInventory;
         
         weaponUI.RaiseSetupUI();
         backpackUI.RaiseSetupUI();
         subPanelUI.RaiseSetupUI();
 
-
+        InputCombatControl.ShowInventory += ShowInventory;
+        WeaponManager.instance.OnInitData += BindWeaponSlotData;
     }
     private void OnDestroy()
     {
         InputCombatControl.ShowInventory -= ShowInventory;
+        WeaponManager.instance.OnInitData -= BindWeaponSlotData;
+
     }
+    private void BindWeaponSlotData(WeaponSlotHandler[] weaponSlotHandlers)
+    {
+        for (int i = 0; i < weaponSlotHandlers.Length; i++)
+        {
+            weaponEquipUIs[i].BindWeaponData(weaponSlotHandlers[i]);
+        }
+    }
+
+
 
     private bool isOpen = false;
     private void ShowInventory()

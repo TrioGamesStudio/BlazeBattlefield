@@ -84,5 +84,14 @@ public class StorageManager : MonoBehaviour
         currentItem.amount -= newDropCount;
         currentItem?.OnUpdateData();
     }
+
+    public bool TryGetAmmo(AmmoType ammoType,out int ammo)
+    {
+        ammo = 0;
+        if(bigData.TryGetValue((ItemType.Ammo,ammoType),out var list))
+        {
+        }
+        return false;
+    }
 }
 

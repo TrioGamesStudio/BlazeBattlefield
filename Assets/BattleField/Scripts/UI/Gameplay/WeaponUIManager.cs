@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class WeaponUIManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static WeaponUIManager instance;
+    public WeaponSlotUI[] weaponSlotUIs;
+    private void Awake()
     {
-        
+        instance = this;
+        WeaponManager.instance.OnInitData += BindSlotHandle;
+    }
+    private void OnDestroy()
+    {
+        WeaponManager.instance.OnInitData -= BindSlotHandle;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void BindSlotHandle(WeaponSlotHandler[] weaponSlotHandlers)
     {
-        
+        for (int i = 0; i < weaponSlotUIs.Length; i++)
+        {
+            weaponSlotUIs[i].BindWeaponSlotHandler(weaponSlotHandlers[i]);
+        }
     }
 }

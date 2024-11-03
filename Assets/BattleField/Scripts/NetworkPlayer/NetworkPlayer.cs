@@ -93,9 +93,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
         if(this.Object.HasStateAuthority) {
             Local = this;
-
+            var animator = GetComponentInChildren<Animator>();
+            WeaponManager.instance.playerAnimator = animator;
+            WeaponManager.instance.ShowWeapon(false);
             // kiem tra Ready scene de ON MainCam OF LocalCam
-            if(isReadyScene) {
+            if (isReadyScene) {
                 // (this.sceneToStart) networkPlayer <- spawner.cs <- dropdownscenename.cs
                 /* if(Runner.IsSharedModeMasterClient) sceneToStart = spawner.gameMap.ToString(); */
                 //Debug.Log("MAIN LOBBY SCENE NE");

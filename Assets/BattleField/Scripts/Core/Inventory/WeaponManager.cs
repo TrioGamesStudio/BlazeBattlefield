@@ -7,12 +7,10 @@ public class WeaponManager : NetworkBehaviour
     public static WeaponManager instance;
     public WeaponSlotHandler[] WeaponProfilerHolders;
     private WeaponSlotHandler currentSlot;
-    public Action OnChangedWeapon;
-    public Action OnDiscardCurrentWeapon;
     public int currentWeaponIndex;
-
+    public Animator playerAnimator;
     // Need UI to bind with
-    private void Awake()
+    private void Start()
     {
         instance = this;
         // setup for UI
@@ -21,6 +19,8 @@ public class WeaponManager : NetworkBehaviour
         WeaponProfilerHolders[1] = new WeaponSlotHandler(GunSlot.MainGun);
         WeaponProfilerHolders[2] = new WeaponSlotHandler(GunSlot.SubGun);
         WeaponProfilerHolders[3] = new WeaponSlotHandler(GunSlot.Melee);
+
+        OnInitData?.Invoke(WeaponProfilerHolders);
     }
 
     public override void Spawned()
@@ -28,6 +28,9 @@ public class WeaponManager : NetworkBehaviour
         base.Spawned();
     }
     private const int SUBGUN_SLOT_INDEX = 2;
+
+    public Action<WeaponSlotHandler[]> OnInitData { get; internal set; }
+
     public void AddNewGun(GunItemConfig newConfig)
     {
         if (newConfig.isSubGun)
@@ -39,12 +42,11 @@ public class WeaponManager : NetworkBehaviour
             if (subGunWeaponSlot.IsEmpty)
             {
                 subGunWeaponSlot.Create(newConfig);
-                subGunWeaponSlot.TurnOn();
+                ShowWeapon(true);
             }
             else
             {
                 // Drop and swap to new weapon
-                subGunWeaponSlot.TurnOff();
                 subGunWeaponSlot.Create(null);
             }
 
@@ -66,7 +68,6 @@ public class WeaponManager : NetworkBehaviour
         if (currentWeaponIndex == activeIndexButton)
         {
             // turn off current slot, because it active same slot
-            WeaponProfilerHolders[currentWeaponIndex].TurnOff();
         }
         else
         {
@@ -76,9 +77,6 @@ public class WeaponManager : NetworkBehaviour
                 Debug.Log("Ban dang co gang kich hoat 1 slot khong co vu khi", gameObject);
                 return;
             }
-            WeaponProfilerHolders[currentWeaponIndex].TurnOff();
-            WeaponProfilerHolders[activeIndexButton].TurnOn();
-            currentWeaponIndex = activeIndexButton;
 
         }
     }
@@ -91,4 +89,8 @@ public class WeaponManager : NetworkBehaviour
         weapon.GetComponent<BoundItem>().AllowAddToCollider = false;
     }
 
+    public void ShowWeapon(bool v)
+    {
+        playerAnimator.SetBool("isEquiped", v);
+    }
 }
