@@ -52,7 +52,7 @@ public class BoundItem : NetworkBehaviour
             {
                 Debug.Log("Set item position near to ground", gameObject);
                 Vector3 spawnPosition = hit.point + new Vector3(0, _collider.size.y / 2, 0);
-                transform.position = spawnPosition + new Vector3(0,height,0);
+                transform.position = spawnPosition;
                 //Debug.LogWarning($"Method: {spawnPosition}");
                 //Debug.Log("Set spawn Position", gameObject);
             }

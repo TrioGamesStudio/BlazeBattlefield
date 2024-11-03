@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WeaponManager : NetworkBehaviour
 {
+    public static WeaponManager instance;
     public WeaponSlotHandler[] WeaponProfilerHolders;
     private WeaponSlotHandler currentSlot;
     public Action OnChangedWeapon;
@@ -13,6 +14,8 @@ public class WeaponManager : NetworkBehaviour
     // Need UI to bind with
     private void Awake()
     {
+        instance = this;
+        // setup for UI
         WeaponProfilerHolders = new WeaponSlotHandler[4];
         WeaponProfilerHolders[0] = new WeaponSlotHandler(GunSlot.MainGun);
         WeaponProfilerHolders[1] = new WeaponSlotHandler(GunSlot.MainGun);
@@ -24,8 +27,8 @@ public class WeaponManager : NetworkBehaviour
     {
         base.Spawned();
     }
-    private const int SUBGUN_SLOT_INDEX = 3;
-    public void OnCollectNewGun(GunItemConfig newConfig)
+    private const int SUBGUN_SLOT_INDEX = 2;
+    public void AddNewGun(GunItemConfig newConfig)
     {
         if (newConfig.isSubGun)
         {
@@ -44,7 +47,7 @@ public class WeaponManager : NetworkBehaviour
                 subGunWeaponSlot.TurnOff();
                 subGunWeaponSlot.Create(null);
             }
-            
+
 
         }
         else
@@ -60,7 +63,7 @@ public class WeaponManager : NetworkBehaviour
 
     public void OnActiveGun(int activeIndexButton)
     {
-        if(currentWeaponIndex == activeIndexButton)
+        if (currentWeaponIndex == activeIndexButton)
         {
             // turn off current slot, because it active same slot
             WeaponProfilerHolders[currentWeaponIndex].TurnOff();
@@ -80,5 +83,12 @@ public class WeaponManager : NetworkBehaviour
         }
     }
 
-    
+    public void CreateWeaponItem(NetworkObject prefab, Transform parent, Vector3 position)
+    {
+        var weapon = Runner.Spawn(prefab, position, Quaternion.identity);
+        weapon.transform.SetParent(parent);
+        // make sure call this, if not item assume to collect item
+        weapon.GetComponent<BoundItem>().AllowAddToCollider = false;
+    }
+
 }

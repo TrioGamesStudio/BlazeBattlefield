@@ -11,15 +11,17 @@ public enum GunSlot
 [Serializable]
 public class WeaponSlotHandler
 {
+    public GunSlot Slot;
+    
     public NetworkObject Prefab;
     public GunItemConfig Config;
-    public GunSlot Slot;
+
     public Action OnTurnOff;
     public Action OnTurnOn;
 
     public Action<GunItemConfig> OnUpdateNewGun;
 
-    public bool IsEmpty => Prefab != null && Config != null;
+    public bool IsEmpty => Prefab == null && Config == null;
 
     public void Create(GunItemConfig newConfig)
     {

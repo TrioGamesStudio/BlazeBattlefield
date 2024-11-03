@@ -1,6 +1,7 @@
 ﻿using Fusion;
 using System;
 using System.Xml;
+using Unity.VisualScripting;
 using UnityEngine;
 [Serializable]
 public class CustomData
@@ -64,17 +65,23 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
 
     public void Collect()
     {
-        InventoryItem inventoryItem = new();
-        inventoryItem.Create(config, quantity);
+
         //inventoryItem.maxStack = config.maxStack;
         //inventoryItem.ItemType = config.ItemType;
         //inventoryItem.displayName = config.displayName;
         //inventoryItem.Icon = config.Icon;
         //inventoryItem.amount = quantity;
         //inventoryItem._SubItemEnum = config.SubItemType;
-        StorageManager.instance.Add(config.ItemType, config.SubItemType, inventoryItem);
+        AddToStorage();
 
         DestroyItem();
+    }
+
+    protected virtual void AddToStorage()
+    {
+        InventoryItem inventoryItem = new();
+        inventoryItem.Create(config, quantity);
+        StorageManager.instance.Add(config.ItemType, config.SubItemType, inventoryItem);
     }
 
     public string UniqueID { get; set; }
