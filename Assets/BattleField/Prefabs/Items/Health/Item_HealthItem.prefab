@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8321137893833480500}
   - component: {fileID: 3513342828563352061}
   - component: {fileID: 7105497667663409181}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Item_HealthItem
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -107,19 +107,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _quantity: 5
-  ItemConfigSettings: {fileID: 11400000, guid: 070af35a617673345aa554bfdfd8d8d8, type: 2}
-  _enumType: 5
   customDatas:
   - key: HealthAmount
     value: 30
   - key: UsingTime
     value: 0.2
-  config:
-    displayName: 
-    Icon: {fileID: 0}
-    SubItemType: 0
-    maxStack: 0
-    ItemType: 0
+  config: {fileID: 0}
 --- !u!114 &7105497667663409181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,7 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7802fa0543099c4409ba0f77cd52fa07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInBound: 0
+  isInBoundCollider: 0
+  allowAddToCollider: 1
   BoundItemsCollider: {fileID: 0}
   _collider: {fileID: 3844001163354628372}
 --- !u!1001 &8525698353374137693

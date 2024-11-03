@@ -9,7 +9,7 @@ public class BoundItem : NetworkBehaviour
 {
     [SerializeField] private bool isInBoundCollider = false;
     [SerializeField] private bool allowAddToCollider = true;
-
+    [SerializeField] private float height = 1.2f;
     public bool IsInBoundCollider { get => isInBoundCollider; set => isInBoundCollider =value; }
     public bool AllowAddToCollider { get => allowAddToCollider; set => allowAddToCollider = value; }
     public BoundItemsCollider BoundItemsCollider;
@@ -24,7 +24,7 @@ public class BoundItem : NetworkBehaviour
         base.Spawned();
     }
 
-    public void SetToGround()
+    public void Setup()
     {
         if(allowAddToCollider)
         {
@@ -50,8 +50,9 @@ public class BoundItem : NetworkBehaviour
         {
             if (hit.collider.gameObject.CompareTag("Ground"))
             {
+                Debug.Log("Set item position near to ground", gameObject);
                 Vector3 spawnPosition = hit.point + new Vector3(0, _collider.size.y / 2, 0);
-                transform.position = spawnPosition;
+                transform.position = spawnPosition + new Vector3(0,height,0);
                 //Debug.LogWarning($"Method: {spawnPosition}");
                 //Debug.Log("Set spawn Position", gameObject);
             }

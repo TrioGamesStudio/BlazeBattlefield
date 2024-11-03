@@ -49,7 +49,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
             return;
         }
 
-        boundItem.SetToGround();
+        boundItem.Setup();
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)

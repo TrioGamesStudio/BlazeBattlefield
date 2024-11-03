@@ -9,6 +9,7 @@ public class ColliderCreator : MonoBehaviour
     public Vector3 maxSize = new Vector3(10f, 10f, 10f); // Kích thước tối đa
     [SerializeField] private List<BoundItem> processingList = new();
     public LayerMask itemLayerMask;
+    public LayerMask boundColliderLayerMask;
     public BoundItemsCollider boundItemPrefab;
     private void Awake()
     {
@@ -42,15 +43,41 @@ public class ColliderCreator : MonoBehaviour
         {
             return;
         }
+        // check bound collider here
+        var BoundResult = Physics.OverlapBox(firstBoundItem.transform.position, minSize, Quaternion.identity, boundColliderLayerMask);
+
+        if (BoundResult.Length > 0)
+        {
+            foreach (var item in BoundResult)
+            {
+                if (item.bounds.Contains(firstBoundItem.transform.position))
+                {
+                    var _boundCollider = item.GetComponent<BoundItemsCollider>();
+                    _boundCollider.AddItemList(firstBoundItem);
+                    firstBoundItem.IsInBoundCollider = true;
+                    firstBoundItem.BoundItemsCollider = _boundCollider;
+                    break;
+                }
+            }
+
+            if (firstBoundItem.IsInBoundCollider)
+            {
+                isProcessing = false;
+                Debug.Log("Khong can phai kiem tra nua", gameObject);
+                return;
+            }
+        }
+
+
 
         BoundItemsCollider BoundItemsCollider = GetBoundItems();
         //BoundItemsCollider.AddItemList(firstBoundItem);
         //firstBoundItem.isInBoundCollider = true;
-        var result = Physics.OverlapBox(firstBoundItem.transform.position, minSize / 2, Quaternion.identity);
+        var ItemResult = Physics.OverlapBox(firstBoundItem.transform.position, minSize, Quaternion.identity, itemLayerMask);
         Debug.Log("Source: " + firstBoundItem.name);
-        if (result != null && result.Length > 0)
+        if (ItemResult != null && ItemResult.Length > 0)
         {
-            foreach (var item in result)
+            foreach (var item in ItemResult)
             {
                 if (item.CompareTag("Item"))
                 {

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6698181183157435316}
   - component: {fileID: 3650653040309371534}
   - component: {fileID: -3292781355194832252}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Item_AmmoGun
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -121,7 +121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7802fa0543099c4409ba0f77cd52fa07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInBound: 0
+  isInBoundCollider: 0
+  allowAddToCollider: 1
   BoundItemsCollider: {fileID: 0}
   _collider: {fileID: 5659457353509585042}
 --- !u!1001 &6296839182833915075
