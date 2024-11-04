@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Ammo", menuName = "Config/Ammo")]
 public class AmmoItemConfig : ItemConfig<AmmoType>
 {
+    public int totalAmmo;
     [Button]
     private void LoadDefaultSettings()
     {

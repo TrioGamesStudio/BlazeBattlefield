@@ -1,5 +1,7 @@
-﻿using System;
+﻿using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 public class StorageManager : MonoBehaviour
 {
@@ -54,6 +56,7 @@ public class StorageManager : MonoBehaviour
             list.Add(inventoryItem);
             OnAddItem(inventoryItem);
             ShowItemInformation(inventoryItem);
+            AmmoManager.instance.AddAmmo(inventoryItem, inventoryItem.amount);
         }
     }
 
@@ -69,6 +72,7 @@ public class StorageManager : MonoBehaviour
             if (!list.Contains(inventoryItem)) return;
             list.Remove(inventoryItem);
             OnRemoveItem(inventoryItem);
+            AmmoManager.instance.RemoveAmmo(inventoryItem, inventoryItem.amount);
         }
     }
 
@@ -83,15 +87,22 @@ public class StorageManager : MonoBehaviour
         ItemDatabase.instance.InventoryItemToWorld(currentItem, newDropCount);
         currentItem.amount -= newDropCount;
         currentItem?.OnUpdateData();
+
+        AmmoManager.instance.RemoveAmmo(currentItem, newDropCount);
     }
 
-    public bool TryGetAmmo(AmmoType ammoType,out int ammo)
+    public AmmoType ammoTypeTesting;
+    public int totalAmmo;
+    [Button]
+    public void TotalAmmo()
     {
-        ammo = 0;
-        if(bigData.TryGetValue((ItemType.Ammo,ammoType),out var list))
+        if (bigData.TryGetValue((ItemType.Ammo, ammoTypeTesting), out var list))
         {
+            foreach(var item in list)
+            {
+                totalAmmo += item.amount;
+            }
         }
-        return false;
     }
 }
 

@@ -36,7 +36,7 @@ public class ItemDatabase : NetworkBehaviour
     {
         var key1 = inventoryItem.ItemType;
         var key2 = inventoryItem._SubItemEnum;
-
+     
         CreateItemInWorld(newAmount, key1, key2, PlayerObject);
     }
 
