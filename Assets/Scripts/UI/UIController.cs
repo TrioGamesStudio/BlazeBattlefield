@@ -11,9 +11,11 @@ using UnityEngine.Events;
 public class UIController : MonoBehaviour
 {
     [Header("UI Elements")]
-    public GameObject panelMode;        
+    public GameObject panelMode;
+    public GameObject panelSelectMap;
     public GameObject panelTeamJoin;
-    public Button showButton;       
+    public Button modeButton;
+    public Button mapButton;
     public GameObject background;
     public Image modeImage;
     public Sprite singleMode;
@@ -51,6 +53,7 @@ public class UIController : MonoBehaviour
         InitializeUI();
         toggleModeButton.onValueChanged.AddListener(OnAutoMatchToggleChanged);
         joinTeamButton.onClick.AddListener(() => ShowHidePanel(panelTeamJoin));
+        mapButton.onClick.AddListener(() => ShowHideUI(panelSelectMap));
         toggleModeButton.interactable = false;
         //lobbyButton.onClick.AddListener(BackToLobby);
     }
@@ -73,10 +76,11 @@ public class UIController : MonoBehaviour
     {
         HidePanel();
 
-        if (showButton != null)
+        if (modeButton != null)
         {
             // Assign the button's onClick event to toggle the panel
-            showButton.onClick.AddListener(ShowPanel);
+            modeButton.onClick.AddListener(ShowPanel);
+           
         }
     }
 
@@ -137,6 +141,7 @@ public class UIController : MonoBehaviour
     {
         panelMode.SetActive(false);
         panelTeamJoin.SetActive(false);
+        panelSelectMap.SetActive(false);
         isPanelActive = false;
     }
 
@@ -155,7 +160,6 @@ public class UIController : MonoBehaviour
             soloButton.UnHightLight();
             duoButton.Highlight();
             toggleModeButton.interactable = true;
-
         }
         //isSingle = !isSingle;
     }
@@ -247,5 +251,10 @@ public class UIController : MonoBehaviour
     {
         SwitchMode(true);
         joinTeamButton.interactable = true;
+    }
+
+    public void SetMapText(string mapName)
+    {
+        mapButton.GetComponentInChildren<TextMeshProUGUI>().text = mapName;
     }
 }

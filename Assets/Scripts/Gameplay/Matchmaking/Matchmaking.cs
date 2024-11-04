@@ -51,6 +51,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         PlayScene = 2,
     }
 
+    private int currentSceneIndex = 2; // This variable will hold the current scene index
+
+
     public enum Mode
     {
         Solo,
@@ -158,13 +161,23 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         }
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         var sceneInfo = new NetworkSceneInfo();
-        int playSceneIndex = (int)SceneBuildIndex.PlayScene;
-        sceneInfo.AddSceneRef(SceneRef.FromIndex(playSceneIndex));
+        Dictionary<string, SessionProperty> customProps = new();
+        customProps["map"] = currentSceneIndex switch
+        {
+            2 => "Harbour",
+            3 => "Middle East",
+            _ => "Harbour",
+        };
+        //customProps["map"] = "Test";
+        //int playSceneIndex = (int)SceneBuildIndex.PlayScene;
+        //int playSceneIndex = currentSceneIndex;
+        sceneInfo.AddSceneRef(SceneRef.FromIndex(currentSceneIndex));
         var result = await networkRunner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             Scene = sceneInfo,
             PlayerCount = MAX_PLAYER,
+            SessionProperties = customProps,
         });
 
         if (result.Ok)
@@ -588,6 +601,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             localSoloPlayer.GetComponent<NetworkPlayer>().localUI.SetActive(false);
             FindObjectOfType<WorldUI>().ShowHideWinUI();
         }
+    }
+
+    public void SetPlayScene(int sceneIndex)
+    {
+        // You can add validation here if needed
+        currentSceneIndex = sceneIndex;
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
