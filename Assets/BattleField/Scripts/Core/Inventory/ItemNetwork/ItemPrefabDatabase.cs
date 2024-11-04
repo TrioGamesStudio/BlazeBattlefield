@@ -7,9 +7,9 @@ using UnityEngine;
 public class ItemPrefabDatabase: ScriptableObject
 {
 
-    [SerializeField] private List<NetworkObject> gameObjects;
-    private Dictionary<(ItemType, Enum), NetworkObject> bigData = new();
-    public NetworkObject GetItemPrefab(ItemType key1, Enum key2)
+    [SerializeField] private List<GameObject> gameObjects;
+    private Dictionary<(ItemType, Enum), GameObject> bigData = new();
+    public GameObject GetItemPrefab(ItemType key1, Enum key2)
     {
         if (bigData.TryGetValue((key1, key2), out var prefab))
         {
@@ -27,7 +27,7 @@ public class ItemPrefabDatabase: ScriptableObject
         }
     }
 
-    private void CastToGeneralItem(NetworkObject item)
+    private void CastToGeneralItem(GameObject item)
     {
         var itemEnum = item.GetComponent<ItemDataEnum>();
         if (itemEnum == null)

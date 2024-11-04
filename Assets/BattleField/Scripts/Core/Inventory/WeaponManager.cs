@@ -3,10 +3,10 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class WeaponManager : NetworkBehaviour
+public class WeaponManager : MonoBehaviour
 {
     public static WeaponManager instance;
-    public WeaponSlotHandler[] WeaponProfilerHolders;
+    public WeaponSlotHandler[] WeaponSlotHandlers;
     public int currentWeaponIndex;
     public Animator playerAnimator;
     // Need UI to bind with
@@ -14,33 +14,25 @@ public class WeaponManager : NetworkBehaviour
     {
         instance = this;
         // setup for UI
-        WeaponProfilerHolders = new WeaponSlotHandler[4];
-        WeaponProfilerHolders[0] = new WeaponSlotHandler();
-        WeaponProfilerHolders[1] = new WeaponSlotHandler();
-        WeaponProfilerHolders[2] = new WeaponSlotHandler();
-        WeaponProfilerHolders[3] = new WeaponSlotHandler();
+        WeaponSlotHandlers = new WeaponSlotHandler[4];
+        WeaponSlotHandlers[0] = new WeaponSlotHandler();
+        WeaponSlotHandlers[1] = new WeaponSlotHandler();
+        WeaponSlotHandlers[2] = new WeaponSlotHandler();
+        WeaponSlotHandlers[3] = new WeaponSlotHandler();
 
-        OnInitData?.Invoke(WeaponProfilerHolders);
+        OnInitData?.Invoke(WeaponSlotHandlers);
     }
-    PlayerInputAction playerInputActions;
     private void RegisterEvent()
     {
-        playerInputActions = new PlayerInputAction();
-        playerInputActions.Combat.Enable();
-        playerInputActions.Combat.SwapGun1.performed += SwapGun1_performed;
-        playerInputActions.Combat.SwapGun2.performed += SwapGun2_performed;
-        playerInputActions.Combat.SwapGun3.performed += SwapGun3_performed;
-        playerInputActions.Combat.SwapMeele.performed += SwapMeele_performed;
+        InputCombatControl.Instance.Enable();
+        InputCombatControl.SwapGun1 += () => OnActiveWeapon(0);
+        InputCombatControl.SwapGun2 += () => OnActiveWeapon(1);
+        InputCombatControl.SwapGun3 += () => OnActiveWeapon(2);
+        InputCombatControl.SwapMeele += () => OnActiveWeapon(3);
+
     }
 
-    private void OnDestroy()
-    {
-        playerInputActions.Combat.SwapGun1.performed -= SwapGun1_performed;
-        playerInputActions.Combat.SwapGun2.performed -= SwapGun2_performed;
-        playerInputActions.Combat.SwapGun3.performed -= SwapGun3_performed;
-        playerInputActions.Combat.SwapMeele.performed -= SwapMeele_performed;
-    }
-
+  
     private void SwapGun1_performed(InputAction.CallbackContext obj)
     {
         OnActiveWeapon(0);
@@ -61,46 +53,63 @@ public class WeaponManager : NetworkBehaviour
         OnActiveWeapon(3);
     }
   
-    public override void Spawned()
-    {
-        base.Spawned();
-    }
+
     private const int SUBGUN_SLOT_INDEX = 2;
 
     public static Action<WeaponSlotHandler[]> OnInitData { get; internal set; }
-
+    public ActiveWeapon activeWeapon;
     public void AddNewGun(GunItemConfig newConfig)
     {
-        if (newConfig.isSubGun)
+        bool allWeaponIsEmpty = true;
+        foreach(var item in WeaponSlotHandlers)
         {
-            Debug.Log("Collect item");
-            // handle in slot index 3
-            // Set new config and prefab
-            var subGunWeaponSlot = WeaponProfilerHolders[SUBGUN_SLOT_INDEX];
-
-            if (subGunWeaponSlot.IsEmpty)
+            if (!item.IsEmpty)
             {
-                Debug.Log("Create slot");
-                subGunWeaponSlot.Create(newConfig);
-                OnActiveWeapon(SUBGUN_SLOT_INDEX);
+                allWeaponIsEmpty = false;
             }
         }
-        else
+        // truong hop 1
+        if (allWeaponIsEmpty)
         {
-            // handle two first slot
-
+            var weaponSlot = WeaponSlotHandlers[(int)newConfig.slotWeaponIndex];
+            weaponSlot.AddNewWeapon(newConfig);
+            
+            activeWeapon.Equip(weaponSlot);
+            currentWeaponIndex = (int)newConfig.slotWeaponIndex;
+            return;
         }
-    }
-    private void Update()
-    {
-        for (int i = 0; i < WeaponProfilerHolders.Length; i++)
+        // truong hop 2
+        var currentWeapon = WeaponSlotHandlers[currentWeaponIndex];
+        //var equipSlot = WeaponSlotHandlers[(int)newConfig.slotWeaponIndex];
+        var index = (int)newConfig.slotWeaponIndex;
+        if (currentWeapon.Config.slotWeaponIndex == newConfig.slotWeaponIndex)
         {
-            Debug.Log($"Index: {i},Prefab: {WeaponProfilerHolders[i].Prefab}, Config:{WeaponProfilerHolders[i].Config}");
+            activeWeapon.Drop();
+            currentWeapon.AddNewWeapon(newConfig);
+            activeWeapon.Equip(currentWeapon);
         }
-    }
+        else // khong cung slot weapon
+        {
+            bool isSlotEmpty = WeaponSlotHandlers[index].IsEmpty;
+            if (isSlotEmpty)
+            {
+                WeaponSlotHandlers[index].AddNewWeapon(newConfig);
+            }
+            else
+            {
+                // drop 
+                WeaponSlotHandlers[index].DeleteAndSpawnWorld();
+                WeaponSlotHandlers[index].AddNewWeapon(newConfig);
+            }
+        }
 
+    }
     public void OnActiveWeapon(int activeIndexButton)
     {
+        if(currentWeaponIndex == -1) // T
+        {
+            // khong cam gi
+        }
 
         if (currentWeaponIndex == activeIndexButton)
         {
@@ -112,7 +121,7 @@ public class WeaponManager : NetworkBehaviour
         else
         {
             // if have 2 different weapon, then deActive current, active new one
-            if (WeaponProfilerHolders[activeIndexButton].IsEmpty)
+            if (WeaponSlotHandlers[activeIndexButton].IsEmpty)
             {
                 Debug.Log("Ban dang co gang kich hoat 1 slot khong co vu khi", gameObject);
                 return;
@@ -120,21 +129,21 @@ public class WeaponManager : NetworkBehaviour
             else
             {
                 Debug.Log("Kich hoat weapon moi", gameObject);
-                WeaponProfilerHolders[currentWeaponIndex].Hide();
-                WeaponProfilerHolders[activeIndexButton].Show();
+                WeaponSlotHandlers[currentWeaponIndex].Hide();
+                WeaponSlotHandlers[activeIndexButton].Show();
                 currentWeaponIndex = activeIndexButton;
             }
 
         }
     }
 
-    public void CreateWeaponItem(NetworkObject prefab, Transform parent, Vector3 position)
-    {
-        var weapon = Runner.Spawn(prefab, position, Quaternion.identity);
-        weapon.transform.SetParent(parent);
-        // make sure call this, if not item assume to collect item
-        weapon.GetComponent<BoundItem>().AllowAddToCollider = false;
-    }
+    //public void CreateWeaponItem(NetworkObject prefab, Transform parent, Vector3 position)
+    //{
+    //    var weapon = Runner.Spawn(prefab, position, Quaternion.identity);
+    //    weapon.transform.SetParent(parent);
+    //    // make sure call this, if not item assume to collect item
+    //    weapon.GetComponent<BoundItem>().AllowAddToCollider = false;
+    //}
 
     public void ShowWeapon(bool v)
     {

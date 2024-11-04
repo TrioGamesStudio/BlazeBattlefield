@@ -6,13 +6,17 @@ using UnityEngine;
 public class WeaponSlotHandler
 {
     
-    public NetworkObject Prefab;
+    public GameObject Prefab;
     public GunItemConfig Config;
 
     public Action OnUpdateNewGunAction;
+    public int currentAmmo;
+
+    public Action TurnOn;
+    public Action TurnOff;
 
     public bool IsEmpty => Prefab == null && Config == null;
-    public void Create(GunItemConfig newConfig)
+    public void AddNewWeapon(GunItemConfig newConfig)
     {
         this.Config = newConfig;
         this.Prefab = ItemDatabase.instance.GetItemPrefab(Config.ItemType, Config.SubItemType);
@@ -29,4 +33,11 @@ public class WeaponSlotHandler
         Debug.Log("Hide weapon");
     }
 
+
+    public void DeleteAndSpawnWorld()
+    {
+        ItemDatabase.instance.GunConfigToWorld(Config, 1);
+        Config = null;
+        Prefab = null;
+    }
 }

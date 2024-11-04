@@ -27,8 +27,6 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     public _Config config;
     private BoundItem boundItem;
 
-    public string DisplayName { get; set; }
-    public int Quantity { get => quantity; set => quantity = value; }
 
     private void Awake()
     {
@@ -36,13 +34,11 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     }
     public override void Spawned()
     {
-        UniqueID = Object.Id.ToString();
-        DisplayName = config.displayName;
         base.Spawned();
         Invoke(nameof(BoundItemSetup), .5f);
     }
 
-    private void BoundItemSetup()
+    public void BoundItemSetup()
     {
         if(boundItem == null)
         {
@@ -84,8 +80,6 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         StorageManager.instance.Add(config.ItemType, config.SubItemType, inventoryItem);
     }
 
-    public string UniqueID { get; set; }
-    
     public void DestroyItem()
     {
         DestroyRPC();
@@ -124,4 +118,18 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         }
     }
 
+    public string DisplayName()
+    {
+        return config.displayName;
+    }
+
+    string RunTimeItem.UniqueID()
+    {
+        return Object.Id.ToString();
+    }
+
+    public int Quantity()
+    {
+        return quantity;
+    }
 }

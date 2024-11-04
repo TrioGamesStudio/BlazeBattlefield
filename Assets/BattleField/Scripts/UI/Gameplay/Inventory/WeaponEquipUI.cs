@@ -23,6 +23,10 @@ public class WeaponEquipUI : MonoBehaviour
 
     public void BindWeaponData(WeaponSlotHandler weaponSlothandler)
     {
+        if (this.weaponSlothandler != null)
+        {
+            this.weaponSlothandler.OnUpdateNewGunAction -= RefreshWeaponInformation;
+        }
         this.weaponSlothandler = weaponSlothandler;
         weaponSlothandler.OnUpdateNewGunAction += RefreshWeaponInformation;
     }
@@ -31,10 +35,13 @@ public class WeaponEquipUI : MonoBehaviour
     {
         weaponSlothandler.OnUpdateNewGunAction -= RefreshWeaponInformation;
     }
-
+    private void OnEnable()
+    {
+        RefreshWeaponInformation();
+    }
     public void RefreshWeaponInformation()
     {
-        if (weaponSlothandler == null)
+        if (weaponSlothandler == null || weaponSlothandler.IsEmpty)
         {
             ResetGunInformation();
             return;
@@ -42,9 +49,9 @@ public class WeaponEquipUI : MonoBehaviour
 
         gunName.text = weaponSlothandler.Config.displayName;
         ammoTypeName.text = weaponSlothandler.Config.ammoUsingType.displayName;
-        //currentGunAmmo.text = bindWeaponData.currentAmmo+"/";
-        //reserveGunAmmo.text = bindWeaponData.totalAmmo;
-        //gunIconImg.sprite = bindWeaponData.icon;
+        currentGunAmmo.text = weaponSlothandler.currentAmmo + "/";
+        reserveGunAmmo.text = weaponSlothandler.Config.ammoUsingType.TotalAmmo.ToString();
+        //gunIconImg.sprite = weaponSlothandler.Config.Icon;
 
     }
 

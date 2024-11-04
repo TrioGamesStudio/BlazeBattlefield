@@ -5,37 +5,25 @@ using UnityEngine;
 
 public class AmmoManager : MonoBehaviour
 {
-    [Serializable]
-    public class AmmoData
-    {
-        public AmmoData(AmmoType ammoType)
-        {
-            Type = ammoType;
-            totalAmmo = 0;
-        }
-        public AmmoType Type;
-        public int totalAmmo;
-    }
+    
 
     public static AmmoManager instance;
     [SerializeField] private int totalAmount;
-    [SerializeField] private List<AmmoData> ammoDatas = new();
-
-
+    [SerializeField] private List<AmmoItemConfig> ammoConfigs;
+    private Dictionary<Enum, AmmoItemConfig> ammoConfigDictionary;
     private void Awake()
     {
         instance = this;
         Init();
     }
+
     private void Init()
     {
-        ammoDatas = new()
+        ammoConfigDictionary = new();
+        foreach (var item in ammoConfigs)
         {
-            new AmmoData(AmmoType.Ammo556),
-            new AmmoData(AmmoType.Ammo762),
-            new AmmoData(AmmoType.Ammo9mm),
-            new AmmoData(AmmoType.Ammo12Gauge)
-        };
+            ammoConfigDictionary.Add(item.SubItemType, item);
+        }
     }
 
     public void AddAmmo(InventoryItem inventory, int quantity)
@@ -50,21 +38,18 @@ public class AmmoManager : MonoBehaviour
     private void HandlerAmmo(InventoryItem inventoryItem, bool isAdd, int quantity)
     {
         if (inventoryItem.ItemType != ItemType.Ammo) return;
-        foreach (var item in ammoDatas)
+       
+        if(ammoConfigDictionary.TryGetValue(inventoryItem._SubItemEnum,out var ammoConfig))
         {
-            if (item.Type.Equals(inventoryItem._SubItemEnum))
+            if (isAdd)
             {
-                if (isAdd)
-                {
-                    item.totalAmmo += quantity;
-                }
-                else
-                {
-                    item.totalAmmo -= quantity;
-                }
+                ammoConfig.ChangeTotalAmmo(quantity);
+            }
+            else
+            {
+                ammoConfig.ChangeTotalAmmo(-quantity);
             }
         }
-
     }
 
 

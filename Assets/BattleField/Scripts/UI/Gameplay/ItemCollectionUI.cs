@@ -43,8 +43,6 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
     {
         itemCollectUI.Initialize(itemInGame);
         //itemCollectUI.SetItemCount(itemInGame.GetQuantity());
-        itemCollectUI.SetItemName($"Name: {itemInGame.DisplayName} ({activeItemUIs.Count})");
-        itemCollectUI.gameObject.name = $"Item {activeItemUIs.Count}";
         itemCollectUI.SetOnClickEvent(() => 
         {
             // need to check storage can collect item
@@ -57,12 +55,12 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
  
     public override void RemoveItemUI(RunTimeItem customObject)
     {
-        RemoveItemFromDictionary(customObject.UniqueID, customObject);
+        RemoveItemFromDictionary(customObject.UniqueID(), customObject);
     }
 
     public override void AddItemUI(RunTimeItem customObject)
     {
-        AddItemToDictionary(customObject.UniqueID, customObject);
+        AddItemToDictionary(customObject.UniqueID(), customObject);
     }
 
     [Button]
@@ -84,9 +82,9 @@ public interface RunTimeItem
 {
     public bool isDisplayedUI { get; set; }
     public Action<RunTimeItem> OnRemoveItemUI { get; set; }
-    string DisplayName { get; set; }
-    string UniqueID { get; set; }
-    int Quantity { get; set; }
+    string DisplayName();
+    string UniqueID();
+    int Quantity();
     void Collect();
     void DestroyItem();
 }

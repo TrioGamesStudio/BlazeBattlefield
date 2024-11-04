@@ -17,8 +17,8 @@ public class ItemCollectUI : BaseUIItem, IPoolCallback<ItemCollectUI>
 
     public void Initialize(RunTimeItem itemInGame)
     {
-        SetItemCount(itemInGame.Quantity);
-        SetItemName($"Name: {itemInGame.DisplayName}");
+        SetItemCount(itemInGame.Quantity());
+        SetItemName($"Name: {itemInGame.DisplayName()}");
     }
 }
 

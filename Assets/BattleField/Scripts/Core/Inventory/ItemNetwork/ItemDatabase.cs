@@ -20,7 +20,7 @@ public class ItemDatabase : NetworkBehaviour
         Debug.Log("ItemDatabase: " + NetworkPlayer.Local.transform.position);
     }
 
-    public NetworkObject GetItemPrefab(ItemType key1, Enum key2)
+    public GameObject GetItemPrefab(ItemType key1, Enum key2)
     {
         return ItemPrefabDatabase.GetItemPrefab(key1, key2);
     }
