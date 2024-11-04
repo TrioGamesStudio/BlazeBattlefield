@@ -6,5 +6,5 @@ public class GunItemConfig : ItemConfig<GunType>
     public bool isSubGun = false;
     public float fireRate;
     public int maxRounds;
-    public AmmoType ammoUsingType;
+    public AmmoItemConfig ammoUsingType;
 }

@@ -9,15 +9,17 @@ public class WeaponUIManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        WeaponManager.instance.OnInitData += BindSlotHandle;
+        WeaponManager.OnInitData += BindSlotHandle;
     }
     private void OnDestroy()
     {
-        WeaponManager.instance.OnInitData -= BindSlotHandle;
+        WeaponManager.OnInitData -= BindSlotHandle;
     }
 
     public void BindSlotHandle(WeaponSlotHandler[] weaponSlotHandlers)
     {
+        Debug.Log("BindSlotHandle", gameObject);
+
         for (int i = 0; i < weaponSlotUIs.Length; i++)
         {
             weaponSlotUIs[i].BindWeaponSlotHandler(weaponSlotHandlers[i]);

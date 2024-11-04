@@ -15,11 +15,18 @@ public class WeaponSlotUI : MonoBehaviour
     public WeaponSlotHandler WeaponSlotHandler;
 
 
-
     public void BindWeaponSlotHandler(WeaponSlotHandler weaponSlotHandler)
     {
         WeaponSlotHandler = weaponSlotHandler;
+        // listener event from WeaponSlotHandler
+        WeaponSlotHandler.OnUpdateNewGunAction += OnUpdateNewGun;
     }
+    private void OnDestroy()
+    {
+        WeaponSlotHandler.OnUpdateNewGunAction -= OnUpdateNewGun;
+
+    }
+
     private void OnUpdateNewGun()
     {
     }

@@ -80,8 +80,11 @@ public class WeaponHandler : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         if(SceneManager.GetActiveScene().name == "MainLobby") return;
-        if((!Matchmaking.Instance.IsDone && Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
-          ||(!MatchmakingTeam.Instance.IsDone && Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo)) return;
+        if(Matchmaking.Instance != null)
+        {
+            if ((!Matchmaking.Instance.IsDone && Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
+          || (!MatchmakingTeam.Instance.IsDone && Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo)) return;
+        }
         
         Fire();
 
