@@ -74,7 +74,7 @@ public class ColliderCreator : MonoBehaviour
         //BoundItemsCollider.AddItemList(firstBoundItem);
         //firstBoundItem.isInBoundCollider = true;
         var ItemResult = Physics.OverlapBox(firstBoundItem.transform.position, minSize, Quaternion.identity, itemLayerMask);
-        Debug.Log("Source: " + firstBoundItem.name);
+        //Debug.Log("Source: " + firstBoundItem.name);
         if (ItemResult != null && ItemResult.Length > 0)
         {
             foreach (var item in ItemResult)
@@ -88,7 +88,7 @@ public class ColliderCreator : MonoBehaviour
                     _boundItem.IsInBoundCollider = true;
                     _boundItem.BoundItemsCollider = BoundItemsCollider;
 
-                    Debug.Log($"AddBound: Source {firstBoundItem.name} Add: {_boundItem.name}");
+                    //Debug.Log($"AddBound: Source {firstBoundItem.name} Add: {_boundItem.name}");
                     if (processingList.Contains(_boundItem))
                     {
                         processingList.Remove(_boundItem);

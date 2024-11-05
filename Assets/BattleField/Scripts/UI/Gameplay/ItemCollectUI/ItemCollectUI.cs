@@ -19,6 +19,7 @@ public class ItemCollectUI : BaseUIItem, IPoolCallback<ItemCollectUI>
     {
         SetItemCount(itemInGame.Quantity());
         SetItemName($"Name: {itemInGame.DisplayName()}");
+        icon.sprite = itemInGame.GetIcon();
     }
 }
 

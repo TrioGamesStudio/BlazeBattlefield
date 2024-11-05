@@ -1,18 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class WeaponBackpackUI : MonoBehaviour
+
+public class WeaponBackpackUI : BindingWeaponUI
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private TextMeshProUGUI gunName;
+    [SerializeField] private TextMeshProUGUI ammoTypeName;
+
+    protected override void UpdateGunInfor()
     {
-        
+        base.UpdateGunInfor();
+
+        //Debug.Log("On Update Gun Infor");
+        gunName.text = weaponSlotHandler.Config.displayName;
+        ammoTypeName.text = weaponSlotHandler.Config.ammoUsingType.displayName;
+
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //protected override void ResetUIState()
+    //{
+    //    base.ResetUIState();
+    //    gunName.text = "";
+    //    ammoTypeName.text = "";
+
+    //}
 }

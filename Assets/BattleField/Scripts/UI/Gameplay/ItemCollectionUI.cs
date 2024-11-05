@@ -82,6 +82,7 @@ public interface RunTimeItem
 {
     public bool isDisplayedUI { get; set; }
     public Action<RunTimeItem> OnRemoveItemUI { get; set; }
+    public Sprite GetIcon();
     string DisplayName();
     string UniqueID();
     int Quantity();

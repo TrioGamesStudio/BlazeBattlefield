@@ -6,14 +6,14 @@ public class InventoryUI : MonoBehaviour
 {
     // For testing
     
-    public WeaponEquipUI WeaponEquipUI;
+    public WeaponBackpackUI WeaponEquipUI;
     public GameObject view;
     [Header("View UI")]
     [SerializeField] private ViewUIHandler weaponUI;
     [SerializeField] private ViewUIHandler backpackUI;
     [SerializeField] private ViewUIHandler subPanelUI;
     [Header("Shooting")]
-    [SerializeField] private WeaponEquipUI[] weaponEquipUIs;
+    [SerializeField] private WeaponBackpackUI[] weaponEquipUIs;
     private void Awake()
     {
         isOpen = false;
@@ -26,23 +26,12 @@ public class InventoryUI : MonoBehaviour
         subPanelUI.RaiseSetupUI();
 
         InputCombatControl.ShowInventory += ShowInventory;
-        WeaponManager.OnInitData += BindWeaponSlotData;
     }
     private void OnDestroy()
     {
         InputCombatControl.ShowInventory -= ShowInventory;
-        WeaponManager.OnInitData -= BindWeaponSlotData;
 
     }
-    private void BindWeaponSlotData(WeaponSlotHandler[] weaponSlotHandlers)
-    {
-        Debug.Log("BindWeaponSlotData", gameObject);
-        for (int i = 0; i < weaponSlotHandlers.Length; i++)
-        {
-            weaponEquipUIs[i].BindWeaponData(weaponSlotHandlers[i]);
-        }
-    }
-
 
 
     private bool isOpen = false;

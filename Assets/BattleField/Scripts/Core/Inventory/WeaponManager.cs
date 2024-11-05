@@ -1,27 +1,35 @@
 ﻿using Fusion;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 public class WeaponManager : MonoBehaviour
 {
     public static WeaponManager instance;
-    public WeaponSlotHandler[] WeaponSlotHandlers;
-    public int currentWeaponIndex;
+    
+    [SerializeField] private WeaponSlotHandler[] weaponSlotHandlers;
+    [SerializeField] private int currentWeaponIndex;
+    
+    private const int SUBGUN_SLOT_INDEX = 2;
+
     public Animator playerAnimator;
+    public ActiveWeapon activeWeapon;
+    public WeaponSlotHandler[] WeaponSlotHandlers { get => weaponSlotHandlers; }
     // Need UI to bind with
-    private void Start()
+
+    private void Awake()
     {
         instance = this;
-        // setup for UI
-        WeaponSlotHandlers = new WeaponSlotHandler[4];
-        WeaponSlotHandlers[0] = new WeaponSlotHandler();
-        WeaponSlotHandlers[1] = new WeaponSlotHandler();
-        WeaponSlotHandlers[2] = new WeaponSlotHandler();
-        WeaponSlotHandlers[3] = new WeaponSlotHandler();
+        weaponSlotHandlers = new WeaponSlotHandler[4];
+        weaponSlotHandlers[0] = new WeaponSlotHandler();
+        weaponSlotHandlers[1] = new WeaponSlotHandler();
+        weaponSlotHandlers[2] = new WeaponSlotHandler();
+        weaponSlotHandlers[3] = new WeaponSlotHandler();
 
-        OnInitData?.Invoke(WeaponSlotHandlers);
     }
+
+
     private void RegisterEvent()
     {
         InputCombatControl.Instance.Enable();
@@ -31,37 +39,10 @@ public class WeaponManager : MonoBehaviour
         InputCombatControl.SwapMeele += () => OnActiveWeapon(3);
 
     }
-
-  
-    private void SwapGun1_performed(InputAction.CallbackContext obj)
-    {
-        OnActiveWeapon(0);
-    }
-
-    private void SwapGun2_performed(InputAction.CallbackContext obj)
-    {
-        OnActiveWeapon(1);
-    }
-
-    private void SwapGun3_performed(InputAction.CallbackContext obj)
-    {
-        OnActiveWeapon(2);
-    }
-
-    private void SwapMeele_performed(InputAction.CallbackContext obj)
-    {
-        OnActiveWeapon(3);
-    }
-  
-
-    private const int SUBGUN_SLOT_INDEX = 2;
-
-    public static Action<WeaponSlotHandler[]> OnInitData { get; internal set; }
-    public ActiveWeapon activeWeapon;
     public void AddNewGun(GunItemConfig newConfig)
     {
         bool allWeaponIsEmpty = true;
-        foreach(var item in WeaponSlotHandlers)
+        foreach(var item in weaponSlotHandlers)
         {
             if (!item.IsEmpty)
             {
@@ -71,7 +52,7 @@ public class WeaponManager : MonoBehaviour
         // truong hop 1
         if (allWeaponIsEmpty)
         {
-            var weaponSlot = WeaponSlotHandlers[(int)newConfig.slotWeaponIndex];
+            var weaponSlot = weaponSlotHandlers[(int)newConfig.slotWeaponIndex];
             weaponSlot.AddNewWeapon(newConfig);
             
             activeWeapon.Equip(weaponSlot);
@@ -79,7 +60,7 @@ public class WeaponManager : MonoBehaviour
             return;
         }
         // truong hop 2
-        var currentWeapon = WeaponSlotHandlers[currentWeaponIndex];
+        var currentWeapon = weaponSlotHandlers[currentWeaponIndex];
         //var equipSlot = WeaponSlotHandlers[(int)newConfig.slotWeaponIndex];
         var index = (int)newConfig.slotWeaponIndex;
         if (currentWeapon.Config.slotWeaponIndex == newConfig.slotWeaponIndex)
@@ -90,16 +71,16 @@ public class WeaponManager : MonoBehaviour
         }
         else // khong cung slot weapon
         {
-            bool isSlotEmpty = WeaponSlotHandlers[index].IsEmpty;
+            bool isSlotEmpty = weaponSlotHandlers[index].IsEmpty;
             if (isSlotEmpty)
             {
-                WeaponSlotHandlers[index].AddNewWeapon(newConfig);
+                weaponSlotHandlers[index].AddNewWeapon(newConfig);
             }
             else
             {
                 // drop 
-                WeaponSlotHandlers[index].DeleteAndSpawnWorld();
-                WeaponSlotHandlers[index].AddNewWeapon(newConfig);
+                weaponSlotHandlers[index].DeleteAndSpawnWorld();
+                weaponSlotHandlers[index].AddNewWeapon(newConfig);
             }
         }
 
@@ -121,7 +102,7 @@ public class WeaponManager : MonoBehaviour
         else
         {
             // if have 2 different weapon, then deActive current, active new one
-            if (WeaponSlotHandlers[activeIndexButton].IsEmpty)
+            if (weaponSlotHandlers[activeIndexButton].IsEmpty)
             {
                 Debug.Log("Ban dang co gang kich hoat 1 slot khong co vu khi", gameObject);
                 return;
@@ -129,8 +110,8 @@ public class WeaponManager : MonoBehaviour
             else
             {
                 Debug.Log("Kich hoat weapon moi", gameObject);
-                WeaponSlotHandlers[currentWeaponIndex].Hide();
-                WeaponSlotHandlers[activeIndexButton].Show();
+                weaponSlotHandlers[currentWeaponIndex].Hide();
+                weaponSlotHandlers[activeIndexButton].Show();
                 currentWeaponIndex = activeIndexButton;
             }
 

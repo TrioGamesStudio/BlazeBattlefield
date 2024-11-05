@@ -132,4 +132,9 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     {
         return quantity;
     }
+
+    public Sprite GetIcon()
+    {
+        return config.Icon;
+    }
 }

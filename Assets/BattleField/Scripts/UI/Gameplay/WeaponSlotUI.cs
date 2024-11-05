@@ -5,61 +5,66 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.UI;
-
-public class WeaponSlotUI : MonoBehaviour
+public class BindingWeaponUI : MonoBehaviour
 {
-    [SerializeField] private Button ChangeFireModeBtn;
-    [SerializeField] private Image GunIcon;
-    [SerializeField] private TextMeshProUGUI weaponAmmo;
-    [SerializeField] private TextMeshProUGUI totalTypeAmmo;
-    [SerializeField] private WeaponSlotHandler WeaponSlotHandler;
-    private void Awake()
+    [SerializeField] protected WeaponSlotHandler weaponSlotHandler;
+    [SerializeField] protected SlotWeaponIndex weaponIndex;
+    [SerializeField] protected TextMeshProUGUI currentGunAmmoText;
+    [SerializeField] protected TextMeshProUGUI totalGunAmmoText;
+    [SerializeField] protected Image IconImage;
+    public SlotWeaponIndex WeaponIndex { get => weaponIndex; }
+
+
+    public virtual void BindWeaponSlot(WeaponSlotHandler newWeaponSlotHandler)
     {
-        SetEmptyText();
+        weaponSlotHandler = newWeaponSlotHandler;
+        weaponSlotHandler.OnUpdateNewGunAction += OnUpdateNewGun;
+        weaponSlotHandler.OnAmmoChange += UpdateCurrentAmmo;
+        OnUpdateNewGun();
     }
-
-    public void BindWeaponSlotHandler(WeaponSlotHandler weaponSlotHandler)
-    {
-        if(this.WeaponSlotHandler != null)
-        {
-            WeaponSlotHandler.OnUpdateNewGunAction -= OnUpdateNewGun;
-            WeaponSlotHandler.Config.ammoUsingType.OnTotalAmmoChange -= OnTotalAmmoChange;
-        }
-
-        WeaponSlotHandler = weaponSlotHandler;
-        // listener event from WeaponSlotHandler
-        WeaponSlotHandler.OnUpdateNewGunAction += OnUpdateNewGun;
-        WeaponSlotHandler.Config.ammoUsingType.OnTotalAmmoChange += OnTotalAmmoChange;
-
-    }
-
 
     private void OnUpdateNewGun()
     {
-        if (WeaponSlotHandler.IsEmpty)
+        if (weaponSlotHandler.IsEmpty)
         {
-            SetEmptyText();
+            // remove callback UI of ammo
+            Debug.Log("Reset UI callback", gameObject);
+            ResetUIState();
         }
         else
         {
-            OnCurrentAmmoChange(WeaponSlotHandler.currentAmmo);
-            OnTotalAmmoChange(WeaponSlotHandler.Config.ammoUsingType.TotalAmmo);
+            // add ammocallback
+            UpdateGunInfor();
         }
     }
-
-    private void OnCurrentAmmoChange(int currentAmmo)
+    protected virtual void UpdateGunInfor()
     {
-        weaponAmmo.text = currentAmmo.ToString() + "/";
+        Debug.Log("IsEmpty: " + weaponSlotHandler.IsEmpty);
+        UpdateCurrentAmmo(weaponSlotHandler.currentAmmo);
+        UpdateTotalAmmo(weaponSlotHandler.Config.ammoUsingType.TotalAmmo);
+        IconImage.gameObject.SetActive(true);
+        IconImage.sprite = weaponSlotHandler.Config.Icon;
+        Debug.Log("Update data:" + weaponSlotHandler.Config.Icon);
     }
 
-    private void OnTotalAmmoChange(int totalAmmo)
+    public void UpdateCurrentAmmo(int currentAmmo)
     {
-        totalTypeAmmo.text = totalAmmo.ToString();
+        currentGunAmmoText.text = currentAmmo.ToString() + "/";
     }
 
-    private void SetEmptyText()
+    public void UpdateTotalAmmo(int totalAmmo)
     {
-        weaponAmmo.text = "";
-        totalTypeAmmo.text = "";
+        totalGunAmmoText.text = totalAmmo.ToString();
     }
+
+    protected virtual void ResetUIState()
+    {
+        UpdateCurrentAmmo(0);
+        UpdateTotalAmmo(0);
+        IconImage.gameObject.SetActive(false);
+    }
+}
+public class WeaponSlotUI : BindingWeaponUI
+{
+
 }

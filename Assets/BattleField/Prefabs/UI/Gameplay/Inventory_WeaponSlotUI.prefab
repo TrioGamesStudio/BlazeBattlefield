@@ -67,7 +67,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 627e3af8a09474aed9925cb0b7e12bec, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -210,10 +210,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93f383554a1d5db499fb7eb5a466990f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponSlotHandler:
+    Prefab: {fileID: 0}
+    Config: {fileID: 0}
+    currentAmmo: 0
+  weaponIndex: 0
+  currentGunAmmoText: {fileID: 4105970378421078448}
+  totalGunAmmoText: {fileID: 7481918670333127442}
+  IconImage: {fileID: 6191333996035144709}
   gunName: {fileID: 1240275230759039148}
   ammoTypeName: {fileID: 4144701999036947578}
-  currentGunAmmo: {fileID: 4105970378421078448}
-  reserveGunAmmo: {fileID: 7481918670333127442}
 --- !u!1001 &139959104557606095
 PrefabInstance:
   m_ObjectHideFlags: 0

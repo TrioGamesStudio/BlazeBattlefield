@@ -1,5 +1,6 @@
 ﻿using Fusion;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -10,11 +11,9 @@ public class WeaponSlotHandler
     public GunItemConfig Config;
 
     public Action OnUpdateNewGunAction;
+    public Action<int> OnAmmoChange;
+
     public int currentAmmo;
-
-    public Action TurnOn;
-    public Action TurnOff;
-
     public bool IsEmpty => Prefab == null && Config == null;
     public void AddNewWeapon(GunItemConfig newConfig)
     {
