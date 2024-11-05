@@ -51,7 +51,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         PlayScene = 2,
     }
 
-    private int currentSceneIndex = 2; // This variable will hold the current scene index
+    public int currentSceneIndex = 2; // This variable will hold the current scene index
 
 
     public enum Mode
@@ -264,11 +264,19 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         }
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         currentMode = Mode.Duo;
+        Dictionary<string, SessionProperty> customProps = new();
+        customProps["map"] = currentSceneIndex switch
+        {
+            2 => "Harbour",
+            3 => "Desert",
+            _ => "Harbour",
+        };
         var startArguments = new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             SessionName = teamcode,
             PlayerCount = MAX_PLAYER,
+            SessionProperties = customProps,
         };
 
         //StatusText.text = startArguments.GameMode == GameMode.Single ? "Starting single-player..." : "Connecting...";
@@ -285,6 +293,39 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             //StatusText.text = $"Connection Failed: {result.ShutdownReason}";
         }
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+    }
+
+    public void UpdateSessionProperties()
+    {
+        if (networkRunner == null || !networkRunner.IsRunning)
+            return;
+
+        // Only the host/master client can update properties
+        //if (!networkRunner.IsSharedModeMasterClient)
+        //    return;
+        if (currentMode == Mode.Solo) return;
+
+        try
+        {
+            // Create new dictionary with updated properties
+            Dictionary<string, SessionProperty> newProps = new();
+            newProps["map"] = currentSceneIndex switch
+            {
+                2 => "Harbour",
+                3 => "Desert",
+                _ => "Harbour",
+            };
+            // Add any other properties you want to update
+            newProps["gameMode"] = "TeamDeathmatch"; // example
+
+            // Update the custom properties
+            networkRunner.SessionInfo.UpdateCustomProperties(newProps);
+            Debug.Log("Session properties updated successfully");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error updating session properties: {e.Message}");
+        }
     }
 
     public async void LeaveRoom()
@@ -361,10 +402,18 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             networkRunner = Instantiate(networkRunnerPrefab);
             networkRunner.AddCallbacks(this);
         }
+        Dictionary<string, SessionProperty> customProps = new();
+        customProps["map"] = currentSceneIndex switch
+        {
+            2 => "Harbour",
+            3 => "Desert",
+            _ => "Harbour",
+        };
         var result = await networkRunner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             SessionName = roomName,
+            SessionProperties = customProps,
             //Scene = sceneInfo, // Assuming you have a separate battle room scene
             //SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
@@ -579,8 +628,14 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             string roomName = session.Name;
             int playerCount = session.PlayerCount;
             int maxPlayer = session.MaxPlayers;
+            // Get map from custom properties
+            string map = "Unknown";
+            if (session.Properties.TryGetValue("map", out var mapValue))
+            {
+                map = mapValue.PropertyValue.ToString();
+            }
             if (session.IsOpen && roomName.Length <= 3)
-                UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer);
+                UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer, map);
         }
     }
 

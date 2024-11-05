@@ -77,13 +77,19 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             networkRunner = Instantiate(networkRunnerPrefab);
             networkRunner.AddCallbacks(this);
         }
+        int currentSceneIndex = Matchmaking.Instance.currentSceneIndex;
         Dictionary<string, SessionProperty> customProps = new();
-
-        customProps["map"] = "Test";
-        customProps["type"] = "Survival";
+        //customProps["map"] = "Test";
+        customProps["type"] = "Survival Team";
+        customProps["map"] = currentSceneIndex switch
+        {
+            2 => "Harbour",
+            3 => "Desert",
+            _ => "Harbour",
+        };
         var sceneInfo = new NetworkSceneInfo();
-        int playSceneIndex = (int)SceneBuildIndex.PlayScene;
-        sceneInfo.AddSceneRef(SceneRef.FromIndex(playSceneIndex));
+        //int playSceneIndex = (int)SceneBuildIndex.PlayScene;
+        sceneInfo.AddSceneRef(SceneRef.FromIndex(currentSceneIndex));
         var result = await networkRunner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,

@@ -182,11 +182,11 @@ public class UIController : MonoBehaviour
         joinTeamButton.interactable = !joinTeamButton.interactable;
     }
 
-    public void CreateRoomUI(string roomname, int playerCount, int maxPlayer)
+    public void CreateRoomUI(string roomname, int playerCount, int maxPlayer, string map)
     {
         GameObject sessionButton = Instantiate(sessionButtonPrefab, sessionListContent);
         string infomation = $"{playerCount}/{maxPlayer}";
-        sessionButton.GetComponent<RoomPanelUI>().SetRoomButtonUI(infomation, roomname);
+        sessionButton.GetComponent<RoomPanelUI>().SetRoomButtonUI(infomation, roomname, map);
         sessionButton.GetComponent<RoomPanelUI>().Deactive(playerCount == maxPlayer);
         //bool isRoomFull = session.PlayerCount >= session.MaxPlayers;
         //sessionButton.GetComponent<RoomButtonUI>().Deactive(isRoomFull);
