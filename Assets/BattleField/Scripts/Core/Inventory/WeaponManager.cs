@@ -1,4 +1,5 @@
 ﻿using Fusion;
+using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,7 @@ public class WeaponManager : MonoBehaviour
         InputCombatControl.SwapMeele += () => OnActiveWeapon(3);
 
     }
+
     public void AddNewGun(GunItemConfig newConfig)
     {
         bool allWeaponIsEmpty = true;
@@ -85,6 +87,7 @@ public class WeaponManager : MonoBehaviour
         }
 
     }
+
     public void OnActiveWeapon(int activeIndexButton)
     {
         if(currentWeaponIndex == -1) // T

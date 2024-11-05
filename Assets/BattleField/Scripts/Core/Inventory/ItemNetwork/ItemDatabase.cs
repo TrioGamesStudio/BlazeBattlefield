@@ -7,7 +7,9 @@ public class ItemDatabase : NetworkBehaviour
     public static ItemDatabase instance;
     [SerializeField] private ItemConfigDatabase ItemConfigDatabase;
     [SerializeField] private ItemPrefabDatabase ItemPrefabDatabase;
-    private Vector3 PlayerObject => NetworkPlayer.Local.transform.position;
+    
+    public Transform PlayerObject;
+    
     private void Awake()
     {
         instance = this;
@@ -37,13 +39,13 @@ public class ItemDatabase : NetworkBehaviour
         var key1 = inventoryItem.ItemType;
         var key2 = inventoryItem._SubItemEnum;
      
-        CreateItemInWorld(newAmount, key1, key2, PlayerObject);
+        CreateItemInWorld(newAmount, key1, key2, PlayerObject.position);
     }
 
     // use for spawn by item config
     public void GunConfigToWorld(GunItemConfig config, int quantity)
     {
-        CreateItemInWorld(quantity, config.ItemType, config.SubItemType, PlayerObject);
+        CreateItemInWorld(quantity, config.ItemType, config.SubItemType, PlayerObject.position);
     }
 
 

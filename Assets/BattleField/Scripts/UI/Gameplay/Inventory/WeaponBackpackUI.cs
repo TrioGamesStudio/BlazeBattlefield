@@ -18,15 +18,12 @@ public class WeaponBackpackUI : BindingWeaponUI
         //Debug.Log("On Update Gun Infor");
         gunName.text = weaponSlotHandler.Config.displayName;
         ammoTypeName.text = weaponSlotHandler.Config.ammoUsingType.displayName;
-
-
     }
 
-    //protected override void ResetUIState()
-    //{
-    //    base.ResetUIState();
-    //    gunName.text = "";
-    //    ammoTypeName.text = "";
-
-    //}
+    protected override void ResetUIState()
+    {
+        base.ResetUIState();
+        gunName.text = "";
+        ammoTypeName.text = "";
+    }
 }

@@ -96,6 +96,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             var animator = GetComponentInChildren<Animator>();
             WeaponManager.instance.playerAnimator = animator;
             WeaponManager.instance.ShowWeapon(false);
+            ItemDatabase.instance.PlayerObject = transform;
             // kiem tra Ready scene de ON MainCam OF LocalCam
             if (isReadyScene) {
                 // (this.sceneToStart) networkPlayer <- spawner.cs <- dropdownscenename.cs

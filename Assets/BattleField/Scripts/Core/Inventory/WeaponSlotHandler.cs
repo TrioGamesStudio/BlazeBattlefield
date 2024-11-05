@@ -17,8 +17,17 @@ public class WeaponSlotHandler
     public bool IsEmpty => Prefab == null && Config == null;
     public void AddNewWeapon(GunItemConfig newConfig)
     {
-        this.Config = newConfig;
-        this.Prefab = ItemDatabase.instance.GetItemPrefab(Config.ItemType, Config.SubItemType);
+        if(newConfig != null)
+        {
+            this.Config = newConfig;
+            this.Prefab = ItemDatabase.instance.GetItemPrefab(Config.ItemType, Config.SubItemType);
+        }
+        else
+        {
+            this.Config = null;
+            this.Prefab = null;
+        }
+        
         OnUpdateNewGunAction?.Invoke();
     }
 
@@ -32,11 +41,9 @@ public class WeaponSlotHandler
         Debug.Log("Hide weapon");
     }
 
-
     public void DeleteAndSpawnWorld()
     {
         ItemDatabase.instance.GunConfigToWorld(Config, 1);
-        Config = null;
-        Prefab = null;
+        AddNewWeapon(null);
     }
 }

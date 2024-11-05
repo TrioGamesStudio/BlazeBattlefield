@@ -1,4 +1,5 @@
 ﻿using Fusion;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class ActiveWeapon : NetworkBehaviour
@@ -43,9 +44,10 @@ public class ActiveWeapon : NetworkBehaviour
 
     private void SpawnWeapon(GameObject prefab, int index)
     {
-        currentWeaponLocal = Instantiate(prefab, weaponHoldersLocal[index].position, Quaternion.identity, weaponHoldersLocal[index]);
+        Quaternion quaternion = Quaternion.Euler(0, 0, 0);
+        currentWeaponLocal = Instantiate(prefab, weaponHoldersLocal[index].position, quaternion, weaponHoldersLocal[index]);
         currentWeaponLocal.tag = "IgnoreLayerChange";
-        currentWeaponRemote = Instantiate(prefab, weaponHoldersRemote[index].position, Quaternion.identity, weaponHoldersRemote[index]);
+        currentWeaponRemote = Instantiate(prefab, weaponHoldersRemote[index].position, quaternion, weaponHoldersRemote[index]);
         currentWeaponRemote.tag = "Untagged";
     }
 
@@ -66,7 +68,7 @@ public class ActiveWeapon : NetworkBehaviour
     {
 
     }
-
+    [EditorButton]
     public void Drop()
     {
         HideAllSlots();
