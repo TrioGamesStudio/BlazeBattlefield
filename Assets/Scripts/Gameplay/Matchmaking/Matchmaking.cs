@@ -122,6 +122,46 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     }
 
+    public void UpdateMap(string map)
+    {
+        if (currentMode != Mode.Duo) return;
+        //string map = "Unknown";
+        //if (networkRunner.SessionInfo.Properties.TryGetValue("map", out var mapValue))
+        //{
+        //    map = mapValue.PropertyValue.ToString();
+        //}
+        //if (map == "Harbour")
+        //{
+        //    FindObjectOfType<Matchmaking>().SetPlayScene(2);
+        //    FindObjectOfType<UIController>().SetMapText("Map Harbour");
+        //}
+        //else if (map == "Desert")
+        //{
+        //    FindObjectOfType<Matchmaking>().SetPlayScene(3);
+        //    FindObjectOfType<UIController>().SetMapText("Map Desert");
+        //}
+        PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => !p.Object.HasInputAuthority);
+        if (localPlayer != null)
+        {
+            localPlayer.UpdateMap(map);
+            //readyButton.GetComponentInChildren<TextMeshProUGUI>().text = localPlayer.IsReady ? "CANCEL" : "READY";
+        }
+    }
+
+    public void UpdateMapProperty(string map)
+    {
+        if (map == "Harbour")
+        {
+            SetPlayScene(2);
+            FindObjectOfType<UIController>().SetMapText("Map Harbour");
+        }
+        else if (map == "Desert")
+        {
+            SetPlayScene(3);
+            FindObjectOfType<UIController>().SetMapText("Map Desert");
+        }
+    }
+
     public async void GotoLobby()
     {
         await JoinLobby();
@@ -402,18 +442,18 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             networkRunner = Instantiate(networkRunnerPrefab);
             networkRunner.AddCallbacks(this);
         }
-        Dictionary<string, SessionProperty> customProps = new();
-        customProps["map"] = currentSceneIndex switch
-        {
-            2 => "Harbour",
-            3 => "Desert",
-            _ => "Harbour",
-        };
+        //Dictionary<string, SessionProperty> customProps = new();
+        //customProps["map"] = currentSceneIndex switch
+        //{
+        //    2 => "Harbour",
+        //    3 => "Desert",
+        //    _ => "Harbour",
+        //};
         var result = await networkRunner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             SessionName = roomName,
-            SessionProperties = customProps,
+            //SessionProperties = customProps,
             //Scene = sceneInfo, // Assuming you have a separate battle room scene
             //SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
@@ -637,6 +677,26 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             if (session.IsOpen && roomName.Length <= 3)
                 UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer, map);
         }
+
+        //if (!runner.IsSharedModeMasterClient)
+        //{
+        //    Debug.Log("Update map ne");
+        //    string map = "Unknown";
+        //    if(runner.SessionInfo.Properties.TryGetValue("map", out var mapValue))
+        //    {
+        //        map = mapValue.PropertyValue.ToString();
+        //    }
+        //    if (map == "Harbour")
+        //    {
+        //        FindObjectOfType<Matchmaking>().SetPlayScene(2);
+        //        FindObjectOfType<UIController>().SetMapText("Map Harbour");
+        //    }
+        //    else if (map == "Desert")
+        //    {
+        //        FindObjectOfType<Matchmaking>().SetPlayScene(3);
+        //        FindObjectOfType<UIController>().SetMapText("Map Desert");
+        //    }
+        //}
     }
 
     public void CheckWin(PlayerRef player)
