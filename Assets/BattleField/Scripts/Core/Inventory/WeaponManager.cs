@@ -17,6 +17,12 @@ public class WeaponManager : MonoBehaviour
     public Animator playerAnimator;
     public ActiveWeapon activeWeapon;
     public WeaponSlotHandler[] WeaponSlotHandlers { get => weaponSlotHandlers; }
+
+    public event Action<WeaponSlotHandler> OnEquipAction;
+    public event Action OnDropAction;
+
+
+
     // Need UI to bind with
 
     private void Awake()
@@ -43,49 +49,66 @@ public class WeaponManager : MonoBehaviour
 
     public void AddNewGun(GunItemConfig newConfig)
     {
+        // truong hop 1
+        var newWeaponSlotIndex = (int)newConfig.slotWeaponIndex;
+        var currentWeapon = weaponSlotHandlers[currentWeaponIndex];
+        if (IsAllSlotEmpty())
+        {
+            AddNewWeaponToSlot(newConfig, newWeaponSlotIndex);
+        }
+        else if (currentWeapon.Config.slotWeaponIndex == newConfig.slotWeaponIndex) 
+        {
+            // truong hop 2: Cung loai, phai bo weapon dang equip, va trang bi vu khi moi
+            //activeWeapon.Drop();
+            currentWeapon.DeleteAndSpawnWorld();
+            currentWeapon.AddNewWeapon(newConfig);
+            currentWeapon.Equip();
+            //activeWeapon.Equip(currentWeapon);
+        }
+        else // khong cung slot weapon
+        {
+            bool isSlotEmpty = weaponSlotHandlers[newWeaponSlotIndex].IsEmpty;
+            if (isSlotEmpty)
+            {
+                weaponSlotHandlers[newWeaponSlotIndex].AddNewWeapon(newConfig);
+            }
+            else
+            {
+                // drop 
+                weaponSlotHandlers[newWeaponSlotIndex].DeleteAndSpawnWorld();
+                weaponSlotHandlers[newWeaponSlotIndex].AddNewWeapon(newConfig);
+            }
+        }
+
+    }
+
+    [Button]
+    private void TestDropItem()
+    {
+        weaponSlotHandlers[0].DeleteAndSpawnWorld();
+    }
+
+    private void AddNewWeaponToSlot(GunItemConfig newConfig, int newWeaponSlotIndex)
+    {
+        var slotOfNewWeapon = weaponSlotHandlers[newWeaponSlotIndex];
+        slotOfNewWeapon.AddNewWeapon(newConfig);
+        //activeWeapon.Equip(slotOfNewWeapon);
+        slotOfNewWeapon.Equip();
+        currentWeaponIndex = newWeaponSlotIndex;
+    }
+
+    private bool IsAllSlotEmpty()
+    {
         bool allWeaponIsEmpty = true;
-        foreach(var item in weaponSlotHandlers)
+        foreach (var item in weaponSlotHandlers)
         {
             if (!item.IsEmpty)
             {
                 allWeaponIsEmpty = false;
             }
         }
-        // truong hop 1
-        if (allWeaponIsEmpty)
-        {
-            var weaponSlot = weaponSlotHandlers[(int)newConfig.slotWeaponIndex];
-            weaponSlot.AddNewWeapon(newConfig);
-            
-            activeWeapon.Equip(weaponSlot);
-            currentWeaponIndex = (int)newConfig.slotWeaponIndex;
-            return;
-        }
-        // truong hop 2
-        var currentWeapon = weaponSlotHandlers[currentWeaponIndex];
-        //var equipSlot = WeaponSlotHandlers[(int)newConfig.slotWeaponIndex];
-        var index = (int)newConfig.slotWeaponIndex;
-        if (currentWeapon.Config.slotWeaponIndex == newConfig.slotWeaponIndex)
-        {
-            activeWeapon.Drop();
-            currentWeapon.AddNewWeapon(newConfig);
-            activeWeapon.Equip(currentWeapon);
-        }
-        else // khong cung slot weapon
-        {
-            bool isSlotEmpty = weaponSlotHandlers[index].IsEmpty;
-            if (isSlotEmpty)
-            {
-                weaponSlotHandlers[index].AddNewWeapon(newConfig);
-            }
-            else
-            {
-                // drop 
-                weaponSlotHandlers[index].DeleteAndSpawnWorld();
-                weaponSlotHandlers[index].AddNewWeapon(newConfig);
-            }
-        }
 
+        return allWeaponIsEmpty;
     }
 
     public void OnActiveWeapon(int activeIndexButton)

@@ -4,23 +4,33 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class WeaponSlotHandler
+public class WeaponSlotHandler: IWeaponSlotAction
 {
     
     public GameObject Prefab;
     public GunItemConfig Config;
 
     public Action OnUpdateNewGunAction;
-    public Action<int> OnAmmoChange;
 
     public int currentAmmo;
+    public int totalAmmo;
+
+    public List<BindingWeaponUI> UIList;
+
     public bool IsEmpty => Prefab == null && Config == null;
+
+    public Action ShowWeaponAction { get; set; }
+    public Action HideWeaponAction { get; set; }
+    public Action EquipWeaponAction { get; set; }
+    public Action DropWeaponAction { get; set; }
     public void AddNewWeapon(GunItemConfig newConfig)
     {
         if(newConfig != null)
         {
+            Config?.RemoveNotifyTotalAmmoChange(this);
             this.Config = newConfig;
             this.Prefab = ItemDatabase.instance.GetItemPrefab(Config.ItemType, Config.SubItemType);
+            Config?.AddNotifyTotalAmmoChange(this);
         }
         else
         {
@@ -31,19 +41,35 @@ public class WeaponSlotHandler
         OnUpdateNewGunAction?.Invoke();
     }
 
+    public void OnTotalAmmoChange(int totalAmmo)
+    {
+        this.totalAmmo = totalAmmo;
+    }
+
     public void Show()
     {
-        Debug.Log("show weapon");
+        ShowWeaponAction?.Invoke();
     }
 
     public void Hide()
     {
-        Debug.Log("Hide weapon");
+        HideWeaponAction?.Invoke();
+    }
+
+    public void Equip()
+    {
+        if (Prefab == null)
+        {
+            Debug.LogError("This weapon slot have null prefab");
+            return;
+        }
+        EquipWeaponAction?.Invoke();
     }
 
     public void DeleteAndSpawnWorld()
     {
         ItemDatabase.instance.GunConfigToWorld(Config, 1);
         AddNewWeapon(null);
+        DropWeaponAction?.Invoke();
     }
 }

@@ -19,7 +19,6 @@ public class BindingWeaponUI : MonoBehaviour
     {
         weaponSlotHandler = newWeaponSlotHandler;
         weaponSlotHandler.OnUpdateNewGunAction += OnUpdateNewGun;
-        weaponSlotHandler.OnAmmoChange += UpdateCurrentAmmo;
         OnUpdateNewGun();
     }
 
