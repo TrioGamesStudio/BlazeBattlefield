@@ -22,6 +22,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     private const int MAX_PLAYER = 2;
     public GameObject localPlayer;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
+    private Dictionary<PlayerRef, bool> playerReadyFlags = new Dictionary<PlayerRef, bool>();
     private PlayerRoomController localPlayerRoomController;
     private Vector3 spawnPosition;
     public Mode currentMode = Mode.Solo;
@@ -529,6 +530,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
                 playerObject.GetComponent<PlayerRoomController>().SetLocalPlayer();
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
+                Debug.Log("=== Add player " + players[player] + " player count" + players.Count);
+                if (players.Count == MAX_PLAYER)
+                {
+                    Debug.Log("=== Start battle.......");
+                    StartBattle();
+                }
                 matchSolo[player] = players[player].TeamID.ToString();
             }
             else
@@ -541,14 +548,26 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             FindObjectOfType<UIController>().SetText(text);
             if (runner.ActivePlayers.Count() == MAX_PLAYER && !isDone) // Assuming PlayerCount is 2
             {
-                runner.SessionInfo.IsOpen = false;
-                isDone = true;
-                alivePlayer = runner.ActivePlayers.Count();
-                FindObjectOfType<UIController>().StartCountdown();
-                StartCoroutine(ReleasePlayer());
-                StartCoroutine(InitializeTeams());
+                Debug.Log("=== Start battle old...");
+                //runner.SessionInfo.IsOpen = false;
+                //isDone = true;
+                //alivePlayer = runner.ActivePlayers.Count();
+                //FindObjectOfType<UIController>().StartCountdown();
+                //StartCoroutine(ReleasePlayer());
+                //StartCoroutine(InitializeTeams());
             }
         }
+    }
+
+    public void StartBattle()
+    {
+        Debug.Log("===Start battle thoi");
+        networkRunner.SessionInfo.IsOpen = false;
+        isDone = true;
+        //alivePlayer = runner.ActivePlayers.Count();
+        FindObjectOfType<UIController>().StartCountdown();
+        StartCoroutine(ReleasePlayer());
+        StartCoroutine(InitializeTeams());
     }
 
     private IEnumerator ReleasePlayer()
@@ -608,6 +627,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
                 matchSolo[player] = players[player].TeamID.ToString();
+                if (players.Count == MAX_PLAYER)
+                {
+                    Debug.Log("=== Start battle.......");
+                    StartBattle();
+                }
+                Debug.Log("=== Add player " + players[player] + " player count" + players.Count);
                 Debug.Log($"Remote player {player} added to players list");
                 Debug.Log("Players dictionanry" + players.Count);
                 yield break;
