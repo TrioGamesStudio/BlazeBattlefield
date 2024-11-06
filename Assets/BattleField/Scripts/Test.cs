@@ -18,7 +18,7 @@ public class Test : NetworkBehaviour
         base.Spawned();
         if (!HasStateAuthority)
         {
-            GetComponent<Test>().enabled = false;
+            gameObject.SetActive(false);
         }
 
     }

@@ -18,7 +18,8 @@ public interface ItemDataEnum
     void SetQuantity(int newAmount);
 }
 
-public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, ItemDataEnum, RunTimeItem where _EnumType : Enum where _Config : ItemConfig<_EnumType>
+public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, ItemDataEnum, 
+    RunTimeItem where _EnumType : Enum where _Config : ItemConfig<_EnumType>
 {
     [Networked] public int quantity { get; set; }
     public Action<RunTimeItem> OnRemoveItemUI { get; set; }
@@ -92,6 +93,12 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         {
             Runner.Despawn(Object);
         }
+    }
+    [EditorButton]
+    public void DestroyTest()
+    {
+        Object.RequestStateAuthority();
+        DestroyRPC();
     }
 
     public Enum GetSubItemType()
