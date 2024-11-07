@@ -75,7 +75,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             }
         }
     }
-
+    private ActiveWeapon activeWeapon;
     public override void Spawned()
     {
         Debug.Log($"_____co chay spawn()");
@@ -97,6 +97,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             WeaponManager.instance.playerAnimator = animator;
             WeaponManager.instance.ShowWeapon(false);
             ItemDatabase.instance.PlayerObject = transform;
+            activeWeapon = GetComponent<ActiveWeapon>();
+            activeWeapon.Init();
             // kiem tra Ready scene de ON MainCam OF LocalCam
             if (isReadyScene) {
                 // (this.sceneToStart) networkPlayer <- spawner.cs <- dropdownscenename.cs

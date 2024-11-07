@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6698181183157435316}
   - component: {fileID: 3650653040309371534}
   - component: {fileID: -3292781355194832252}
+  - component: {fileID: 911242941516078503}
   m_Layer: 10
   m_Name: Item_AmmoGun
   m_TagString: Item
@@ -57,6 +58,7 @@ MonoBehaviour:
   - {fileID: 6698181183157435316}
   - {fileID: 3650653040309371534}
   - {fileID: -3292781355194832252}
+  - {fileID: 911242941516078503}
 --- !u!65 &5659457353509585042
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -122,9 +124,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInBoundCollider: 0
-  allowAddToCollider: 1
+  height: 1.2
   BoundItemsCollider: {fileID: 0}
   _collider: {fileID: 5659457353509585042}
+  _allowAddToCollider: 1
+--- !u!114 &911242941516078503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088817911595024533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db6977ad3f1869048bd5ddf9e3ea4076, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ObjectTag: 
 --- !u!1001 &6296839182833915075
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -8,12 +8,11 @@ using UnityEngine;
 public class BoundItem : NetworkBehaviour
 {
     [SerializeField] private bool isInBoundCollider = false;
-    [SerializeField] private bool allowAddToCollider = true;
     [SerializeField] private float height = 1.2f;
     public bool IsInBoundCollider { get => isInBoundCollider; set => isInBoundCollider =value; }
-    public bool AllowAddToCollider { get => allowAddToCollider; set => allowAddToCollider = value; }
     public BoundItemsCollider BoundItemsCollider;
     [SerializeField] private BoxCollider _collider;
+    [Networked] public bool allowAddToCollider { get; set; }
     private void Awake()
     {
         _collider = GetComponent<BoxCollider>();

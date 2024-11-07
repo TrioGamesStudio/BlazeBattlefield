@@ -1949,6 +1949,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 999570621900638530}
+  - component: {fileID: 5691869833103464867}
   m_Layer: 0
   m_Name: Slot_2_Local
   m_TagString: IgnoreLayerChange
@@ -1971,6 +1972,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6345840781961549198}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5691869833103464867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2155964363482464399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 1234000452
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours: []
 --- !u!1 &2174477653748156666
 GameObject:
   m_ObjectHideFlags: 0
@@ -2106,6 +2124,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3285555686452458904}
+  - component: {fileID: 8333652982734516909}
   m_Layer: 0
   m_Name: Slot_1_Local
   m_TagString: IgnoreLayerChange
@@ -2128,6 +2147,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6345840781961549198}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8333652982734516909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238727736336679339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 3621994632
+  ObjectInterest: 1
+  Flags: 1
+  NestedObjects: []
+  NetworkedBehaviours: []
 --- !u!1 &2253135334363324347
 GameObject:
   m_ObjectHideFlags: 0
@@ -7270,6 +7306,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2362203674217470871}
+  - component: {fileID: 2207046295072104202}
   m_Layer: 0
   m_Name: Slot_3_Local
   m_TagString: IgnoreLayerChange
@@ -7292,6 +7329,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6345840781961549198}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2207046295072104202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2328690293230864944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 3867266507
+  ObjectInterest: 1
+  Flags: 1
+  NestedObjects: []
+  NetworkedBehaviours: []
 --- !u!1 &2361796609063039299
 GameObject:
   m_ObjectHideFlags: 0
@@ -12472,6 +12526,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1375562210468276060}
+  - component: {fileID: 717962865447535811}
   m_Layer: 0
   m_Name: Slot_0_Remote
   m_TagString: Untagged
@@ -12495,6 +12550,24 @@ Transform:
   - {fileID: 5969854652552716653}
   m_Father: {fileID: 8050795431302410353}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &717962865447535811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2993234193014735513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 3669926738
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects:
+  - {fileID: 6980759596231916390}
+  NetworkedBehaviours: []
 --- !u!1 &3045125221690353586
 GameObject:
   m_ObjectHideFlags: 0
@@ -13040,6 +13113,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7858562597745215463}
+  - component: {fileID: 4997373582290907706}
   m_Layer: 0
   m_Name: Slot_3_Remote
   m_TagString: Untagged
@@ -13062,6 +13136,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8050795431302410353}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4997373582290907706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3406381142035020043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 4227578815
+  ObjectInterest: 1
+  Flags: 1
+  NestedObjects: []
+  NetworkedBehaviours: []
 --- !u!1 &3473780749825334620
 GameObject:
   m_ObjectHideFlags: 0
@@ -14474,6 +14565,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2386567452473935538}
+  - component: {fileID: 9071756424361812323}
   m_Layer: 0
   m_Name: Slot_1_Remote
   m_TagString: Untagged
@@ -14496,6 +14588,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8050795431302410353}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9071756424361812323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4819935001894537344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 1899834298
+  ObjectInterest: 1
+  Flags: 1
+  NestedObjects: []
+  NetworkedBehaviours: []
 --- !u!1 &4837798987564155811
 GameObject:
   m_ObjectHideFlags: 0
@@ -20104,6 +20213,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7534421404899798444}
+  - component: {fileID: 7387504853649156745}
   m_Layer: 0
   m_Name: Slot_2_Remote
   m_TagString: Untagged
@@ -20126,6 +20236,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8050795431302410353}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7387504853649156745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5279050362355291317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 1140559310
+  ObjectInterest: 1
+  Flags: 1
+  NestedObjects: []
+  NetworkedBehaviours: []
 --- !u!1 &5334859868581819407
 GameObject:
   m_ObjectHideFlags: 0
@@ -25385,6 +25512,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 137288291842770667}
+  - component: {fileID: 1415559706067124175}
   m_Layer: 0
   m_Name: Slot_0_Local
   m_TagString: IgnoreLayerChange
@@ -25408,6 +25536,24 @@ Transform:
   - {fileID: 4343285648987248308}
   m_Father: {fileID: 6345840781961549198}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1415559706067124175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5744833800821264102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 3640229682
+  ObjectInterest: 1
+  Flags: 1
+  NestedObjects:
+  - {fileID: 4173361597161327373}
+  NetworkedBehaviours: []
 --- !u!1 &6064089540814650437
 GameObject:
   m_ObjectHideFlags: 0
@@ -30695,7 +30841,11 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects:
+  - {fileID: 1415559706067124175}
   - {fileID: 4173361597161327373}
+  - {fileID: 8333652982734516909}
+  - {fileID: 5691869833103464867}
+  - {fileID: 2207046295072104202}
   NetworkedBehaviours:
   - {fileID: 8828218949455178257}
 --- !u!114 &8828218949455178257
@@ -31419,9 +31569,17 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects:
+  - {fileID: 717962865447535811}
   - {fileID: 6980759596231916390}
+  - {fileID: 9071756424361812323}
+  - {fileID: 7387504853649156745}
+  - {fileID: 4997373582290907706}
   - {fileID: 5484364122333496330}
+  - {fileID: 1415559706067124175}
   - {fileID: 4173361597161327373}
+  - {fileID: 8333652982734516909}
+  - {fileID: 5691869833103464867}
+  - {fileID: 2207046295072104202}
   NetworkedBehaviours:
   - {fileID: 5430193227879812855}
   - {fileID: 3509325470741164774}
@@ -31686,9 +31844,6 @@ MonoBehaviour:
   - {fileID: 2386567452473935538}
   - {fileID: 7534421404899798444}
   - {fileID: 7858562597745215463}
-  WeaponSlotHandlers: []
-  currentWeapon: {fileID: 0}
-  isHoslter: 0
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0

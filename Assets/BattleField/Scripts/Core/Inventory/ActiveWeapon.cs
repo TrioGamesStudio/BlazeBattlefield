@@ -2,6 +2,7 @@
 using NaughtyAttributes;
 using System;
 using UnityEngine;
+using static ActiveWeapon;
 public interface IWeaponSlotAction
 {
     Action ShowWeaponAction { get; set; }
@@ -16,11 +17,17 @@ public class ActiveWeapon : NetworkBehaviour
         public Transform localHolderTransform;
         public Transform remoteHolderTransform;
 
-        public GameObject currentWeaponLocal;
-        public GameObject currentWeaponRemote;
+        public NetworkObject currentWeaponLocal;
+        public NetworkObject currentWeaponRemote;
 
         public WeaponSlotHandler weaponSlotHandler;
+
+        public ActiveWeapon activeWeapon;
+
+        public NetworkRunner Runner;
         private IWeaponSlotAction iWeaponAction;
+        public int index;
+
         public void SetWeaponSlotHandler(WeaponSlotHandler weaponSlotHandler)
         {
             this.weaponSlotHandler = weaponSlotHandler;
@@ -55,16 +62,33 @@ public class ActiveWeapon : NetworkBehaviour
         private void Equip()
         {
             Quaternion quaternion = Quaternion.Euler(0, 0, 0);
-            currentWeaponLocal = Instantiate(weaponSlotHandler.Prefab, localHolderTransform.position, quaternion, localHolderTransform);
-            currentWeaponLocal.tag = "IgnoreLayerChange";
-            currentWeaponRemote = Instantiate(weaponSlotHandler.Prefab, remoteHolderTransform.position, quaternion, remoteHolderTransform);
-            currentWeaponRemote.tag = "Untagged";
+            //currentWeaponLocal = Instantiate(weaponSlotHandler.Prefab, localHolderTransform.position, quaternion, localHolderTransform);
+            //currentWeaponLocal.tag = "IgnoreLayerChange";
+            //currentWeaponRemote = Instantiate(weaponSlotHandler.Prefab, remoteHolderTransform.position, quaternion, remoteHolderTransform);
+            //currentWeaponRemote.tag = "Untagged";
+
+            currentWeaponLocal = SpawnItem("IgnoreLayerChange", localHolderTransform);
+            currentWeaponRemote = SpawnItem("Untagged", remoteHolderTransform);
+            activeWeapon.RPC_SetParentWeapon(currentWeaponLocal, true, index);
+            activeWeapon.RPC_SetParentWeapon(currentWeaponRemote, false, index);
         }
+
+        private NetworkObject SpawnItem(string tag, Transform spawnTransform)
+        {
+            var networkObject = Runner.Spawn(weaponSlotHandler.Prefab, spawnTransform.position, Quaternion.identity, null, (runner, obj) =>
+            {
+                obj.GetComponent<BoundItem>().allowAddToCollider = false;
+                obj.GetComponent<TagObjectHandler>().ObjectTag = tag;
+
+            });
+            return networkObject;
+        }
+
 
         public void Drop()
         {
-            Destroy(currentWeaponLocal.gameObject);
-            Destroy(currentWeaponRemote.gameObject);
+            Runner.Despawn(currentWeaponLocal);
+            Runner.Despawn(currentWeaponRemote);
             currentWeaponLocal = null;
             currentWeaponRemote = null;
         }
@@ -76,29 +100,26 @@ public class ActiveWeapon : NetworkBehaviour
         }
 
     }
-
     public Transform[] weaponHoldersLocal;
     public Transform[] weaponHoldersRemote;
 
-    //public WeaponSlotHandler[] WeaponSlotHandlers;
-    public GameObject currentWeaponLocal;
-    public GameObject currentWeaponRemote;
-
-    private int currentIndex = 0;
-    public bool isHoslter = false;
     private WeaponHolder[] weaponHolders;
-    private void Awake()
+    public void Init()
     {
         //WeaponSlotHandlers = WeaponManager.instance.WeaponSlotHandlers;
         WeaponManager.instance.activeWeapon = this;
         weaponHolders = new WeaponHolder[4];
         for (int i = 0; i < weaponHolders.Length; i++)
         {
-            var weaponHolder = new WeaponHolder();
+            weaponHolders[i] = new();
+            var weaponHolder = weaponHolders[i];
             var localTransform = weaponHoldersLocal[i];
             var remoteTransform = weaponHoldersRemote[i];
             weaponHolder.SetSpawnTransform(localTransform, remoteTransform);
             weaponHolder.SetWeaponSlotHandler(WeaponManager.instance.WeaponSlotHandlers[i]);
+            weaponHolder.Runner = Runner;
+            weaponHolder.index = i;
+            weaponHolder.activeWeapon = this;
         }
     }
 
@@ -108,73 +129,28 @@ public class ActiveWeapon : NetworkBehaviour
 
     }
 
-    public void Equip(WeaponSlotHandler WeaponSlotHandler)
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_SetParentWeapon(NetworkObject weapon, bool isLocal, int index)
     {
-        HideAllSlots();
-
-        // Instantiate
-        currentIndex = (int)WeaponSlotHandler.Config.slotWeaponIndex;
-        Show(currentIndex, true);
-        SpawnWeapon(WeaponSlotHandler.Prefab, currentIndex);
-
-        weaponHolders[currentIndex].Show();
-    }
-
-    public void Active(WeaponSlotHandler WeaponSlotHandler)
-    {
-        Show(this.currentIndex, false);
-        int newIndex = (int)WeaponSlotHandler.Config.slotWeaponIndex;
-        Show(newIndex, true);
-    }
-
-    private void SpawnWeapon(GameObject prefab, int index)
-    {
-        Quaternion quaternion = Quaternion.Euler(0, 0, 0);
-        currentWeaponLocal = Instantiate(prefab, weaponHoldersLocal[index].position, quaternion, weaponHoldersLocal[index]);
-        currentWeaponLocal.tag = "IgnoreLayerChange";
-        currentWeaponRemote = Instantiate(prefab, weaponHoldersRemote[index].position, quaternion, weaponHoldersRemote[index]);
-        currentWeaponRemote.tag = "Untagged";
-    }
-
-    private void Show(int index, bool isShow)
-    {
-        weaponHoldersLocal[index].gameObject.SetActive(isShow);
-        weaponHoldersRemote[index].gameObject.SetActive(isShow);
-
-    }
-
-
-    public void Swap()
-    {
-
-    }
-
-    public void Shoot()
-    {
-
+        if (isLocal)
+        {
+            Debug.Log("Set local");
+            weapon.transform.SetParent(weaponHoldersLocal[index]);
+        }
+        else
+        {
+            Debug.Log("Set remote");
+            weapon.transform.SetParent(weaponHoldersRemote[index]);
+        }
+        //weapon.transform.SetParent(parent.transform);
+        Debug.Log($"Weapon name {weapon.name}");
     }
     [EditorButton]
-    public void Drop(WeaponSlotHandler weaponSlotHandler)
+    public void TestRPC()
     {
-        HideAllSlots();
-        Destroy(currentWeaponLocal.gameObject);
-        Destroy(currentWeaponRemote.gameObject);
-        //WeaponSlotHandlers[currentIndex].DeleteAndSpawnWorld();
-        currentWeaponLocal = null;
-        //NOTE: viet ham drop gun
-    }
+        Debug.Log(weaponHolders[0].currentWeaponRemote);
+        Debug.Log(weaponHolders[0].currentWeaponLocal);
 
-    private void HideAllSlots()
-    {
-        foreach (var item in weaponHoldersLocal)
-        {
-            item.gameObject.SetActive(false);
-        }
-        foreach (var item in weaponHoldersRemote)
-        {
-            item.gameObject.SetActive(false);
-        }
     }
-
 
 }
