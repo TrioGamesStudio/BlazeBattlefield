@@ -31,18 +31,12 @@ public partial class ActiveWeapon
 
         public void Show()
         {
-            ShowWeapon(true);
+            activeWeapon.ShowWeapon_RPC(index);
         }
 
         public void Hide()
         {
-            ShowWeapon(false);
-        }
-
-        private void ShowWeapon(bool isShow)
-        {
-            currentWeaponLocal.gameObject.SetActive(isShow);
-            currentWeaponRemote.gameObject.SetActive(isShow);
+            activeWeapon.HideWeapon_RPC();
         }
 
         private void Equip()
@@ -51,14 +45,16 @@ public partial class ActiveWeapon
 
             currentWeaponLocal = activeWeapon.SpawnItem(weaponSlotHandler.Prefab, true, index, "IgnoreLayerChange");
             currentWeaponRemote = activeWeapon.SpawnItem(weaponSlotHandler.Prefab, false, index, "Untagged");
+            activeWeapon.ShowWeapon_RPC(index);
         }
 
-        public void Drop()
+        private void Drop()
         {
             activeWeapon.Runner.Despawn(currentWeaponLocal);
             activeWeapon.Runner.Despawn(currentWeaponRemote);
             currentWeaponLocal = null;
             currentWeaponRemote = null;
+            activeWeapon.HideWeapon_RPC();
         }
     }
 

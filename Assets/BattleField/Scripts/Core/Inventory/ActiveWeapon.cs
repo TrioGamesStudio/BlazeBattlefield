@@ -1,6 +1,7 @@
 ﻿using Fusion;
 using NaughtyAttributes;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using static ActiveWeapon;
 public partial class ActiveWeapon : NetworkBehaviour
@@ -9,6 +10,7 @@ public partial class ActiveWeapon : NetworkBehaviour
     public Transform[] weaponHoldersLocal;
     public Transform[] weaponHoldersRemote;
     private WeaponHolder[] weaponHolders;
+    [Networked, Capacity(4)] NetworkDictionary<byte, bool> activeWeaponState => default;
     public void Init()
     {
         //WeaponSlotHandlers = WeaponManager.instance.WeaponSlotHandlers;
@@ -37,7 +39,29 @@ public partial class ActiveWeapon : NetworkBehaviour
         RPC_SetParentWeapon(networkObject, isLocal, index);
         return networkObject;
     }
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void ShowWeapon_RPC(int activeIndex)
+    {
+        SetActiveList(false, weaponHoldersLocal);
+        SetActiveList(false, weaponHoldersRemote);
+        weaponHoldersLocal[activeIndex].gameObject.SetActive(true);
+        weaponHoldersRemote[activeIndex].gameObject.SetActive(true);
+    }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void HideWeapon_RPC()
+    {
+        SetActiveList(false, weaponHoldersLocal);
+        SetActiveList(false, weaponHoldersRemote);
+    }
+
+    private void SetActiveList(bool isActive, Transform[] list)
+    {
+        foreach(var item in list)
+        {
+            item.gameObject.SetActive(isActive);
+        }
+    }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_SetParentWeapon(NetworkObject weapon, bool isLocal, int index)

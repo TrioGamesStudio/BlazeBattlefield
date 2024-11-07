@@ -87,6 +87,16 @@ public class WeaponManager : MonoBehaviour
     {
         weaponSlotHandlers[0].DeleteAndSpawnWorld();
     }
+    [Button]
+    private void TestHideWeapon()
+    {
+        weaponSlotHandlers[0].Hide();
+    }
+    [Button]
+    private void TestShowWeapon()
+    {
+        weaponSlotHandlers[0].Show();
+    }
 
     private void AddNewWeaponToSlot(GunItemConfig newConfig, int newWeaponSlotIndex)
     {
