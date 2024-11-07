@@ -126,21 +126,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public void UpdateMap(string map)
     {
         if (currentMode != Mode.Duo) return;
-        //string map = "Unknown";
-        //if (networkRunner.SessionInfo.Properties.TryGetValue("map", out var mapValue))
-        //{
-        //    map = mapValue.PropertyValue.ToString();
-        //}
-        //if (map == "Harbour")
-        //{
-        //    FindObjectOfType<Matchmaking>().SetPlayScene(2);
-        //    FindObjectOfType<UIController>().SetMapText("Map Harbour");
-        //}
-        //else if (map == "Desert")
-        //{
-        //    FindObjectOfType<Matchmaking>().SetPlayScene(3);
-        //    FindObjectOfType<UIController>().SetMapText("Map Desert");
-        //}
         PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => !p.Object.HasInputAuthority);
         if (localPlayer != null)
         {
@@ -357,7 +342,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 _ => "Harbour",
             };
             // Add any other properties you want to update
-            newProps["gameMode"] = "TeamDeathmatch"; // example
+            //newProps["gameMode"] = "TeamDeathmatch"; // example
 
             // Update the custom properties
             networkRunner.SessionInfo.UpdateCustomProperties(newProps);
@@ -543,7 +528,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 // Handle remote player
                 StartCoroutine(WaitForPlayerObjectSolo(runner, player));
             }
-            int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
+            //int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
+            int remainPlayer = MAX_PLAYER - players.Count();
             string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(text);
             if (runner.ActivePlayers.Count() == MAX_PLAYER && !isDone) // Assuming PlayerCount is 2
