@@ -81,7 +81,7 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
         }
         if (!activeItemUIs.TryGetValue(key, out var ui))
         {
-            Debug.Log("Not Contain Key");
+            //Debug.Log("Not Contain Key");
             return;
         }
         activeItemUIs.Remove(key);

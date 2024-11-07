@@ -23,7 +23,6 @@ public class WeaponSlotHandler: IWeaponSlotAction
     public Action HideWeaponAction { get; set; }
     public Action EquipWeaponAction { get; set; }
     public Action DropWeaponAction { get; set; }
-    public Action SwapWeaponAction { get; set; }
 
     public void AddNewWeapon(GunItemConfig newConfig)
     {
@@ -75,9 +74,4 @@ public class WeaponSlotHandler: IWeaponSlotAction
         DropWeaponAction?.Invoke();
     }
 
-    public void Swap(GunItemConfig newConfig)
-    {
-        AddNewWeapon(newConfig);
-        SwapWeaponAction?.Invoke();
-    }
 }

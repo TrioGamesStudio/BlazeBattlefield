@@ -6,5 +6,4 @@ public interface IWeaponSlotAction
     Action HideWeaponAction { get; set; }
     Action EquipWeaponAction { get; set; }
     Action DropWeaponAction { get; set; }
-    Action SwapWeaponAction { get; set; }
 }

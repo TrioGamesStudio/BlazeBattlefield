@@ -36,6 +36,7 @@ public partial class ActiveWeapon : NetworkBehaviour
             obj.GetComponent<BoundItem>().allowAddToCollider = false;
             obj.GetComponent<TagObjectHandler>().ObjectTag = _tag;
         });
+        Debug.Log("Start set parent",gameObject);
         RPC_SetParentWeapon(networkObject, isLocal, index);
         return networkObject;
     }
@@ -68,16 +69,16 @@ public partial class ActiveWeapon : NetworkBehaviour
     {
         if (isLocal)
         {
-            Debug.Log("Set local");
+            Debug.Log("Set parent RPC local"+ weaponHoldersLocal[index]);
             weapon.transform.SetParent(weaponHoldersLocal[index]);
         }
         else
         {
-            Debug.Log("Set remote");
+            Debug.Log("Set parent RPC remote"+ weaponHoldersRemote[index]);
             weapon.transform.SetParent(weaponHoldersRemote[index]);
         }
         //weapon.transform.SetParent(parent.transform);
-        Debug.Log($"Weapon name {weapon.name}");
+        //Debug.Log($"Weapon name {weapon.name}");
     }
 
 }

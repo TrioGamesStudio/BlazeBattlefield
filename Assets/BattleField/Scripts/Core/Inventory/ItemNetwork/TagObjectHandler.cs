@@ -11,6 +11,6 @@ public class TagObjectHandler : NetworkBehaviour, IAfterSpawned
             ObjectTag = "Item";
         }
         tag = ObjectTag;
-        Debug.Log("Tag assign is: " + ObjectTag);
+        //Debug.Log("Tag assign is: " + ObjectTag);
     }
 }

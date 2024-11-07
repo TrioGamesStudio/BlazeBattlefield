@@ -74,7 +74,7 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
         if (activeItemUIs.Count == 0) return;
         var itemUI = activeItemUIs.First().Value;
         itemUI.RaiseCallback();
-        Debug.Log("Show first Item", itemUI.gameObject);
+        //Debug.Log("Show first Item", itemUI.gameObject);
     }
 
 }

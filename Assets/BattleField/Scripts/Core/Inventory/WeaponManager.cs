@@ -62,6 +62,7 @@ public class WeaponManager : MonoBehaviour
             var slotOfNewWeapon = weaponSlotHandlers[newWeaponSlotIndex];
             slotOfNewWeapon.AddNewWeapon(newConfig);
             slotOfNewWeapon.Equip();
+            slotOfNewWeapon.Show();
             currentWeaponIndex = newWeaponSlotIndex;
             ShowWeapon(true);
         }
@@ -73,20 +74,24 @@ public class WeaponManager : MonoBehaviour
             currentWeapon.DeleteAndSpawnWorld();
             currentWeapon.AddNewWeapon(newConfig);
             currentWeapon.Equip();
+            currentWeapon.Show();
             //activeWeapon.Equip(currentWeapon);
         }
-        else // khong cung slot weapon
+        else // khong cung index voi curent weapon
         {
             Debug.LogWarning("truong hop 3");
-            bool isSlotEmpty = weaponSlotHandlers[newWeaponSlotIndex].IsEmpty;
-            if (isSlotEmpty)
+            bool isTargetSlotEmpty = weaponSlotHandlers[newWeaponSlotIndex].IsEmpty;
+            if (isTargetSlotEmpty)
             {
                 weaponSlotHandlers[newWeaponSlotIndex].AddNewWeapon(newConfig);
             }
             else
             {
                 // drop 
-                weaponSlotHandlers[newWeaponSlotIndex].Swap(newConfig);
+                var targetSlot = weaponSlotHandlers[newWeaponSlotIndex];
+                targetSlot.DeleteAndSpawnWorld();
+                targetSlot.AddNewWeapon(newConfig);
+                targetSlot.Equip();
             }
         }
     }

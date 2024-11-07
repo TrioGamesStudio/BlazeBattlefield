@@ -27,7 +27,6 @@ public partial class ActiveWeapon
             iWeaponAction.HideWeaponAction += Hide;
             iWeaponAction.EquipWeaponAction += Equip;
             iWeaponAction.DropWeaponAction += Drop;
-            iWeaponAction.SwapWeaponAction += Swap;
         }
 
         public void Show()
@@ -46,7 +45,6 @@ public partial class ActiveWeapon
 
             currentWeaponLocal = activeWeapon.SpawnItem(weaponSlotHandler.Prefab, true, index, "IgnoreLayerChange");
             currentWeaponRemote = activeWeapon.SpawnItem(weaponSlotHandler.Prefab, false, index, "Untagged");
-            activeWeapon.ShowWeapon_RPC(index);
         }
 
         private void Drop()
@@ -55,21 +53,9 @@ public partial class ActiveWeapon
             activeWeapon.Runner.Despawn(currentWeaponRemote);
             currentWeaponLocal = null;
             currentWeaponRemote = null;
-            activeWeapon.HideWeapon_RPC();
         }
 
-        private void Swap()
-        {
-            activeWeapon.Runner.Despawn(currentWeaponLocal);
-            activeWeapon.Runner.Despawn(currentWeaponRemote);
-            currentWeaponLocal = null;
-            currentWeaponRemote = null;
-
-            Quaternion quaternion = Quaternion.Euler(0, 0, 0);
-
-            currentWeaponLocal = activeWeapon.SpawnItem(weaponSlotHandler.Prefab, true, index, "IgnoreLayerChange");
-            currentWeaponRemote = activeWeapon.SpawnItem(weaponSlotHandler.Prefab, false, index, "Untagged");
-        }
+       
     }
 
 }

@@ -49,7 +49,7 @@ public class BoundItem : NetworkBehaviour
         {
             if (hit.collider.gameObject.CompareTag("Ground"))
             {
-                Debug.Log("Set item position near to ground", gameObject);
+                //Debug.Log("Set item position near to ground", gameObject);
                 Vector3 spawnPosition = hit.point + new Vector3(0, _collider.size.y / 2, 0);
                 transform.position = spawnPosition;
                 //Debug.LogWarning($"Method: {spawnPosition}");

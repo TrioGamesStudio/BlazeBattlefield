@@ -38,7 +38,7 @@ public class BindingWeaponUI : MonoBehaviour
     }
     protected virtual void UpdateGunInfor()
     {
-        Debug.Log("IsEmpty: " + weaponSlotHandler.IsEmpty);
+        //Debug.Log("IsEmpty: " + weaponSlotHandler.IsEmpty);
         UpdateCurrentAmmo(weaponSlotHandler.currentAmmo);
         UpdateTotalAmmo(weaponSlotHandler.Config.ammoUsingType.TotalAmmo);
         IconImage.gameObject.SetActive(true);
