@@ -22,7 +22,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     private const int MAX_PLAYER = 2;
     public GameObject localPlayer;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
-    private Dictionary<PlayerRef, bool> playerReadyFlags = new Dictionary<PlayerRef, bool>();
     private PlayerRoomController localPlayerRoomController;
     private Vector3 spawnPosition;
     public Mode currentMode = Mode.Solo;
@@ -440,6 +439,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.Shared,
             SessionName = roomName,
+            PlayerCount = MAX_PLAYER,
             //SessionProperties = customProps,
             //Scene = sceneInfo, // Assuming you have a separate battle room scene
             //SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
@@ -453,6 +453,44 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         //createRoomButton.gameObject.SetActive(false);
         //sessionListContent.parent.parent.gameObject.SetActive(false);
     }
+        else
+        {
+            Debug.LogError($"Failed to Start: {result.ShutdownReason}");
+        }
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+    }
+
+    public async void RejoinRoomByName(string roomName)
+    {
+        currentMode = Mode.Duo;
+        players.Clear();
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+        if (networkRunner == null)
+        {
+            networkRunner = Instantiate(networkRunnerPrefab);
+            networkRunner.AddCallbacks(this);
+        }
+        Dictionary<string, SessionProperty> customProps = new();
+        customProps["map"] = currentSceneIndex switch
+        {
+            2 => "Harbour",
+            3 => "Desert",
+            _ => "Harbour",
+        };
+
+        var result = await networkRunner.StartGame(new StartGameArgs()
+        {
+            GameMode = GameMode.Shared,
+            SessionName = roomName,
+            PlayerCount = MAX_PLAYER,
+            SessionProperties = customProps,
+        });
+
+        if (result.Ok)
+        {
+            UIController.Instance.SwitchMode(false);
+            UIController.Instance.OnOffPanel();
+        }
         else
         {
             Debug.LogError($"Failed to Start: {result.ShutdownReason}");

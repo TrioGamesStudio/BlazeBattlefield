@@ -361,7 +361,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         Matchmaking.Instance.localPlayer.gameObject.SetActive(true);
         UIController.Instance.ResetUI();
         await Matchmaking.Instance.JoinLobby();
-        Matchmaking.Instance.JoinRoomByName(roomID);
+        Matchmaking.Instance.RejoinRoomByName(roomID);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
