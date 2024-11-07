@@ -1,10 +1,7 @@
-﻿using Fusion;
-using NaughtyAttributes;
+﻿using NaughtyAttributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 public class WeaponManager : MonoBehaviour
 {
     public static WeaponManager instance;
@@ -89,13 +86,10 @@ public class WeaponManager : MonoBehaviour
             else
             {
                 // drop 
-                weaponSlotHandlers[newWeaponSlotIndex].DeleteAndSpawnWorld();
-                weaponSlotHandlers[newWeaponSlotIndex].AddNewWeapon(newConfig);
+                weaponSlotHandlers[newWeaponSlotIndex].Swap(newConfig);
             }
         }
-
     }
-
     [Button]
     private void TestDropItem()
     {

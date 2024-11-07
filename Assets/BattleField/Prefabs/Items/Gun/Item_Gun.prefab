@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7307722318176291116}
   - component: {fileID: 331506477476600972}
   - component: {fileID: 4298069037153397568}
+  - component: {fileID: -2305748763354565089}
   m_Layer: 10
   m_Name: Item_Gun
   m_TagString: Item
@@ -57,6 +58,7 @@ MonoBehaviour:
   - {fileID: 7307722318176291116}
   - {fileID: 331506477476600972}
   - {fileID: 4298069037153397568}
+  - {fileID: -2305748763354565089}
 --- !u!65 &3335697909994566590
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -126,6 +128,19 @@ MonoBehaviour:
   _quantity: 1
   customDatas: []
   config: {fileID: 0}
+--- !u!114 &-2305748763354565089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6313178522276323356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db6977ad3f1869048bd5ddf9e3ea4076, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ObjectTag: 
 --- !u!1001 &4617721578879156472
 PrefabInstance:
   m_ObjectHideFlags: 0

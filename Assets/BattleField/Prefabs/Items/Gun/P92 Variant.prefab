@@ -22,7 +22,7 @@ PrefabInstance:
         type: 3}
       propertyPath: NetworkedBehaviours.Array.data[3]
       value: 
-      objectReference: {fileID: -4439520825391873093}
+      objectReference: {fileID: 653544324658811834}
     - target: {fileID: 4298069037153397568, guid: 7b9c70f0f6655cf4cb8ee9a8509dfd51,
         type: 3}
       propertyPath: config
@@ -92,28 +92,17 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6313178522276323356, guid: 7b9c70f0f6655cf4cb8ee9a8509dfd51,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: -4439520825391873093}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b9c70f0f6655cf4cb8ee9a8509dfd51, type: 3}
---- !u!1 &4507369596139947449 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6313178522276323356, guid: 7b9c70f0f6655cf4cb8ee9a8509dfd51,
+--- !u!114 &653544324658811834 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -2305748763354565089, guid: 7b9c70f0f6655cf4cb8ee9a8509dfd51,
     type: 3}
   m_PrefabInstance: {fileID: 7570989329090520485}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-4439520825391873093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4507369596139947449}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db6977ad3f1869048bd5ddf9e3ea4076, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ObjectTag: 

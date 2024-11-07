@@ -23,6 +23,8 @@ public class WeaponSlotHandler: IWeaponSlotAction
     public Action HideWeaponAction { get; set; }
     public Action EquipWeaponAction { get; set; }
     public Action DropWeaponAction { get; set; }
+    public Action SwapWeaponAction { get; set; }
+
     public void AddNewWeapon(GunItemConfig newConfig)
     {
         if(newConfig != null)
@@ -71,5 +73,11 @@ public class WeaponSlotHandler: IWeaponSlotAction
         ItemDatabase.instance.GunConfigToWorld(Config, 1);
         AddNewWeapon(null);
         DropWeaponAction?.Invoke();
+    }
+
+    public void Swap(GunItemConfig newConfig)
+    {
+        AddNewWeapon(newConfig);
+        SwapWeaponAction?.Invoke();
     }
 }
