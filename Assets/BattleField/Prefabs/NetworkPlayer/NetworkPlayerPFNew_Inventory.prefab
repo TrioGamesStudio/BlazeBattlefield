@@ -7438,8 +7438,6 @@ GameObject:
   - component: {fileID: 1837619416720597612}
   - component: {fileID: 1028535649208392277}
   - component: {fileID: 2608116379528039535}
-  - component: {fileID: 6980759596231916390}
-  - component: {fileID: 5798289705124729169}
   m_Layer: 0
   m_Name: Gun_Remote
   m_TagString: Untagged
@@ -7537,40 +7535,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43738032617314366, guid: 41a773e32f46447419f8466e6d421f85, type: 2}
---- !u!114 &6980759596231916390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2364356614854494682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 3030182452
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 5798289705124729169}
---- !u!114 &5798289705124729169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2364356614854494682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
 --- !u!1 &2552602247617707543
 GameObject:
   m_ObjectHideFlags: 0
@@ -31419,7 +31383,6 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects:
-  - {fileID: 6980759596231916390}
   - {fileID: 5484364122333496330}
   - {fileID: 4173361597161327373}
   NetworkedBehaviours:

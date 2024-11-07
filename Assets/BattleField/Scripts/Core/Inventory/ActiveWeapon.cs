@@ -31,20 +31,20 @@ public partial class ActiveWeapon : NetworkBehaviour
     private NetworkObject SpawnItem(GameObject prefab, bool isLocal, int index, string _tag)
     {
         var position = isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position;
-        var networkObject = Runner.Spawn(prefab, position, Quaternion.Euler(0,0,0), null, (runner, obj) =>
+        var networkObject = Runner.Spawn(prefab, position, Quaternion.Euler(0, 0, 0), null, (runner, obj) =>
         {
             obj.GetComponent<BoundItem>().allowAddToCollider = false;
             obj.GetComponent<TagObjectHandler>().ObjectTag = _tag;
         });
-        Debug.Log("Start set parent",gameObject);
+        Debug.Log("Start set parent", gameObject);
         RPC_SetParentWeapon(networkObject, isLocal, index);
         return networkObject;
     }
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void ShowWeapon_RPC(int activeIndex)
     {
-        SetActiveList(false, weaponHoldersLocal);
-        SetActiveList(false, weaponHoldersRemote);
+        //SetActiveList(false, weaponHoldersLocal);
+        //SetActiveList(false, weaponHoldersRemote);
         weaponHoldersLocal[activeIndex].gameObject.SetActive(true);
         weaponHoldersRemote[activeIndex].gameObject.SetActive(true);
     }
@@ -58,7 +58,7 @@ public partial class ActiveWeapon : NetworkBehaviour
 
     private void SetActiveList(bool isActive, Transform[] list)
     {
-        foreach(var item in list)
+        foreach (var item in list)
         {
             item.gameObject.SetActive(isActive);
         }
@@ -67,16 +67,8 @@ public partial class ActiveWeapon : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_SetParentWeapon(NetworkObject weapon, bool isLocal, int index)
     {
-        if (isLocal)
-        {
-            Debug.Log("Set parent RPC local"+ weaponHoldersLocal[index]);
-            weapon.transform.SetParent(weaponHoldersLocal[index]);
-        }
-        else
-        {
-            Debug.Log("Set parent RPC remote"+ weaponHoldersRemote[index]);
-            weapon.transform.SetParent(weaponHoldersRemote[index]);
-        }
+        weapon.transform.SetParent(isLocal ? weaponHoldersLocal[index] : weaponHoldersRemote[index], false);
+        weapon.GetComponent<NetworkTransform>().Teleport(isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position);
         //weapon.transform.SetParent(parent.transform);
         //Debug.Log($"Weapon name {weapon.name}");
     }

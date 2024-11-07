@@ -1,4 +1,5 @@
-﻿using NaughtyAttributes;
+﻿using Fusion.Sockets;
+using NaughtyAttributes;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -75,6 +76,9 @@ public class WeaponManager : MonoBehaviour
             currentWeapon.AddNewWeapon(newConfig);
             currentWeapon.Equip();
             currentWeapon.Show();
+            //StartCoroutine(Startsdaw(currentWeapon, newConfig));
+
+
             //activeWeapon.Equip(currentWeapon);
         }
         else // khong cung index voi curent weapon
@@ -94,6 +98,13 @@ public class WeaponManager : MonoBehaviour
                 targetSlot.Equip();
             }
         }
+    }
+    private IEnumerator Startsdaw(WeaponSlotHandler currentWeapon, GunItemConfig newConfig)
+    {
+        yield return new WaitForSeconds(.2f);
+        currentWeapon.AddNewWeapon(newConfig);
+        currentWeapon.Equip();
+        currentWeapon.Show();
     }
     [Button]
     private void TestDropItem()
