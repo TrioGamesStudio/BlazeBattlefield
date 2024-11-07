@@ -12,8 +12,6 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private WeaponSlotHandler[] weaponSlotHandlers;
     [SerializeField] private int currentWeaponIndex;
     
-    private const int SUBGUN_SLOT_INDEX = 2;
-
     public Animator playerAnimator;
     public ActiveWeapon activeWeapon;
     public WeaponSlotHandler[] WeaponSlotHandlers { get => weaponSlotHandlers; }
@@ -33,7 +31,7 @@ public class WeaponManager : MonoBehaviour
         weaponSlotHandlers[1] = new WeaponSlotHandler();
         weaponSlotHandlers[2] = new WeaponSlotHandler();
         weaponSlotHandlers[3] = new WeaponSlotHandler();
-
+        RegisterEvent();
     }
 
 
@@ -47,17 +45,32 @@ public class WeaponManager : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        InputCombatControl.SwapGun1 -= () => OnActiveWeapon(0);
+        InputCombatControl.SwapGun2 -= () => OnActiveWeapon(1);
+        InputCombatControl.SwapGun3 -= () => OnActiveWeapon(2);
+        InputCombatControl.SwapMeele -= () => OnActiveWeapon(3);
+    }
+
     public void AddNewGun(GunItemConfig newConfig)
     {
         // truong hop 1
         var newWeaponSlotIndex = (int)newConfig.slotWeaponIndex;
         var currentWeapon = weaponSlotHandlers[currentWeaponIndex];
+        
         if (IsAllSlotEmpty())
         {
-            AddNewWeaponToSlot(newConfig, newWeaponSlotIndex);
+            Debug.LogWarning("truong hop 1");
+            var slotOfNewWeapon = weaponSlotHandlers[newWeaponSlotIndex];
+            slotOfNewWeapon.AddNewWeapon(newConfig);
+            slotOfNewWeapon.Equip();
+            currentWeaponIndex = newWeaponSlotIndex;
+            ShowWeapon(true);
         }
         else if (currentWeapon.Config.slotWeaponIndex == newConfig.slotWeaponIndex) 
         {
+            Debug.LogWarning("truong hop 2");
             // truong hop 2: Cung loai, phai bo weapon dang equip, va trang bi vu khi moi
             //activeWeapon.Drop();
             currentWeapon.DeleteAndSpawnWorld();
@@ -67,6 +80,7 @@ public class WeaponManager : MonoBehaviour
         }
         else // khong cung slot weapon
         {
+            Debug.LogWarning("truong hop 3");
             bool isSlotEmpty = weaponSlotHandlers[newWeaponSlotIndex].IsEmpty;
             if (isSlotEmpty)
             {
@@ -98,14 +112,7 @@ public class WeaponManager : MonoBehaviour
         weaponSlotHandlers[0].Show();
     }
 
-    private void AddNewWeaponToSlot(GunItemConfig newConfig, int newWeaponSlotIndex)
-    {
-        var slotOfNewWeapon = weaponSlotHandlers[newWeaponSlotIndex];
-        slotOfNewWeapon.AddNewWeapon(newConfig);
-        //activeWeapon.Equip(slotOfNewWeapon);
-        slotOfNewWeapon.Equip();
-        currentWeaponIndex = newWeaponSlotIndex;
-    }
+
 
     private bool IsAllSlotEmpty()
     {
@@ -126,13 +133,17 @@ public class WeaponManager : MonoBehaviour
         if(currentWeaponIndex == -1) // T
         {
             // khong cam gi
+            if (weaponSlotHandlers[activeIndexButton].IsEmpty) return;
+            weaponSlotHandlers[activeIndexButton].Show();
+            currentWeaponIndex = activeIndexButton;
+            ShowWeapon(true);
         }
-
-        if (currentWeaponIndex == activeIndexButton)
+        else if (currentWeaponIndex == activeIndexButton)
         {
             // same with weapon onActive
-            ShowWeapon(false);
+            weaponSlotHandlers[currentWeaponIndex].Hide();
             currentWeaponIndex = -1;
+            ShowWeapon(false);
             // turn off current slot, because it active same slot
         }
         else
@@ -154,13 +165,6 @@ public class WeaponManager : MonoBehaviour
         }
     }
 
-    //public void CreateWeaponItem(NetworkObject prefab, Transform parent, Vector3 position)
-    //{
-    //    var weapon = Runner.Spawn(prefab, position, Quaternion.identity);
-    //    weapon.transform.SetParent(parent);
-    //    // make sure call this, if not item assume to collect item
-    //    weapon.GetComponent<BoundItem>().AllowAddToCollider = false;
-    //}
 
     public void ShowWeapon(bool v)
     {
