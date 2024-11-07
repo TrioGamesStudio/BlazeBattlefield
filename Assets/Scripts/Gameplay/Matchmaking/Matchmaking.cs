@@ -194,6 +194,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             3 => "Middle East",
             _ => "Harbour",
         };
+        customProps["type"] = "Survival Solo";
         //customProps["map"] = "Test";
         //int playSceneIndex = (int)SceneBuildIndex.PlayScene;
         //int playSceneIndex = currentSceneIndex;
