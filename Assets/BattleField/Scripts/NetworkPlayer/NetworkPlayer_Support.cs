@@ -7,9 +7,15 @@ public class NetworkPlayer_Support : NetworkBehaviour
    
     public void Init()
     {
-        WeaponManager.instance.playerAnimator = animator;
-        WeaponManager.instance.ShowWeapon(false);
-        ItemDatabase.instance.PlayerObject = transform;
+        if(WeaponManager.instance != null)
+        {
+            WeaponManager.instance.playerAnimator = animator;
+            WeaponManager.instance.ShowWeapon(false);
+        }
+        if(ItemDatabase.instance != null)
+        {
+            ItemDatabase.instance.PlayerObject = transform;
+        }
         activeWeapon.Init();
     }
 }

@@ -14,6 +14,7 @@ public partial class ActiveWeapon : NetworkBehaviour
     public void Init()
     {
         //WeaponSlotHandlers = WeaponManager.instance.WeaponSlotHandlers;
+        if (WeaponManager.instance == null) return;
         WeaponManager.instance.activeWeapon = this;
         weaponHolders = new WeaponHolder[4];
         for (int i = 0; i < weaponHolders.Length; i++)
