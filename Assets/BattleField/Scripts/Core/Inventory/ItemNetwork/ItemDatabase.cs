@@ -18,8 +18,6 @@ public class ItemDatabase : NetworkBehaviour
     public override void Spawned()
     {
         base.Spawned();
-
-        Debug.Log("ItemDatabase: " + NetworkPlayer.Local.transform.position);
     }
 
     public GameObject GetItemPrefab(ItemType key1, Enum key2)
