@@ -109,17 +109,18 @@ public class WeaponManager : MonoBehaviour
     [Button]
     private void TestDropItem()
     {
-        weaponSlotHandlers[0].DeleteAndSpawnWorld();
+        weaponSlotHandlers[currentWeaponIndex].DeleteAndSpawnWorld();
+        currentWeaponIndex = -1;
     }
     [Button]
     private void TestHideWeapon()
     {
-        weaponSlotHandlers[0].Hide();
+        weaponSlotHandlers[currentWeaponIndex].Hide();
     }
     [Button]
     private void TestShowWeapon()
     {
-        weaponSlotHandlers[0].Show();
+        weaponSlotHandlers[currentWeaponIndex].Show();
     }
 
 
