@@ -92,6 +92,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
         if(this.Object.HasStateAuthority) {
             Local = this;
+            GetComponent<NetworkPlayer_Support>().Init();
             // kiem tra Ready scene de ON MainCam OF LocalCam
             if (isReadyScene) {
                 // (this.sceneToStart) networkPlayer <- spawner.cs <- dropdownscenename.cs
