@@ -12,24 +12,51 @@ using System.Threading.Tasks;
 
 public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 {
+    public static MatchmakingTeam Instance;
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private PlayerRoomController playerControllerPrefab;
     private NetworkRunner networkRunner;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     public TextMeshProUGUI StatusText;
-    private const int MAX_PLAYER = 3;
+    private const int MAX_PLAYER = 2;
     string roomID;
     string teamID = "";
-    string roomAutoMatch;
+    string roomAutoMatch = "";
     bool isDone = false;
+    public bool IsDone { get => isDone; }
     //[SerializeField] private GameHandler gameManagerPrefab;
     //private GameHandler gameManager;
 
     public Dictionary<string, List<PlayerRef>> teams = new();
+    public Dictionary<PlayerRef, string> matchTeam = new();
     enum SceneBuildIndex
     {
         PlayScene = 2,
     }
+
+    private void Awake()
+    {
+        // Check if there is already a canvas with this tag to avoid duplicates
+        if (FindObjectsOfType<MatchmakingTeam>().Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        // Check if instance already exists and destroy if duplicate
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            // Set the instance to this object
+            Instance = this;
+            // Optionally, make the object persistent across scenes
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,25 +71,34 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public async void StartGame()
     {
+        isDone = false;
+        players.Clear();
+        Debug.Log("=== Start new game -> clear players");
         if (networkRunner == null)
         {
             networkRunner = Instantiate(networkRunnerPrefab);
             networkRunner.AddCallbacks(this);
         }
+        int currentSceneIndex = Matchmaking.Instance.currentSceneIndex;
         Dictionary<string, SessionProperty> customProps = new();
-
-        customProps["map"] = "Test";
-        customProps["type"] = "Survival";
+        //customProps["map"] = "Test";
+        customProps["type"] = "Survival Team";
+        customProps["map"] = currentSceneIndex switch
+        {
+            2 => "Harbour",
+            3 => "Desert",
+            _ => "Harbour",
+        };
         var sceneInfo = new NetworkSceneInfo();
-        int playSceneIndex = (int)SceneBuildIndex.PlayScene;
-        sceneInfo.AddSceneRef(SceneRef.FromIndex(playSceneIndex));
+        //int playSceneIndex = (int)SceneBuildIndex.PlayScene;
+        sceneInfo.AddSceneRef(SceneRef.FromIndex(currentSceneIndex));
         var result = await networkRunner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             //SessionName = "Battle",
             Scene = sceneInfo, // Assuming you have a separate battle room scene
             SessionProperties = customProps,
-            PlayerCount = 4,// Adjust based on your team sizes
+            PlayerCount = MAX_PLAYER,// Adjust based on your team sizes
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
 
@@ -91,6 +127,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             players[player] = playerObject.GetComponent<PlayerRoomController>();
             players[player].SetRoomID(roomID);
             players[player].SetLocalPlayer();
+            matchTeam[player] = players[player].TeamID.ToString();
             //players[player].SetHealthBarColor(Color.green);
             Debug.Log("New player joined " + player.ToString());
             Debug.Log("Player count " + runner.ActivePlayers.Count());
@@ -151,22 +188,11 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                 }
             }
 
-            //foreach (var team in teams)
-            //{
-            //    // Print the team name (key)
-            //    Debug.Log($"TEAM: {team.Key}");
-
-            //    // Print all players in the team (value)
-            //    foreach (var member in team.Value)
-            //    {
-            //        // Assuming PlayerRef has some properties to print, like an ID or Name
-            //        Debug.Log($"PlAYER IN TEAM: {member.PlayerId}"); // Replace with actual player properties
-            //    }
-
-            //    // Add a separator for clarity
-            //    Debug.Log("---------------------------");
-            //}
-            StartCoroutine(WaitForTeamID(runner, player));
+            if (players.Count == MAX_PLAYER)
+            {
+                Debug.Log("=== Start battle.......");
+                StartBattle();
+            }
         }
         else
         {
@@ -179,27 +205,38 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         string text = "Waiting other player: " + remainPlayer + " remain";
         
         FindObjectOfType<UIController>().SetText(text);
-        if (remainPlayer == 0 && !isDone) // Assuming PlayerCount is 2
+        if (runner.ActivePlayers.Count() == MAX_PLAYER && !isDone) // Assuming PlayerCount is 2
         {
-            isDone = true;
-            FindObjectOfType<UIController>().StartCountdown();
-            StartCoroutine(ReleasePlayer());
-            //if (player == runner.LocalPlayer)
-            StartCoroutine(InitializeTeams());
+            Debug.Log("===Start battle old....");
+            //isDone = true;
+            //runner.SessionInfo.IsOpen = false;
+            //FindObjectOfType<UIController>().StartCountdown();
+            //StartCoroutine(ReleasePlayer());
+            ////if (player == runner.LocalPlayer)
+            //StartCoroutine(InitializeTeams());
         }
+    }
 
-        //TODO: Not allow player shooting before release
+    public void StartBattle()
+    {
+        Debug.Log("===Start battle thoi");
+        networkRunner.SessionInfo.IsOpen = false;
+        isDone = true;
+        //alivePlayer = runner.ActivePlayers.Count();
+        FindObjectOfType<UIController>().StartCountdown();
+        StartCoroutine(ReleasePlayer());
+        StartCoroutine(InitializeTeams());
     }
 
     private IEnumerator ReleasePlayer()
     {
         yield return new WaitForSeconds(4f);
-        FindObjectOfType<WaitingArea>()?.ReleasePlayer();   
+        FindObjectOfType<WaitingArea>().ReleasePlayer();   
     }
 
     private IEnumerator InitializeTeams()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(8f);
         FindObjectOfType<GameHandler>().InitializeTeams();
     }
 
@@ -230,11 +267,12 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             if (playerObject != null)
             {
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
+                matchTeam[player] = players[player].TeamID.ToString();
                 if (players[player].IsAutoMatch)
                 {
                     if (runner.IsSharedModeMasterClient)
                     {
-                        if (teams.ContainsKey(roomAutoMatch) && teams[roomAutoMatch].Count >= 2)
+                        if (teams.ContainsKey(roomAutoMatch) && teams[roomAutoMatch].Count >= 2 || roomAutoMatch == "")
                             roomAutoMatch = GenerateRoomName();
                         players[player].SetTeamID(roomAutoMatch);
                         if (teams.ContainsKey(roomAutoMatch))
@@ -249,7 +287,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                         }
                     }        
                 }
-                else
+                else //Not auto match
                 {
                     if (teams.ContainsKey(players[player].RoomID.ToString()))
                     {
@@ -263,29 +301,12 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                     }
                 }
 
-                StartCoroutine(CheckTeamMate(player));
-
-                foreach (var team in teams)
+                if (players.Count == MAX_PLAYER)
                 {
-                    // Print the team name (key)
-                    Debug.Log($"TEAM: {team.Key}");
-
-                    // Print all players in the team (value)
-                    foreach (var member in team.Value)
-                    {
-                        // Assuming PlayerRef has some properties to print, like an ID or Name
-                        Debug.Log($"PlAYER IN TEAM: {member.PlayerId}"); // Replace with actual player properties
-                    }
-
-                    // Add a separator for clarity
-                    Debug.Log("---------------------------");
+                    Debug.Log("=== Start battle.......");
+                    StartBattle();
                 }
 
-                //if (players[player].RoomID == roomID)
-                {
-                    //players[player].SetHealthBarColor(Color.blue);
-                }
-                //Debug.Log("______PLAYER COUNT: " + players.Count);
                 yield break;
             }
             elapsedTime += Time.deltaTime;
@@ -340,12 +361,21 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         Matchmaking.Instance.localPlayer.gameObject.SetActive(true);
         UIController.Instance.ResetUI();
         await Matchmaking.Instance.JoinLobby();
-        Matchmaking.Instance.JoinRoomByName(roomID);
+        Matchmaking.Instance.RejoinRoomByName(roomID);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-    {
+    {       
+        Debug.Log("===Player trong team left neeee");
+        Debug.Log("===Player trong team left neeee " + runner.ActivePlayers.Count());
         //throw new NotImplementedException();
+        string team = matchTeam[player];
+        PlayerRoomController playerRoom = players[player];
+        FindObjectOfType<GameHandler>().Eliminate(team, playerRoom);
+        //StartCoroutine(FindObjectOfType<GameHandler>().CheckLose(matchTeam[player]));
+        if (runner.ActivePlayers.Count() > 1)
+            FindObjectOfType<GameHandler>().CheckWin();
+        players.Remove(player);
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
