@@ -223,4 +223,21 @@ public class PlayerRoomController : NetworkBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     } */
+
+    public void UpdateMap(string map)
+    {
+        //if (Object.HasInputAuthority)
+        {
+            RPC_UpdateMap(map);
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_UpdateMap(string map)
+    {
+        //if (Object.HasStateAuthority)
+        {
+            matchmaking.UpdateMapProperty(map);
+        }
+    }
 }

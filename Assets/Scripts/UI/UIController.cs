@@ -11,9 +11,11 @@ using UnityEngine.Events;
 public class UIController : MonoBehaviour
 {
     [Header("UI Elements")]
-    public GameObject panelMode;        
+    public GameObject panelMode;
+    public GameObject panelSelectMap;
     public GameObject panelTeamJoin;
-    public Button showButton;       
+    public Button modeButton;
+    public Button mapButton;
     public GameObject background;
     public Image modeImage;
     public Sprite singleMode;
@@ -51,6 +53,7 @@ public class UIController : MonoBehaviour
         InitializeUI();
         toggleModeButton.onValueChanged.AddListener(OnAutoMatchToggleChanged);
         joinTeamButton.onClick.AddListener(() => ShowHidePanel(panelTeamJoin));
+        mapButton.onClick.AddListener(() => ShowHideUI(panelSelectMap));
         toggleModeButton.interactable = false;
         //lobbyButton.onClick.AddListener(BackToLobby);
     }
@@ -73,10 +76,11 @@ public class UIController : MonoBehaviour
     {
         HidePanel();
 
-        if (showButton != null)
+        if (modeButton != null)
         {
             // Assign the button's onClick event to toggle the panel
-            showButton.onClick.AddListener(ShowPanel);
+            modeButton.onClick.AddListener(ShowPanel);
+           
         }
     }
 
@@ -137,6 +141,7 @@ public class UIController : MonoBehaviour
     {
         panelMode.SetActive(false);
         panelTeamJoin.SetActive(false);
+        panelSelectMap.SetActive(false);
         isPanelActive = false;
     }
 
@@ -155,7 +160,6 @@ public class UIController : MonoBehaviour
             soloButton.UnHightLight();
             duoButton.Highlight();
             toggleModeButton.interactable = true;
-
         }
         //isSingle = !isSingle;
     }
@@ -178,11 +182,11 @@ public class UIController : MonoBehaviour
         joinTeamButton.interactable = !joinTeamButton.interactable;
     }
 
-    public void CreateRoomUI(string roomname, int playerCount, int maxPlayer)
+    public void CreateRoomUI(string roomname, int playerCount, int maxPlayer, string map)
     {
         GameObject sessionButton = Instantiate(sessionButtonPrefab, sessionListContent);
         string infomation = $"{playerCount}/{maxPlayer}";
-        sessionButton.GetComponent<RoomPanelUI>().SetRoomButtonUI(infomation, roomname);
+        sessionButton.GetComponent<RoomPanelUI>().SetRoomButtonUI(infomation, roomname, map);
         sessionButton.GetComponent<RoomPanelUI>().Deactive(playerCount == maxPlayer);
         //bool isRoomFull = session.PlayerCount >= session.MaxPlayers;
         //sessionButton.GetComponent<RoomButtonUI>().Deactive(isRoomFull);
@@ -209,35 +213,6 @@ public class UIController : MonoBehaviour
         FindObjectOfType<WorldUI>().StartCountdown();
     }
 
-
-    //private IEnumerator CountdownCoroutine()
-    //{
-    //    int countdownValue = 3;  // Start from 3
-    //    yield return new WaitForSeconds(1f);
-    //    while (countdownValue > 0)
-    //    {
-    //        yield return new WaitForSeconds(1f);             // Wait for 1 second
-    //        informationText.text = countdownValue.ToString();  // Update the countdown text
-    //        //countdownText.gameObject.SetActive(true);        // Show the countdown UI        
-    //        countdownValue--;
-    //    }
-
-    //    // Countdown finished
-    //    informationText.text = "GO!";
-    //    yield return new WaitForSeconds(1f);  // Keep "GO!" for 1 second
-
-    //    // Hide the countdown UI
-    //    informationText.gameObject.SetActive(false);
-
-    //    // Load the battle scene
-    //    //TransitionToBattleScene(runner);
-    //}
-
-    //private void BackToLobby()
-    //{
-    //    Debug.Log("BACK TO LOBBY NE");
-    //}
-
     public void ShowResultPanel(int alivePlayer)
     {
         FindObjectOfType<WorldUI>().ShowHideUI(alivePlayer);
@@ -247,5 +222,16 @@ public class UIController : MonoBehaviour
     {
         SwitchMode(true);
         joinTeamButton.interactable = true;
+    }
+
+    public void SetMapText(string mapName)
+    {
+        mapButton.GetComponentInChildren<TextMeshProUGUI>().text = mapName;
+    }
+
+    public void AllowSelectMapMode(bool isInteractable)
+    {
+        mapButton.interactable = isInteractable;
+        modeButton.interactable = isInteractable;
     }
 }
