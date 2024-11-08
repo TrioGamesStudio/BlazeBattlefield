@@ -365,15 +365,17 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-    {
-        players.Remove(player);
+    {       
         Debug.Log("===Player trong team left neeee");
+        Debug.Log("===Player trong team left neeee " + runner.ActivePlayers.Count());
         //throw new NotImplementedException();
         string team = matchTeam[player];
         PlayerRoomController playerRoom = players[player];
         FindObjectOfType<GameHandler>().Eliminate(team, playerRoom);
         //StartCoroutine(FindObjectOfType<GameHandler>().CheckLose(matchTeam[player]));
-        FindObjectOfType<GameHandler>().CheckWin();
+        if (runner.ActivePlayers.Count() > 1)
+            FindObjectOfType<GameHandler>().CheckWin();
+        players.Remove(player);
     }
 
     public void OnConnectedToServer(NetworkRunner runner)

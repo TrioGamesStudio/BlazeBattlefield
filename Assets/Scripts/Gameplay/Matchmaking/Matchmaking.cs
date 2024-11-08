@@ -260,8 +260,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         Debug.Log("Team member join battle room");
-        playButton.gameObject.SetActive(false);
-        readyButton.gameObject.SetActive(false);
+        //playButton.gameObject.SetActive(false);
+        //readyButton.gameObject.SetActive(false);
         //TransitionToBattleRoom();
 
         networkRunner.RemoveCallbacks(this);
@@ -386,6 +386,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             UIController.Instance.SwitchMode(true);
             UIController.Instance.OnOffPanel();
             UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+            UIController.Instance.AllowSelectMapMode(true);
             await JoinLobby();
 
             // Optionally update the UI, e.g., re-enable room creation UI or show session list
@@ -531,13 +532,16 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 players[player].RPC_SetAsRoomOwner();
                 playButton.gameObject.SetActive(true);
+                readyButton.gameObject.SetActive(false);
                 UpdatePlayButtonInteractability();
             }
             else if (player == runner.LocalPlayer)
             {
                 players[player].SetAsRoomMember();
                 readyButton.gameObject.SetActive(true);
+                playButton.gameObject.SetActive(false);
                 readyButton.GetComponentInChildren<TextMeshProUGUI>().text = "Ready";
+                UIController.Instance.AllowSelectMapMode(false);
             }
 
             if (runner.IsSharedModeMasterClient)
@@ -686,6 +690,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         players.Remove(player);
 
+        // Setup when team member become room owner when room owner left room
         if (player != runner.LocalPlayer)
             players[runner.LocalPlayer].RPC_SetAsRoomOwner();
 
@@ -696,6 +701,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 players[runner.LocalPlayer].gameObject.transform.position = memberPos[0].position;
                 readyButton.gameObject.SetActive(false);
+                playButton.gameObject.SetActive(true);
+                UIController.Instance.AllowSelectMapMode(true);
             }
             UpdatePlayButtonInteractability();
         }   
