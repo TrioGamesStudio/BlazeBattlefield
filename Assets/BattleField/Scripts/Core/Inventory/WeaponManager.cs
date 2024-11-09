@@ -184,4 +184,11 @@ public class WeaponManager : MonoBehaviour
     {
         playerAnimator.SetBool("isEquiped", v);
     }
+
+
+    public bool IsReadyToShoot()
+    {
+        if (currentWeaponIndex < 0 || currentWeaponIndex > 4) return false;
+        return weaponSlotHandlers[currentWeaponIndex].IsEmpty == false && weaponSlotHandlers[currentWeaponIndex].IsShowInHand;
+    }
 }

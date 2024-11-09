@@ -24,6 +24,9 @@ public class WeaponSlotHandler: IWeaponSlotAction
     public Action EquipWeaponAction { get; set; }
     public Action DropWeaponAction { get; set; }
 
+    private bool isShowInHand;
+    public bool IsShowInHand { get => isShowInHand; }
+
     public void AddNewWeapon(GunItemConfig newConfig)
     {
         if(newConfig != null)
@@ -38,7 +41,8 @@ public class WeaponSlotHandler: IWeaponSlotAction
             this.Config = null;
             this.Prefab = null;
         }
-        
+        isShowInHand = false;
+
         OnUpdateNewGunAction?.Invoke();
     }
 
@@ -50,11 +54,13 @@ public class WeaponSlotHandler: IWeaponSlotAction
     public void Show()
     {
         ShowWeaponAction?.Invoke();
+        isShowInHand = true;
     }
 
     public void Hide()
     {
         HideWeaponAction?.Invoke();
+        isShowInHand = false;
     }
 
     public void Equip()

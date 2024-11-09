@@ -19,7 +19,7 @@ public class WeaponHandler : NetworkBehaviour
     [SerializeField] LayerMask collisionLayers;
 
     [Networked] // bien updated through the server on all the clients
-    public bool isFiring{get; set;}
+    public bool isFiring { get; set; }
     ChangeDetector changeDetector;
 
     float lastTimeFired = 0f;
@@ -40,7 +40,7 @@ public class WeaponHandler : NetworkBehaviour
     Vector3 spawnPointRaycastCam = Vector3.zero;
 
     [Networked]
-    public int killCount{get; set;}
+    public int killCount { get; set; }
 
     bool isFired = false;
     bool isFiredPressed = false;
@@ -51,7 +51,8 @@ public class WeaponHandler : NetworkBehaviour
 
     CharacterInputHandler characterInputHandler;
     HPHandler hPHandler;
-    private void Awake() {
+    private void Awake()
+    {
         characterInputHandler = GetComponent<CharacterInputHandler>();
         hPHandler = GetComponent<HPHandler>();
         networkPlayer = GetComponent<NetworkPlayer>();
@@ -63,14 +64,16 @@ public class WeaponHandler : NetworkBehaviour
         spawner = FindObjectOfType<Spawner>();
     }
 
-    public override void Spawned() {
+    public override void Spawned()
+    {
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
     }
 
-    private void Update() {
-        if(SceneManager.GetActiveScene().name == "Ready") return;
+    private void Update()
+    {
+        if (SceneManager.GetActiveScene().name == "Ready") return;
         if (HasStateAuthority == false) return;
-        if(hPHandler.Networked_IsDead) return;
+        if (hPHandler.Networked_IsDead) return;
 
         // nhan mouse 0 fire bullet
         //if(Input.GetKeyDown(KeyCode.Mouse0)) isFired = true;
@@ -79,59 +82,73 @@ public class WeaponHandler : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if(SceneManager.GetActiveScene().name == "MainLobby") return;
-        if(Matchmaking.Instance != null)
+        if (SceneManager.GetActiveScene().name == "MainLobby") return;
+        if (Matchmaking.Instance != null)
         {
             if ((!Matchmaking.Instance.IsDone && Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
           || (!MatchmakingTeam.Instance.IsDone && Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo)) return;
         }
-        
-        Fire();
+        if (Object.HasStateAuthority)
+        {
+            if (WeaponManager.instance.IsReadyToShoot())
+            {
+                Fire();
+            }
+        }
 
     }
 
-    void Fire() {
-        if(!isFiredPressed && isFired) {
+    void Fire()
+    {
+        if (!isFiredPressed && isFired)
+        {
             isFiredPressed = true;
             StartCoroutine(FireCO(coolTimeWeapon));
         }
-        
+
     }
 
-    IEnumerator FireCO(float coolTime) {
+    IEnumerator FireCO(float coolTime)
+    {
         // chi tao ra hieu ung laser no o nong sung va bay toi muc tieu va cham
         localCameraHandler.RaycastHitPoint();
 
         var hitPointVector3 = localCameraHandler.hitPoint_Network;
 
-        if(hitPointVector3 != Vector3.zero) FireBulletVFX(hitPointVector3);
-        
+        if (hitPointVector3 != Vector3.zero) FireBulletVFX(hitPointVector3);
+
         Fire(localCameraHandler.transform.forward, aimPoint);  // neu player thi aimpoint = vi tri 1st cam
         yield return new WaitForSeconds(coolTime);
         isFiredPressed = false;
     }
 
-    public override void Render() {
+    public override void Render()
+    {
         if (changeDetector == null) return;
-        foreach (var change in changeDetector.DetectChanges(this, out var previousBuffer, out var currentBuffer)) {
-            switch (change) {
+        foreach (var change in changeDetector.DetectChanges(this, out var previousBuffer, out var currentBuffer))
+        {
+            switch (change)
+            {
                 case nameof(isFiring):
-                var boolReader = GetPropertyReader<bool>(nameof(isFiring));
-                var (previousBool, currentBool) = boolReader.Read(previousBuffer, currentBuffer);
-                OnFireChanged(previousBool, currentBool);
+                    var boolReader = GetPropertyReader<bool>(nameof(isFiring));
+                    var (previousBool, currentBool) = boolReader.Read(previousBuffer, currentBuffer);
+                    OnFireChanged(previousBool, currentBool);
                     break;
             }
         }
     }
 
     //? fire bullet laser VFX => chi tao ra virtual o nong sung + bullet trails + impact
-    void FireBulletVFX(Vector3 hitPoint) {
+    void FireBulletVFX(Vector3 hitPoint)
+    {
         Vector3 dir = hitPoint - aimPoint_grandeRocket.position;
 
-        if(bulletFireDelay.ExpiredOrNotRunning(Runner)) {
-            
+        if (bulletFireDelay.ExpiredOrNotRunning(Runner))
+        {
+
             Runner.Spawn(bulletVFXPF, aimPoint_grandeRocket.position, Quaternion.LookRotation(dir), Object.InputAuthority,
-            (runner, spawnBullet) => {
+            (runner, spawnBullet) =>
+            {
                 spawnBullet.GetComponent<BulletHandler>().FireBullet(Object.InputAuthority, networkObject, networkPlayer.nickName_Network.ToString());
             });
             bulletFireDelay = TickTimer.CreateFromSeconds(Runner, 0.15f); // sau 3 s se exp or notRunning
@@ -139,12 +156,13 @@ public class WeaponHandler : NetworkBehaviour
     }
 
     //? FIRE raycast BULLET FROM CAMERA
-    void Fire(Vector3 aimForwardVector, Transform aimPoint) {
+    void Fire(Vector3 aimForwardVector, Transform aimPoint)
+    {
         //? AI fire theo AI fireRate
         //if(networkPlayer.isBot && Time.time - lastTimeFired < aiFireRate) return;
 
         //? player fire rate theo lasTimeLimit
-        if(Time.time - lastTimeFired < 0.15f) return;
+        if (Time.time - lastTimeFired < 0.15f) return;
 
         StartCoroutine(FireEffect());
 
@@ -154,30 +172,33 @@ public class WeaponHandler : NetworkBehaviour
         /* if(!networkPlayer.isBot) 
             spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network;
         else spawnPointRaycastCam = aiCameraAnchor.position; */
-        
-        
+
+
         spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network;
 
-        if(Physics.Raycast(spawnPointRaycastCam,aimForwardVector, out var hit, 100, collisionLayers)) {
+        if (Physics.Raycast(spawnPointRaycastCam, aimForwardVector, out var hit, 100, collisionLayers))
+        {
             // neu hitInfo do this.gameObject ban ra thi return
-            if(hit.transform.GetComponent<WeaponHandler>() == this) return;
+            if (hit.transform.GetComponent<WeaponHandler>() == this) return;
             // neu hitInfo la dong doi thi khong tru mau
             //if (hit.transform.CompareTag("TeamMate")) return;
             if (IsTeammate(hit)) return;
             float hitDis = 100f;
             bool isHitOtherRemotePlayers = false;
 
-            if(hit.distance > 0) hitDis = hit.distance;
+            if (hit.distance > 0) hitDis = hit.distance;
 
-            if(hit.transform.TryGetComponent<HPHandler>(out var health)) {
+            if (hit.transform.TryGetComponent<HPHandler>(out var health))
+            {
                 Debug.Log($"{Time.time} {transform.name} hit HitBox {hit.transform.root.name}");
-                
+
                 // kiem tra co phai dong doi hay khong
                 bool isEnemyCheck = hit.transform.GetComponent<NetworkPlayer>().isEnemy_Network;
                 //=> if(spawner.customLobbyName == "OurLobbyID_Team" && networkPlayer.isEnemy_Network == isEnemyCheck) return;
                 // kiem tra co phai dong doi hay khong
 
-                if(Object.HasStateAuthority) {
+                if (Object.HasStateAuthority)
+                {
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
                     hit.collider.GetComponent<HitboxRoot>().GetComponent<HPHandler>().
                                 OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this);
@@ -185,18 +206,19 @@ public class WeaponHandler : NetworkBehaviour
 
                 isHitOtherRemotePlayers = true;
             }
-            else if(hit.collider != null){
+            else if (hit.collider != null)
+            {
                 Debug.Log($"{Time.time} {transform.name} hit PhysiX Collier {hit.transform.root.name}");
             }
 
             //? ve ra tia neu ban trung remotePlayers
-            if(isHitOtherRemotePlayers)
+            if (isHitOtherRemotePlayers)
                 Debug.DrawRay(aimPoint.position, aimForwardVector * hitDis, Color.red, 1f);
-            else 
+            else
                 Debug.DrawRay(aimPoint.position, aimForwardVector * hitDis, Color.green, 1f);
 
         }
-        
+
         lastTimeFired = Time.time;
 
         // lam cho ai ban theo tan suat random khoang time
@@ -213,7 +235,7 @@ public class WeaponHandler : NetworkBehaviour
     }
 
     // fire particle on aimPoint
-    IEnumerator FireEffect()    
+    IEnumerator FireEffect()
     {
         isFiring = true;
 
@@ -221,23 +243,26 @@ public class WeaponHandler : NetworkBehaviour
         /* if(NetworkPlayer.Local.is3rdPersonCamera)
             fireParticleSystemRemote.Play();
         else 
-            fireParticleSystemLocal.Play(); */ 
-        
+            fireParticleSystemLocal.Play(); */
+
         fireParticleSystemLocal.Play();
         yield return new WaitForSeconds(0.09f);
         isFiring = false;
     }
 
-    void OnFireChanged(bool previous, bool current) {
-        if(current && !previous) 
+    void OnFireChanged(bool previous, bool current)
+    {
+        if (current && !previous)
             OnFireRemote();
     }
 
-    void OnFireRemote() {
-        if(!Object.HasStateAuthority) {
-            
+    void OnFireRemote()
+    {
+        if (!Object.HasStateAuthority)
+        {
+
             fireParticleSystemRemote.Play();
 
-        } 
+        }
     }
 }
