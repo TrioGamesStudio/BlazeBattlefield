@@ -51,6 +51,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         PlayScene = 2,
     }
 
+    public int currentSceneIndex = 2; // This variable will hold the current scene index
+
+
     public enum Mode
     {
         Solo,
@@ -119,6 +122,31 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     }
 
+    public void UpdateMap(string map)
+    {
+        if (currentMode != Mode.Duo) return;
+        PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => !p.Object.HasInputAuthority);
+        if (localPlayer != null)
+        {
+            localPlayer.UpdateMap(map);
+            //readyButton.GetComponentInChildren<TextMeshProUGUI>().text = localPlayer.IsReady ? "CANCEL" : "READY";
+        }
+    }
+
+    public void UpdateMapProperty(string map)
+    {
+        if (map == "Harbour")
+        {
+            SetPlayScene(2);
+            FindObjectOfType<UIController>().SetMapText("Map Harbour");
+        }
+        else if (map == "Desert")
+        {
+            SetPlayScene(3);
+            FindObjectOfType<UIController>().SetMapText("Map Desert");
+        }
+    }
+
     public async void GotoLobby()
     {
         await JoinLobby();
@@ -158,13 +186,24 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         }
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         var sceneInfo = new NetworkSceneInfo();
-        int playSceneIndex = (int)SceneBuildIndex.PlayScene;
-        sceneInfo.AddSceneRef(SceneRef.FromIndex(playSceneIndex));
+        Dictionary<string, SessionProperty> customProps = new();
+        customProps["map"] = currentSceneIndex switch
+        {
+            2 => "Harbour",
+            3 => "Middle East",
+            _ => "Harbour",
+        };
+        customProps["type"] = "Survival Solo";
+        //customProps["map"] = "Test";
+        //int playSceneIndex = (int)SceneBuildIndex.PlayScene;
+        //int playSceneIndex = currentSceneIndex;
+        sceneInfo.AddSceneRef(SceneRef.FromIndex(currentSceneIndex));
         var result = await networkRunner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             Scene = sceneInfo,
             PlayerCount = MAX_PLAYER,
+            SessionProperties = customProps,
         });
 
         if (result.Ok)
@@ -221,8 +260,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         Debug.Log("Team member join battle room");
-        playButton.gameObject.SetActive(false);
-        readyButton.gameObject.SetActive(false);
+        //playButton.gameObject.SetActive(false);
+        //readyButton.gameObject.SetActive(false);
         //TransitionToBattleRoom();
 
         networkRunner.RemoveCallbacks(this);
@@ -241,7 +280,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public async void CreateRoom()
     {
-        players.Clear();
+        if (currentMode == Mode.Duo) return;
+        players.Clear();    
         string teamcode = UnityEngine.Random.Range(100, 999).ToString();
         if (networkRunner == null)
         {
@@ -249,11 +289,20 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             networkRunner.AddCallbacks(this);
         }
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+        currentMode = Mode.Duo;
+        Dictionary<string, SessionProperty> customProps = new();
+        customProps["map"] = currentSceneIndex switch
+        {
+            2 => "Harbour",
+            3 => "Desert",
+            _ => "Harbour",
+        };
         var startArguments = new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             SessionName = teamcode,
             PlayerCount = MAX_PLAYER,
+            SessionProperties = customProps,
         };
 
         //StatusText.text = startArguments.GameMode == GameMode.Single ? "Starting single-player..." : "Connecting...";
@@ -272,8 +321,43 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
     }
 
+    public void UpdateSessionProperties()
+    {
+        if (networkRunner == null || !networkRunner.IsRunning)
+            return;
+
+        // Only the host/master client can update properties
+        //if (!networkRunner.IsSharedModeMasterClient)
+        //    return;
+        if (currentMode == Mode.Solo) return;
+
+        try
+        {
+            // Create new dictionary with updated properties
+            Dictionary<string, SessionProperty> newProps = new();
+            newProps["map"] = currentSceneIndex switch
+            {
+                2 => "Harbour",
+                3 => "Desert",
+                _ => "Harbour",
+            };
+            // Add any other properties you want to update
+            //newProps["gameMode"] = "TeamDeathmatch"; // example
+
+            // Update the custom properties
+            networkRunner.SessionInfo.UpdateCustomProperties(newProps);
+            Debug.Log("Session properties updated successfully");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error updating session properties: {e.Message}");
+        }
+    }
+
     public async void LeaveRoom()
     {
+        if (currentMode == Mode.Solo) return;
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
         if (networkRunner != null)
         {
             Debug.Log("Leaving room...");
@@ -301,6 +385,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             localPlayer.SetActive(true);
             UIController.Instance.SwitchMode(true);
             UIController.Instance.OnOffPanel();
+            UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+            UIController.Instance.AllowSelectMapMode(true);
             await JoinLobby();
 
             // Optionally update the UI, e.g., re-enable room creation UI or show session list
@@ -343,10 +429,19 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             networkRunner = Instantiate(networkRunnerPrefab);
             networkRunner.AddCallbacks(this);
         }
+        //Dictionary<string, SessionProperty> customProps = new();
+        //customProps["map"] = currentSceneIndex switch
+        //{
+        //    2 => "Harbour",
+        //    3 => "Desert",
+        //    _ => "Harbour",
+        //};
         var result = await networkRunner.StartGame(new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             SessionName = roomName,
+            PlayerCount = MAX_PLAYER,
+            //SessionProperties = customProps,
             //Scene = sceneInfo, // Assuming you have a separate battle room scene
             //SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
@@ -359,6 +454,44 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         //createRoomButton.gameObject.SetActive(false);
         //sessionListContent.parent.parent.gameObject.SetActive(false);
     }
+        else
+        {
+            Debug.LogError($"Failed to Start: {result.ShutdownReason}");
+        }
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+    }
+
+    public async void RejoinRoomByName(string roomName)
+    {
+        currentMode = Mode.Duo;
+        players.Clear();
+        UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+        if (networkRunner == null)
+        {
+            networkRunner = Instantiate(networkRunnerPrefab);
+            networkRunner.AddCallbacks(this);
+        }
+        Dictionary<string, SessionProperty> customProps = new();
+        customProps["map"] = currentSceneIndex switch
+        {
+            2 => "Harbour",
+            3 => "Desert",
+            _ => "Harbour",
+        };
+
+        var result = await networkRunner.StartGame(new StartGameArgs()
+        {
+            GameMode = GameMode.Shared,
+            SessionName = roomName,
+            PlayerCount = MAX_PLAYER,
+            SessionProperties = customProps,
+        });
+
+        if (result.Ok)
+        {
+            UIController.Instance.SwitchMode(false);
+            UIController.Instance.OnOffPanel();
+        }
         else
         {
             Debug.LogError($"Failed to Start: {result.ShutdownReason}");
@@ -399,13 +532,16 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 players[player].RPC_SetAsRoomOwner();
                 playButton.gameObject.SetActive(true);
+                readyButton.gameObject.SetActive(false);
                 UpdatePlayButtonInteractability();
             }
             else if (player == runner.LocalPlayer)
             {
                 players[player].SetAsRoomMember();
                 readyButton.gameObject.SetActive(true);
+                playButton.gameObject.SetActive(false);
                 readyButton.GetComponentInChildren<TextMeshProUGUI>().text = "Ready";
+                UIController.Instance.AllowSelectMapMode(false);
             }
 
             if (runner.IsSharedModeMasterClient)
@@ -422,6 +558,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
                 playerObject.GetComponent<PlayerRoomController>().SetLocalPlayer();
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
+                Debug.Log("=== Add player " + players[player] + " player count" + players.Count);
+                if (players.Count == MAX_PLAYER)
+                {
+                    Debug.Log("=== Start battle.......");
+                    StartBattle();
+                }
                 matchSolo[player] = players[player].TeamID.ToString();
             }
             else
@@ -429,19 +571,32 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 // Handle remote player
                 StartCoroutine(WaitForPlayerObjectSolo(runner, player));
             }
-            int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
+            //int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
+            int remainPlayer = MAX_PLAYER - players.Count();
             string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(text);
             if (runner.ActivePlayers.Count() == MAX_PLAYER && !isDone) // Assuming PlayerCount is 2
             {
-                runner.SessionInfo.IsOpen = false;
-                isDone = true;
-                alivePlayer = runner.ActivePlayers.Count();
-                FindObjectOfType<UIController>().StartCountdown();
-                StartCoroutine(ReleasePlayer());
-                StartCoroutine(InitializeTeams());
+                Debug.Log("=== Start battle old...");
+                //runner.SessionInfo.IsOpen = false;
+                //isDone = true;
+                //alivePlayer = runner.ActivePlayers.Count();
+                //FindObjectOfType<UIController>().StartCountdown();
+                //StartCoroutine(ReleasePlayer());
+                //StartCoroutine(InitializeTeams());
             }
         }
+    }
+
+    public void StartBattle()
+    {
+        Debug.Log("===Start battle thoi");
+        networkRunner.SessionInfo.IsOpen = false;
+        isDone = true;
+        //alivePlayer = runner.ActivePlayers.Count();
+        FindObjectOfType<UIController>().StartCountdown();
+        StartCoroutine(ReleasePlayer());
+        StartCoroutine(InitializeTeams());
     }
 
     private IEnumerator ReleasePlayer()
@@ -501,6 +656,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
                 matchSolo[player] = players[player].TeamID.ToString();
+                if (players.Count == MAX_PLAYER)
+                {
+                    Debug.Log("=== Start battle.......");
+                    StartBattle();
+                }
+                Debug.Log("=== Add player " + players[player] + " player count" + players.Count);
                 Debug.Log($"Remote player {player} added to players list");
                 Debug.Log("Players dictionanry" + players.Count);
                 yield break;
@@ -529,6 +690,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         players.Remove(player);
 
+        // Setup when team member become room owner when room owner left room
         if (player != runner.LocalPlayer)
             players[runner.LocalPlayer].RPC_SetAsRoomOwner();
 
@@ -539,6 +701,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 players[runner.LocalPlayer].gameObject.transform.position = memberPos[0].position;
                 readyButton.gameObject.SetActive(false);
+                playButton.gameObject.SetActive(true);
+                UIController.Instance.AllowSelectMapMode(true);
             }
             UpdatePlayButtonInteractability();
         }   
@@ -561,9 +725,35 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             string roomName = session.Name;
             int playerCount = session.PlayerCount;
             int maxPlayer = session.MaxPlayers;
+            // Get map from custom properties
+            string map = "Unknown";
+            if (session.Properties.TryGetValue("map", out var mapValue))
+            {
+                map = mapValue.PropertyValue.ToString();
+            }
             if (session.IsOpen && roomName.Length <= 3)
-                UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer);
+                UIController.Instance.CreateRoomUI(roomName, playerCount, maxPlayer, map);
         }
+
+        //if (!runner.IsSharedModeMasterClient)
+        //{
+        //    Debug.Log("Update map ne");
+        //    string map = "Unknown";
+        //    if(runner.SessionInfo.Properties.TryGetValue("map", out var mapValue))
+        //    {
+        //        map = mapValue.PropertyValue.ToString();
+        //    }
+        //    if (map == "Harbour")
+        //    {
+        //        FindObjectOfType<Matchmaking>().SetPlayScene(2);
+        //        FindObjectOfType<UIController>().SetMapText("Map Harbour");
+        //    }
+        //    else if (map == "Desert")
+        //    {
+        //        FindObjectOfType<Matchmaking>().SetPlayScene(3);
+        //        FindObjectOfType<UIController>().SetMapText("Map Desert");
+        //    }
+        //}
     }
 
     public void CheckWin(PlayerRef player)
@@ -583,6 +773,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             localSoloPlayer.GetComponent<NetworkPlayer>().localUI.SetActive(false);
             FindObjectOfType<WorldUI>().ShowHideWinUI();
         }
+    }
+
+    public void SetPlayScene(int sceneIndex)
+    {
+        // You can add validation here if needed
+        currentSceneIndex = sceneIndex;
     }
 
     public void OnConnectedToServer(NetworkRunner runner)

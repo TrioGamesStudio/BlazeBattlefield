@@ -1,4 +1,6 @@
+using NaughtyAttributes;
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +12,6 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
 
     [SerializeField] private GameObject view;
     [SerializeField] private Button toggleViewButton;
-
     protected override void Init()
     {
         base.Init();
@@ -40,47 +41,51 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
 
     protected override void ConfigureItemUI(RunTimeItem itemInGame, ItemCollectUI itemCollectUI)
     {
-        itemCollectUI.SetItemCount(itemInGame.GetQuantity());
-        itemCollectUI.SetItemName(itemInGame.GetItemName());
-
+        itemCollectUI.Initialize(itemInGame);
+        //itemCollectUI.SetItemCount(itemInGame.GetQuantity());
         itemCollectUI.SetOnClickEvent(() => 
-        { 
-            if (Backpack.instance.CanCollect() == false) return;
+        {
+            // need to check storage can collect item
             RemoveItemUI(itemInGame);
-            //BackpackUI.instance.AddItemUI(itemInGame);
-
             itemInGame.Collect();
-            itemInGame.DestroyItem();
         });
         itemInGame.OnRemoveItemUI = RemoveItemUI;
         itemCollectUI.gameObject.SetActive(true);
     }
-
-
-    protected override void OnItemAdded(RunTimeItem customObject)
-    {
-        base.OnItemAdded(customObject);
-    }
-
+ 
     public override void RemoveItemUI(RunTimeItem customObject)
     {
-        RemoveItemFromDictionary(customObject.GetUniqueID(), customObject);
+        RemoveItemFromDictionary(customObject.UniqueID(), customObject);
     }
 
     public override void AddItemUI(RunTimeItem customObject)
     {
-        AddItemToDictionary(customObject.GetUniqueID(), customObject);
+        AddItemToDictionary(customObject.UniqueID(), customObject);
     }
 
-    
+    [Button]
+    public void GetFirstItemDebug()
+    {
+        if (activeItemUIs.Count == 0)
+        {
+            Debug.Log("Bay gio khong co item nao trong danh sach thu thap", gameObject);
+            return;
+        }
+        if (activeItemUIs.Count == 0) return;
+        var itemUI = activeItemUIs.First().Value;
+        itemUI.RaiseCallback();
+        //Debug.Log("Show first Item", itemUI.gameObject);
+    }
+
 }
 public interface RunTimeItem
 {
     public bool isDisplayedUI { get; set; }
     public Action<RunTimeItem> OnRemoveItemUI { get; set; }
-    string GetItemName();
-    int GetQuantity();
+    public Sprite GetIcon();
+    string DisplayName();
+    string UniqueID();
+    int Quantity();
     void Collect();
     void DestroyItem();
-    string GetUniqueID();
 }

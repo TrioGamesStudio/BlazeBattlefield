@@ -75,7 +75,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             }
         }
     }
-
     public override void Spawned()
     {
         Debug.Log($"_____co chay spawn()");
@@ -93,9 +92,9 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
         if(this.Object.HasStateAuthority) {
             Local = this;
-
+            GetComponent<NetworkPlayer_Support>()?.Init();
             // kiem tra Ready scene de ON MainCam OF LocalCam
-            if(isReadyScene) {
+            if (isReadyScene) {
                 // (this.sceneToStart) networkPlayer <- spawner.cs <- dropdownscenename.cs
                 /* if(Runner.IsSharedModeMasterClient) sceneToStart = spawner.gameMap.ToString(); */
                 //Debug.Log("MAIN LOBBY SCENE NE");
@@ -140,9 +139,10 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             }
 
             // lay gia tri Gamemanager.playerNickName gan vao
-            RPC_SetNickName(GameManager.playerNickName);
+            //RPC_SetNickName(GameManager.playerNickName);
+            RPC_SetNickName(DataSaver.Instance.dataToSave.userName);
 
-            
+
             /* RPC_SetNickName(PlayerPrefs.GetString("PlayerNickName_Local")); */
 
             // kiem tra PlayerPref player (Object.InputAuthority.PlayerID) -> le = green | chan = red

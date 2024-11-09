@@ -178,16 +178,16 @@ public class PlayerRoomController : NetworkBehaviour
         {
             FindObjectOfType<WorldUI>().ShowHideWinUITeam();
             // set winteam variable
-            //DataSaver.Instance.dataToSave.winTeam += 1;
+            DataSaver.Instance.dataToSave.winTeam += 1;
         }       
         else
         {
             FindObjectOfType<WorldUI>().ShowHideWinUI();
             // save achivement winSolo
-            //DataSaver.Instance.dataToSave.winSolo += 1;
+            DataSaver.Instance.dataToSave.winSolo += 1;
         }
         // save to firebase datatosave
-        //DataSaver.Instance.SaveData();
+        DataSaver.Instance.SaveData();
         GetComponent<NetworkPlayer>().localUI.SetActive(false);
     }
 
@@ -223,4 +223,21 @@ public class PlayerRoomController : NetworkBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     } */
+
+    public void UpdateMap(string map)
+    {
+        //if (Object.HasInputAuthority)
+        {
+            RPC_UpdateMap(map);
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_UpdateMap(string map)
+    {
+        //if (Object.HasStateAuthority)
+        {
+            matchmaking.UpdateMapProperty(map);
+        }
+    }
 }

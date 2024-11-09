@@ -16,7 +16,7 @@ public class ItemGrenerator : NetworkBehaviour
             Debug.Log("Spawned");
             for (int i = 0; i < count; i++)
             {
-                ItemGeneratorManager.instance.CreateRandomItemFromSource();
+                //ItemGeneratorManager.instance.CreateRandomItemFromSource();
             }
         }
         
@@ -24,7 +24,7 @@ public class ItemGrenerator : NetworkBehaviour
     [Button]
     public void Create()
     {
-        ItemGeneratorManager.instance.CreateRandomItemFromSource();
+        //ItemGeneratorManager.instance.CreateRandomItemFromSource();
     }
 
 }

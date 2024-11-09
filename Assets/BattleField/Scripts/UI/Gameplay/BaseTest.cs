@@ -8,7 +8,7 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
 {
     protected UnityPool<ItemCollectUI> poolItemsUI;
     protected Dictionary<string, ItemCollectUI> activeItemUIs;
-    //[SerializeField] protected List<ItemCollectUI> usingList;
+    //[SerializeField] protected List<ItemCollectionUI> usingList;
     [SerializeField] protected ItemCollectUI itemCollectUIPrefab;
     [SerializeField] protected GameObject content;
 
@@ -64,6 +64,7 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
         if (activeItemUIs.ContainsKey(key))
         {
             Debug.Log("Is Contain Key");
+            UpdateUI(key, customObject);
             return;
         }
         var itemUI = poolItemsUI.Get();
@@ -80,7 +81,7 @@ public abstract class BaseTest<CustomObject> : MonoBehaviour
         }
         if (!activeItemUIs.TryGetValue(key, out var ui))
         {
-            Debug.Log("Not Contain Key");
+            //Debug.Log("Not Contain Key");
             return;
         }
         activeItemUIs.Remove(key);
