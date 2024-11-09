@@ -15,7 +15,7 @@ public class DropAmountUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI itemName;
     [SerializeField] private TextMeshProUGUI currentCountDrop;
     [SerializeField] private TextMeshProUGUI maxCount;
-    public Action<int> OnDropItemCallback;
+    private Action<int> DropItemAction;
 
     private void Awake()
     {
@@ -28,6 +28,7 @@ public class DropAmountUI : MonoBehaviour
     }
     private void OnDestroy()
     {
+        Debug.Log("Setup amount silder UI");
         IncreaseButton.onClick.RemoveListener(Increase);
         DecreaseButton.onClick.RemoveListener(Decrease);
         CancelButton.onClick.RemoveListener(Cancel);
@@ -40,10 +41,10 @@ public class DropAmountUI : MonoBehaviour
     {
         currentCountDrop.text = value.ToString();
     }
-    public void SetupView(ItemLocalData itemData)
+    public void SetupView(InventoryItem inventoryItem)
     {
-        int currentCount = itemData.CurrentQuantity;
-        string _itemName = itemData.ItemName;
+        int currentCount = inventoryItem.amount;
+        string _itemName = inventoryItem.displayName;
 
         amountSlider.minValue = 1;
         amountSlider.maxValue = currentCount;
@@ -74,10 +75,19 @@ public class DropAmountUI : MonoBehaviour
     public void Cancel()
     {
         Hide();
-        OnDropItemCallback = null;
     }
     public void Drop()
     {
-        OnDropItemCallback?.Invoke((int)amountSlider.value);
+        DropItemAction?.Invoke((int)amountSlider.value);
+    }
+
+    public void SetAcceptDrop(Action<int> onAcceptDrop)
+    {
+        DropItemAction = onAcceptDrop;
+    }
+
+    private void OnDisable()
+    {
+        amountSlider.SetValueWithoutNotify(0);
     }
 }

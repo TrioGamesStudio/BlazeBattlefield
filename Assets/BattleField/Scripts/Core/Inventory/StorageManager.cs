@@ -1,75 +1,108 @@
-﻿using System;
+﻿using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 public class StorageManager : MonoBehaviour
 {
-
     public static StorageManager instance;
+
+    public static Action<InventoryItem> OnAddItem;
+    public static Action<InventoryItem> OnRemoveItem;
+    public static Action<InventoryItem> OnUpdateItem;
+
+    private Dictionary<(ItemType, Enum), List<InventoryItem>> bigData = new();
+
     private void Awake()
     {
         instance = this;
-        Init();
     }
 
-    private Dictionary<AmmoType, int> ammoInformation;
-    private Dictionary<HealingItemType, int> healthInformation;
-
-    private void Init()
+    public void Add(ItemType itemType, Enum _enum, InventoryItem inventoryItem)
     {
-        ammoInformation = new()
-        {
-            {AmmoType.Ammo556, 0},
-            {AmmoType.Ammo762, 0},
-            {AmmoType.Ammo9mm, 0},
-            {AmmoType.ShotgunShell, 0},
-            {AmmoType.Ammo12Gauge, 0},
-        };
+        if (bigData.ContainsKey((itemType, _enum)) == false)
+            bigData.Add((itemType, _enum), new List<InventoryItem>());
 
-        healthInformation = new()
+        if (bigData.TryGetValue((itemType, _enum), out var list))
         {
-            {HealingItemType.Bandage, 0},
-            {HealingItemType.FirstAidKit, 0},
-            {HealingItemType.Medkit, 0},
-        };
-    }
+            foreach(var item in list)
+            {
+                if (inventoryItem.amount == 0)
+                    break;
 
+                bool itemHasMoreSpace = item.amount < item.maxStack;
+                if (itemHasMoreSpace)
+                {
+                    
+                    int totalAmount = item.amount + inventoryItem.amount;
+                   
+                    if (totalAmount <= item.maxStack) // Can add all item
+                    {
+                        item.amount += inventoryItem.amount;
+                        inventoryItem.amount = 0;
+                    }
+                    else // need iterator more item // 7 + 5 = 12 => totalAmount - maxStack 
+                    {
+                        item.amount = item.maxStack;
+                        inventoryItem.amount = totalAmount- item.maxStack;
+                    }
+                    // callback in UI
+                    item.OnUpdateData();
+                }
+            }
 
-    private void UpdateItem<T>(Dictionary<T, int> itemDictionary, T itemType, int quantity, bool isAdding)
-    {
-        if (itemDictionary.ContainsKey(itemType))
-        {
-            itemDictionary[itemType] += isAdding ? quantity : -quantity;
-            Debug.Log($"Current {typeof(T).Name}: {itemType} count is: {itemDictionary[itemType]}");
+            if (inventoryItem.amount == 0) return;
+            // add new item to inventory
+            list.Add(inventoryItem);
+            OnAddItem(inventoryItem);
+            ShowItemInformation(inventoryItem);
+            AmmoManager.instance.AddAmmo(inventoryItem, inventoryItem.amount);
         }
-        else
-        {
-            Debug.LogWarning($"{typeof(T).Name} type {itemType} not found in dictionary.");
-        }
-
-        if (itemDictionary[itemType] <= 0)
-        {
-            Debug.LogError("item is zero");
-        }
     }
 
-    public void UpdateAmmo(AmmoType ammoType, int quantity, bool isAdding)
+    private void ShowItemInformation(InventoryItem inventoryItem)
     {
-        UpdateItem(ammoInformation, ammoType, quantity, isAdding);
+        Debug.Log($"name{inventoryItem.displayName},amoumt {inventoryItem.amount},item type {inventoryItem.ItemType},max stack {inventoryItem.maxStack}");
     }
 
-    public void UpdateHealth(HealingItemType healingItemType, int quantity, bool isAdding)
+    public void Remove(ItemType itemType, Enum _enum, InventoryItem inventoryItem)
     {
-        UpdateItem(healthInformation, healingItemType, quantity, isAdding);
+        if (bigData.TryGetValue((itemType, _enum), out var list))
+        {
+            if (!list.Contains(inventoryItem)) return;
+            list.Remove(inventoryItem);
+            OnRemoveItem(inventoryItem);
+            AmmoManager.instance.RemoveAmmo(inventoryItem, inventoryItem.amount);
+        }
     }
 
+    public void DropAll(InventoryItem currentItem)
+    {
+        ItemDatabase.instance.InventoryItemToWorld(currentItem, currentItem.amount);
+        Remove(currentItem.ItemType, currentItem._SubItemEnum, currentItem);
+    }
+
+    public void SplitItem(InventoryItem currentItem, int newDropCount)
+    {
+        ItemDatabase.instance.InventoryItemToWorld(currentItem, newDropCount);
+        currentItem.amount -= newDropCount;
+        currentItem?.OnUpdateData();
+
+        AmmoManager.instance.RemoveAmmo(currentItem, newDropCount);
+    }
+
+    public AmmoType ammoTypeTesting;
+    public int totalAmmo;
+    [Button]
+    public void TotalAmmo()
+    {
+        if (bigData.TryGetValue((ItemType.Ammo, ammoTypeTesting), out var list))
+        {
+            foreach(var item in list)
+            {
+                totalAmmo += item.amount;
+            }
+        }
+    }
 }
 
-public enum HealingItemType
-{
-    None = 0,
-    Bandage = 5,
-    FirstAidKit = 10,
-    Medkit = 15,
-    EnergyDrink = 20,
-    Painkiller = 25
-}

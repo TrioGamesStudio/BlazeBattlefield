@@ -2,90 +2,141 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-public class ItemBackpackUI : ItemCollectUI
-{
-    public ItemBPData _ItemBPData;
-    public struct ItemBPData
-    {
-        public ItemType itemType;
-        public int quantity;
-        public int enumIndex;
-    }
-    public void SetItemBPData(ItemType itemType, int quantity, int enumIndex)
-    {
-        _ItemBPData.itemType = itemType;
-        _ItemBPData.quantity = quantity;
-        _ItemBPData.enumIndex = enumIndex;
-    }
-}
 public class BackpackUI : MonoBehaviour
 {
     public static BackpackUI instance;
-    protected UnityPool<ItemCollectUI> poolItemsUI;
+    protected UnityPool<ItemBackpackUI> poolItemsUI;
     [SerializeField] protected ItemBackpackUI itemCollectUIPrefab;
     [SerializeField] protected GameObject content;
-    [SerializeField] protected HealthItemData healthItemData;
+    [SerializeField] protected ItemConfigDatabase itemDefaultConfig;
     [SerializeField] protected BackpackButtonGroupUI buttonGroupUI;
     [SerializeField] protected DropAmountUI dropAmountUI;
     [SerializeField] protected int dropCount;
-    private void Awake()
+    private InventoryItem currentItem;
+
+    private Dictionary<ItemType, List<ItemBackpackUI>> _itemUIs = new();
+
+    public void Setup()
     {
+        instance = this;
         itemCollectUIPrefab.gameObject.SetActive(false);
-        poolItemsUI = new UnityPool<ItemCollectUI>(itemCollectUIPrefab,10, content.transform);
+        poolItemsUI = new UnityPool<ItemBackpackUI>(itemCollectUIPrefab, 10, content.transform);
+        StorageManager.OnAddItem += HandleItemAdded;
+        StorageManager.OnRemoveItem += HandleItemRemove;
+
+
+        HideButton();
+        buttonGroupUI.SetOnDropFull(DropAllItem);
+        buttonGroupUI.SetOndropItemAmount(ShowDropAmount);
+       
+        dropAmountUI.Hide();
+        dropAmountUI.SetAcceptDrop(OnAcceptDrop);
     }
 
-    public void UpdateHealthUI(Dictionary<HealingItemType,int> itemList)
-    {
-        foreach(var healthItem in itemList)
-        {
-            var itemConfig = healthItemData.GetItemDataConfig(healthItem.Key);
-            int maxQuantityOfStack = itemConfig.maxStack;
-            var itemBackpackUI = GetUIItem();
-            itemBackpackUI.SetItemCount(healthItem.Value);
-            itemBackpackUI.SetItemName(itemConfig.displayName);
 
-            itemBackpackUI.SetItemBPData(itemConfig.ItemType, healthItem.Value, (int)healthItem.Key);
-            itemBackpackUI.SetOnClickEvent(() =>
-            {
-                SetCurrentItem(itemBackpackUI);
-                buttonGroupUI.ShowByIndex(itemBackpackUI.transform.GetSiblingIndex());
-            });
-        }
-    }
-    ItemBackpackUI.ItemBPData ItemBPData;
-    public void SetCurrentItem(ItemBackpackUI itemBackpackUI)
+    private void OnDestroy()
     {
-        ItemBPData = itemBackpackUI._ItemBPData;
-    }
-    private void OnDrop(ItemType itemType, int enumIndex, int quantity)
-    {
-        if(itemType == ItemType.Health)
-        {
-            StorageManager.instance.UpdateHealth((HealingItemType)enumIndex, quantity, false);
-        }
-        else if(itemType == ItemType.Ammo)
-        {
-            StorageManager.instance.UpdateAmmo((AmmoType)enumIndex, quantity, false);
-        }
-    }
-    private ItemBackpackUI GetUIItem()
-    {
-        var itemBackpackUI = poolItemsUI.Get();
-        return itemBackpackUI as ItemBackpackUI;
-    }
-    public HealingItemType HealingItemType;
+        StorageManager.OnAddItem -= HandleItemAdded;
+        StorageManager.OnRemoveItem -= HandleItemRemove;
 
-    [Button]
-    private void Test()
+        buttonGroupUI.SetOnDropFull(null);
+        buttonGroupUI.SetOndropItemAmount(null);
+
+        dropAmountUI.SetAcceptDrop(null);
+
+        
+    }
+
+
+    public void ShowDropAmount()
     {
-        var itemData = healthItemData.GetItemDataConfig(HealingItemType);
-        if(itemData == null)
+        dropAmountUI.Show();
+        dropAmountUI.SetupView(currentItem);
+    }
+
+    private void OnAcceptDrop(int newDropCount)
+    {
+        if (newDropCount == 0) return;
+
+        dropCount = newDropCount;
+        if(dropCount == currentItem.amount)
         {
-            Debug.Log("Item Data is null");
+            DropAllItem();
         }
         else
         {
-            Debug.Log("Item Data not null");
+            StorageManager.instance.SplitItem(currentItem, newDropCount);
         }
+        HideDropAmount();
+        HideButton();
+        Debug.Log("Drop With Count:" + newDropCount);
     }
+
+    private void DropAllItem()
+    {
+        HideButton();
+        HideDropAmount();
+        StorageManager.instance.DropAll(currentItem);
+    }
+
+
+    private void HandleItemAdded(InventoryItem item)
+    {
+        if(item == null)
+        {
+            Debug.Log("This item is null", gameObject);
+            return;
+        }
+
+        var ui = poolItemsUI.Get();
+        ui.Initialize(item);
+
+        if (!_itemUIs.ContainsKey(item.ItemType))
+            _itemUIs[item.ItemType] = new List<ItemBackpackUI>();
+       
+        _itemUIs[item.ItemType].Add(ui);
+        ui.gameObject.SetActive(true);
+    }
+
+    private void HandleItemRemove(InventoryItem item)
+    {
+        if (_itemUIs.TryGetValue(item.ItemType, out var uis) && uis.Count > 0)
+        {
+            foreach (var itemUI in uis)
+            {
+                if (itemUI.AreSameItem(item))
+                {
+                    var key = item.ItemType;
+                    uis.Remove(itemUI);
+                    itemUI.OnRelease();
+                    break;
+                }
+            }
+        }
+
+    }
+
+
+
+    public void HideDropAmount()
+    {
+        dropAmountUI.gameObject.SetActive(false);
+    }
+
+    public void ShowButton(int transformIndex)
+    {
+        buttonGroupUI.gameObject.SetActive(true);
+        buttonGroupUI.transform.SetSiblingIndex(transformIndex);
+    }
+
+    public void HideButton()
+    {
+        buttonGroupUI.gameObject.SetActive(false);
+    }
+
+    public void SetCurrentItem(InventoryItem inventoryItem)
+    {
+        currentItem = inventoryItem;
+    }
+
 }
