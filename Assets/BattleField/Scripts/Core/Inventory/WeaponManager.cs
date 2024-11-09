@@ -55,7 +55,6 @@ public class WeaponManager : MonoBehaviour
     {
         // truong hop 1
         var newWeaponSlotIndex = (int)newConfig.slotWeaponIndex;
-        var currentWeapon = weaponSlotHandlers[currentWeaponIndex];
         
         if (IsAllSlotEmpty())
         {
@@ -66,8 +65,12 @@ public class WeaponManager : MonoBehaviour
             slotOfNewWeapon.Show();
             currentWeaponIndex = newWeaponSlotIndex;
             ShowWeapon(true);
+            return;
         }
-        else if (currentWeapon.Config.slotWeaponIndex == newConfig.slotWeaponIndex) 
+
+        var currentWeapon = weaponSlotHandlers[currentWeaponIndex];
+
+        if (currentWeapon.Config.slotWeaponIndex == newConfig.slotWeaponIndex) 
         {
             Debug.LogWarning("truong hop 2");
             // truong hop 2: Cung loai, phai bo weapon dang equip, va trang bi vu khi moi

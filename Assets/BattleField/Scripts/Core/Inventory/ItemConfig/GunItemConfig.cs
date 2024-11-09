@@ -9,7 +9,7 @@ public class GunItemConfig : ItemConfig<GunType>
     public int maxRounds;
     public AmmoItemConfig ammoUsingType;
     public SlotWeaponIndex slotWeaponIndex;
-    private List<WeaponSlotHandler> weaponListeners;
+    private List<WeaponSlotHandler> weaponListeners = new();
 
     public void RemoveNotifyTotalAmmoChange(WeaponSlotHandler weaponSlotHandler)
     {
