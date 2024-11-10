@@ -18,7 +18,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     private NetworkRunner networkRunner;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     public TextMeshProUGUI StatusText;
-    private const int MAX_PLAYER = 2;
+    private const int MAX_PLAYER = 4;
     string roomID;
     string teamID = "";
     string roomAutoMatch = "";
@@ -171,7 +171,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                         listPlayers.Add(player);
                         teams[roomAutoMatch] = listPlayers;
                     }
-                }              
+                }
             }
             else
             {
@@ -187,6 +187,9 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                     teams[players[player].RoomID.ToString()] = listPlayers;
                 }
             }
+
+            teamID = players[player].TeamID.ToString();
+            Debug.Log("==== Local team ID is " + teamID);
 
             if (players.Count == MAX_PLAYER)
             {
@@ -301,6 +304,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
                     }
                 }
 
+                //StartCoroutine(CheckTeamMate(player));
+
                 if (players.Count == MAX_PLAYER)
                 {
                     Debug.Log("=== Start battle.......");
@@ -322,15 +327,21 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 
     private IEnumerator CheckTeamMate(PlayerRef player)
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(5);
+        teamID = players[networkRunner.LocalPlayer].TeamID.ToString();
+        Debug.Log("==== Local team ID is " + teamID);
         if (players[player].TeamID.ToString() == teamID)
         {
-            Debug.Log("####DONG DOI VAO ROI NEEEEEEEEEE");
-            players[player].SetTeamMateTag();
+            Debug.Log("===DONG DOI VAO ROI NEEEEEEEEEE");
+            NetworkPlayer networkPlayer = players[player].GetComponent<NetworkPlayer>();
+            networkPlayer.SetNicknameUIColor(Color.blue); //Set enemy name plate UI color to red
+            //players[player].SetTeamMateTag();
         }
         else
         {
-            Debug.Log("####Local team id: " + teamID + "Player team id " + players[player].TeamID.ToString());
+            NetworkPlayer networkPlayer = players[player].GetComponent<NetworkPlayer>();
+            networkPlayer.SetNicknameUIColor(Color.red); //Set enemy name plate UI color to red
+            Debug.Log("===Local team id: " + teamID + "Player team id " + players[player].TeamID.ToString());
         }
     }
 

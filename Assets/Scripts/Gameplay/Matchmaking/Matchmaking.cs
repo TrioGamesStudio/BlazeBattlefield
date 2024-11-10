@@ -625,6 +625,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             if (playerObject != null)
             {
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
+                NetworkPlayer networkPlayer = players[player].GetComponent<NetworkPlayer>();
+                networkPlayer.SetNicknameUIColor(Color.blue); //Set teammate name plate UI color to blue
                 Debug.Log($"Remote player {player} added to players list");
                 Debug.Log("Players dictionanry" + players.Count);
                 //players[player].TurnOnTeamMemberPanel();
@@ -656,7 +658,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             {
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
                 NetworkPlayer networkPlayer = players[player].GetComponent<NetworkPlayer>();
-                networkPlayer.SetNicknameUIColor(Color.red);
+                networkPlayer.SetNicknameUIColor(Color.red); //Set enemy name plate UI color to red
                 matchSolo[player] = players[player].TeamID.ToString();
                 if (players.Count == MAX_PLAYER)
                 {

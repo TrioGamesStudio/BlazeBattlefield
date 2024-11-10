@@ -8,7 +8,7 @@ public class GameHandler : MonoBehaviour
 {
     public Dictionary<string, List<PlayerRoomController>> teamsOriginal = new();
     public Dictionary<string, List<PlayerRoomController>> teams = new();
-
+    string teamID;
     public void InitializeTeams()
     {
         PlayerRoomController[] players = FindObjectsByType<PlayerRoomController>(FindObjectsSortMode.None);
@@ -27,9 +27,11 @@ public class GameHandler : MonoBehaviour
                 listPlayers.Add(player);
                 teams[player.TeamID.ToString()] = listPlayers;
             }
+            if (player.isLocalPlayer)
+                teamID = player.TeamID.ToString();
         }
 
-        foreach (var player in players)
+        foreach (var player in players) 
         {
             if (teamsOriginal.ContainsKey(player.TeamID.ToString()))
             {
@@ -40,6 +42,16 @@ public class GameHandler : MonoBehaviour
                 List<PlayerRoomController> listPlayers = new();
                 listPlayers.Add(player);
                 teamsOriginal[player.TeamID.ToString()] = listPlayers;
+            }
+            if (player.TeamID == teamID)
+            {
+                NetworkPlayer networkPlayer = player.GetComponent<NetworkPlayer>();
+                networkPlayer.SetNicknameUIColor(Color.blue); //Set teamate name plate UI color to blue
+            }
+            else
+            {
+                NetworkPlayer networkPlayer = player.GetComponent<NetworkPlayer>();
+                networkPlayer.SetNicknameUIColor(Color.red); //Set enemy name plate UI color to red
             }
         }
         Debug.Log("===AFTER initialize");
