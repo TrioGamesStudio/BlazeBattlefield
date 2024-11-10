@@ -655,6 +655,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             if (playerObject != null)
             {
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
+                NetworkPlayer networkPlayer = players[player].GetComponent<NetworkPlayer>();
+                networkPlayer.SetNicknameUIColor(Color.red);
                 matchSolo[player] = players[player].TeamID.ToString();
                 if (players.Count == MAX_PLAYER)
                 {

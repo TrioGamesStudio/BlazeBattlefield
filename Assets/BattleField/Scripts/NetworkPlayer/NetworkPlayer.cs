@@ -191,6 +191,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         } else nickName_TM.color = Color.green;
     }
 
+    public void SetNicknameUIColor(Color color)
+    {
+        nickName_TM.color = color;
+    }
+
     //? phuong thuc de local player send data cua rieng no len stateAuthority
     [Rpc(RpcSources.StateAuthority, RpcTargets.StateAuthority)]
     public void RPC_SetNickName(string nickName, RpcInfo info = default) {
