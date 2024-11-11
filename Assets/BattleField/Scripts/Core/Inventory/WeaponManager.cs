@@ -91,6 +91,7 @@ public class WeaponManager : MonoBehaviour
             if (isTargetSlotEmpty)
             {
                 weaponSlotHandlers[newWeaponSlotIndex].AddNewWeapon(newConfig);
+                weaponSlotHandlers[newWeaponSlotIndex].Equip();
             }
             else
             {

@@ -13,9 +13,8 @@ public class WeaponSlotHandler: IWeaponSlotAction
     public Action OnUpdateNewGunAction;
 
     public int currentAmmo;
-    public int totalAmmo;
 
-    public List<BindingWeaponUI> UIList;
+    public List<BindingWeaponUI> UIList = new();
 
     public bool IsEmpty => Prefab == null && Config == null;
 
@@ -48,7 +47,18 @@ public class WeaponSlotHandler: IWeaponSlotAction
 
     public void OnTotalAmmoChange(int totalAmmo)
     {
-        this.totalAmmo = totalAmmo;
+        foreach(var item in UIList)
+        {
+            item.UpdateTotalAmmo(totalAmmo);
+        }
+    }
+
+    public void OnCurrentAmmoChange()
+    {
+        foreach (var item in UIList)
+        {
+            item.UpdateCurrentAmmo(currentAmmo);
+        }
     }
 
     public void Show()
