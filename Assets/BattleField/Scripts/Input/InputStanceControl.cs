@@ -9,7 +9,7 @@ public class InputStanceControl : InputReader, PlayerInputAction.IStanceControlA
     public static Action CrouchAction;
     public static Action StandAction;
 
-    private void OnEnable()
+    public override void SetCallbacks()
     {
         Instance.StanceControl.SetCallbacks(this);
     }
@@ -28,4 +28,5 @@ public class InputStanceControl : InputReader, PlayerInputAction.IStanceControlA
     {
         StandAction?.Invoke();
     }
+
 }

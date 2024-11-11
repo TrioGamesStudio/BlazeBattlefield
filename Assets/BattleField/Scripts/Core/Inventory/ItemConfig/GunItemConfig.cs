@@ -10,7 +10,7 @@ public class GunItemConfig : ItemConfig<GunType>
     public AmmoItemConfig ammoUsingType;
     public SlotWeaponIndex slotWeaponIndex;
     private List<WeaponSlotHandler> weaponListeners = new();
-
+    private bool isInitialize = false;
     public void RemoveNotifyTotalAmmoChange(WeaponSlotHandler weaponSlotHandler)
     {
         if (!weaponListeners.Contains(weaponSlotHandler)) return;

@@ -20,8 +20,8 @@ public class ItemBackpackUI : BaseUIItem, IPoolCallback<ItemBackpackUI>
     {
         if (!isShow)
         {
-            BackpackUI.instance.ShowButton(transform.GetSiblingIndex() + 1);
             BackpackUI.instance.SetCurrentItem(currentItem);
+            BackpackUI.instance.ShowButton(transform.GetSiblingIndex() + 1);
             isShow = true;
         }
         else

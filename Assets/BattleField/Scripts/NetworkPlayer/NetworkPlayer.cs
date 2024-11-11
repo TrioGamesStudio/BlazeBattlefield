@@ -135,7 +135,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
                 //? disable mouse de play
                 Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                Cursor.visible = true;
             }
 
             // lay gia tri Gamemanager.playerNickName gan vao
