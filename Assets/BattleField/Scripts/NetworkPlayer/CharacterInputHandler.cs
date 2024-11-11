@@ -30,8 +30,13 @@ public class CharacterInputHandler : MonoBehaviour
 
         playerInputActions.PlayerMovement.SwitchCam.started += _ => isThirdCam = !isThirdCam;
         
+        InputPlayerMovement.LookAction += ChangeLookVector;
     }
-
+    private void ChangeLookVector(Vector2 lookVector)
+    {
+        Debug.Log("Look vector");
+        aimDir = lookVector;
+    }
     private void OnEnable() {
         playerInputActions.PlayerMovement.Moving.Enable();
         playerInputActions.PlayerMovement.Jumping.Enable();
@@ -57,11 +62,12 @@ public class CharacterInputHandler : MonoBehaviour
         move = playerInputActions.PlayerMovement.Moving.ReadValue<Vector2>();
         move.Normalize();
 
-        aimDir = playerInputActions.PlayerMovement.Look.ReadValue<Vector2>();
+        //aimDir = playerInputActions.PlayerMovement.Look.ReadValue<Vector2>();
 
         if(isThirdCam && isFired) {
             isThirdCam = false;
         }
+        //aimDir = playerInputActions.PlayerMovement.Look.ReadValue<Vector2>();
     }
 
 

@@ -4467,7 +4467,6 @@ MonoBehaviour:
   dropButton: {fileID: 7611156099236793588}
   dropAllButton: {fileID: 7798283957791479807}
   useButton: {fileID: 3224664000803147845}
-  equipButton: {fileID: 144544962344759907}
 --- !u!1 &5349414709343568860
 GameObject:
   m_ObjectHideFlags: 0
@@ -4754,7 +4753,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.019607844}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.2901961}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4778,7 +4777,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5634480682556247656}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9d677f1681015749b15c436eec6d880, type: 3}
   m_Name: 
@@ -4818,7 +4817,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a88c7cb0d985d44d899cbca932d1b82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates: []
+  isLooking: 0
+  touchID: -1
+  delta: {x: 0, y: 0}
 --- !u!1 &5775688623007250422
 GameObject:
   m_ObjectHideFlags: 0

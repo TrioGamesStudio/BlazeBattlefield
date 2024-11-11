@@ -40,6 +40,7 @@ public class WeaponManager : MonoBehaviour
         InputCombatControl.SwapGun2 += () => OnActiveWeapon(1);
         InputCombatControl.SwapGun3 += () => OnActiveWeapon(2);
         InputCombatControl.SwapMeele += () => OnActiveWeapon(3);
+        InputCombatControl.Reload += Reload;
 
     }
 
@@ -49,6 +50,15 @@ public class WeaponManager : MonoBehaviour
         InputCombatControl.SwapGun2 -= () => OnActiveWeapon(1);
         InputCombatControl.SwapGun3 -= () => OnActiveWeapon(2);
         InputCombatControl.SwapMeele -= () => OnActiveWeapon(3);
+        InputCombatControl.Reload -= Reload;
+
+    }
+
+    public void Reload()
+    {
+        if (currentWeaponIndex == -1) return;
+        weaponSlotHandlers[currentWeaponIndex].TryToReload();
+        Debug.Log("Reload ammo");
     }
 
     public void AddNewGun(GunItemConfig newConfig)
@@ -91,6 +101,7 @@ public class WeaponManager : MonoBehaviour
             if (isTargetSlotEmpty)
             {
                 weaponSlotHandlers[newWeaponSlotIndex].AddNewWeapon(newConfig);
+                weaponSlotHandlers[newWeaponSlotIndex].Equip();
             }
             else
             {

@@ -13,9 +13,8 @@ public class WeaponSlotHandler: IWeaponSlotAction
     public Action OnUpdateNewGunAction;
 
     public int currentAmmo;
-    public int totalAmmo;
 
-    public List<BindingWeaponUI> UIList;
+    public List<BindingWeaponUI> UIList = new();
 
     public bool IsEmpty => Prefab == null && Config == null;
 
@@ -48,7 +47,18 @@ public class WeaponSlotHandler: IWeaponSlotAction
 
     public void OnTotalAmmoChange(int totalAmmo)
     {
-        this.totalAmmo = totalAmmo;
+        foreach(var item in UIList)
+        {
+            item.UpdateTotalAmmo(totalAmmo);
+        }
+    }
+
+    public void OnCurrentAmmoChange()
+    {
+        foreach (var item in UIList)
+        {
+            item.UpdateCurrentAmmo(currentAmmo);
+        }
     }
 
     public void Show()
@@ -75,9 +85,43 @@ public class WeaponSlotHandler: IWeaponSlotAction
 
     public void DeleteAndSpawnWorld()
     {
+        TurnAmmoBackWhenDrop();
         ItemDatabase.instance.GunConfigToWorld(Config, 1);
         AddNewWeapon(null);
         DropWeaponAction?.Invoke();
+        currentAmmo = 0;
     }
 
+    private void TurnAmmoBackWhenDrop()
+    {
+        if(currentAmmo > 0)
+        {
+            Config.ammoUsingType.ChangeTotalAmmo(currentAmmo);
+        }
+    }
+
+    public bool TryToReload()
+    {
+        if (IsEmpty || isShowInHand == false) return false;
+
+
+        if(Config.ammoUsingType.TotalAmmo > 0)
+        {
+            int maxStack = Config.ammoUsingType.maxStack;
+            int ammoNeed = maxStack - currentAmmo;
+            if (Config.ammoUsingType.TotalAmmo >= ammoNeed)
+            {
+                Config.ammoUsingType.ChangeTotalAmmo(-ammoNeed);
+                currentAmmo = maxStack;
+            }
+            else
+            {
+                currentAmmo += Config.ammoUsingType.TotalAmmo;
+                Config.ammoUsingType.ChangeTotalAmmo(-currentAmmo);
+            }
+            OnCurrentAmmoChange();
+            return true;
+        }
+        return false;
+    }
 }
