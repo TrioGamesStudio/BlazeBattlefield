@@ -133,6 +133,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     Config: {fileID: 0}
     currentAmmo: 0
+    UIList: []
   weaponIndex: 0
   currentGunAmmoText: {fileID: 2284850243575489136}
   totalGunAmmoText: {fileID: 7583355344528701256}
@@ -229,13 +230,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 17
-  m_fontSizeBase: 17
+  m_fontSize: 20.65
+  m_fontSizeBase: 20.65
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
@@ -305,8 +306,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 33, y: -15}
-  m_SizeDelta: {x: 73.1763, y: 73.1763}
+  m_AnchoredPosition: {x: 45.4, y: -15}
+  m_SizeDelta: {x: 86.0279, y: 86.0279}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2386924642364849360
 CanvasRenderer:
@@ -438,13 +439,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 17
-  m_fontSizeBase: 17
+  m_fontSize: 20.65
+  m_fontSizeBase: 20.65
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 4
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
@@ -602,10 +603,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3660228170252219775}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -31.057503, y: 27.099998}
-  m_SizeDelta: {x: -76.255104, y: -54.4151}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: -31.057495, y: -13.001823}
+  m_SizeDelta: {x: 143.7449, y: 25.788498}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8831717936860929867
 CanvasRenderer:

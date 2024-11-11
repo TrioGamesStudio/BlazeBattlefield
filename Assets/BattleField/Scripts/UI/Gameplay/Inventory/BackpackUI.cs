@@ -28,7 +28,7 @@ public class BackpackUI : MonoBehaviour
         HideButton();
         buttonGroupUI.SetOnDropFull(DropAllItem);
         buttonGroupUI.SetOndropItemAmount(ShowDropAmount);
-       
+        buttonGroupUI.SetOnUseItem(UseHealthItem);
         dropAmountUI.Hide();
         dropAmountUI.SetAcceptDrop(OnAcceptDrop);
     }
@@ -47,7 +47,16 @@ public class BackpackUI : MonoBehaviour
         
     }
 
-
+    private void UseHealthItem()
+    {
+        if (currentItem == null) return;
+        currentItem.amount -= 1;
+        currentItem?.OnUpdateData();
+        if (currentItem.amount == 0)
+        {
+            StorageManager.instance.Remove(currentItem.ItemType, currentItem._SubItemEnum, currentItem);
+        }
+    }
     public void ShowDropAmount()
     {
         dropAmountUI.Show();
@@ -126,6 +135,7 @@ public class BackpackUI : MonoBehaviour
     public void ShowButton(int transformIndex)
     {
         buttonGroupUI.gameObject.SetActive(true);
+        buttonGroupUI.SetupView(currentItem);
         buttonGroupUI.transform.SetSiblingIndex(transformIndex);
     }
 

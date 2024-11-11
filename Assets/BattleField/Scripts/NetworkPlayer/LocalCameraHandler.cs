@@ -1,3 +1,4 @@
+using Cinemachine;
 using Fusion;
 using UnityEngine;
 
@@ -32,6 +33,7 @@ public class LocalCameraHandler : NetworkBehaviour
 
     //others
     [SerializeField] CharacterInputHandler characterInputHandler;
+    CinemachineVirtualCamera cinemachineVirtualCamera;
     private void Awake() {
         characterInputHandler = GetComponentInParent<CharacterInputHandler>();
 
@@ -55,8 +57,42 @@ public class LocalCameraHandler : NetworkBehaviour
         //? xet cho local cam
         if(cameraAnchorPoint == null) return;
         if(!localCamera.enabled) return;
-        //if (!Object.HasStateAuthority) return;
-        Utils.SetRenderLayerInChildren(NetworkPlayer.Local.playerModel, LayerMask.NameToLayer("LocalPlayerModel"));
+
+        if(cinemachineVirtualCamera == null) 
+        {
+            cinemachineVirtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
+        }
+        else {
+            if(characterInputHandler.IsThirdCam)
+            {
+                if(!cinemachineVirtualCamera.enabled) 
+                {
+                    cinemachineVirtualCamera.Follow = NetworkPlayer.Local.playerModel;
+                    cinemachineVirtualCamera.LookAt = NetworkPlayer.Local.playerModel;
+                    cinemachineVirtualCamera.enabled = true;
+
+                    // set playersModel.transform - chuyen sang default Layer - de 3rdPersonCam render thay
+                    Utils.SetRenderLayerInChildren(NetworkPlayer.Local.playerModel, LayerMask.NameToLayer("Default"));
+                }
+                cinemachineVirtualCamera.transform.position = cameraAnchorPoint.position; // localCam di theo | ko phai nam ben trong
+                _cameraRotationX += viewInput.y * Time.deltaTime * networkCharacterController.viewRotationSpeed;
+                _cameraRotationX = Mathf.Clamp(_cameraRotationX, -90, 90);
+                _cameraRotationY += viewInput.x * Time.deltaTime * networkCharacterController.rotationSpeed;
+
+                cinemachineVirtualCamera.transform.rotation = Quaternion.Euler(_cameraRotationX, _cameraRotationY, 0);
+                return;
+            }
+            else 
+            {
+                if(cinemachineVirtualCamera.enabled) {
+                    cinemachineVirtualCamera.enabled = false;
+
+                    //? Set Playerodel - LocalPlayerModel -> de 1stPersomCam render thay
+                    Utils.SetRenderLayerInChildren(NetworkPlayer.Local.playerModel, LayerMask.NameToLayer("LocalPlayerModel"));
+
+                }
+            }
+        }
 
         localCamera.transform.position = cameraAnchorPoint.position; // localCam di theo | ko phai nam ben trong
 

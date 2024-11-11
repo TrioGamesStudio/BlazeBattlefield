@@ -135,7 +135,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
                 //? disable mouse de play
                 Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                Cursor.visible = true;
             }
 
             // lay gia tri Gamemanager.playerNickName gan vao
@@ -189,6 +189,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         if(isEnemy_Network) {
             nickName_TM.color = Color.red;
         } else nickName_TM.color = Color.green;
+    }
+
+    public void SetNicknameUIColor(Color color)
+    {
+        nickName_TM.color = color;
     }
 
     //? phuong thuc de local player send data cua rieng no len stateAuthority
