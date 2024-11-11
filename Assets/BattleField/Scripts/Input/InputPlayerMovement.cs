@@ -8,12 +8,10 @@ public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovemen
     public static Action<Vector2> MoveAction;
     public static Action<Vector2> LookAction;
     public static Action JumpAction;
-    private void OnEnable()
+    public override void SetCallbacks()
     {
         Instance.PlayerMovement.SetCallbacks(this);
     }
- 
-
     public void OnMoving(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
@@ -45,7 +43,8 @@ public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovemen
     {
         JumpAction?.Invoke();
     }
-    
+
+   
 }
 
 public abstract class InputReader : ScriptableObject
@@ -62,4 +61,6 @@ public abstract class InputReader : ScriptableObject
             return instance;
         }
     }
+    public abstract void SetCallbacks();
+
 }

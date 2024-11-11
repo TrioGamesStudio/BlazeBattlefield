@@ -17,10 +17,13 @@ public class InputCombatControl : InputReader , PlayerInputAction.ICombatActions
     public static Action GetInCar;
     public static Action ChangeFireMode;
     public static Action ShowInventory;
-    private void OnEnable()
+    public static Action Reload;
+  
+    public override void SetCallbacks()
     {
         Instance.Combat.SetCallbacks(this);
     }
+
     public void OnSwapGun1(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -119,4 +122,13 @@ public class InputCombatControl : InputReader , PlayerInputAction.ICombatActions
             ShowInventory?.Invoke();
         }
     }
+
+    public void OnReload(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Reload?.Invoke();
+        }
+    }
+
 }

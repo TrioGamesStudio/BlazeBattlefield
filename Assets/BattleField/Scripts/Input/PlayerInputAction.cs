@@ -852,6 +852,15 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""580b1c58-29ec-4aa3-99ed-e99c2164c86d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -997,6 +1006,17 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""action"": ""Show Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5007feda-9f17-4979-b62a-f4d99c2a4016"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1100,6 +1120,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Combat_GetInCar = m_Combat.FindAction("Get In Car", throwIfNotFound: true);
         m_Combat_SwapFireMode = m_Combat.FindAction("Swap Fire Mode", throwIfNotFound: true);
         m_Combat_ShowInventory = m_Combat.FindAction("Show Inventory", throwIfNotFound: true);
+        m_Combat_Reload = m_Combat.FindAction("Reload", throwIfNotFound: true);
     }
 
     ~@PlayerInputAction()
@@ -1423,6 +1444,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Combat_GetInCar;
     private readonly InputAction m_Combat_SwapFireMode;
     private readonly InputAction m_Combat_ShowInventory;
+    private readonly InputAction m_Combat_Reload;
     public struct CombatActions
     {
         private @PlayerInputAction m_Wrapper;
@@ -1439,6 +1461,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         public InputAction @GetInCar => m_Wrapper.m_Combat_GetInCar;
         public InputAction @SwapFireMode => m_Wrapper.m_Combat_SwapFireMode;
         public InputAction @ShowInventory => m_Wrapper.m_Combat_ShowInventory;
+        public InputAction @Reload => m_Wrapper.m_Combat_Reload;
         public InputActionMap Get() { return m_Wrapper.m_Combat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1484,6 +1507,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @ShowInventory.started += instance.OnShowInventory;
             @ShowInventory.performed += instance.OnShowInventory;
             @ShowInventory.canceled += instance.OnShowInventory;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
         }
 
         private void UnregisterCallbacks(ICombatActions instance)
@@ -1524,6 +1550,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @ShowInventory.started -= instance.OnShowInventory;
             @ShowInventory.performed -= instance.OnShowInventory;
             @ShowInventory.canceled -= instance.OnShowInventory;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
         }
 
         public void RemoveCallbacks(ICombatActions instance)
@@ -1625,5 +1654,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnGetInCar(InputAction.CallbackContext context);
         void OnSwapFireMode(InputAction.CallbackContext context);
         void OnShowInventory(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
 }
