@@ -1,6 +1,6 @@
 ﻿using NaughtyAttributes;
 using System;
-using UnityEditor.VersionControl;
+//using UnityEditor.VersionControl;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,16 +15,16 @@ public class ItemConfig<SubType> : ScriptableObject where SubType : Enum
     [Button]
     private void RenameByDisplayName()
     {
-        if (displayName == String.Empty)
-        {
-            name = "Item_DisplayNameIsEmpty";
-        }
-        else
-        {
-            string assetPath = AssetDatabase.GetAssetPath(GetInstanceID());
-            AssetDatabase.RenameAsset(assetPath, displayName);
-            AssetDatabase.SaveAssets();
-        }
+        //if (displayName == String.Empty)
+        //{
+        //    name = "Item_DisplayNameIsEmpty";
+        //}
+        //else
+        //{
+        //    string assetPath = AssetDatabase.GetAssetPath(GetInstanceID());
+        //    AssetDatabase.RenameAsset(assetPath, displayName);
+        //    AssetDatabase.SaveAssets();
+        //}
     }
 
     public virtual void ShowDebug()
