@@ -1,92 +1,97 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-
-public class TouchRotationView : EventTrigger
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
+public class TouchRotationView : MonoBehaviour
 {
-    public override void OnBeginDrag(PointerEventData data)
+    private RectTransform rectTransform;
+    
+    private void Awake()
     {
-        Debug.Log("OnBeginDrag called.");
-    }
+        EnhancedTouchSupport.Enable();
+        rectTransform = GetComponent<RectTransform>();
 
-    public override void OnCancel(BaseEventData data)
-    {
-        Debug.Log("OnCancel called.");
     }
-
-    public override void OnDeselect(BaseEventData data)
+    private void Update()
     {
-        Debug.Log("OnDeselect called.");
+        var activeTouches = Touch.activeTouches;
+        for (var i = 0; i < activeTouches.Count; ++i)
+            Debug.Log("Active touch: " + activeTouches[i]);
+
+        if(activeTouches.Count > 0)
+        {
+            foreach(var touch in activeTouches)
+            {
+                switch (touch.phase)
+                {
+                    case UnityEngine.InputSystem.TouchPhase.None:
+                        break;
+                    case UnityEngine.InputSystem.TouchPhase.Began:
+                        Check(touch);
+                        break;
+                    case UnityEngine.InputSystem.TouchPhase.Moved:
+                        Move(touch);
+                        break;
+                    case UnityEngine.InputSystem.TouchPhase.Ended:
+                        End(touch);
+                        break;
+                    case UnityEngine.InputSystem.TouchPhase.Canceled:
+                        break;
+                    case UnityEngine.InputSystem.TouchPhase.Stationary:
+                        Static(touch);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
-
-    public override void OnDrag(PointerEventData data)
+    public bool isLooking;
+    public int touchID;
+    private void Check(Touch touch)
     {
-        Debug.Log("OnDrag called.");
+        if (isLooking == true) return;
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform,
+            touch.screenPosition,
+            null,
+            out localPoint
+        );
+        if (rectTransform.rect.Contains(localPoint))
+        {
+            Debug.Log("Touched inside image!");
+            isLooking = true;
+            touchID = touch.touchId;
+
+        }
     }
-
-    public override void OnDrop(PointerEventData data)
+    public Vector2 delta;
+    private void Move(Touch touch)
     {
-        Debug.Log("OnDrop called.");
+        if(isLooking && touch.touchId == touchID)
+        {
+            delta = touch.delta.normalized;
+            InputPlayerMovement.LookAction?.Invoke(delta);
+
+        }
     }
-
-    public override void OnEndDrag(PointerEventData data)
+    private void End(Touch touch)
     {
-        Debug.Log("OnEndDrag called.");
+        if (isLooking && touch.touchId == touchID)
+        {
+            delta = Vector2.zero;
+            isLooking = false;
+            touchID = -1;
+            InputPlayerMovement.LookAction?.Invoke(delta);
+        }
     }
-
-    public override void OnInitializePotentialDrag(PointerEventData data)
+    private void Static(Touch touch)
     {
-        Debug.Log("OnInitializePotentialDrag called.");
-    }
+        if (isLooking && touch.touchId == touchID)
+        {
+            delta = Vector2.zero;
+            InputPlayerMovement.LookAction?.Invoke(delta);
 
-    public override void OnMove(AxisEventData data)
-    {
-        Debug.Log("OnMove called.");
-    }
-
-    public override void OnPointerClick(PointerEventData data)
-    {
-        Debug.Log("OnPointerClick called.");
-    }
-
-    public override void OnPointerDown(PointerEventData data)
-    {
-        Debug.Log("OnPointerDown called.");
-    }
-
-    public override void OnPointerEnter(PointerEventData data)
-    {
-        Debug.Log("OnPointerEnter called.");
-    }
-
-    public override void OnPointerExit(PointerEventData data)
-    {
-        Debug.Log("OnPointerExit called.");
-    }
-
-    public override void OnPointerUp(PointerEventData data)
-    {
-        Debug.Log("OnPointerUp called.");
-    }
-
-    public override void OnScroll(PointerEventData data)
-    {
-        Debug.Log("OnScroll called.");
-    }
-
-    public override void OnSelect(BaseEventData data)
-    {
-        Debug.Log("OnSelect called.");
-    }
-
-    public override void OnSubmit(BaseEventData data)
-    {
-        Debug.Log("OnSubmit called.");
-    }
-
-    public override void OnUpdateSelected(BaseEventData data)
-    {
-        Debug.Log("OnUpdateSelected called.");
+        }
     }
 }
