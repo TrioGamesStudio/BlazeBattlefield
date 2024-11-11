@@ -9,7 +9,7 @@ public class WeaponManager : MonoBehaviour
     
     [SerializeField] private WeaponSlotHandler[] weaponSlotHandlers;
     [SerializeField] private int currentWeaponIndex;
-    
+    public int CurrentWeaponIndex { get => currentWeaponIndex; }
     public Animator playerAnimator;
     public ActiveWeapon activeWeapon;
     public WeaponSlotHandler[] WeaponSlotHandlers { get => weaponSlotHandlers; }

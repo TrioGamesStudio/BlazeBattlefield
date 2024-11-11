@@ -1,16 +1,23 @@
 ﻿using Fusion;
 using UnityEngine;
-public class TagObjectHandler : NetworkBehaviour, IAfterSpawned
+public class TagObjectHandler : NetworkBehaviour
 {
-    [Networked] public string ObjectTag { get; set; }
 
-    public void AfterSpawned()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void SetTag_RPC(string newTag, bool isLocal)
     {
-        if (string.IsNullOrEmpty(ObjectTag))
+        tag = newTag;
+        if (isLocal)
         {
-            ObjectTag = "Item";
+            //Utils.SetRenderLayerInChildren(transform, LayerMask.NameToLayer("Default"));
+            foreach (var trans in transform.GetComponentsInChildren<Transform>(true))
+            {
+                trans.gameObject.layer = LayerMask.NameToLayer("Default");
+            }
         }
-        tag = ObjectTag;
-        //Debug.Log("Tag assign is: " + ObjectTag);
+        else
+        {
+            Utils.SetRenderLayerInChildren(transform, LayerMask.NameToLayer("LocalPlayerModel"));
+        }
     }
 }
