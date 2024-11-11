@@ -11,8 +11,10 @@ public class CharacterInputHandler : MonoBehaviour
     public bool IsJumped {get => isJumped;}
     public bool IsFired{get => isFired;}
     public Vector2 AimDir {get => aimDir;}
+
     //others
-    
+    [SerializeField] bool isThirdCam = false;
+    public bool IsThirdCam{get => isThirdCam;}
 
     private void Awake() {
         playerInputActions = new PlayerInputAction();
@@ -23,6 +25,11 @@ public class CharacterInputHandler : MonoBehaviour
         playerInputActions.Combat.Attack.started += _ => isFired = true;
         playerInputActions.Combat.Attack.canceled += _ => isFired = false;
 
+        /* playerInputActions.PlayerMovement.SwitchCam.started += _ => isSwitchCam = true;
+        playerInputActions.PlayerMovement.SwitchCam.canceled += _ => isSwitchCam = false; */
+
+        playerInputActions.PlayerMovement.SwitchCam.started += _ => isThirdCam = !isThirdCam;
+        
     }
 
     private void OnEnable() {
@@ -32,6 +39,7 @@ public class CharacterInputHandler : MonoBehaviour
 
         playerInputActions.PlayerMovement.Look.Enable();
 
+        playerInputActions.PlayerMovement.SwitchCam.Enable();
     }
 
     private void OnDisable() {
@@ -40,6 +48,9 @@ public class CharacterInputHandler : MonoBehaviour
         playerInputActions.Combat.Attack.Disable();
 
         playerInputActions.PlayerMovement.Look.Disable();
+
+        playerInputActions.PlayerMovement.SwitchCam.Disable();
+
     }
 
     private void Update() {
@@ -47,6 +58,10 @@ public class CharacterInputHandler : MonoBehaviour
         move.Normalize();
 
         aimDir = playerInputActions.PlayerMovement.Look.ReadValue<Vector2>();
+
+        if(isThirdCam && isFired) {
+            isThirdCam = false;
+        }
     }
 
 

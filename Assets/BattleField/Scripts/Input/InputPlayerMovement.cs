@@ -8,6 +8,9 @@ public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovemen
     public static Action<Vector2> MoveAction;
     public static Action<Vector2> LookAction;
     public static Action JumpAction;
+    public static Action SwitchCamAction;
+
+
     private void OnEnable()
     {
         Instance.PlayerMovement.SetCallbacks(this);
@@ -45,6 +48,12 @@ public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovemen
     {
         JumpAction?.Invoke();
     }
+
+    public void OnSwitchCam(InputAction.CallbackContext context) {
+        SwitchCamAction?.Invoke();
+    }
+
+
     
 }
 
