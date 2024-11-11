@@ -4,7 +4,9 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 public class TouchRotationView : MonoBehaviour
 {
     private RectTransform rectTransform;
-    
+    [SerializeField] private bool isLooking;
+    [SerializeField] private int touchID;
+    [SerializeField] private Vector2 delta;
     private void Awake()
     {
         EnhancedTouchSupport.Enable();
@@ -45,8 +47,8 @@ public class TouchRotationView : MonoBehaviour
             }
         }
     }
-    public bool isLooking;
-    public int touchID;
+  
+
     private void Check(Touch touch)
     {
         if (isLooking == true) return;
@@ -65,7 +67,6 @@ public class TouchRotationView : MonoBehaviour
 
         }
     }
-    public Vector2 delta;
     private void Move(Touch touch)
     {
         if(isLooking && touch.touchId == touchID)

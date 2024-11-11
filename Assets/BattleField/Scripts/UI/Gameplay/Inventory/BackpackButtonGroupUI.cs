@@ -8,9 +8,9 @@ public class BackpackButtonGroupUI : MonoBehaviour
     [SerializeField] private Button dropButton;
     [SerializeField] private Button dropAllButton;
     [SerializeField] private Button useButton;
-    [SerializeField] private Button equipButton;
     private event Action OnDropFullItem;
     private event Action OnShowDropButton;
+    private event Action OnUseItem;
     private void Awake()
     {
         dropButton.onClick.AddListener(Drop);
@@ -22,7 +22,19 @@ public class BackpackButtonGroupUI : MonoBehaviour
         dropButton.onClick.RemoveListener(Drop);
         dropAllButton.onClick.RemoveListener(DropAll);
     }
+    public void SetOnDropFull(Action dropAllItem)
+    {
+        OnDropFullItem = dropAllItem;
+    }
 
+    public void SetOndropItemAmount(Action showDropAmount)
+    {
+        OnShowDropButton = showDropAmount;
+    }
+    public void SetOnUseItem(Action useItem)
+    {
+        OnUseItem = useItem;
+    }
     private void Drop()
     {
         OnShowDropButton?.Invoke();
@@ -32,22 +44,30 @@ public class BackpackButtonGroupUI : MonoBehaviour
     {
         OnDropFullItem?.Invoke();
     }
+    
+    private void Use()
+    {
+        OnUseItem?.Invoke();
+    }
 
     public void RemoveAllRegister()
     {
         dropButton.onClick.RemoveAllListeners();
         dropAllButton.onClick.RemoveAllListeners();
         useButton.onClick.RemoveAllListeners();
-        equipButton.onClick.RemoveAllListeners();
     }
 
-    public void SetOnDropFull(Action dropAllItem)
-    {
-        OnDropFullItem = dropAllItem;
-    }
+    
 
-    public void SetOndropItemAmount(Action showDropAmount)
+    public void SetupView(InventoryItem currentItem)
     {
-        OnShowDropButton = showDropAmount;
+        if(currentItem.ItemType == ItemType.Health)
+        {
+            useButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            useButton.gameObject.SetActive(false);
+        }
     }
 }
