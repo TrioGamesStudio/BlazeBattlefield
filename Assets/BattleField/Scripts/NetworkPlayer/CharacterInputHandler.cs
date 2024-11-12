@@ -39,6 +39,7 @@ public class CharacterInputHandler : MonoBehaviour
     {
         isThirdCam = !isThirdCam;
         ActiveWeapon.SetActiveLocalWeapon(!isThirdCam);
+
     }
 
     private void ChangeLookVector(Vector2 lookVector)
@@ -73,11 +74,10 @@ public class CharacterInputHandler : MonoBehaviour
 
         //aimDir = playerInputActions.PlayerMovement.Look.ReadValue<Vector2>();
 
-        if(isThirdCam && isFired) {
+        /* if(isThirdCam && isFired) {
             isThirdCam = false;
             ActiveWeapon.SetActiveLocalWeapon(true);
-        }
-        //aimDir = playerInputActions.PlayerMovement.Look.ReadValue<Vector2>();
+        } */
     }
 
 

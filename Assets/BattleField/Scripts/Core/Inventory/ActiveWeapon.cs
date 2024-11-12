@@ -12,6 +12,8 @@ public partial class ActiveWeapon : NetworkBehaviour
     private WeaponHolder[] weaponHolders;
 
     [Networked, Capacity(4)] NetworkDictionary<byte, bool> activeWeaponState => default;
+    [SerializeField] CharacterInputHandler characterInputHandler;
+    [SerializeField] Transform gunLocalHolder;
     public void Init()
     {
         //WeaponSlotHandlers = WeaponManager.instance.WeaponSlotHandlers;
@@ -27,6 +29,7 @@ public partial class ActiveWeapon : NetworkBehaviour
             weaponHolder.SetWeaponSlotHandler(WeaponManager.instance.WeaponSlotHandlers[i]);
             weaponHolder.index = i;
             weaponHolder.activeWeapon = this;
+
         }
     }
 
@@ -42,6 +45,7 @@ public partial class ActiveWeapon : NetworkBehaviour
         RPC_SetParentWeapon(networkObject, isLocal, index);
         return networkObject;
     }
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void ShowWeapon_RPC(int activeIndex)
     {
@@ -73,11 +77,25 @@ public partial class ActiveWeapon : NetworkBehaviour
         weapon.GetComponent<NetworkTransform>().Teleport(isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position);
         //weapon.transform.SetParent(parent.transform);
         //Debug.Log($"Weapon name {weapon.name}");
+
     }
 
     public void SetActiveLocalWeapon(bool isShow)
     {
-        if (WeaponManager.instance.CurrentWeaponIndex == -1) return;
-        weaponHoldersLocal[WeaponManager.instance.CurrentWeaponIndex].gameObject.SetActive(isShow);
+        // if (WeaponManager.instance.CurrentWeaponIndex == -1) return;
+        // weaponHoldersLocal[WeaponManager.instance.CurrentWeaponIndex].gameObject.SetActive(isShow);
+
+        gunLocalHolder.gameObject.SetActive(isShow);
+        SetRenderForLocalAndRomoteBody();
+    }
+
+    public void SetRenderForLocalAndRomoteBody() {
+        if(characterInputHandler.IsThirdCam) {
+            Utils.SetRenderLayerInChildren(NetworkPlayer.Local.playerModel, LayerMask.NameToLayer("Default"));
+        }
+        else {
+            Utils.SetRenderLayerInChildren(NetworkPlayer.Local.playerModel, LayerMask.NameToLayer("LocalPlayerModel"));
+
+        }
     }
 }

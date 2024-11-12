@@ -12,12 +12,12 @@ public class TagObjectHandler : NetworkBehaviour
             //Utils.SetRenderLayerInChildren(transform, LayerMask.NameToLayer("Default"));
             foreach (var trans in transform.GetComponentsInChildren<Transform>(true))
             {
-                trans.gameObject.layer = LayerMask.NameToLayer("Default");
+                //trans.gameObject.layer = LayerMask.NameToLayer("Default");
             }
         }
         else
         {
-            Utils.SetRenderLayerInChildren(transform, LayerMask.NameToLayer("LocalPlayerModel"));
+            //Utils.SetRenderLayerInChildren(transform, LayerMask.NameToLayer("LocalPlayerModel"));
         }
     }
 }
