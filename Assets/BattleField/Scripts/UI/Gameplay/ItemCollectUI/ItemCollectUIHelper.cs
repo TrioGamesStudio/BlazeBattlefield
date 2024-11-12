@@ -7,7 +7,6 @@ using UnityEngine;
 public class ItemCollectUIHelper : MonoBehaviour
 {
     private ItemCollectionUI ItemCollectionUI;
-    private PlayerInputAction playerInputActions;
 
     private float timer = 0;
     private float defaultCollectTimer = .5f;
@@ -18,8 +17,7 @@ public class ItemCollectUIHelper : MonoBehaviour
     private void Awake()
     {
         ItemCollectionUI = GetComponent<ItemCollectionUI>();
-        playerInputActions = new PlayerInputAction();
-        playerInputActions.Combat.GetInCar.performed += GetInCar_performed;
+        InputCombatControl.GetInCar += GetInCar_performed;
 
 #if PLATFORM_ANDROID 
         informationText.gameObject.SetActive(false);
@@ -29,10 +27,10 @@ public class ItemCollectUIHelper : MonoBehaviour
 
     private void OnDestroy()
     {
-        playerInputActions.Combat.GetInCar.performed -= GetInCar_performed;
+        InputCombatControl.GetInCar -= GetInCar_performed;
     }
 
-    private void GetInCar_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void GetInCar_performed()
     {
         Collect();
     }

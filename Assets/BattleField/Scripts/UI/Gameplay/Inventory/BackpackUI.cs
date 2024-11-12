@@ -47,7 +47,7 @@ public class BackpackUI : MonoBehaviour
         
     }
 
-    private void UseHealthItem()
+    public void UseHealthItem()
     {
         if (currentItem == null) return;
         currentItem.amount -= 1;
@@ -55,6 +55,7 @@ public class BackpackUI : MonoBehaviour
         if (currentItem.amount == 0)
         {
             StorageManager.instance.Remove(currentItem.ItemType, currentItem._SubItemEnum, currentItem);
+            HideButton();
         }
     }
     public void ShowDropAmount()
