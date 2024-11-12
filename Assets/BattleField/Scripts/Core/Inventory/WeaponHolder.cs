@@ -45,6 +45,8 @@ public partial class ActiveWeapon
 
             currentWeaponLocal = activeWeapon.SpawnItem(weaponSlotHandler.Prefab, true, index, "IgnoreLayerChange");
             currentWeaponRemote = activeWeapon.SpawnItem(weaponSlotHandler.Prefab, false, index, "Untagged");
+
+            activeWeapon.SetRenderForLocalAndRomoteBody();
         }
 
         private void Drop()
@@ -54,8 +56,6 @@ public partial class ActiveWeapon
             currentWeaponLocal = null;
             currentWeaponRemote = null;
         }
-
-       
     }
 
 }
