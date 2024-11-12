@@ -10,6 +10,7 @@ public partial class ActiveWeapon : NetworkBehaviour
     public Transform[] weaponHoldersLocal;
     public Transform[] weaponHoldersRemote;
     private WeaponHolder[] weaponHolders;
+
     [Networked, Capacity(4)] NetworkDictionary<byte, bool> activeWeaponState => default;
     public void Init()
     {
@@ -35,7 +36,7 @@ public partial class ActiveWeapon : NetworkBehaviour
         var networkObject = Runner.Spawn(prefab, position, Quaternion.Euler(0, 0, 0), null, (runner, obj) =>
         {
             obj.GetComponent<BoundItem>().allowAddToCollider = false;
-            obj.GetComponent<TagObjectHandler>().ObjectTag = _tag;
+            obj.GetComponent<TagObjectHandler>().SetTag_RPC(_tag, isLocal);
         });
         Debug.Log("Start set parent", gameObject);
         RPC_SetParentWeapon(networkObject, isLocal, index);
@@ -74,4 +75,9 @@ public partial class ActiveWeapon : NetworkBehaviour
         //Debug.Log($"Weapon name {weapon.name}");
     }
 
+    public void SetActiveLocalWeapon(bool isShow)
+    {
+        if (WeaponManager.instance.CurrentWeaponIndex == -1) return;
+        weaponHoldersLocal[WeaponManager.instance.CurrentWeaponIndex].gameObject.SetActive(isShow);
+    }
 }

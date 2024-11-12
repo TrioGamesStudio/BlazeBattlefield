@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class CharacterInputHandler : MonoBehaviour
 {
+    ActiveWeapon ActiveWeapon;
     PlayerInputAction playerInputActions;
     Vector2 move;
     bool isJumped = false;
@@ -17,6 +18,7 @@ public class CharacterInputHandler : MonoBehaviour
     public bool IsThirdCam{get => isThirdCam;}
 
     private void Awake() {
+        ActiveWeapon = GetComponent<ActiveWeapon>();
         playerInputActions = new PlayerInputAction();
 
         playerInputActions.PlayerMovement.Jumping.started += _ => isJumped = true;
@@ -28,10 +30,17 @@ public class CharacterInputHandler : MonoBehaviour
         /* playerInputActions.PlayerMovement.SwitchCam.started += _ => isSwitchCam = true;
         playerInputActions.PlayerMovement.SwitchCam.canceled += _ => isSwitchCam = false; */
 
-        playerInputActions.PlayerMovement.SwitchCam.started += _ => isThirdCam = !isThirdCam;
+        playerInputActions.PlayerMovement.SwitchCam.started += _ => ChangeCamera();
         
         InputPlayerMovement.LookAction += ChangeLookVector;
     }
+
+    private void ChangeCamera()
+    {
+        isThirdCam = !isThirdCam;
+        ActiveWeapon.SetActiveLocalWeapon(!isThirdCam);
+    }
+
     private void ChangeLookVector(Vector2 lookVector)
     {
         Debug.Log("Look vector");
@@ -66,6 +75,7 @@ public class CharacterInputHandler : MonoBehaviour
 
         if(isThirdCam && isFired) {
             isThirdCam = false;
+            ActiveWeapon.SetActiveLocalWeapon(true);
         }
         //aimDir = playerInputActions.PlayerMovement.Look.ReadValue<Vector2>();
     }
