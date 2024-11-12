@@ -23,6 +23,7 @@ public class WeaponManager : MonoBehaviour
 
     private void Awake()
     {
+        currentWeaponIndex = -1;
         instance = this;
         weaponSlotHandlers = new WeaponSlotHandler[4];
         weaponSlotHandlers[0] = new WeaponSlotHandler();

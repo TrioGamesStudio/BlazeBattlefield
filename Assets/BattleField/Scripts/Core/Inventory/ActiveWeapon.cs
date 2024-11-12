@@ -39,7 +39,7 @@ public partial class ActiveWeapon : NetworkBehaviour
         var networkObject = Runner.Spawn(prefab, position, Quaternion.Euler(0, 0, 0), null, (runner, obj) =>
         {
             obj.GetComponent<BoundItem>().allowAddToCollider = false;
-            obj.GetComponent<TagObjectHandler>().SetTag_RPC(_tag, isLocal);
+            obj.GetComponent<TagObjectHandler>().SetTag_RPC(_tag);
         });
         Debug.Log("Start set parent", gameObject);
         RPC_SetParentWeapon(networkObject, isLocal, index);
@@ -49,8 +49,9 @@ public partial class ActiveWeapon : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void ShowWeapon_RPC(int activeIndex)
     {
-        //SetActiveList(false, weaponHoldersLocal);
-        //SetActiveList(false, weaponHoldersRemote);
+        /* SetActiveList(false, weaponHoldersLocal);
+        SetActiveList(false, weaponHoldersRemote); */
+
         weaponHoldersLocal[activeIndex].gameObject.SetActive(true);
         weaponHoldersRemote[activeIndex].gameObject.SetActive(true);
     }
@@ -75,15 +76,16 @@ public partial class ActiveWeapon : NetworkBehaviour
     {
         weapon.transform.SetParent(isLocal ? weaponHoldersLocal[index] : weaponHoldersRemote[index], false);
         weapon.GetComponent<NetworkTransform>().Teleport(isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position);
-        //weapon.transform.SetParent(parent.transform);
-        //Debug.Log($"Weapon name {weapon.name}");
+        
+        /* weapon.transform.SetParent(parent.transform);
+        Debug.Log($"Weapon name {weapon.name}"); */
 
     }
 
     public void SetActiveLocalWeapon(bool isShow)
     {
-        // if (WeaponManager.instance.CurrentWeaponIndex == -1) return;
-        // weaponHoldersLocal[WeaponManager.instance.CurrentWeaponIndex].gameObject.SetActive(isShow);
+        /* if (WeaponManager.instance.CurrentWeaponIndex == -1) return;
+        weaponHoldersLocal[WeaponManager.instance.CurrentWeaponIndex].gameObject.SetActive(isShow); */
 
         gunLocalHolder.gameObject.SetActive(isShow);
         SetRenderForLocalAndRomoteBody();
