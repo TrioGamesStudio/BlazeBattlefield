@@ -19,7 +19,6 @@ public class ItemCollectUIHelper : MonoBehaviour
     {
         ItemCollectionUI = GetComponent<ItemCollectionUI>();
         playerInputActions = new PlayerInputAction();
-        playerInputActions.Combat.Enable();
         playerInputActions.Combat.GetInCar.performed += GetInCar_performed;
 
 #if PLATFORM_ANDROID 
