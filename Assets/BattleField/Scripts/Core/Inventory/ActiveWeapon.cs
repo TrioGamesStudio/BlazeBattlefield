@@ -12,6 +12,8 @@ public partial class ActiveWeapon : NetworkBehaviour
     private WeaponHolder[] weaponHolders;
 
     [Networked, Capacity(4)] NetworkDictionary<byte, bool> activeWeaponState => default;
+    [SerializeField] CharacterInputHandler characterInputHandler;
+    [SerializeField] Transform gunLocalHolder;
     public void Init()
     {
         //WeaponSlotHandlers = WeaponManager.instance.WeaponSlotHandlers;
@@ -27,6 +29,7 @@ public partial class ActiveWeapon : NetworkBehaviour
             weaponHolder.SetWeaponSlotHandler(WeaponManager.instance.WeaponSlotHandlers[i]);
             weaponHolder.index = i;
             weaponHolder.activeWeapon = this;
+
         }
     }
 
@@ -36,17 +39,19 @@ public partial class ActiveWeapon : NetworkBehaviour
         var networkObject = Runner.Spawn(prefab, position, Quaternion.Euler(0, 0, 0), null, (runner, obj) =>
         {
             obj.GetComponent<BoundItem>().allowAddToCollider = false;
-            obj.GetComponent<TagObjectHandler>().SetTag_RPC(_tag, isLocal);
+            obj.GetComponent<TagObjectHandler>().SetTag_RPC(_tag);
         });
         Debug.Log("Start set parent", gameObject);
         RPC_SetParentWeapon(networkObject, isLocal, index);
         return networkObject;
     }
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void ShowWeapon_RPC(int activeIndex)
     {
-        //SetActiveList(false, weaponHoldersLocal);
-        //SetActiveList(false, weaponHoldersRemote);
+        /* SetActiveList(false, weaponHoldersLocal);
+        SetActiveList(false, weaponHoldersRemote); */
+
         weaponHoldersLocal[activeIndex].gameObject.SetActive(true);
         weaponHoldersRemote[activeIndex].gameObject.SetActive(true);
     }
@@ -71,13 +76,28 @@ public partial class ActiveWeapon : NetworkBehaviour
     {
         weapon.transform.SetParent(isLocal ? weaponHoldersLocal[index] : weaponHoldersRemote[index], false);
         weapon.GetComponent<NetworkTransform>().Teleport(isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position);
-        //weapon.transform.SetParent(parent.transform);
-        //Debug.Log($"Weapon name {weapon.name}");
+        
+        /* weapon.transform.SetParent(parent.transform);
+        Debug.Log($"Weapon name {weapon.name}"); */
+
     }
 
     public void SetActiveLocalWeapon(bool isShow)
     {
-        if (WeaponManager.instance.CurrentWeaponIndex == -1) return;
-        weaponHoldersLocal[WeaponManager.instance.CurrentWeaponIndex].gameObject.SetActive(isShow);
+        /* if (WeaponManager.instance.CurrentWeaponIndex == -1) return;
+        weaponHoldersLocal[WeaponManager.instance.CurrentWeaponIndex].gameObject.SetActive(isShow); */
+
+        gunLocalHolder.gameObject.SetActive(isShow);
+        SetRenderForLocalAndRomoteBody();
+    }
+
+    public void SetRenderForLocalAndRomoteBody() {
+        if(characterInputHandler.IsThirdCam) {
+            Utils.SetRenderLayerInChildren(NetworkPlayer.Local.playerModel, LayerMask.NameToLayer("Default"));
+        }
+        else {
+            Utils.SetRenderLayerInChildren(NetworkPlayer.Local.playerModel, LayerMask.NameToLayer("LocalPlayerModel"));
+
+        }
     }
 }
