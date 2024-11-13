@@ -64,55 +64,35 @@ public class WeaponManager : MonoBehaviour
 
     public void AddNewGun(GunItemConfig newConfig)
     {
-        // truong hop 1
-        var newWeaponSlotIndex = (int)newConfig.slotWeaponIndex;
-        
-        if (IsAllSlotEmpty())
+        int newWeaponSlotIndex = (int)newConfig.slotWeaponIndex;
+        bool allSlotIsEmpty = true;
+        bool isEquipWeapon = currentWeaponIndex != -1;
+
+        foreach(var item in weaponSlotHandlers)
         {
-            Debug.LogWarning("truong hop 1");
-            var slotOfNewWeapon = weaponSlotHandlers[newWeaponSlotIndex];
-            slotOfNewWeapon.AddNewWeapon(newConfig);
-            slotOfNewWeapon.Equip();
-            slotOfNewWeapon.Show();
+            if(item.IsEmpty == false)
+            {
+                allSlotIsEmpty = false;
+                break;
+            }
+        }
+
+        if (!weaponSlotHandlers[newWeaponSlotIndex].IsEmpty)
+        {
+            weaponSlotHandlers[newWeaponSlotIndex].DeleteAndSpawnWorld();
+        }
+
+        weaponSlotHandlers[newWeaponSlotIndex].AddNewWeapon(newConfig);
+        weaponSlotHandlers[newWeaponSlotIndex].Equip();
+
+        if (!isEquipWeapon && allSlotIsEmpty)
+        {
+            weaponSlotHandlers[newWeaponSlotIndex].Hide();
+            weaponSlotHandlers[newWeaponSlotIndex].Show();
             currentWeaponIndex = newWeaponSlotIndex;
             ShowWeapon(true);
-            return;
         }
 
-        var currentWeapon = weaponSlotHandlers[currentWeaponIndex];
-
-        if (currentWeapon.Config.slotWeaponIndex == newConfig.slotWeaponIndex) 
-        {
-            Debug.LogWarning("truong hop 2");
-            // truong hop 2: Cung loai, phai bo weapon dang equip, va trang bi vu khi moi
-            //activeWeapon.Drop();
-            currentWeapon.DeleteAndSpawnWorld();
-            currentWeapon.AddNewWeapon(newConfig);
-            currentWeapon.Equip();
-            currentWeapon.Show();
-            //StartCoroutine(Startsdaw(currentWeapon, newConfig));
-
-
-            //activeWeapon.Equip(currentWeapon);
-        }
-        else // khong cung index voi curent weapon
-        {
-            Debug.LogWarning("truong hop 3");
-            bool isTargetSlotEmpty = weaponSlotHandlers[newWeaponSlotIndex].IsEmpty;
-            if (isTargetSlotEmpty)
-            {
-                weaponSlotHandlers[newWeaponSlotIndex].AddNewWeapon(newConfig);
-                weaponSlotHandlers[newWeaponSlotIndex].Equip();
-            }
-            else
-            {
-                // drop 
-                var targetSlot = weaponSlotHandlers[newWeaponSlotIndex];
-                targetSlot.DeleteAndSpawnWorld();
-                targetSlot.AddNewWeapon(newConfig);
-                targetSlot.Equip();
-            }
-        }
     }
     private IEnumerator Startsdaw(WeaponSlotHandler currentWeapon, GunItemConfig newConfig)
     {
@@ -140,19 +120,6 @@ public class WeaponManager : MonoBehaviour
 
 
 
-    private bool IsAllSlotEmpty()
-    {
-        bool allWeaponIsEmpty = true;
-        foreach (var item in weaponSlotHandlers)
-        {
-            if (!item.IsEmpty)
-            {
-                allWeaponIsEmpty = false;
-            }
-        }
-
-        return allWeaponIsEmpty;
-    }
 
     public void OnActiveWeapon(int activeIndexButton)
     {
