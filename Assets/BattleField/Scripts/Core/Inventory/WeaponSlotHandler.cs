@@ -25,6 +25,7 @@ public class WeaponSlotHandler: IWeaponSlotAction
 
     private bool isShowInHand;
     public bool IsShowInHand { get => isShowInHand; }
+    public bool HasAmmo { get => currentAmmo > 0;  }
 
     public void AddNewWeapon(GunItemConfig newConfig)
     {
@@ -123,5 +124,11 @@ public class WeaponSlotHandler: IWeaponSlotAction
             return true;
         }
         return false;
+    }
+
+    public void Shoot()
+    {
+        currentAmmo--;
+        OnCurrentAmmoChange();
     }
 }

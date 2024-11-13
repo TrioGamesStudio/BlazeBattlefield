@@ -170,4 +170,9 @@ public class WeaponManager : MonoBehaviour
         if (currentWeaponIndex < 0 || currentWeaponIndex > 4) return false;
         return weaponSlotHandlers[currentWeaponIndex].IsEmpty == false && weaponSlotHandlers[currentWeaponIndex].IsShowInHand;
     }
+
+    public void Shoot()
+    {
+        weaponSlotHandlers[currentWeaponIndex].Shoot();
+    }
 }
