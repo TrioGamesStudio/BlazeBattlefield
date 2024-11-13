@@ -86,7 +86,7 @@ public class WeaponHandler : NetworkBehaviour
         if (Matchmaking.Instance != null)
         {
             if ((!Matchmaking.Instance.IsDone && Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
-          || (!MatchmakingTeam.Instance.IsDone && Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo)) return;
+            || (!MatchmakingTeam.Instance.IsDone && Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo)) return;
         }
         if (Object.HasStateAuthority)
         {
@@ -115,7 +115,11 @@ public class WeaponHandler : NetworkBehaviour
 
         var hitPointVector3 = localCameraHandler.hitPoint_Network;
 
-        if (hitPointVector3 != Vector3.zero) FireBulletVFX(hitPointVector3);
+        if (hitPointVector3 != Vector3.zero) {
+            if(!characterInputHandler.IsThirdCam) {
+                FireBulletVFX(hitPointVector3, aimPoint_grandeRocket.position);
+            } else FireBulletVFX(hitPointVector3, aimPoint_grandeRocket_3rd.position);
+        } 
 
         Fire(localCameraHandler.transform.forward, aimPoint);  // neu player thi aimpoint = vi tri 1st cam
         yield return new WaitForSeconds(coolTime);
@@ -139,14 +143,14 @@ public class WeaponHandler : NetworkBehaviour
     }
 
     //? fire bullet laser VFX => chi tao ra virtual o nong sung + bullet trails + impact
-    void FireBulletVFX(Vector3 hitPoint)
+    void FireBulletVFX(Vector3 hitPoint, Vector3 spanwPoint)
     {
-        Vector3 dir = hitPoint - aimPoint_grandeRocket.position;
+        Vector3 dir = dir = hitPoint - spanwPoint;
 
         if (bulletFireDelay.ExpiredOrNotRunning(Runner))
         {
 
-            Runner.Spawn(bulletVFXPF, aimPoint_grandeRocket.position, Quaternion.LookRotation(dir), Object.InputAuthority,
+            Runner.Spawn(bulletVFXPF, spanwPoint, Quaternion.LookRotation(dir), Object.InputAuthority,
             (runner, spawnBullet) =>
             {
                 spawnBullet.GetComponent<BulletHandler>().FireBullet(Object.InputAuthority, networkObject, networkPlayer.nickName_Network.ToString());
@@ -240,12 +244,12 @@ public class WeaponHandler : NetworkBehaviour
         isFiring = true;
 
         //? show cho localPlayer thay hieu ung ban ra
-        /* if(NetworkPlayer.Local.is3rdPersonCamera)
+        if(characterInputHandler.IsThirdCam)
             fireParticleSystemRemote.Play();
         else 
-            fireParticleSystemLocal.Play(); */
+            fireParticleSystemLocal.Play();
 
-        fireParticleSystemLocal.Play();
+        /* fireParticleSystemLocal.Play(); */
         yield return new WaitForSeconds(0.09f);
         isFiring = false;
     }
