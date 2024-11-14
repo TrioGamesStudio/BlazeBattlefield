@@ -19,7 +19,7 @@ public class BindingWeaponUI : MonoBehaviour
     {
         newWeaponSlotHandler.UIList.Add(this);
         weaponSlotHandler = newWeaponSlotHandler;
-        weaponSlotHandler.OnUpdateNewGunAction += OnUpdateNewGun;
+        weaponSlotHandler.OnUpdateNewGunUIAction += OnUpdateNewGun;
         OnUpdateNewGun();
     }
 

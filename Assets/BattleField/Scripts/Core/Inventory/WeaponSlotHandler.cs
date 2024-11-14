@@ -15,7 +15,7 @@ public class WeaponSlotHandler: IWeaponSlotAction
     public GameObject Prefab;
     public GunItemConfig Config;
 
-    public Action OnUpdateNewGunAction;
+    public Action OnUpdateNewGunUIAction;
 
     public int currentAmmo;
 
@@ -45,7 +45,7 @@ public class WeaponSlotHandler: IWeaponSlotAction
             this.Config = null;
             this.Prefab = null;
         }
-        OnUpdateNewGunAction?.Invoke();
+        OnUpdateNewGunUIAction?.Invoke();
     }
 
     public void OnTotalAmmoChange()
@@ -91,7 +91,9 @@ public class WeaponSlotHandler: IWeaponSlotAction
     {
         TurnAmmoBackWhenDrop();
         ItemDatabase.instance.GunConfigToWorld(Config, 1);
+        
         AddNewWeapon(null);
+        
         DropWeaponAction?.Invoke();
         currentAmmo = 0;
     }
@@ -100,7 +102,9 @@ public class WeaponSlotHandler: IWeaponSlotAction
     {
         if(currentAmmo > 0)
         {
-
+            var inventory = new InventoryItem();
+            inventory.Create(Config.ammoUsingType, currentAmmo);
+            StorageManager.instance.Add(ItemType.Ammo, Config.ammoUsingType.SubItemType, inventory);
         }
     }
 
