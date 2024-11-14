@@ -5,20 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Ammo", menuName = "Config/Ammo")]
 public class AmmoItemConfig : ItemConfig<AmmoType>
 {
-    [SerializeField] private int totalAmmo;
-    public Action<int> OnTotalAmmoChange { get; internal set; }
-    public int TotalAmmo { get => totalAmmo; }
-    
-    public void ChangeTotalAmmo(int addAmount)
-    {
-        totalAmmo += addAmount;
-        OnTotalAmmoChange?.Invoke(totalAmmo);
-    }
-
-    public void SetTotalAmmo(int value)
-    {
-        totalAmmo = value;
-    }
 
     [Button]
     private void LoadDefaultSettings()

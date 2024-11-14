@@ -9,21 +9,8 @@ public class GunItemConfig : ItemConfig<GunType>
     public int maxRounds;
     public AmmoItemConfig ammoUsingType;
     public SlotWeaponIndex slotWeaponIndex;
-    private List<WeaponSlotHandler> weaponListeners = new();
     private bool isInitialize = false;
-    public void RemoveNotifyTotalAmmoChange(WeaponSlotHandler weaponSlotHandler)
-    {
-        if (!weaponListeners.Contains(weaponSlotHandler)) return;
-        weaponListeners.Remove(weaponSlotHandler);
-        ammoUsingType.OnTotalAmmoChange -= weaponSlotHandler.OnTotalAmmoChange;
-    }
-
-    public void AddNotifyTotalAmmoChange(WeaponSlotHandler weaponSlotHandler)
-    {
-        if (weaponListeners.Contains(weaponSlotHandler)) return;
-        weaponListeners.Add(weaponSlotHandler);
-        ammoUsingType.OnTotalAmmoChange += weaponSlotHandler.OnTotalAmmoChange;
-    }
+   
 }
 
 public enum SlotWeaponIndex

@@ -41,7 +41,7 @@ public class BindingWeaponUI : MonoBehaviour
     {
         //Debug.Log("IsEmpty: " + weaponSlotHandler.IsEmpty);
         UpdateCurrentAmmo(weaponSlotHandler.currentAmmo);
-        UpdateTotalAmmo(weaponSlotHandler.Config.ammoUsingType.TotalAmmo);
+        UpdateTotalAmmo(weaponSlotHandler.TotalAmmo());
         IconImage.gameObject.SetActive(true);
         IconImage.sprite = weaponSlotHandler.Config.Icon;
         Debug.Log("Update data:" + weaponSlotHandler.Config.Icon);

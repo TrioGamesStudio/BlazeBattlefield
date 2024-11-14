@@ -33,7 +33,7 @@ public class ItemBackpackUI : BaseUIItem, IPoolCallback<ItemBackpackUI>
 
     public void OnRelease()
     {
-        currentItem.OnUpdateData = null;
+        currentItem.OnUpdateDataAction = null;
         currentItem = null;
         OnCallback?.Invoke(this);
     }
@@ -41,7 +41,7 @@ public class ItemBackpackUI : BaseUIItem, IPoolCallback<ItemBackpackUI>
     public void Initialize(InventoryItem item)
     {
         currentItem = item;
-        currentItem.OnUpdateData = UpdateData;
+        currentItem.OnUpdateDataAction = UpdateData;
         UpdateData();
     }
 

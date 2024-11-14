@@ -1,73 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &694171307385631893
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8372488700620191191}
-  - component: {fileID: 4486476969747081673}
-  - component: {fileID: 7350821708417860351}
-  m_Layer: 0
-  m_Name: Ammo Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8372488700620191191
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 694171307385631893}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.1908324, y: 0.26990008, z: -0.0016281083}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2410822809969261775}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4486476969747081673
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 694171307385631893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 2555947160
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours: []
---- !u!114 &7350821708417860351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 694171307385631893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39207f57e4aeaed4cb98af46758fe047, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  totalAmount: 0
-  ammoConfigs:
-  - {fileID: 11400000, guid: efe0a45e38273ed4293075d538c5e17e, type: 2}
-  - {fileID: 11400000, guid: b97b856555403694196818e8f73a2b8f, type: 2}
-  - {fileID: 11400000, guid: 966ba81660ca8964aa9e8ab7ccb9d033, type: 2}
-  - {fileID: 11400000, guid: a530e9542c5c61b4bb75ad45773bb039, type: 2}
 --- !u!1 &1761541826186913362
 GameObject:
   m_ObjectHideFlags: 0
@@ -102,7 +34,6 @@ Transform:
   - {fileID: 1153746569062564365}
   - {fileID: 4873743389071372107}
   - {fileID: 5954145089007120286}
-  - {fileID: 8372488700620191191}
   - {fileID: 1709312967797427369}
   - {fileID: 5976176189461940917}
   m_Father: {fileID: 0}
@@ -164,8 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: 0
-  doneTimer: 0
-  canTimer: 0
+  onProcess: 0
 --- !u!1 &4498492502612120974
 GameObject:
   m_ObjectHideFlags: 0

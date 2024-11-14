@@ -22,5 +22,11 @@ public class InventoryItem
     public Sprite Icon;
     public int maxStack;
     public int amount;
-    public Action OnUpdateData;
+    public Action OnUpdateDataAction;
+
+    public void OnUpdateData()
+    {
+        StorageManager.OnUpdateItem?.Invoke();
+        OnUpdateDataAction?.Invoke();
+    }
 }
