@@ -71,7 +71,7 @@ public class TouchRotationView : MonoBehaviour
     {
         if(isLooking && touch.touchId == touchID)
         {
-            delta = touch.delta.normalized;
+            delta = touch.delta;
             InputPlayerMovement.LookAction?.Invoke(delta);
 
         }
