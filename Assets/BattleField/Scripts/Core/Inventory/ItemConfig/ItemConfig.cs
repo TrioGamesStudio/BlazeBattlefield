@@ -1,7 +1,8 @@
 ﻿using NaughtyAttributes;
 using System;
-using UnityEditor.VersionControl;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 public class ItemConfig<SubType> : ScriptableObject where SubType : Enum
@@ -11,7 +12,7 @@ public class ItemConfig<SubType> : ScriptableObject where SubType : Enum
     public SubType SubItemType;
     public int maxStack;
     public ItemType ItemType;
-
+#if UNITY_EDITOR
     [Button]
     private void RenameByDisplayName()
     {
@@ -26,7 +27,7 @@ public class ItemConfig<SubType> : ScriptableObject where SubType : Enum
             AssetDatabase.SaveAssets();
         }
     }
-
+#endif
     public virtual void ShowDebug()
     {
         Debug.Log($"Item Name: {displayName}, MaxStack {maxStack} MainType: {ItemType.ToString()} SubType:{SubItemType.ToString()}");
