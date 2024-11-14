@@ -21,7 +21,6 @@ public class ItemPopupButton : MonoBehaviour
     
     
     private List<Button> selectBtnList = new();
-    public Action UseItem;
     private int itemCount = 3;
     private bool isShowView = false;
     

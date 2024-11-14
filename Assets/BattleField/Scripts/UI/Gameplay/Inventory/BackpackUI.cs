@@ -28,7 +28,7 @@ public class BackpackUI : MonoBehaviour
         HideButton();
         buttonGroupUI.SetOnDropFull(DropAllItem);
         buttonGroupUI.SetOndropItemAmount(ShowDropAmount);
-        buttonGroupUI.SetOnUseItem(UseHealthItem);
+        buttonGroupUI.SetOnUseItem(ActiveHealthTimer);
         dropAmountUI.Hide();
         dropAmountUI.SetAcceptDrop(OnAcceptDrop);
     }
@@ -47,7 +47,11 @@ public class BackpackUI : MonoBehaviour
         
     }
 
-    public void UseHealthItem()
+    public void ActiveHealthTimer()
+    {
+        TimerActionHandler.instance.StartTimer(4, () => { OnUseHealthItem(currentItem); });
+    }
+    private void OnUseHealthItem(InventoryItem currentItem)
     {
         if (currentItem == null) return;
         currentItem.amount -= 1;

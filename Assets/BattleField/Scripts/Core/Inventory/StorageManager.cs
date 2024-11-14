@@ -18,6 +18,13 @@ public class StorageManager : MonoBehaviour
         instance = this;
     }
 
+    private void OnDestroy()
+    {
+        OnAddItem = null;
+        OnRemoveItem = null;
+        OnUpdateItem = null;
+    }
+
     public void Add(ItemType itemType, Enum _enum, InventoryItem inventoryItem)
     {
         if (bigData.ContainsKey((itemType, _enum)) == false)

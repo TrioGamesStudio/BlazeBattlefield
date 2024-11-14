@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TimerActionHandler : MonoBehaviour
 {
-    
+    public static TimerActionHandler instance;
     [Header("Variables")]
     [SerializeField] private float timer;
     [SerializeField] private bool onProcess;
@@ -16,6 +16,7 @@ public class TimerActionHandler : MonoBehaviour
     {
         timer = 0;
         TimerActionUI.OnCancel += Cancel;
+        instance = this;
     }
 
     private void OnDestroy()
