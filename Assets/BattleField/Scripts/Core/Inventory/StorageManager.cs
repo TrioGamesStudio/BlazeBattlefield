@@ -91,18 +91,5 @@ public class StorageManager : MonoBehaviour
         AmmoManager.instance.RemoveAmmo(currentItem, newDropCount);
     }
 
-    public AmmoType ammoTypeTesting;
-    public int totalAmmo;
-    [Button]
-    public void TotalAmmo()
-    {
-        if (bigData.TryGetValue((ItemType.Ammo, ammoTypeTesting), out var list))
-        {
-            foreach(var item in list)
-            {
-                totalAmmo += item.amount;
-            }
-        }
-    }
 }
 

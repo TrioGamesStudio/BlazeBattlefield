@@ -168,7 +168,8 @@ public class WeaponManager : MonoBehaviour
     public bool IsReadyToShoot()
     {
         if (currentWeaponIndex < 0 || currentWeaponIndex > 4) return false;
-        return weaponSlotHandlers[currentWeaponIndex].IsEmpty == false && weaponSlotHandlers[currentWeaponIndex].IsShowInHand;
+        var currentSlot = weaponSlotHandlers[currentWeaponIndex];
+        return currentSlot.IsEmpty == false && currentSlot.IsShowInHand && currentSlot.HasAmmo;
     }
 
     public void Shoot()

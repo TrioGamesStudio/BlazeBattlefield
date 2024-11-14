@@ -23,6 +23,7 @@ public class AmmoManager : MonoBehaviour
         foreach (var item in ammoConfigs)
         {
             ammoConfigDictionary.Add(item.SubItemType, item);
+            item.SetTotalAmmo(0);
         }
     }
 
