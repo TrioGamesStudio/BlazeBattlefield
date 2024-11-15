@@ -6,11 +6,16 @@ using UnityEngine;
 [Serializable]
 public class WeaponSlotHandler: IWeaponSlotAction
 {
-    
+    public WeaponSlotHandler()
+    {
+        isShowInHand = false;
+        StorageManager.OnUpdateItem += () => { OnTotalAmmoChange();} ;
+    }
+
     public GameObject Prefab;
     public GunItemConfig Config;
 
-    public Action OnUpdateNewGunAction;
+    public Action OnUpdateNewGunUIAction;
 
     public int currentAmmo;
 
@@ -23,30 +28,29 @@ public class WeaponSlotHandler: IWeaponSlotAction
     public Action EquipWeaponAction { get; set; }
     public Action DropWeaponAction { get; set; }
 
-    private bool isShowInHand;
+    [SerializeField] private bool isShowInHand;
     public bool IsShowInHand { get => isShowInHand; }
+    public bool HasAmmo { get => currentAmmo > 0;  }
 
+ 
     public void AddNewWeapon(GunItemConfig newConfig)
     {
         if(newConfig != null)
         {
-            Config?.RemoveNotifyTotalAmmoChange(this);
             this.Config = newConfig;
             this.Prefab = ItemDatabase.instance.GetItemPrefab(Config.ItemType, Config.SubItemType);
-            Config?.AddNotifyTotalAmmoChange(this);
         }
         else
         {
             this.Config = null;
             this.Prefab = null;
         }
-        isShowInHand = false;
-
-        OnUpdateNewGunAction?.Invoke();
+        OnUpdateNewGunUIAction?.Invoke();
     }
 
-    public void OnTotalAmmoChange(int totalAmmo)
+    public void OnTotalAmmoChange()
     {
+        int totalAmmo = TotalAmmo();
         foreach(var item in UIList)
         {
             item.UpdateTotalAmmo(totalAmmo);
@@ -87,7 +91,9 @@ public class WeaponSlotHandler: IWeaponSlotAction
     {
         TurnAmmoBackWhenDrop();
         ItemDatabase.instance.GunConfigToWorld(Config, 1);
+        
         AddNewWeapon(null);
+        
         DropWeaponAction?.Invoke();
         currentAmmo = 0;
     }
@@ -96,7 +102,9 @@ public class WeaponSlotHandler: IWeaponSlotAction
     {
         if(currentAmmo > 0)
         {
-            Config.ammoUsingType.ChangeTotalAmmo(currentAmmo);
+            var inventory = new InventoryItem();
+            inventory.Create(Config.ammoUsingType, currentAmmo);
+            StorageManager.instance.Add(ItemType.Ammo, Config.ammoUsingType.SubItemType, inventory);
         }
     }
 
@@ -104,24 +112,34 @@ public class WeaponSlotHandler: IWeaponSlotAction
     {
         if (IsEmpty || isShowInHand == false) return false;
 
+        int ammoNeed = Config.maxRounds - currentAmmo;
 
-        if(Config.ammoUsingType.TotalAmmo > 0)
+        if (ammoNeed == 0) return false;
+
+        int ammoInStorage = StorageManager.instance.AcquireAmmoItem(Config.ammoUsingType.SubItemType, ammoNeed);
+        if (ammoInStorage > 0)
         {
-            int maxStack = Config.ammoUsingType.maxStack;
-            int ammoNeed = maxStack - currentAmmo;
-            if (Config.ammoUsingType.TotalAmmo >= ammoNeed)
-            {
-                Config.ammoUsingType.ChangeTotalAmmo(-ammoNeed);
-                currentAmmo = maxStack;
-            }
-            else
-            {
-                currentAmmo += Config.ammoUsingType.TotalAmmo;
-                Config.ammoUsingType.ChangeTotalAmmo(-currentAmmo);
-            }
+            currentAmmo += ammoInStorage;
             OnCurrentAmmoChange();
             return true;
         }
         return false;
+    }
+
+    public int TotalAmmo()
+    {
+        if (IsEmpty)
+        {
+            Debug.LogError("Slot nay dang bi null, khong the kiem tra tong so dan");
+            return 0;
+        }
+
+        return StorageManager.instance.GetTotalAmmo(Config.ammoUsingType.SubItemType);
+    }
+
+    public void Shoot()
+    {
+        currentAmmo--;
+        OnCurrentAmmoChange();
     }
 }

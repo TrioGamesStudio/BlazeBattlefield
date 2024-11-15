@@ -9,13 +9,20 @@ public class StorageManager : MonoBehaviour
 
     public static Action<InventoryItem> OnAddItem;
     public static Action<InventoryItem> OnRemoveItem;
-    public static Action<InventoryItem> OnUpdateItem;
+    public static Action OnUpdateItem;
 
     private Dictionary<(ItemType, Enum), List<InventoryItem>> bigData = new();
 
     private void Awake()
     {
         instance = this;
+    }
+
+    private void OnDestroy()
+    {
+        OnAddItem = null;
+        OnRemoveItem = null;
+        OnUpdateItem = null;
     }
 
     public void Add(ItemType itemType, Enum _enum, InventoryItem inventoryItem)
@@ -50,13 +57,14 @@ public class StorageManager : MonoBehaviour
                     item.OnUpdateData();
                 }
             }
+            
 
             if (inventoryItem.amount == 0) return;
             // add new item to inventory
             list.Add(inventoryItem);
             OnAddItem(inventoryItem);
             ShowItemInformation(inventoryItem);
-            AmmoManager.instance.AddAmmo(inventoryItem, inventoryItem.amount);
+            OnUpdateItem?.Invoke();
         }
     }
 
@@ -72,7 +80,7 @@ public class StorageManager : MonoBehaviour
             if (!list.Contains(inventoryItem)) return;
             list.Remove(inventoryItem);
             OnRemoveItem(inventoryItem);
-            AmmoManager.instance.RemoveAmmo(inventoryItem, inventoryItem.amount);
+            OnUpdateItem?.Invoke();
         }
     }
 
@@ -88,21 +96,48 @@ public class StorageManager : MonoBehaviour
         currentItem.amount -= newDropCount;
         currentItem?.OnUpdateData();
 
-        AmmoManager.instance.RemoveAmmo(currentItem, newDropCount);
     }
 
-    public AmmoType ammoTypeTesting;
-    public int totalAmmo;
-    [Button]
-    public void TotalAmmo()
+    public int GetTotalAmmo(AmmoType ammoType)
     {
-        if (bigData.TryGetValue((ItemType.Ammo, ammoTypeTesting), out var list))
+        int totalAmmo = 0;
+        if (bigData.TryGetValue((ItemType.Ammo, ammoType), out var list))
         {
             foreach(var item in list)
             {
                 totalAmmo += item.amount;
             }
         }
+        Debug.Log($"{ammoType.ToString()} : {totalAmmo}");
+        return totalAmmo;
+    }
+
+    public int AcquireAmmoItem(AmmoType ammoType,int ammoNeed)
+    {
+        int ammoCanGet = 0;
+        if (bigData.TryGetValue((ItemType.Ammo, ammoType), out var list))
+        {
+            foreach(var ammo in list)
+            {
+                if (ammo.amount > ammoNeed)
+                {
+                    ammo.amount -= ammoNeed;
+                    ammoCanGet += ammoNeed;
+                    ammo.OnUpdateData();
+                }
+                else
+                {
+                    ammoCanGet += ammo.amount;
+                    Remove(ItemType.Ammo, ammoType, ammo);
+                }
+         
+                if(ammoCanGet == ammoNeed)
+                {
+                    break;
+                }
+            }
+        }
+        return ammoCanGet;
     }
 }
 

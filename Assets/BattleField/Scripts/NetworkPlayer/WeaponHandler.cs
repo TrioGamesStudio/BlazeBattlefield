@@ -93,6 +93,7 @@ public class WeaponHandler : NetworkBehaviour
             if (WeaponManager.instance.IsReadyToShoot())
             {
                 Fire();
+                
             }
         }
 
@@ -103,6 +104,7 @@ public class WeaponHandler : NetworkBehaviour
         if (!isFiredPressed && isFired)
         {
             isFiredPressed = true;
+            WeaponManager.instance.Shoot();
             StartCoroutine(FireCO(coolTimeWeapon));
         }
 

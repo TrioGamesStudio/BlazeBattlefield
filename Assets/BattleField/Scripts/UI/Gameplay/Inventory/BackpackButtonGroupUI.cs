@@ -15,12 +15,14 @@ public class BackpackButtonGroupUI : MonoBehaviour
     {
         dropButton.onClick.AddListener(Drop);
         dropAllButton.onClick.AddListener(DropAll);
+        useButton.onClick.AddListener(Use);
     }
 
     private void OnDestroy()
     {
         dropButton.onClick.RemoveListener(Drop);
         dropAllButton.onClick.RemoveListener(DropAll);
+        useButton.onClick.RemoveListener(Use);
     }
     public void SetOnDropFull(Action dropAllItem)
     {
@@ -31,6 +33,7 @@ public class BackpackButtonGroupUI : MonoBehaviour
     {
         OnShowDropButton = showDropAmount;
     }
+
     public void SetOnUseItem(Action useItem)
     {
         OnUseItem = useItem;
