@@ -57,14 +57,6 @@ public class WeaponSlotHandler: IWeaponSlotAction
         }
     }
 
-    public void OnCurrentAmmoChange()
-    {
-        foreach (var item in UIList)
-        {
-            item.UpdateCurrentAmmo(currentAmmo);
-        }
-    }
-
     public void Show()
     {
         ShowWeaponAction?.Invoke();
@@ -120,7 +112,6 @@ public class WeaponSlotHandler: IWeaponSlotAction
         if (ammoInStorage > 0)
         {
             currentAmmo += ammoInStorage;
-            OnCurrentAmmoChange();
             return true;
         }
         return false;
@@ -140,6 +131,5 @@ public class WeaponSlotHandler: IWeaponSlotAction
     public void Shoot()
     {
         currentAmmo--;
-        OnCurrentAmmoChange();
     }
 }

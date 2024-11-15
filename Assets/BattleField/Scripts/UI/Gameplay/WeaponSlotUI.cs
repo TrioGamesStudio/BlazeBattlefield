@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.UI;
+
 public class BindingWeaponUI : MonoBehaviour
 {
     [SerializeField] protected WeaponSlotHandler weaponSlotHandler;
@@ -14,7 +16,6 @@ public class BindingWeaponUI : MonoBehaviour
     [SerializeField] protected Image IconImage;
     public SlotWeaponIndex WeaponIndex { get => weaponIndex; }
 
-
     public virtual void BindWeaponSlot(WeaponSlotHandler newWeaponSlotHandler)
     {
         newWeaponSlotHandler.UIList.Add(this);
@@ -22,6 +23,7 @@ public class BindingWeaponUI : MonoBehaviour
         weaponSlotHandler.OnUpdateNewGunUIAction += OnUpdateNewGun;
         OnUpdateNewGun();
     }
+    
 
     private void OnUpdateNewGun()
     {
@@ -40,31 +42,43 @@ public class BindingWeaponUI : MonoBehaviour
     protected virtual void UpdateGunInfor()
     {
         //Debug.Log("IsEmpty: " + weaponSlotHandler.IsEmpty);
-        UpdateCurrentAmmo(weaponSlotHandler.currentAmmo);
         UpdateTotalAmmo(weaponSlotHandler.TotalAmmo());
         IconImage.gameObject.SetActive(true);
         IconImage.sprite = weaponSlotHandler.Config.Icon;
         Debug.Log("Update data:" + weaponSlotHandler.Config.Icon);
     }
 
-    public void UpdateCurrentAmmo(int currentAmmo)
-    {
-        currentGunAmmoText.text = currentAmmo.ToString() + "/";
-    }
-
+  
     public void UpdateTotalAmmo(int totalAmmo)
     {
         totalGunAmmoText.text = totalAmmo.ToString();
     }
+    private void Update()
+    {
+        currentGunAmmoText.text = weaponSlotHandler.currentAmmo.ToString() + "/";
+        if (weaponSlotHandler.IsEmpty) return;
+        float lerpvalue = (float)weaponSlotHandler.currentAmmo / (float)weaponSlotHandler.Config.maxStack;
+        currentGunAmmoText.color = Color.Lerp(Color.red, Color.white, lerpvalue * 1.5f);
+    }
 
     protected virtual void ResetUIState()
     {
-        UpdateCurrentAmmo(0);
         UpdateTotalAmmo(0);
         IconImage.gameObject.SetActive(false);
     }
+
+    
 }
 public class WeaponSlotUI : BindingWeaponUI
 {
+    [SerializeField] protected Image hightlightFrameImg;
 
+    public void ApplyHighlight()
+    {
+        hightlightFrameImg.gameObject.SetActive(true);
+    }
+    public void RemoveHighlight()
+    {
+        hightlightFrameImg.gameObject.SetActive(false);
+    }
 }

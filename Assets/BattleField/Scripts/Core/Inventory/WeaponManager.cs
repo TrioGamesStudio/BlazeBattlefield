@@ -58,12 +58,18 @@ public class WeaponManager : MonoBehaviour
     public void Reload()
     {
         if (currentWeaponIndex == -1) return;
-        weaponSlotHandlers[currentWeaponIndex].TryToReload();
-        Debug.Log("Reload ammo");
+        TimerActionHandler.instance.StartTimer(1.5f, () =>
+        {
+            weaponSlotHandlers[currentWeaponIndex].TryToReload();
+            Debug.Log("Reload ammo");
+        });
+        
     }
 
     public void AddNewGun(GunItemConfig newConfig)
     {
+        TimerActionHandler.instance.Cancel();
+
         int newWeaponSlotIndex = (int)newConfig.slotWeaponIndex;
         bool allSlotIsEmpty = true;
         bool isEquipWeapon = currentWeaponIndex != -1;
@@ -89,7 +95,7 @@ public class WeaponManager : MonoBehaviour
         {
             weaponSlotHandlers[newWeaponSlotIndex].Hide();
             weaponSlotHandlers[newWeaponSlotIndex].Show();
-            currentWeaponIndex = newWeaponSlotIndex;
+            ChangeCurrentWeaponIndex(newWeaponSlotIndex);
             ShowWeapon(true);
         }
 
@@ -123,19 +129,21 @@ public class WeaponManager : MonoBehaviour
 
     public void OnActiveWeapon(int activeIndexButton)
     {
-        if(currentWeaponIndex == -1) // T
+        TimerActionHandler.instance.Cancel();
+
+        if (currentWeaponIndex == -1) // T
         {
             // khong cam gi
             if (weaponSlotHandlers[activeIndexButton].IsEmpty) return;
             weaponSlotHandlers[activeIndexButton].Show();
-            currentWeaponIndex = activeIndexButton;
+            ChangeCurrentWeaponIndex(activeIndexButton);
             ShowWeapon(true);
         }
         else if (currentWeaponIndex == activeIndexButton)
         {
             // same with weapon onActive
             weaponSlotHandlers[currentWeaponIndex].Hide();
-            currentWeaponIndex = -1;
+            ChangeCurrentWeaponIndex(-1);
             ShowWeapon(false);
             // turn off current slot, because it active same slot
         }
@@ -152,7 +160,7 @@ public class WeaponManager : MonoBehaviour
                 Debug.Log("Kich hoat weapon moi", gameObject);
                 weaponSlotHandlers[currentWeaponIndex].Hide();
                 weaponSlotHandlers[activeIndexButton].Show();
-                currentWeaponIndex = activeIndexButton;
+                ChangeCurrentWeaponIndex(activeIndexButton);
             }
 
         }
@@ -162,8 +170,13 @@ public class WeaponManager : MonoBehaviour
     public void ShowWeapon(bool v)
     {
         playerAnimator.SetBool("isEquiped", v);
+        
     }
-
+    private void ChangeCurrentWeaponIndex(int newIndex)
+    {
+        currentWeaponIndex = newIndex;
+        WeaponUIManager.instance.Hightligh(currentWeaponIndex);
+    }
 
     public bool IsReadyToShoot()
     {
