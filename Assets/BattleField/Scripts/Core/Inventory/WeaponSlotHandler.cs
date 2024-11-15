@@ -23,19 +23,22 @@ public class WeaponSlotHandler: IWeaponSlotAction
 
     public bool IsEmpty => Prefab == null && Config == null;
 
-    public Action ShowWeaponAction { get; set; }
-    public Action HideWeaponAction { get; set; }
-    public Action EquipWeaponAction { get; set; }
-    public Action DropWeaponAction { get; set; }
+
 
     [SerializeField] private bool isShowInHand;
     public bool IsShowInHand { get => isShowInHand; }
     public bool HasAmmo { get => currentAmmo > 0;  }
-
- 
+    public bool isReloading = false;
+    #region Action
+    public Action ShowWeaponAction { get; set; }
+    public Action HideWeaponAction { get; set; }
+    public Action EquipWeaponAction { get; set; }
+    public Action DropWeaponAction { get; set; }
+    #endregion Action
     public void AddNewWeapon(GunItemConfig newConfig)
     {
-        if(newConfig != null)
+        isReloading = false;
+        if (newConfig != null)
         {
             this.Config = newConfig;
             this.Prefab = ItemDatabase.instance.GetItemPrefab(Config.ItemType, Config.SubItemType);
@@ -67,6 +70,7 @@ public class WeaponSlotHandler: IWeaponSlotAction
     {
         HideWeaponAction?.Invoke();
         isShowInHand = false;
+        isReloading = false;
     }
 
     public void Equip()
@@ -100,18 +104,24 @@ public class WeaponSlotHandler: IWeaponSlotAction
         }
     }
 
+
     public bool TryToReload()
     {
-        if (IsEmpty || isShowInHand == false) return false;
+        if (IsEmpty || isShowInHand == false || isReloading) return false;
 
         int ammoNeed = Config.maxRounds - currentAmmo;
 
-        if (ammoNeed == 0) return false;
-
-        int ammoInStorage = StorageManager.instance.AcquireAmmoItem(Config.ammoUsingType.SubItemType, ammoNeed);
-        if (ammoInStorage > 0)
+        if (StorageManager.instance.GetTotalAmmo(Config.ammoUsingType.SubItemType) > 0 && ammoNeed > 0)
         {
-            currentAmmo += ammoInStorage;
+            isReloading = true;
+
+            TimerActionHandler.instance.StartTimer(1.5f, () =>
+            {
+                int ammoInStorage = StorageManager.instance.AcquireAmmoItem(Config.ammoUsingType.SubItemType, ammoNeed);
+
+                currentAmmo += ammoInStorage;
+                isReloading = false;
+            });
             return true;
         }
         return false;

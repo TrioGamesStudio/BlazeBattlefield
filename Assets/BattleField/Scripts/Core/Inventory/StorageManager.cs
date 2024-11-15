@@ -1,6 +1,7 @@
 ﻿using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 public class StorageManager : MonoBehaviour
@@ -114,29 +115,39 @@ public class StorageManager : MonoBehaviour
 
     public int AcquireAmmoItem(AmmoType ammoType,int ammoNeed)
     {
+        if (ammoNeed <= 0) return 0;
+
         int ammoCanGet = 0;
-        if (bigData.TryGetValue((ItemType.Ammo, ammoType), out var list))
+        if (!bigData.TryGetValue((ItemType.Ammo, ammoType), out var list))
         {
-            foreach(var ammo in list)
+            return 0;
+        }
+
+        foreach (var ammo in list) 
+        {
+            int ammoToTake = Math.Min(ammo.amount, ammoNeed - ammoCanGet);
+
+            if (ammoToTake > 0)
             {
-                if (ammo.amount > ammoNeed)
+                ammo.amount -= ammoToTake;
+                ammoCanGet += ammoToTake;
+
+                if (ammo.amount <= 0)
                 {
-                    ammo.amount -= ammoNeed;
-                    ammoCanGet += ammoNeed;
-                    ammo.OnUpdateData();
+                    Remove(ItemType.Ammo, ammoType, ammo);
                 }
                 else
                 {
-                    ammoCanGet += ammo.amount;
-                    Remove(ItemType.Ammo, ammoType, ammo);
+                    ammo.OnUpdateData();
                 }
-         
-                if(ammoCanGet == ammoNeed)
+
+                if (ammoCanGet >= ammoNeed)
                 {
                     break;
                 }
             }
         }
+
         return ammoCanGet;
     }
 }

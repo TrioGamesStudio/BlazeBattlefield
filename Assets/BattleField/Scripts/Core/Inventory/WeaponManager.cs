@@ -58,18 +58,12 @@ public class WeaponManager : MonoBehaviour
     public void Reload()
     {
         if (currentWeaponIndex == -1) return;
-        TimerActionHandler.instance.StartTimer(1.5f, () =>
-        {
-            weaponSlotHandlers[currentWeaponIndex].TryToReload();
-            Debug.Log("Reload ammo");
-        });
-        
+        weaponSlotHandlers[currentWeaponIndex].TryToReload();
     }
 
     public void AddNewGun(GunItemConfig newConfig)
     {
         TimerActionHandler.instance.Cancel();
-
         int newWeaponSlotIndex = (int)newConfig.slotWeaponIndex;
         bool allSlotIsEmpty = true;
         bool isEquipWeapon = currentWeaponIndex != -1;
@@ -187,6 +181,7 @@ public class WeaponManager : MonoBehaviour
 
     public void Shoot()
     {
+        TimerActionHandler.instance.Cancel();
         weaponSlotHandlers[currentWeaponIndex].Shoot();
     }
 }

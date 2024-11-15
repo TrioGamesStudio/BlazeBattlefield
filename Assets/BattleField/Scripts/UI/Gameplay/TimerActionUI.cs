@@ -10,6 +10,7 @@ public class TimerActionUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private Button cancelButton;
     [SerializeField] private GameObject view;
+    [SerializeField] private Image circleFadeImage;
     public static Action OnCancel;
     private void Awake()
     {
@@ -39,5 +40,10 @@ public class TimerActionUI : MonoBehaviour
     public void UpdateTimerText(double timer)
     {
         timerText.text = timer.ToString();
+    }
+
+    public void Fade(float value)
+    {
+        circleFadeImage.fillAmount = value;
     }
 }

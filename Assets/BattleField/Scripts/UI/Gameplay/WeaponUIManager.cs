@@ -14,16 +14,13 @@ public class WeaponUIManager : MonoBehaviour
     public void Hightligh(int index)
     {
         Debug.Log("Hightlight in :" + index);
-        if(index == -1)
+        foreach (var item in weaponSlotUIArray)
         {
-            foreach(var item in weaponSlotUIArray)
-            {
-                item.RemoveHighlight();
-            }
+            item.RemoveHighlight();
         }
-        else
-        {
-            weaponSlotUIArray[index].ApplyHighlight();
-        }
+        if (index == -1) return;
+
+        weaponSlotUIArray[index].ApplyHighlight();
+
     }
 }
