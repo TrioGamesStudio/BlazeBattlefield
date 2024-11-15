@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemDatabase : NetworkBehaviour
 {
     public static ItemDatabase instance;
-    [SerializeField] private ItemConfigDatabase ItemConfigDatabase;
+    [SerializeField] public ItemConfigDatabase ItemConfigDatabase;
     [SerializeField] private ItemPrefabDatabase ItemPrefabDatabase;
     
     public Transform PlayerObject;
@@ -26,10 +26,6 @@ public class ItemDatabase : NetworkBehaviour
     }
 
 
-    public ItemConfig<Enum> GetItemConfig(ItemType itemType, Enum subItemType)
-    {
-        return ItemConfigDatabase.FindItem(itemType, subItemType);
-    }
 
     // Use by inventory spawning
     public void InventoryItemToWorld(InventoryItem inventoryItem, int newAmount)

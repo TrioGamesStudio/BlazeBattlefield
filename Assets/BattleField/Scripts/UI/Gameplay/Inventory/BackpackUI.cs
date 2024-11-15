@@ -49,11 +49,13 @@ public class BackpackUI : MonoBehaviour
 
     public void ActiveHealthTimer()
     {
-        TimerActionHandler.instance.StartTimer(4, () => { OnUseHealthItem(currentItem); });
+        if (currentItem == null) return;
+        var healthConfig = ItemDatabase.instance.ItemConfigDatabase.FindHealthItem(currentItem._SubItemEnum);
+        TimerActionHandler.instance.StartTimer(healthConfig.usingTime, () => { OnUseHealthItem(currentItem); });
     }
     private void OnUseHealthItem(InventoryItem currentItem)
     {
-        if (currentItem == null) return;
+        
         currentItem.amount -= 1;
         currentItem?.OnUpdateData();
         if (currentItem.amount == 0)

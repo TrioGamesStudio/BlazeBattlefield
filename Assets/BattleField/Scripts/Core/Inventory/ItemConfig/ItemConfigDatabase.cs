@@ -6,48 +6,50 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ItemConfigDatabase", menuName = "Configs/ItemDefaults")]
 public class ItemConfigDatabase : ScriptableObject
 {
-    public List<HealthItemConfig> healthConfigs;
-    public List<AmmoItemConfig> ammoConfigs;
-    public List<GunItemConfig> gunConfigs;
-    public ItemType itemType;
+    [SerializeField] private List<HealthItemConfig> healthConfigs;
+    [SerializeField] private List<AmmoItemConfig> ammoConfigs;
+    [SerializeField] private List<GunItemConfig> gunConfigs;
+    [SerializeField] private ItemType itemType;
 
-    public ItemConfig<T> FindItem<T>(ItemType itemType, T subItemType) where T : Enum
+    
+
+    public HealthItemConfig FindHealthItem<T>(T subItemType) where T : Enum
     {
-        switch (itemType)
+        foreach (var item in healthConfigs)
         {
-            case ItemType.Health:
-                foreach (var item in healthConfigs)
-                {
-                    if (item.SubItemType.Equals(subItemType))
-                    {
-                        return item as ItemConfig<T>;
-                    }
-                }
-                break;
-
-            case ItemType.Ammo:
-                foreach (var item in ammoConfigs)
-                {
-                    if (item.SubItemType.Equals(subItemType))
-                    {
-                        return item as ItemConfig<T>;
-                    }
-                }
-                break;
-            case ItemType.Gun:
-                foreach (var item in gunConfigs)
-                {
-                    if (item.SubItemType.Equals(subItemType))
-                    {
-                        return item as ItemConfig<T>;
-                    }
-                }
-                break;
+            if (item.SubItemType.Equals(subItemType))
+            {
+                return item;
+            }
         }
-
-        Debug.LogWarning($"No item found with ItemType: {itemType} and SubItemType: {subItemType}");
+        Debug.LogWarning($"No health item found with SubItemType: {subItemType}");
         return null;
     }
 
+    public AmmoItemConfig FindAmmoItem<T>(T subItemType) where T : Enum
+    {
+        foreach (var item in ammoConfigs)
+        {
+            if (item.SubItemType.Equals(subItemType))
+            {
+                return item;
+            }
+        }
+        Debug.LogWarning($"No ammo item found with SubItemType: {subItemType}");
+        return null;
+    }
+
+    public GunItemConfig FindGunItem<T>(T subItemType) where T : Enum
+    {
+        foreach (var item in gunConfigs)
+        {
+            if (item.SubItemType.Equals(subItemType))
+            {
+                return item;
+            }
+        }
+        Debug.LogWarning($"No gun item found with SubItemType: {subItemType}");
+        return null;
+    }
 }
 
