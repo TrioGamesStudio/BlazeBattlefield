@@ -5,7 +5,7 @@
     Ammo,
     Health,
     Grenade,
-    Ammor,
+    Armor,
     Helmet,
     Backpack
 }

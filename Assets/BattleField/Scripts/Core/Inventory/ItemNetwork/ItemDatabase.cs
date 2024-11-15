@@ -42,14 +42,21 @@ public class ItemDatabase : NetworkBehaviour
         CreateItemInWorld(quantity, config.ItemType, config.SubItemType, PlayerObject.position);
     }
 
+    public void ArmorConfigToWorld(ArmorConfig config, float durability)
+    {
+        var item = CreateItemInWorld(1, config.ItemType, config.SubItemType, PlayerObject.position);
+        item.SetCustomData(GearManager.DurabilityKey, durability);
+    }
 
-    private void CreateItemInWorld(int newAmount, ItemType key1, Enum key2, Vector3 position)
+    private ItemDataEnum CreateItemInWorld(int newAmount, ItemType key1, Enum key2, Vector3 position)
     {
         var itemPrefab = GetItemPrefab(key1, key2);
-        if (itemPrefab == null) return;
+        if (itemPrefab == null) return null;
 
         var item = Runner.Spawn(itemPrefab, position).GetComponent<ItemDataEnum>();
         item.SetQuantity(newAmount);
+
+        return item;
     }
 
     

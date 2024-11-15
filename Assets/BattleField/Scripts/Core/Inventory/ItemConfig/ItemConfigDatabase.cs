@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ItemConfigDatabase", menuName = "Configs/ItemDefaults")]
+[CreateAssetMenu(fileName = "ItemConfigDatabase", menuName = "Config/ItemDefaults")]
 public class ItemConfigDatabase : ScriptableObject
 {
     [SerializeField] private List<HealthItemConfig> healthConfigs;
     [SerializeField] private List<AmmoItemConfig> ammoConfigs;
     [SerializeField] private List<GunItemConfig> gunConfigs;
+    [SerializeField] private List<ArmorConfig> armorConfigs;
     [SerializeField] private ItemType itemType;
 
     
@@ -42,6 +43,19 @@ public class ItemConfigDatabase : ScriptableObject
     public GunItemConfig FindGunItem<T>(T subItemType) where T : Enum
     {
         foreach (var item in gunConfigs)
+        {
+            if (item.SubItemType.Equals(subItemType))
+            {
+                return item;
+            }
+        }
+        Debug.LogWarning($"No gun item found with SubItemType: {subItemType}");
+        return null;
+    }
+
+    public ArmorConfig FindArmorItem<T>(T subItemType) where T : Enum
+    {
+        foreach (var item in armorConfigs)
         {
             if (item.SubItemType.Equals(subItemType))
             {

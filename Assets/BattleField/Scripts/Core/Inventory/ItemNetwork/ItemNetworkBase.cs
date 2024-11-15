@@ -6,6 +6,15 @@ using UnityEngine;
 [Serializable]
 public class CustomData
 {
+    public CustomData()
+    {
+
+    }
+    public CustomData(string _key,float _value)
+    {
+        key = _key;
+        value = _value;
+    }
     public string key;
     public float value;
 }
@@ -16,6 +25,7 @@ public interface ItemDataEnum
     ItemType GetItemType();
 
     void SetQuantity(int newAmount);
+    void SetCustomData(string key, float value);
 }
 
 public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, ItemDataEnum, 
@@ -94,6 +104,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
             Runner.Despawn(Object);
         }
     }
+
     [EditorButton]
     public void DestroyTest()
     {
@@ -109,20 +120,6 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     public ItemType GetItemType()
     {
         return config.ItemType;
-    }
-
-    public void SetQuantity(int newAmount)
-    {
-        SetQuantityRPC(newAmount);
-    }
-
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void SetQuantityRPC(int newAmount)
-    {
-        if (Object.HasStateAuthority)
-        {
-            quantity = newAmount;
-        }
     }
 
     public string DisplayName()
@@ -143,5 +140,34 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     public Sprite GetIcon()
     {
         return config.Icon;
+    }
+    public void SetQuantity(int newAmount)
+    {
+        SetQuantityRPC(newAmount);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void SetQuantityRPC(int newAmount)
+    {
+        if (Object.HasStateAuthority)
+        {
+            quantity = newAmount;
+        }
+    }
+
+    
+
+    public void SetCustomData(string key, float value)
+    {
+        SetCustomDataRPC(key, value);
+    }
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void SetCustomDataRPC(string key, float value)
+    {
+        if (Object.HasStateAuthority)
+        {
+            customDatas[0].key = key;
+            customDatas[0].value = value;
+        }
     }
 }
