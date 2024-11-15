@@ -14,6 +14,12 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private ViewUIHandler subPanelUI;
     [Header("Shooting")]
     [SerializeField] private WeaponBackpackUI[] weaponEquipUIs;
+
+    [SerializeField] private Transform ItemCollectUI;
+
+    [SerializeField] private Transform defaultStandTransform;
+    [SerializeField] private Transform openViewStandTransform;
+
     private void Awake()
     {
         isOpen = false;
@@ -49,8 +55,23 @@ public class InventoryUI : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+        ToggleItemCollectUI();
         isOpen = !isOpen;
     }
+
+    private void ToggleItemCollectUI()
+    {
+        if (isOpen)
+        {
+            ItemCollectUI.transform.position = openViewStandTransform.position;
+
+        }
+        else
+        {
+            ItemCollectUI.transform.position = defaultStandTransform.position;
+        }
+    }
+
     private void ShowInventoryElement(bool isShow)
     {
         if (isShow)

@@ -138,16 +138,24 @@ public class BackpackUI : MonoBehaviour
     {
         dropAmountUI.gameObject.SetActive(false);
     }
-
+    private int currentIndex = -1;
     public void ShowButton(int transformIndex)
     {
+        if(transformIndex == currentIndex)
+        {
+            HideButton();
+            return;
+        }
+
         buttonGroupUI.gameObject.SetActive(true);
         buttonGroupUI.SetupView(currentItem);
         buttonGroupUI.transform.SetSiblingIndex(transformIndex);
+        currentIndex = transformIndex;
     }
 
     public void HideButton()
     {
+        currentIndex = -1;
         buttonGroupUI.gameObject.SetActive(false);
     }
 
