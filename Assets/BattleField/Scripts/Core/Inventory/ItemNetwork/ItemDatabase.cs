@@ -59,5 +59,16 @@ public class ItemDatabase : NetworkBehaviour
         return item;
     }
 
-    
+    public NetworkObject SpawnItem(GameObject prefab,Vector3 position, string _tag)
+    {
+        //var position = isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position;
+        var networkObject = Runner.Spawn(prefab, position, Quaternion.Euler(0, 0, 0), null, (runner, obj) =>
+        {
+            obj.GetComponent<BoundItem>().allowAddToCollider = false;
+            obj.GetComponent<TagObjectHandler>().SetTag_RPC(_tag);
+        });
+        Debug.Log("Start set parent", gameObject);
+        //RPC_SetParentWeapon(networkObject, isLocal, index);
+        return networkObject;
+    }
 }

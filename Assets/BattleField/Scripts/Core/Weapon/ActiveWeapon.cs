@@ -36,11 +36,7 @@ public partial class ActiveWeapon : NetworkBehaviour
     private NetworkObject SpawnItem(GameObject prefab, bool isLocal, int index, string _tag)
     {
         var position = isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position;
-        var networkObject = Runner.Spawn(prefab, position, Quaternion.Euler(0, 0, 0), null, (runner, obj) =>
-        {
-            obj.GetComponent<BoundItem>().allowAddToCollider = false;
-            obj.GetComponent<TagObjectHandler>().SetTag_RPC(_tag);
-        });
+        var networkObject = ItemDatabase.instance.SpawnItem(prefab, position, _tag);
         Debug.Log("Start set parent", gameObject);
         RPC_SetParentWeapon(networkObject, isLocal, index);
         return networkObject;
@@ -76,7 +72,7 @@ public partial class ActiveWeapon : NetworkBehaviour
     {
         weapon.transform.SetParent(isLocal ? weaponHoldersLocal[index] : weaponHoldersRemote[index], false);
         weapon.GetComponent<NetworkTransform>().Teleport(isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position);
-        
+
         /* weapon.transform.SetParent(parent.transform);
         Debug.Log($"Weapon name {weapon.name}"); */
 
@@ -91,11 +87,14 @@ public partial class ActiveWeapon : NetworkBehaviour
         SetRenderForLocalAndRomoteBody();
     }
 
-    public void SetRenderForLocalAndRomoteBody() {
-        if(characterInputHandler.IsThirdCam) {
+    public void SetRenderForLocalAndRomoteBody()
+    {
+        if (characterInputHandler.IsThirdCam)
+        {
             Utils.SetRenderLayerInChildren(NetworkPlayer.Local.playerModel, LayerMask.NameToLayer("Default"));
         }
-        else {
+        else
+        {
             Utils.SetRenderLayerInChildren(NetworkPlayer.Local.playerModel, LayerMask.NameToLayer("LocalPlayerModel"));
 
         }

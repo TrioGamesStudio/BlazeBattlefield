@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ArmorItem : ItemNetworkBase<ArmorType, ArmorConfig>
 {
+    [SerializeField] private GameObject pickupModel;
+    [SerializeField] private GameObject equipModel;
+  
     protected override void AddToStorage()
     {
         GearManager.instance.AddArmor(config, customDatas[0].value);
@@ -13,4 +16,6 @@ public class ArmorItem : ItemNetworkBase<ArmorType, ArmorConfig>
     {
         customDatas = new CustomData[1] { new CustomData(GearManager.DurabilityKey, config.durability) };
     }
+
+
 }
