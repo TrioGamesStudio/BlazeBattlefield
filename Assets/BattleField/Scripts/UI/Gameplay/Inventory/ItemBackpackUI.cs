@@ -5,7 +5,6 @@ public class ItemBackpackUI : BaseUIItem, IPoolCallback<ItemBackpackUI>
 {
     public Action<ItemBackpackUI> OnCallback { get; set; }
     private InventoryItem currentItem;
-    private bool isShow = false;
     protected override void Awake()
     {
         base.Awake();
@@ -18,17 +17,8 @@ public class ItemBackpackUI : BaseUIItem, IPoolCallback<ItemBackpackUI>
     }
     private void ShowButtonBelowItemUI()
     {
-        if (!isShow)
-        {
-            BackpackUI.instance.SetCurrentItem(currentItem);
-            BackpackUI.instance.ShowButton(transform.GetSiblingIndex() + 1);
-            isShow = true;
-        }
-        else
-        {
-            BackpackUI.instance.HideButton();
-            isShow = false;
-        }
+        BackpackUI.instance.SetCurrentItem(currentItem);
+        BackpackUI.instance.ShowButton(transform.GetSiblingIndex() + 1);
     }
 
     public void OnRelease()

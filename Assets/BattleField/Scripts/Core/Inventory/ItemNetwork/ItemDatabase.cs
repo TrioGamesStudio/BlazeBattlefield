@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemDatabase : NetworkBehaviour
 {
     public static ItemDatabase instance;
-    [SerializeField] private ItemConfigDatabase ItemConfigDatabase;
+    [SerializeField] public ItemConfigDatabase ItemConfigDatabase;
     [SerializeField] private ItemPrefabDatabase ItemPrefabDatabase;
     
     public Transform PlayerObject;
@@ -26,10 +26,6 @@ public class ItemDatabase : NetworkBehaviour
     }
 
 
-    public ItemConfig<Enum> GetItemConfig(ItemType itemType, Enum subItemType)
-    {
-        return ItemConfigDatabase.FindItem(itemType, subItemType);
-    }
 
     // Use by inventory spawning
     public void InventoryItemToWorld(InventoryItem inventoryItem, int newAmount)
@@ -46,15 +42,33 @@ public class ItemDatabase : NetworkBehaviour
         CreateItemInWorld(quantity, config.ItemType, config.SubItemType, PlayerObject.position);
     }
 
+    public void ArmorConfigToWorld(ArmorConfig config, float durability)
+    {
+        var item = CreateItemInWorld(1, config.ItemType, config.SubItemType, PlayerObject.position);
+        item.SetCustomData(GearManager.DurabilityKey, durability);
+    }
 
-    private void CreateItemInWorld(int newAmount, ItemType key1, Enum key2, Vector3 position)
+    private ItemDataEnum CreateItemInWorld(int newAmount, ItemType key1, Enum key2, Vector3 position)
     {
         var itemPrefab = GetItemPrefab(key1, key2);
-        if (itemPrefab == null) return;
+        if (itemPrefab == null) return null;
 
         var item = Runner.Spawn(itemPrefab, position).GetComponent<ItemDataEnum>();
         item.SetQuantity(newAmount);
+
+        return item;
     }
 
-    
+    public NetworkObject SpawnItem(GameObject prefab,Vector3 position, string _tag)
+    {
+        //var position = isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position;
+        var networkObject = Runner.Spawn(prefab, position, Quaternion.Euler(0, 0, 0), null, (runner, obj) =>
+        {
+            obj.GetComponent<BoundItem>().allowAddToCollider = false;
+            obj.GetComponent<TagObjectHandler>().SetTag_RPC(_tag);
+        });
+        Debug.Log("Start set parent", gameObject);
+        //RPC_SetParentWeapon(networkObject, isLocal, index);
+        return networkObject;
+    }
 }

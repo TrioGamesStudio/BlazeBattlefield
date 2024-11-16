@@ -49,11 +49,13 @@ public class BackpackUI : MonoBehaviour
 
     public void ActiveHealthTimer()
     {
-        TimerActionHandler.instance.StartTimer(4, () => { OnUseHealthItem(currentItem); });
+        if (currentItem == null) return;
+        var healthConfig = ItemDatabase.instance.ItemConfigDatabase.FindHealthItem(currentItem._SubItemEnum);
+        TimerActionHandler.instance.StartTimer(healthConfig.usingTime, () => { OnUseHealthItem(currentItem); });
     }
     private void OnUseHealthItem(InventoryItem currentItem)
     {
-        if (currentItem == null) return;
+        
         currentItem.amount -= 1;
         currentItem?.OnUpdateData();
         if (currentItem.amount == 0)
@@ -136,16 +138,24 @@ public class BackpackUI : MonoBehaviour
     {
         dropAmountUI.gameObject.SetActive(false);
     }
-
+    private int currentIndex = -1;
     public void ShowButton(int transformIndex)
     {
+        if(transformIndex == currentIndex)
+        {
+            HideButton();
+            return;
+        }
+
         buttonGroupUI.gameObject.SetActive(true);
         buttonGroupUI.SetupView(currentItem);
         buttonGroupUI.transform.SetSiblingIndex(transformIndex);
+        currentIndex = transformIndex;
     }
 
     public void HideButton()
     {
+        currentIndex = -1;
         buttonGroupUI.gameObject.SetActive(false);
     }
 

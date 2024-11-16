@@ -11,7 +11,7 @@ public class TimerActionHandler : MonoBehaviour
     public bool OnProcess { get => onProcess; }
 
     private Action onTimerComplete;
-    
+    private float maxTimer;
     private void Awake()
     {
         timer = 0;
@@ -33,6 +33,7 @@ public class TimerActionHandler : MonoBehaviour
     {
         this.onTimerComplete = onTimerComplete;
         timer = time;
+        maxTimer = time;
         onProcess = true;
         TimerActionUI.instance.Show();
     }
@@ -59,6 +60,7 @@ public class TimerActionHandler : MonoBehaviour
             }
 
             TimerActionUI.instance.UpdateTimerText(Math.Round(timer, 1));
+            TimerActionUI.instance.Fade(timer / maxTimer);
         }
     }
 }
