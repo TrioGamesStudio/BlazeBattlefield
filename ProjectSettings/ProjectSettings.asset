@@ -9,7 +9,7 @@ PlayerSettings:
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
   defaultScreenOrientation: 4
-  targetDevice: 2
+  targetDevice: 0
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: TrioGamesStudio
@@ -166,7 +166,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.TrioGamesStudio.BlazeBattlefield
     Standalone: com.Unity-Technologies.com.unity.template.urp-blank
-    iPhone: com.Unity-Technologies.com.unity.template.urp-blank
+    iPhone: com.TrioGamesStudio.BlazeBattlefield
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -190,7 +190,7 @@ PlayerSettings:
   strictShaderVariantMatching: 0
   VertexChannelCompressionMask: 4054
   iPhoneSdkVersion: 988
-  iOSTargetOSVersionString: 12.0
+  iOSTargetOSVersionString: 13.0
   tvOSSdkVersion: 0
   tvOSRequireExtendedGameController: 0
   tvOSTargetOSVersionString: 12.0
@@ -813,6 +813,7 @@ PlayerSettings:
     Android: FUSION_WEAVER;FUSION2
     Standalone: FUSION_WEAVER;FUSION2
     WebGL: FUSION_WEAVER;FUSION2
+    iPhone: FUSION_WEAVER;FUSION2
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
