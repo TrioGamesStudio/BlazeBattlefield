@@ -563,6 +563,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 {
                     Debug.Log("=== Start battle.......");
                     StartBattle();
+                    Debug.Log("Start local!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
                     players.Clear();
 
@@ -667,6 +668,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 {
                     Debug.Log("=== Start battle.......");
                     StartBattle();
+                    Debug.Log("Start remote!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 }
                 Debug.Log("=== Add player " + players[player] + " player count" + players.Count);
                 Debug.Log($"Remote player {player} added to players list");
