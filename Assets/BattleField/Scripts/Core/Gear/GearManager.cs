@@ -10,7 +10,7 @@ public class GearManager : MonoBehaviour
     public static GearManager instance;
     [SerializeField] private ArmorConfig currentArmorEquip;
     [SerializeField] private float currentArmorDurability;
-
+    [SerializeField] public GearActive gearActive;
     private void Awake()
     {
         instance = this;
@@ -36,8 +36,6 @@ public class GearManager : MonoBehaviour
 
         var networkObject = ItemDatabase.instance.SpawnItem(prefab, NetworkPlayer.Local.transform.position, "Item");
         var armor = networkObject.GetComponent<ArmorItem>();
-        armor.isEquip = true;
-        armor.SetEquipModelStateRPC();
 
     }
 }
