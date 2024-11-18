@@ -31657,15 +31657,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8de05c89c1fc1b49aa1e34795c76caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Networked_HP: 5
+  _Networked_HP: 10
   _Networked_IsDead: 0
   _Networked_Killer:
     _length: 0
     _data:
       Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   PlayerNotify: {fileID: 0}
-  OnTakeDamageModel: {fileID: 0}
-  isSkipSettingStartValues: 0
   inGamePlayerStatusUIHandler: {fileID: 419307488567696843}
 --- !u!114 &4043879867669260240
 MonoBehaviour:
@@ -31776,8 +31774,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerModel: {fileID: 702367509307297863}
-  uiOnHitColor: {r: 1, g: 0, b: 0, a: 1}
+  uiOnHitColor: {r: 1, g: 0, b: 0, a: 0.39215687}
   uiOnHitImage: {fileID: 7161972522368408250}
+  localGun: {fileID: 313210496306553861}
+  hitboxRoot: {fileID: 4209804027836753055}
+  deathParticlePf: {fileID: 4968256401583644762, guid: 136094b40fc14b34ab568c032409f5df,
+    type: 3}
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,7 +19,7 @@ public class HPHandler : NetworkBehaviour
     const byte startingHP = 5;
 
     public Action OnHpChanged;
-    public Action OnPlayerDeath;
+    public Action OnPlayerDeathLocal;
 
 
     // change material when player hit damage (doi mau SkinnedMeshRenderer)
@@ -73,7 +73,7 @@ public class HPHandler : NetworkBehaviour
                 case nameof(Networked_IsDead):
                 var boolReader = GetPropertyReader<bool>(nameof(Networked_IsDead));
                 var (previousBool, currentBool) = boolReader.Read(previousBuffer, currentBuffer);
-                //OnStateChanged(previousBool, currentBool);
+                    OnStateChanged(previousBool, currentBool);
                     break;
             }
         }
@@ -98,7 +98,7 @@ public class HPHandler : NetworkBehaviour
         Debug.Log($"{Time.time} {transform.name} took damage {Networked_HP} left");
 
         if(Networked_HP <= 0) {
-            OnPlayerDeath?.Invoke();
+            OnPlayerDeathLocal?.Invoke();
             Debug.Log($"{Time.time} {transform.name} is dead by {damageCausedByPlayerNickName}");
             /* RPC_SetNetworkedKiller(damageCausedByPlayerNickName); */ // can use
             isPublicDeathMessageSent = false;
@@ -154,7 +154,22 @@ public class HPHandler : NetworkBehaviour
         // khi hp thay doi show hp on screen
         inGamePlayerStatusUIHandler.OnGamePlayerHpRecieved(Networked_HP);
     }
+    void OnStateChanged(bool previous, bool current)
+    {
+        if (current)
+        {
+            OnPlayerDeathRemote?.Invoke();
+            //OnDeath(); // dang song turn die(current)
+        }
 
+        else if (!current && previous)
+        {
+            //OnRelive(); // dang die turn alive(current)
+            OnPlayerRelive?.Invoke();
+        }
+    }
+    public Action OnPlayerDeathRemote;
+    public Action OnPlayerRelive;
 
     void OnHPReduced() {
         if(!isInitialized) return;

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Fusion;
 
 public class OnTakeDamageModel : MonoBehaviour
 {
@@ -16,12 +17,15 @@ public class OnTakeDamageModel : MonoBehaviour
         ResetMeshRenders();
         HPHandler = GetComponent<HPHandler>();
         HPHandler.OnHpChanged += OnHpChanged;
+        HPHandler.OnPlayerDeathRemote += OnDeath;
+        HPHandler.OnPlayerRelive += OnRelive;
     }
 
     private void OnDestroy()
     {
         HPHandler.OnHpChanged -= OnHpChanged;
-
+        HPHandler.OnPlayerDeathRemote -= OnDeath;
+        HPHandler.OnPlayerRelive -= OnRelive;
     }
 
     private void OnHpChanged()
@@ -76,5 +80,31 @@ public class OnTakeDamageModel : MonoBehaviour
         {
             flashMeshRenders.Add(new FlashMeshRender(null, skinnedMeshRenderer)); // chi dang tao mang cho meshRender
         }
+    }
+    public GameObject localGun;
+    public HitboxRoot hitboxRoot;
+    public GameObject deathParticlePf;
+    void OnDeath()
+    {
+        Debug.Log($"{Time.time} onDeath");
+        playerModel.gameObject.SetActive(false);
+        localGun.gameObject.SetActive(false);   // khi death tat luon local gun
+        hitboxRoot.HitboxRootActive = false; // ko de nhan them damage
+        GetComponent<CharacterMovementHandler>().CharacterControllerEnable(false);
+        Instantiate(deathParticlePf, transform.position + Vector3.up * 1, Quaternion.identity);
+    }
+
+    void OnRelive()
+    {
+        Debug.Log($"{Time.time} onRelive");
+
+        if (HPHandler.HasStateAuthority)
+        {
+            uiOnHitImage.color = new Color(0, 0, 0, 0);
+        }
+        playerModel.gameObject.SetActive(true);
+        localGun.SetActive(true);
+        hitboxRoot.HitboxRootActive = true;
+        GetComponent<CharacterMovementHandler>().CharacterControllerEnable(true);
     }
 }

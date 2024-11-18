@@ -7,12 +7,12 @@ public class PlayerNotify : NetworkBehaviour
     private void Awake()
     {
         HPHandler = GetComponent<HPHandler>();
-        HPHandler.OnPlayerDeath += Test;
+        HPHandler.OnPlayerDeathLocal += Test;
     }
 
     private void OnDestroy()
     {
-        HPHandler.OnPlayerDeath -= Test;
+        HPHandler.OnPlayerDeathLocal -= Test;
     }
 
     public void Test()
