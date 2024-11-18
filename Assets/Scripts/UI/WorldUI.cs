@@ -31,9 +31,9 @@ public class WorldUI : MonoBehaviour
     }
 
     private void Update() {
-        if(Input.GetKeyDown(KeyCode.Escape)) {
-            ToggleCursor();
-        }
+        //if(Input.GetKeyDown(KeyCode.Escape)) {
+        //    ToggleCursor();
+        //}
     }
     
 
