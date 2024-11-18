@@ -563,6 +563,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 {
                     Debug.Log("=== Start battle.......");
                     StartBattle();
+
+                    players.Clear();
+
                 }
                 matchSolo[player] = players[player].TeamID.ToString();
             }
