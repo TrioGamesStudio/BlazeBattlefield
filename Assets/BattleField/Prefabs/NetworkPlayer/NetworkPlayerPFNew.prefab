@@ -31408,6 +31408,8 @@ GameObject:
   - component: {fileID: 4143770320003914217}
   - component: {fileID: 2577614603369078220}
   - component: {fileID: 5717655937548043561}
+  - component: {fileID: -4837319583816838637}
+  - component: {fileID: 5397635892622693518}
   m_Layer: 0
   m_Name: NetworkPlayerPFNew
   m_TagString: Player
@@ -31467,6 +31469,7 @@ MonoBehaviour:
   - {fileID: 4143770320003914217}
   - {fileID: 2577614603369078220}
   - {fileID: 5717655937548043561}
+  - {fileID: -4837319583816838637}
 --- !u!114 &4878325697303761598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31660,12 +31663,8 @@ MonoBehaviour:
     _length: 0
     _data:
       Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  uiOnHitColor: {r: 0.8980392, g: 0.2784314, b: 0.2784314, a: 0.39215687}
-  uiOnHitImage: {fileID: 7161972522368408250}
-  playerModel: {fileID: 702367509307297863}
-  localGun: {fileID: 0}
-  deathParticlePf: {fileID: 4968256401583644762, guid: 136094b40fc14b34ab568c032409f5df,
-    type: 3}
+  PlayerNotify: {fileID: 0}
+  OnTakeDamageModel: {fileID: 0}
   isSkipSettingStartValues: 0
   inGamePlayerStatusUIHandler: {fileID: 419307488567696843}
 --- !u!114 &4043879867669260240
@@ -31752,6 +31751,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeWeapon: {fileID: 2577614603369078220}
   animator: {fileID: 189564311054050457}
+--- !u!114 &-4837319583816838637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6593664972719329374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 013311780d1be1e4796d2f4e18200793, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5397635892622693518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6593664972719329374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31c6bdbe8aa02f746877c3cb72e9ec42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerModel: {fileID: 702367509307297863}
+  uiOnHitColor: {r: 1, g: 0, b: 0, a: 1}
+  uiOnHitImage: {fileID: 7161972522368408250}
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0
