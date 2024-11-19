@@ -44,7 +44,7 @@ namespace Fusion {
     public float jumpImpulse   = 8.0f;
     public float acceleration  = 10.0f;
     public float braking       = 10.0f;
-    public float maxSpeed      = 2.0f;
+    public float maxSpeed      = 4.0f;
     public float rotationSpeed = 15.0f;
     public float viewRotationSpeed = 50f;
 

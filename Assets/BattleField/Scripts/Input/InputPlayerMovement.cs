@@ -4,14 +4,11 @@ using UnityEngine.InputSystem;
 [CreateAssetMenu(fileName = "InputPlayerMovement", menuName = "Input/InputPlayerMovement")]
 public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovementActions
 {
-
     public static Action<Vector2> MoveAction;
     public static Action<Vector2> LookAction;
     public static Action JumpAction;
     public static Action SwitchCamAction;
     public static Action SprintAction;
-
-    
 
 
     //private void OnEnable()
