@@ -482,7 +482,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             if (player == runner.LocalPlayer)
             {
-                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
+                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 30, 0), Quaternion.identity, player);
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
                 localSoloPlayer = playerObject.GetComponent<PlayerRoomController>();
                 playerObject.GetComponent<PlayerRoomController>().SetPlayerRef(player);

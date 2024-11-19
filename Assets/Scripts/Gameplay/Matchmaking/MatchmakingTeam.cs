@@ -59,7 +59,6 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         isDone = false;
         players.Clear();
-        Debug.Log("=== Start new game -> clear players");
         if (networkRunner == null)
         {
             networkRunner = Instantiate(networkRunnerPrefab);
@@ -282,45 +281,6 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         }
         
     }
-
-    //private IEnumerator CheckTeamMate(PlayerRef player)
-    //{
-    //    yield return new WaitForSeconds(5);
-    //    teamID = players[networkRunner.LocalPlayer].TeamID.ToString();
-    //    Debug.Log("==== Local team ID is " + teamID);
-    //    if (players[player].TeamID.ToString() == teamID)
-    //    {
-    //        Debug.Log("===DONG DOI VAO ROI NEEEEEEEEEE");
-    //        NetworkPlayer networkPlayer = players[player].GetComponent<NetworkPlayer>();
-    //        networkPlayer.SetNicknameUIColor(Color.blue); //Set enemy name plate UI color to red
-    //        //players[player].SetTeamMateTag();
-    //    }
-    //    else
-    //    {
-    //        NetworkPlayer networkPlayer = players[player].GetComponent<NetworkPlayer>();
-    //        networkPlayer.SetNicknameUIColor(Color.red); //Set enemy name plate UI color to red
-    //        Debug.Log("===Local team id: " + teamID + "Player team id " + players[player].TeamID.ToString());
-    //    }
-    //}
-
-    //private IEnumerator WaitForTeamID(NetworkRunner runner, PlayerRef player)
-    //{
-    //    //NetworkObject playerObject = null;
-    //    float timeout = 5f; // 5 seconds timeout
-    //    float elapsedTime = 0f;
-    //    while (teamID == "" && elapsedTime < timeout)
-    //    {
-    //        teamID = players[player].TeamID.ToString();
-    //        if (teamID != "")
-    //        {
-    //            Debug.Log("******TEAM ID OF LOCAL PLAYER: " + teamID);
-    //            yield break;
-    //        }               
-    //        elapsedTime += Time.deltaTime;
-    //        yield return null;
-    //    }
-
-    //}
 
     public async void BackToLobby()
     {
