@@ -74,11 +74,16 @@ public class CharacterMovementHandler : NetworkBehaviour
         }
 
         Move(movementInput);
+
         Jump();
 
         CheckFallToRespawn();
     }
 
+    void RunForward(Vector2 movementInput) {
+
+    }
+    
     void Move(Vector2 movementInput) {
         transform.forward = aimForwardVector;
 
@@ -89,6 +94,7 @@ public class CharacterMovementHandler : NetworkBehaviour
 
         //move network
         Vector3 moveDir = transform.forward * movementInput.y + transform.right * movementInput.x;
+        
         moveDir.Normalize();
 
         networkCharacterController.Move(moveDir);

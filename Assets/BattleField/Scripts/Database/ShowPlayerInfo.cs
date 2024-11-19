@@ -23,7 +23,7 @@ public class ShowPlayerInfo : MonoBehaviour
 
 
     const string MAINLOBBY = "MainLobby";
-    const string WORLD1 = "World1";
+    const string WORLD1 = "Quang_Scene";
 
     //ohters
     DataSaver _dataSaver;

@@ -17,6 +17,7 @@ public class CharacterInputHandler : MonoBehaviour
     [SerializeField] bool isThirdCam = false;
     public bool IsThirdCam{get => isThirdCam;}
 
+    
     private void Awake() {
         ActiveWeapon = GetComponent<ActiveWeapon>();
         playerInputActions = new PlayerInputAction();
