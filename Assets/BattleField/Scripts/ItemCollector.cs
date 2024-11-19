@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 [RequireComponent(typeof(Rigidbody))]
-public class Test : NetworkBehaviour
+public class ItemCollector : NetworkBehaviour
 {
     private Rigidbody Rigidbody;
     private void Awake()
@@ -51,18 +51,6 @@ public class Test : NetworkBehaviour
             OnShowItemList(showing, BoundItemsCollider.GetList());
         }
 
-        //if (other.CompareTag("Item") == false) return;
-        //var RunTimeItem = other.GetComponent<RunTimeItem>();
-        //RunTimeItem.isDisplayedUI = showing;
-
-        //if (showing)
-        //{
-        //    ItemCollectionUI.instance.AddItemUI(RunTimeItem);
-        //}
-        //else
-        //{
-        //    ItemCollectionUI.instance.RemoveItemUI(RunTimeItem);
-        //}
     }
     private void OnChangeShowList(List<BoundItem> list)
     {

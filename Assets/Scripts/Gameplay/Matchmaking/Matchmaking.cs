@@ -406,6 +406,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         isDone = false;
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
         localPlayer.gameObject.SetActive(true);
+        players.Clear();
         await JoinLobby();
     }
 

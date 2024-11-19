@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8791259767813851350}
   - component: {fileID: 9028735146877533333}
-  - component: {fileID: 6452352528162196287}
   - component: {fileID: 7268682324085305194}
   - component: {fileID: 5359046980623043594}
+  - component: {fileID: 2262265377839815591}
   m_Layer: 0
   m_Name: CollectBox
   m_TagString: Untagged
@@ -56,18 +56,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.89, z: 1}
   m_Center: {x: 0, y: 0.07, z: 0}
---- !u!114 &6452352528162196287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5118858910141303949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 283d53d4e88bd054b9f6266539a98c76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &7268682324085305194
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -109,7 +97,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 700948268
   ObjectInterest: 1
-  Flags: 1
+  Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 6452352528162196287}
+  - {fileID: 2262265377839815591}
+--- !u!114 &2262265377839815591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5118858910141303949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dbe2c84c07ab9d4e92bae67fad7d463, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

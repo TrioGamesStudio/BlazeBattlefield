@@ -44,7 +44,7 @@ public class CharacterInputHandler : MonoBehaviour
 
     private void ChangeLookVector(Vector2 lookVector)
     {
-        Debug.Log("Look vector");
+        //Debug.Log("Look vector");
         aimDir = lookVector;
     }
     private void OnEnable() {

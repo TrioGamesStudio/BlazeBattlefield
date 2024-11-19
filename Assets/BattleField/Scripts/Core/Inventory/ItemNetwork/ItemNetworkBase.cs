@@ -36,29 +36,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     public bool isDisplayedUI { get; set; }
     public CustomData[] customDatas;
     public _Config config;
-    private BoundItem boundItem;
-
-
-    private void Awake()
-    {
-        boundItem = GetComponent<BoundItem>();
-    }
-    public override void Spawned()
-    {
-        base.Spawned();
-        Invoke(nameof(BoundItemSetup), .5f);
-    }
-
-    public void BoundItemSetup()
-    {
-        if(boundItem == null)
-        {
-            Debug.LogError("Bound item is null in item", gameObject);
-            return;
-        }
-
-        boundItem.Setup();
-    }
+ 
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {

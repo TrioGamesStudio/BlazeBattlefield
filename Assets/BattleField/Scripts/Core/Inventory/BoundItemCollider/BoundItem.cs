@@ -77,4 +77,11 @@ public class BoundItem : NetworkBehaviour
     {
         return isInBoundCollider == false && allowAddToCollider && BoundItemsCollider == null;
     }
+
+    public void ExitBound()
+    {
+        BoundItemsCollider = null;
+        allowAddToCollider = true;
+        isInBoundCollider = false;
+    }
 }

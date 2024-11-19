@@ -7,8 +7,9 @@ public class BoundItemsCollider : MonoBehaviour
 {
     [SerializeField] private BoxCollider boxCollider;
     [SerializeField] private List<BoundItem> ItemBases = new();
-    [SerializeField] private bool IsDirty = false;
     private Bounds colliderBounds;
+
+    // notify when have item removed or added in bounds
     public Action<List<BoundItem>> OnChangedList;
     private void Awake()
     {
@@ -39,19 +40,10 @@ public class BoundItemsCollider : MonoBehaviour
         boxCollider.size = boundsSize;
     }
 
-    public void CanBoundItem(Transform item)
-    {
-        bool canBoundItem = colliderBounds.Contains(item.position);
-        Bounds newBounds = colliderBounds;
-        newBounds.Encapsulate(item.position);
-    }
-
-
     public void AddItemList(BoundItem itemInGame)
     {
         if (ItemBases.Contains(itemInGame)) return;
         ItemBases.Add(itemInGame);
-        IsDirty = true;
 
         OnChangedList?.Invoke(ItemBases);
     }
@@ -60,7 +52,6 @@ public class BoundItemsCollider : MonoBehaviour
     {
         if (!ItemBases.Contains(itemInGame)) return;
         ItemBases.Remove(itemInGame);
-        IsDirty = true;
         
         if(ItemBases.Count == 0)
         {
@@ -70,7 +61,17 @@ public class BoundItemsCollider : MonoBehaviour
         }
     }
 
-    public List<BoundItem>  GetList()
+    public void ClearItemBound()
+    {
+        Debug.Log("Clear All item");
+        foreach(var item in ItemBases)
+        {
+            item.ExitBound();
+        }
+        Destroy(gameObject);
+    }
+
+    public List<BoundItem> GetList()
     {
         return ItemBases;
     }

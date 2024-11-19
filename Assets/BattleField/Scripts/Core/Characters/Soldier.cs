@@ -6,7 +6,7 @@ public class Soldier : NetworkBehaviour
 {
     public SoldierMovement movement;
     public Transform cameraPositionTransform;
-    public Test CollectCube;
+    public ItemCollector CollectCube;
     private void Awake()
     {
         movement = GetComponent<SoldierMovement>();

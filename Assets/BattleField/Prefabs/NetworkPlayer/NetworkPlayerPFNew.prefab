@@ -13463,6 +13463,118 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6861560686829112150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3947449302511977580
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 847005593242533943}
+  - component: {fileID: 904517572467094644}
+  - component: {fileID: 1521780336495961995}
+  - component: {fileID: 4296108464145253611}
+  - component: {fileID: 8581890591967411103}
+  m_Layer: 0
+  m_Name: Item Trigger Collect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &847005593242533943
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3947449302511977580}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.98, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4946146826298080308}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &904517572467094644
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3947449302511977580}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5, y: 2.87, z: 5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1521780336495961995
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3947449302511977580}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &4296108464145253611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3947449302511977580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 269888932
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours: []
+--- !u!114 &8581890591967411103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3947449302511977580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d359bb0e617ff424a8b8cfed39ca46a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3988944459893753732
 GameObject:
   m_ObjectHideFlags: 0
@@ -31432,6 +31544,7 @@ Transform:
   - {fileID: 2765225612460693475}
   - {fileID: 944937579383811275}
   - {fileID: 7529519651389035531}
+  - {fileID: 847005593242533943}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8973208252846215027
@@ -31454,6 +31567,7 @@ MonoBehaviour:
   - {fileID: 5484364122333496330}
   - {fileID: 7287991597190728165}
   - {fileID: 6350575483080216791}
+  - {fileID: 4296108464145253611}
   NetworkedBehaviours:
   - {fileID: 5430193227879812855}
   - {fileID: 3509325470741164774}
@@ -48653,12 +48767,17 @@ PrefabInstance:
     - target: {fileID: 5118858910141303949, guid: b567bd548e41e214aae8b1b45dedeb79,
         type: 3}
       propertyPath: m_Name
-      value: CollectBox
+      value: ItemCollector
       objectReference: {fileID: 0}
     - target: {fileID: 5359046980623043594, guid: b567bd548e41e214aae8b1b45dedeb79,
         type: 3}
       propertyPath: SortKey
       value: 2574545097
+      objectReference: {fileID: 0}
+    - target: {fileID: 7268682324085305194, guid: b567bd548e41e214aae8b1b45dedeb79,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8791259767813851350, guid: b567bd548e41e214aae8b1b45dedeb79,
         type: 3}

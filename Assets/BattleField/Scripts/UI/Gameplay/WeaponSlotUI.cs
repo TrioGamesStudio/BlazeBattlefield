@@ -30,7 +30,7 @@ public class BindingWeaponUI : MonoBehaviour
         if (weaponSlotHandler.IsEmpty)
         {
             // remove callback UI of ammo
-            Debug.Log("Reset UI callback", gameObject);
+            //Debug.Log("Reset UI callback", gameObject);
             ResetUIState();
         }
         else
