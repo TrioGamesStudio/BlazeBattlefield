@@ -166,6 +166,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         isDone = false;
         playButton.interactable = true;
         currentMode = Mode.Solo;
+        players.Clear();
     }
 
     public void StartGame()
@@ -682,6 +683,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
+        if (player == runner.LocalPlayer)
+            players.Clear();
 
         if (currentMode == Mode.Solo)
         {

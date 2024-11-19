@@ -376,7 +376,10 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-    {       
+    {
+        if (player == runner.LocalPlayer)
+            players.Clear();
+
         Debug.Log("===Player trong team left neeee");
         Debug.Log("===Player trong team left neeee " + runner.ActivePlayers.Count());
         //throw new NotImplementedException();
