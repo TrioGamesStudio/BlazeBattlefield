@@ -1047,6 +1047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerHP: {fileID: 2840044513813436601}
+  HPHandler: {fileID: 8736713430267502296}
 --- !u!223 &3411932234409435927
 Canvas:
   m_ObjectHideFlags: 0
@@ -31410,6 +31411,7 @@ GameObject:
   - component: {fileID: 5717655937548043561}
   - component: {fileID: -4837319583816838637}
   - component: {fileID: 5397635892622693518}
+  - component: {fileID: 6118668917653563473}
   m_Layer: 0
   m_Name: NetworkPlayerPFNew
   m_TagString: Player
@@ -31470,6 +31472,7 @@ MonoBehaviour:
   - {fileID: 2577614603369078220}
   - {fileID: 5717655937548043561}
   - {fileID: -4837319583816838637}
+  - {fileID: 6118668917653563473}
 --- !u!114 &4878325697303761598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31663,8 +31666,6 @@ MonoBehaviour:
     _length: 0
     _data:
       Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  PlayerNotify: {fileID: 0}
-  inGamePlayerStatusUIHandler: {fileID: 419307488567696843}
 --- !u!114 &4043879867669260240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31780,6 +31781,18 @@ MonoBehaviour:
   hitboxRoot: {fileID: 4209804027836753055}
   deathParticlePf: {fileID: 4968256401583644762, guid: 136094b40fc14b34ab568c032409f5df,
     type: 3}
+--- !u!114 &6118668917653563473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6593664972719329374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d8268491df2a574a81efa7e406d3c59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0
