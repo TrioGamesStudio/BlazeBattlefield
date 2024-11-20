@@ -3,6 +3,8 @@ using Fusion;
 using UnityEngine.SceneManagement;
 using System;
 using System.Collections;
+using UnityEditor.ShaderGraph.Internal;
+using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 
 public class CharacterMovementHandler : NetworkBehaviour
 {
@@ -16,10 +18,12 @@ public class CharacterMovementHandler : NetworkBehaviour
 
     Vector2 movementInput;
     Vector3 aimForwardVector;
-
+    bool isSprinted;
     //locomotion
-    [SerializeField] float walkSpeed = 0f;
-    [SerializeField] Animator anim;
+
+    Animator anim;
+    int speedAnimRate = 1;
+    [SerializeField] float currentSpeedAnim = 0;
 
     // request after falling
     [SerializeField] float fallHightToRespawn = -10f;
@@ -34,7 +38,7 @@ public class CharacterMovementHandler : NetworkBehaviour
 
     HPHandler hPHandler;
     CharacterInputHandler characterInputHandler;
-
+    Vector3 moveDir;
     private void Awake() {
         characterInputHandler = GetComponent<CharacterInputHandler>();
         networkCharacterController = GetComponent<NetworkCharacterController>();
@@ -43,6 +47,8 @@ public class CharacterMovementHandler : NetworkBehaviour
         networkPlayer = GetComponent<NetworkPlayer>();
         anim = GetComponentInChildren<Animator>();
         hPHandler = GetComponent<HPHandler>();
+
+        speedAnimRate = 1;
     }
 
 
@@ -53,7 +59,16 @@ public class CharacterMovementHandler : NetworkBehaviour
         //? move input local
         /* if (Input.GetButtonDown("Jump")) _jumpPressed = true;
         movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")); */
-        movementInput = characterInputHandler.Move;
+        
+        if(!isSprinted) {
+            movementInput = characterInputHandler.Move;
+            //networkCharacterController.maxSpeed = 4;
+        }
+        else {
+            movementInput = Vector2.up;
+            //networkCharacterController.maxSpeed = 6;
+        }
+        
         isJumped = characterInputHandler.IsJumped;
 
         aimForwardVector = localCameraHandler.transform.forward;
@@ -74,9 +89,22 @@ public class CharacterMovementHandler : NetworkBehaviour
         }
 
         Move(movementInput);
+
         Jump();
 
         CheckFallToRespawn();
+    }
+
+    public void SetMovementInput(bool isSprinted) {
+        this.isSprinted = isSprinted;
+        if(isSprinted) {
+            networkCharacterController.maxSpeed = 6;
+            speedAnimRate = 4;
+        }
+        else {
+            networkCharacterController.maxSpeed = 4;
+            speedAnimRate = 1;
+        }
     }
 
     void Move(Vector2 movementInput) {
@@ -88,9 +116,9 @@ public class CharacterMovementHandler : NetworkBehaviour
         transform.rotation = rotation;
 
         //move network
-        Vector3 moveDir = transform.forward * movementInput.y + transform.right * movementInput.x;
-        moveDir.Normalize();
+        moveDir = transform.forward * movementInput.y + transform.right * movementInput.x;
 
+        moveDir.Normalize();
         networkCharacterController.Move(moveDir);
 
         // animator
@@ -98,9 +126,9 @@ public class CharacterMovementHandler : NetworkBehaviour
                                         networkCharacterController.Velocity.z);
         
         walkVector.Normalize(); // ko cho lon hon 1
-        walkSpeed = Mathf.Lerp(walkSpeed, Mathf.Clamp01(walkVector.magnitude), Runner.DeltaTime * 10f);
 
-        anim.SetFloat("walkSpeed", walkSpeed);
+        currentSpeedAnim = Mathf.Lerp(currentSpeedAnim, Mathf.Clamp01(walkVector.magnitude), Runner.DeltaTime * 10f);
+        anim.SetFloat("walkSpeed", currentSpeedAnim * speedAnimRate);
     }
 
     void Jump() {
