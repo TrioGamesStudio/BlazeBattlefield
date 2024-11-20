@@ -608,11 +608,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         players.Remove(player);
 
         // Setup when team member become room owner when room owner left room
-        if (player != runner.LocalPlayer)
+        if (player != runner.LocalPlayer && currentMode == Mode.Duo)
             players[runner.LocalPlayer].RPC_SetAsRoomOwner();
 
         // Setup when team member become room owner
-        if (players.ContainsKey(runner.LocalPlayer))
+        if (players.ContainsKey(runner.LocalPlayer) && currentMode == Mode.Duo)
         {
             if (players[runner.LocalPlayer].IsRoomOwner)
             {
