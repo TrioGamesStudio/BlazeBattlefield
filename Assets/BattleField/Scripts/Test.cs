@@ -78,7 +78,7 @@ public class Test : NetworkBehaviour
                 continue;
             }
 
-            var runTimeItem = item.GetComponent<RunTimeItem>();
+            var runTimeItem = item.GetComponent<IRunTimeItem>();
             if (showing)
             {
                 runTimeItem.isDisplayedUI = true;
