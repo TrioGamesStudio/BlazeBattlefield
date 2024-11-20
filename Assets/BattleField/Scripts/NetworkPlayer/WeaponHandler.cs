@@ -73,7 +73,6 @@ public class WeaponHandler : NetworkBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Ready") return;
         if (HasStateAuthority == false) return;
-        if (hPHandler.Networked_IsDead || hPHandler.Networked_HP < 0) return;
 
         // nhan mouse 0 fire bullet
         //if(Input.GetKeyDown(KeyCode.Mouse0)) isFired = true;
@@ -90,7 +89,8 @@ public class WeaponHandler : NetworkBehaviour
         }
         if (Object.HasStateAuthority)
         {
-            if (WeaponManager.instance.IsReadyToShoot())
+            if (WeaponManager.instance.IsReadyToShoot() && 
+                !hPHandler.Networked_IsDead && hPHandler.Networked_HP > 0)
             {
                 Fire();
                 
