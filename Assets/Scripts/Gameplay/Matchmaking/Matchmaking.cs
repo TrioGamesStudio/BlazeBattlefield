@@ -19,7 +19,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private Button readyButton;
     [SerializeField] private Button playButton;
     private NetworkRunner networkRunner;
-    private const int MAX_PLAYER = 2;
+    private const int MAX_PLAYER = 3;
     public GameObject localPlayer;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     private PlayerRoomController localPlayerRoomController;
@@ -482,7 +482,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             if (player == runner.LocalPlayer)
             {
-                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 30, 0), Quaternion.identity, player);
+                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
                 localSoloPlayer = playerObject.GetComponent<PlayerRoomController>();
                 playerObject.GetComponent<PlayerRoomController>().SetPlayerRef(player);
@@ -501,7 +501,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 // Handle remote player
                 StartCoroutine(WaitForPlayerObjectSolo(runner, player));
             }
-            int remainPlayer = MAX_PLAYER - players.Count();
+            int remainPlayer = MAX_PLAYER - networkRunner.ActivePlayers.Count();
             string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(text);
         }
@@ -592,10 +592,14 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        if (player == runner.LocalPlayer)
-            players.Clear();
+        if (currentMode == Mode.Solo && !isDone)
+        {
+            int remainPlayer = MAX_PLAYER - networkRunner.ActivePlayers.Count();
+            string text = "Waiting other player: " + remainPlayer + " remain";
+            FindObjectOfType<UIController>().SetText(text);
+        }
 
-        if (currentMode == Mode.Solo)
+        if (currentMode == Mode.Solo && isDone)
         {
             FindObjectOfType<GameHandler>().Eliminate(matchSolo[player], players[player]);
             FindObjectOfType<GameHandler>().CheckWin();
