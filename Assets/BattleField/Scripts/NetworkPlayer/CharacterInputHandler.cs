@@ -4,6 +4,7 @@ public class CharacterInputHandler : MonoBehaviour
 {
     ActiveWeapon ActiveWeapon;
     PlayerInputAction playerInputActions;
+    CharacterMovementHandler characterMovementHandler;
     Vector2 move;
     bool isJumped = false;
     bool isFired = false;
@@ -12,7 +13,10 @@ public class CharacterInputHandler : MonoBehaviour
     public bool IsJumped {get => isJumped;}
     public bool IsFired{get => isFired;}
     public Vector2 AimDir {get => aimDir;}
+    // check run button
+    //[SerializeField] bool isSprintPressed;
 
+    public bool isPrinted = false;
     //others
     [SerializeField] bool isThirdCam = false;
     public bool IsThirdCam{get => isThirdCam;}
@@ -20,6 +24,7 @@ public class CharacterInputHandler : MonoBehaviour
     
     private void Awake() {
         ActiveWeapon = GetComponent<ActiveWeapon>();
+        characterMovementHandler = GetComponent<CharacterMovementHandler>();
         playerInputActions = new PlayerInputAction();
 
         playerInputActions.PlayerMovement.Jumping.started += _ => isJumped = true;
@@ -34,13 +39,24 @@ public class CharacterInputHandler : MonoBehaviour
         playerInputActions.PlayerMovement.SwitchCam.started += _ => ChangeCamera();
         
         InputPlayerMovement.LookAction += ChangeLookVector;
+
+        playerInputActions.PlayerMovement.Sprint.started += _ => UpdateIsPrinted();
+    }
+
+    private void Start() {
+        isPrinted = false;
+    }
+
+    void UpdateIsPrinted() {
+        isPrinted = !isPrinted;
+        if(!isPrinted) characterMovementHandler.SetMovementInput(false);
+        else characterMovementHandler.SetMovementInput(true);
     }
 
     private void ChangeCamera()
     {
         isThirdCam = !isThirdCam;
         ActiveWeapon.SetActiveLocalWeapon(!isThirdCam);
-
     }
 
     private void ChangeLookVector(Vector2 lookVector)
@@ -56,6 +72,7 @@ public class CharacterInputHandler : MonoBehaviour
         playerInputActions.PlayerMovement.Look.Enable();
 
         playerInputActions.PlayerMovement.SwitchCam.Enable();
+        playerInputActions.PlayerMovement.Sprint.Enable();
     }
 
     private void OnDisable() {
@@ -66,7 +83,7 @@ public class CharacterInputHandler : MonoBehaviour
         playerInputActions.PlayerMovement.Look.Disable();
 
         playerInputActions.PlayerMovement.SwitchCam.Disable();
-
+        playerInputActions.PlayerMovement.Sprint.Disable();
     }
 
     private void Update() {
