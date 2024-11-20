@@ -30,7 +30,7 @@ public class BaseUIItem : MonoBehaviour
 
     public void SetItemCount(int count)
     {
-        itemCount.text = count.ToString();
+        itemCount.text = "x"+count.ToString();
     }
 
     public void SetIcon(Sprite icon)

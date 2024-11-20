@@ -139,20 +139,41 @@ public class BackpackUI : MonoBehaviour
         dropAmountUI.gameObject.SetActive(false);
     }
     private int currentIndex = -1;
-    public void ShowButton(int transformIndex)
+    private ItemBackpackUI previousItemBackpackUI;
+    public void ShowButton(ItemBackpackUI itemBackpackUI)
     {
-        if(transformIndex == currentIndex)
+        HideDropAmount();
+        int transformIndex = itemBackpackUI.transform.GetSiblingIndex() + 1;
+        if(currentIndex == -1 && transformIndex == 1)
         {
+            Debug.Log("Fuck you");
+            currentIndex = 1;
+        }
+        else if(transformIndex > currentIndex)
+        {
+            transformIndex -= 1;
+            Debug.Log("Fuck you 2");
+        }
+        else if (transformIndex == currentIndex)
+        {
+            Debug.Log("Fuck you 3");
+            previousItemBackpackUI?.UnHighlight();
+            previousItemBackpackUI = null;
             HideButton();
             return;
         }
+        Debug.Log("Fuck you 4");
+        previousItemBackpackUI?.UnHighlight();
+        previousItemBackpackUI = itemBackpackUI;
+        previousItemBackpackUI.Highlight();
 
-        buttonGroupUI.gameObject.SetActive(true);
         buttonGroupUI.SetupView(currentItem);
         buttonGroupUI.transform.SetSiblingIndex(transformIndex);
+        buttonGroupUI.gameObject.SetActive(true);
+        Debug.Log($"{itemBackpackUI.transform.GetSiblingIndex()} | {transformIndex}");
         currentIndex = transformIndex;
     }
-
+  
     public void HideButton()
     {
         currentIndex = -1;
