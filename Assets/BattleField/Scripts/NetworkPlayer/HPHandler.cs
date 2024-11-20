@@ -43,7 +43,7 @@ public class HPHandler : NetworkBehaviour
 
     // show thong tin player in game HP
     [SerializeField] InGamePlayerStatusUIHandler inGamePlayerStatusUIHandler;
-
+    bool isShowResultTable = false;
     private void Awake() {
         characterMovementHandler = GetComponent<CharacterMovementHandler>();
         hitboxRoot = GetComponent<HitboxRoot>();
@@ -93,6 +93,30 @@ public class HPHandler : NetworkBehaviour
 
     public override void FixedUpdateNetwork() {
         CheckPlayerDeath(Networked_HP);
+        if (!isShowResultTable && Networked_HP <= 0)
+        {
+            isShowResultTable = true;
+            if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
+            {
+                //PlayerRef player = GetComponent<PlayerRoomController>().ThisPlayerRef;
+                //Debug.Log("====Player ref " + player);
+                //RPC_ShowResult(Matchmaking.Instance.alivePlayer);    
+                //Matchmaking.Instance.CheckWin(player);
+                PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
+                RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
+                RPC_HideLocalPlayerUI();
+                RPC_ShowResultDuo();
+            }
+            else
+            {
+                PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
+                //FindObjectOfType<GameHandler>().Eliminate(playerRoomController.RoomID.ToString(), playerRoomController);
+                RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
+                RPC_HideLocalPlayerUI();
+                RPC_ShowResultDuo();
+            }
+        }
+
     }
 
     //? server call | coll 55 WeaponHandler.cs | khi hitInfo.HitBox tren player
@@ -115,25 +139,25 @@ public class HPHandler : NetworkBehaviour
             isPublicDeathMessageSent = false;
             //StartCoroutine(ServerRespawnCountine()); //Phuc comment: not allow player respawn
             /* RPC_SetNetworkedIsDead(true); */ // can use
-            if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
-            {
-                //PlayerRef player = GetComponent<PlayerRoomController>().ThisPlayerRef;
-                //Debug.Log("====Player ref " + player);
-                //RPC_ShowResult(Matchmaking.Instance.alivePlayer);    
-                //Matchmaking.Instance.CheckWin(player);
-                PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
-                RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
-                RPC_HideLocalPlayerUI();
-                RPC_ShowResultDuo();
-            }
-            else
-            {
-                PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
-                //FindObjectOfType<GameHandler>().Eliminate(playerRoomController.RoomID.ToString(), playerRoomController);
-                RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
-                RPC_HideLocalPlayerUI();
-                RPC_ShowResultDuo();
-            }
+            //if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
+            //{
+            //    //PlayerRef player = GetComponent<PlayerRoomController>().ThisPlayerRef;
+            //    //Debug.Log("====Player ref " + player);
+            //    //RPC_ShowResult(Matchmaking.Instance.alivePlayer);    
+            //    //Matchmaking.Instance.CheckWin(player);
+            //    PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
+            //    RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
+            //    RPC_HideLocalPlayerUI();
+            //    RPC_ShowResultDuo();
+            //}
+            //else
+            //{
+            //    PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
+            //    //FindObjectOfType<GameHandler>().Eliminate(playerRoomController.RoomID.ToString(), playerRoomController);
+            //    RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
+            //    RPC_HideLocalPlayerUI();
+            //    RPC_ShowResultDuo();
+            //}
 
             //deadCount ++;
             weaponHandler.killCount ++;
