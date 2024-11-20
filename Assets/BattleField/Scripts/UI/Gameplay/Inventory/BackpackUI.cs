@@ -51,7 +51,7 @@ public class BackpackUI : MonoBehaviour
     {
         if (currentItem == null) return;
         var healthConfig = ItemDatabase.instance.ItemConfigDatabase.FindHealthItem(currentItem._SubItemEnum);
-        TimerActionHandler.instance.StartTimer(healthConfig.usingTime, () => { OnUseHealthItem(currentItem); });
+        TimerActionHandler.instance.StartTimer(healthConfig.usingTime, () => { OnUseHealthItem(currentItem); },null);
     }
     private void OnUseHealthItem(InventoryItem currentItem)
     {

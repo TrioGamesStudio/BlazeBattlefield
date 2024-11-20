@@ -121,6 +121,10 @@ public class WeaponSlotHandler: IWeaponSlotAction
 
                 currentAmmo += ammoInStorage;
                 isReloading = false;
+            },
+            () =>
+            {
+                isReloading = false;
             });
             return true;
         }
