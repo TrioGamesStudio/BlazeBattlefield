@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8618509106426490487}
   - component: {fileID: 7079029991576096636}
-  - component: {fileID: 5569952793135258565}
   m_Layer: 0
   m_Name: WaitingArea
   m_TagString: Untagged
@@ -60,24 +59,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27fc34adf9ebd42cebd49e2c3f037c98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5569952793135258565
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2659943779028758654}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 687263565
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 7079029991576096636}
 --- !u!1001 &1008408740232634221
 PrefabInstance:
   m_ObjectHideFlags: 0

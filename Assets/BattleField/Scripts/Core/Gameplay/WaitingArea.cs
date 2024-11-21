@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
-public class WaitingArea : NetworkBehaviour
+public class WaitingArea : MonoBehaviour
 {
     public void ReleasePlayer()
     {

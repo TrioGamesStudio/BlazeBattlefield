@@ -51,7 +51,7 @@ public class BackpackUI : MonoBehaviour
     {
         if (currentItem == null) return;
         var healthConfig = ItemDatabase.instance.ItemConfigDatabase.FindHealthItem(currentItem._SubItemEnum);
-        TimerActionHandler.instance.StartTimer(healthConfig.usingTime, () => { OnUseHealthItem(currentItem); });
+        TimerActionHandler.instance.StartTimer(healthConfig.usingTime, () => { OnUseHealthItem(currentItem); },null);
     }
     private void OnUseHealthItem(InventoryItem currentItem)
     {
@@ -85,6 +85,7 @@ public class BackpackUI : MonoBehaviour
         }
         HideDropAmount();
         HideButton();
+        previousItemBackpackUI?.UnHighlight();
         Debug.Log("Drop With Count:" + newDropCount);
     }
 
@@ -139,20 +140,36 @@ public class BackpackUI : MonoBehaviour
         dropAmountUI.gameObject.SetActive(false);
     }
     private int currentIndex = -1;
-    public void ShowButton(int transformIndex)
+    private ItemBackpackUI previousItemBackpackUI;
+    public void ShowButton(ItemBackpackUI itemBackpackUI)
     {
-        if(transformIndex == currentIndex)
+        HideDropAmount();
+        buttonGroupUI.transform.parent = null;
+        int transformIndex = itemBackpackUI.transform.GetSiblingIndex() + 1;
+      
+        if (transformIndex == currentIndex)
         {
+            Debug.Log("Fuck you 3");
+            previousItemBackpackUI?.UnHighlight();
+            previousItemBackpackUI = null;
             HideButton();
             return;
         }
+        Debug.Log("Fuck you 4");
 
-        buttonGroupUI.gameObject.SetActive(true);
+        buttonGroupUI.transform.SetParent(content.transform);
+
+        previousItemBackpackUI?.UnHighlight();
+        previousItemBackpackUI = itemBackpackUI;
+        previousItemBackpackUI.Highlight();
+
         buttonGroupUI.SetupView(currentItem);
         buttonGroupUI.transform.SetSiblingIndex(transformIndex);
+        buttonGroupUI.gameObject.SetActive(true);
+        Debug.Log($"{itemBackpackUI.transform.GetSiblingIndex()} | {transformIndex}");
         currentIndex = transformIndex;
     }
-
+  
     public void HideButton()
     {
         currentIndex = -1;

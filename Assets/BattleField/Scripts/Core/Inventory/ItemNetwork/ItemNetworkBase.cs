@@ -29,10 +29,10 @@ public interface ItemDataEnum
 }
 
 public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, ItemDataEnum, 
-    RunTimeItem where _EnumType : Enum where _Config : ItemConfig<_EnumType>
+    IRunTimeItem where _EnumType : Enum where _Config : ItemConfig<_EnumType>
 {
     [Networked] public int quantity { get; set; }
-    public Action<RunTimeItem> OnRemoveItemUI { get; set; }
+    public Action<IRunTimeItem> OnRemoveItemUI { get; set; }
     public bool isDisplayedUI { get; set; }
     public CustomData[] customDatas;
     public _Config config;
@@ -127,7 +127,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         return config.displayName;
     }
 
-    string RunTimeItem.UniqueID()
+    string IRunTimeItem.UniqueID()
     {
         return Object.Id.ToString();
     }
