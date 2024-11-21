@@ -39,6 +39,7 @@ public partial class ActiveWeapon : NetworkBehaviour
         var networkObject = ItemDatabase.instance.SpawnItem(prefab, position, _tag);
         Debug.Log("Start set parent", gameObject);
         RPC_SetParentWeapon(networkObject, isLocal, index);
+        GetComponent<HPHandler>().LocalGun = prefab;
         return networkObject;
     }
 
@@ -72,6 +73,7 @@ public partial class ActiveWeapon : NetworkBehaviour
     {
         weapon.transform.SetParent(isLocal ? weaponHoldersLocal[index] : weaponHoldersRemote[index], false);
         weapon.GetComponent<NetworkTransform>().Teleport(isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position);
+
 
         /* weapon.transform.SetParent(parent.transform);
         Debug.Log($"Weapon name {weapon.name}"); */

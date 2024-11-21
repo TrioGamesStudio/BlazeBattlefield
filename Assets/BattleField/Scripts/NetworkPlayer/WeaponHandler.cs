@@ -1,5 +1,6 @@
 using System.Collections;
 using Fusion;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,6 +18,11 @@ public class WeaponHandler : NetworkBehaviour
 
     [Header("Collisons")]
     [SerializeField] LayerMask collisionLayers;
+
+    [Header("Sound")]
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip weaponSoundCurr;
+
 
     [Networked] // bien updated through the server on all the clients
     public bool isFiring { get; set; }
@@ -37,6 +43,7 @@ public class WeaponHandler : NetworkBehaviour
     //! testing
     [SerializeField] LocalCameraHandler localCameraHandler;
     float aiFireRate = 2f;
+    [SerializeField] byte weaponDamageCurr = 1;
     Vector3 spawnPointRaycastCam = Vector3.zero;
 
     [Networked]
@@ -51,13 +58,18 @@ public class WeaponHandler : NetworkBehaviour
 
     CharacterInputHandler characterInputHandler;
     HPHandler hPHandler;
+
+    const string HEAD = "Head";
+    const string ARML = "Shoulder_L";
+    const string ARMR = "Shoulder_R";
+
     private void Awake()
     {
         characterInputHandler = GetComponent<CharacterInputHandler>();
         hPHandler = GetComponent<HPHandler>();
         networkPlayer = GetComponent<NetworkPlayer>();
         networkObject = GetComponent<NetworkObject>();
-
+        audioSource = GetComponent<AudioSource>();
         localCameraHandler = FindFirstObjectByType<LocalCameraHandler>();
 
         //weaponSwitcher = GetComponent<WeaponSwitcher>();
@@ -194,22 +206,33 @@ public class WeaponHandler : NetworkBehaviour
 
             if (hit.distance > 0) hitDis = hit.distance;
 
-            if (hit.transform.TryGetComponent<HPHandler>(out var health))
-            {
-                Debug.Log($"{Time.time} {transform.name} hit HitBox {hit.transform.root.name}");
-
-                // kiem tra co phai dong doi hay khong
-                bool isEnemyCheck = hit.transform.GetComponent<NetworkPlayer>().isEnemy_Network;
-                //=> if(spawner.customLobbyName == "OurLobbyID_Team" && networkPlayer.isEnemy_Network == isEnemyCheck) return;
-                // kiem tra co phai dong doi hay khong
+            if(hit.collider.transform.TryGetComponent<CheckBodyParts>(out var part)) {
+                string bodyName = hit.collider.transform.name;
+                Debug.Log($"_____bodyName = {bodyName}");
+                if(bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
+                else if(bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
 
                 if (Object.HasStateAuthority)
                 {
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
-                    hit.collider.GetComponent<HitboxRoot>().GetComponent<HPHandler>().
-                                OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this);
+                    GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), weaponDamageCurr, this);
                 }
+            }
+            else weaponDamageCurr = 1;
 
+            if (hit.transform.TryGetComponent<HPHandler>(out var health))
+            {
+                Debug.Log($"{Time.time} {transform.name} hit HitBox {hit.transform.root.name}");
+
+                // ban trung dau get full hp
+                                
+                if (Object.HasStateAuthority)
+                {
+                    /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
+                    hit.collider.GetComponent<HitboxRoot>().GetComponent<HPHandler>().
+                                OnTakeDamage(networkPlayer.nickName_Network.ToString(), weaponDamageCurr, this);
+                }
+                
                 isHitOtherRemotePlayers = true;
             }
             else if (hit.collider != null)
@@ -251,7 +274,10 @@ public class WeaponHandler : NetworkBehaviour
         else 
             fireParticleSystemLocal.Play();
 
-        /* fireParticleSystemLocal.Play(); */
+        if(audioSource) {
+            audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
+        }
+
         yield return new WaitForSeconds(0.09f);
         isFiring = false;
     }
@@ -264,11 +290,14 @@ public class WeaponHandler : NetworkBehaviour
 
     void OnFireRemote()
     {
-        if (!Object.HasStateAuthority)
-        {
-
+        if (!Object.HasStateAuthority) {
             fireParticleSystemRemote.Play();
 
+            if(audioSource) {
+                audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
+            }
         }
+
+        
     }
 }

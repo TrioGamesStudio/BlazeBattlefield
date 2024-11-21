@@ -184,4 +184,5 @@ public class WeaponManager : MonoBehaviour
         TimerActionHandler.instance.Cancel();
         weaponSlotHandlers[currentWeaponIndex].Shoot();
     }
+
 }
