@@ -11,6 +11,9 @@ public class GunItemConfig : ItemConfig<GunType>
     public SlotWeaponIndex slotWeaponIndex;
     private bool isInitialize = false;
     public Sprite IconActualGun;
+    public AudioClip shootingSound;
+    public AudioClip reloadSound;
+    public float damagePerHit = 1;
 }
 
 public enum SlotWeaponIndex
