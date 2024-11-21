@@ -10244,8 +10244,31 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4798275556351140211}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 617338291108283985, guid: 53f1b775f5d623940a88983eb88dad50,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 395446510199191017}
   m_SourcePrefab: {fileID: 100100000, guid: 53f1b775f5d623940a88983eb88dad50, type: 3}
+--- !u!1 &1933679315454221183 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 617338291108283985, guid: 53f1b775f5d623940a88983eb88dad50,
+    type: 3}
+  m_PrefabInstance: {fileID: 1316448501901221166}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &395446510199191017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1933679315454221183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d54531977ecb194c95e2d3aa7a5d72a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ControlPath: <Keyboard>/r
 --- !u!224 &4855510291350725803 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5847583346722109829, guid: 53f1b775f5d623940a88983eb88dad50,
