@@ -5,10 +5,12 @@ public class ItemBackpackUI : BaseUIItem, IPoolCallback<ItemBackpackUI>
 {
     public Action<ItemBackpackUI> OnCallback { get; set; }
     private InventoryItem currentItem;
+    public GameObject highlightObject;
     protected override void Awake()
     {
         base.Awake();
         OnClickButton.onClick.AddListener(ShowButtonBelowItemUI);
+        highlightObject.gameObject.SetActive(false);
     }
     protected override void OnDestroy()
     {
@@ -18,7 +20,7 @@ public class ItemBackpackUI : BaseUIItem, IPoolCallback<ItemBackpackUI>
     private void ShowButtonBelowItemUI()
     {
         BackpackUI.instance.SetCurrentItem(currentItem);
-        BackpackUI.instance.ShowButton(transform.GetSiblingIndex() + 1);
+        BackpackUI.instance.ShowButton(this);
     }
 
     public void OnRelease()
@@ -49,4 +51,14 @@ public class ItemBackpackUI : BaseUIItem, IPoolCallback<ItemBackpackUI>
         return currentItem.Equals(item);
     }
 
+    public void Highlight()
+    {
+        highlightObject.gameObject.SetActive(true);
+    }
+
+    public void UnHighlight()
+    {
+        highlightObject.gameObject.SetActive(false);
+
+    }
 }

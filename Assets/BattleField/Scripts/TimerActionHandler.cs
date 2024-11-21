@@ -11,6 +11,7 @@ public class TimerActionHandler : MonoBehaviour
     public bool OnProcess { get => onProcess; }
 
     private Action onTimerComplete;
+    private Action onTimerFalse;
     private float maxTimer;
     private void Awake()
     {
@@ -23,15 +24,11 @@ public class TimerActionHandler : MonoBehaviour
     {
         TimerActionUI.OnCancel -= Cancel;
     }
-    [Button]
-    private void Test()
-    {
-        StartTimer(2, () => { Debug.Log("Timer Complete"); });
-    }
-
-    public void StartTimer(float time, Action onTimerComplete)
+ 
+    public void StartTimer(float time, Action onTimerComplete,Action onTimerFalse)
     {
         this.onTimerComplete = onTimerComplete;
+        this.onTimerFalse = onTimerFalse;
         timer = time;
         maxTimer = time;
         onProcess = true;
@@ -40,9 +37,16 @@ public class TimerActionHandler : MonoBehaviour
 
     public void Cancel()
     {
-        onTimerComplete = null;
+        onTimerFalse?.Invoke();
+        ResetCallback();
         onProcess = false;
         TimerActionUI.instance.Hide();
+    }
+
+    private void ResetCallback()
+    {
+        onTimerFalse = null;
+        onTimerComplete = null;
     }
 
     private void Update()
@@ -55,7 +59,7 @@ public class TimerActionHandler : MonoBehaviour
                 onProcess = false;
                 timer = 0;
                 onTimerComplete?.Invoke();
-                onTimerComplete = null;
+                ResetCallback();
                 TimerActionUI.instance.Hide();
             }
 

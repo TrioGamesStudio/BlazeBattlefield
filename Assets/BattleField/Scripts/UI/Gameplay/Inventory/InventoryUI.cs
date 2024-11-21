@@ -43,6 +43,7 @@ public class InventoryUI : MonoBehaviour
     private bool isOpen = false;
     private void ShowInventory()
     {
+        isOpen = !isOpen;
         if (isOpen)
         {
             ShowInventoryElement(true);
@@ -56,7 +57,6 @@ public class InventoryUI : MonoBehaviour
             Cursor.visible = false;
         }
         ToggleItemCollectUI();
-        isOpen = !isOpen;
     }
 
     private void ToggleItemCollectUI()

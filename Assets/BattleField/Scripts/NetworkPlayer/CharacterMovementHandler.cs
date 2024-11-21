@@ -3,8 +3,6 @@ using Fusion;
 using UnityEngine.SceneManagement;
 using System;
 using System.Collections;
-using UnityEditor.ShaderGraph.Internal;
-using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 
 public class CharacterMovementHandler : NetworkBehaviour
 {

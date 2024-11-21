@@ -1,11 +1,10 @@
 using NaughtyAttributes;
-using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-public class ItemCollectionUI : BaseTest<RunTimeItem>
+public class ItemCollectionUI : BaseTest<IRunTimeItem>
 {
     public static ItemCollectionUI instance;
 
@@ -39,7 +38,7 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
     private void Hide() => view.gameObject.SetActive(false);
 
 
-    protected override void ConfigureItemUI(RunTimeItem itemInGame, ItemCollectUI itemCollectUI)
+    protected override void ConfigureItemUI(IRunTimeItem itemInGame, ItemCollectUI itemCollectUI)
     {
         itemCollectUI.Initialize(itemInGame);
         //itemCollectUI.SetItemCount(itemInGame.GetQuantity());
@@ -53,12 +52,12 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
         itemCollectUI.gameObject.SetActive(true);
     }
  
-    public override void RemoveItemUI(RunTimeItem customObject)
+    public override void RemoveItemUI(IRunTimeItem customObject)
     {
         RemoveItemFromDictionary(customObject.UniqueID(), customObject);
     }
 
-    public override void AddItemUI(RunTimeItem customObject)
+    public override void AddItemUI(IRunTimeItem customObject)
     {
         AddItemToDictionary(customObject.UniqueID(), customObject);
     }
@@ -77,15 +76,4 @@ public class ItemCollectionUI : BaseTest<RunTimeItem>
         //Debug.Log("Show first Item", itemUI.gameObject);
     }
 
-}
-public interface RunTimeItem
-{
-    public bool isDisplayedUI { get; set; }
-    public Action<RunTimeItem> OnRemoveItemUI { get; set; }
-    public Sprite GetIcon();
-    string DisplayName();
-    string UniqueID();
-    int Quantity();
-    void Collect();
-    void DestroyItem();
 }

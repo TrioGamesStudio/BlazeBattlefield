@@ -121,6 +121,10 @@ public class WeaponSlotHandler: IWeaponSlotAction
 
                 currentAmmo += ammoInStorage;
                 isReloading = false;
+            },
+            () =>
+            {
+                isReloading = false;
             });
             return true;
         }
@@ -131,7 +135,7 @@ public class WeaponSlotHandler: IWeaponSlotAction
     {
         if (IsEmpty)
         {
-            Debug.LogError("Slot nay dang bi null, khong the kiem tra tong so dan");
+            //Debug.LogError("Slot nay dang bi null, khong the kiem tra tong so dan");
             return 0;
         }
 
