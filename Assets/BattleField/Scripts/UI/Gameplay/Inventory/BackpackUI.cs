@@ -143,18 +143,10 @@ public class BackpackUI : MonoBehaviour
     public void ShowButton(ItemBackpackUI itemBackpackUI)
     {
         HideDropAmount();
+        buttonGroupUI.transform.parent = null;
         int transformIndex = itemBackpackUI.transform.GetSiblingIndex() + 1;
-        if(currentIndex == -1 && transformIndex == 1)
-        {
-            Debug.Log("Fuck you");
-            currentIndex = 1;
-        }
-        else if(transformIndex > currentIndex)
-        {
-            transformIndex -= 1;
-            Debug.Log("Fuck you 2");
-        }
-        else if (transformIndex == currentIndex)
+      
+        if (transformIndex == currentIndex)
         {
             Debug.Log("Fuck you 3");
             previousItemBackpackUI?.UnHighlight();
@@ -163,6 +155,9 @@ public class BackpackUI : MonoBehaviour
             return;
         }
         Debug.Log("Fuck you 4");
+
+        buttonGroupUI.transform.SetParent(content.transform);
+
         previousItemBackpackUI?.UnHighlight();
         previousItemBackpackUI = itemBackpackUI;
         previousItemBackpackUI.Highlight();
