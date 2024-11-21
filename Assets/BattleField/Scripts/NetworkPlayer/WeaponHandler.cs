@@ -206,6 +206,7 @@ public class WeaponHandler : NetworkBehaviour
 
             if (hit.distance > 0) hitDis = hit.distance;
 
+            // check body part
             if(hit.collider.transform.TryGetComponent<CheckBodyParts>(out var part)) {
                 string bodyName = hit.collider.transform.name;
                 Debug.Log($"_____bodyName = {bodyName}");
@@ -215,17 +216,22 @@ public class WeaponHandler : NetworkBehaviour
                 if (Object.HasStateAuthority)
                 {
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
-                    GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), weaponDamageCurr, this);
+                    part.hPHandler.OnTakeDamage(networkPlayer.nickName_Network.ToString(), weaponDamageCurr, this);
                 }
             }
             else weaponDamageCurr = 1;
 
+            // get damage
             if (hit.transform.TryGetComponent<HPHandler>(out var health))
             {
                 Debug.Log($"{Time.time} {transform.name} hit HitBox {hit.transform.root.name}");
 
                 // ban trung dau get full hp
-                                
+                string bodyName = hit.collider.transform.name;
+                Debug.Log($"_____bodyName = {bodyName}");
+                if(bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
+                else if(bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
+                
                 if (Object.HasStateAuthority)
                 {
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
