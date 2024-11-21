@@ -69,7 +69,6 @@ public class WeaponHandler : NetworkBehaviour
         hPHandler = GetComponent<HPHandler>();
         networkPlayer = GetComponent<NetworkPlayer>();
         networkObject = GetComponent<NetworkObject>();
-        audioSource = GetComponent<AudioSource>();
         localCameraHandler = FindFirstObjectByType<LocalCameraHandler>();
 
         //weaponSwitcher = GetComponent<WeaponSwitcher>();
@@ -221,7 +220,7 @@ public class WeaponHandler : NetworkBehaviour
             }
             else weaponDamageCurr = 1;
 
-            // get damage
+            // get damage ohters
             if (hit.transform.TryGetComponent<HPHandler>(out var health))
             {
                 Debug.Log($"{Time.time} {transform.name} hit HitBox {hit.transform.root.name}");
