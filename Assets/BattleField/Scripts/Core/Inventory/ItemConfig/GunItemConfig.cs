@@ -10,7 +10,7 @@ public class GunItemConfig : ItemConfig<GunType>
     public AmmoItemConfig ammoUsingType;
     public SlotWeaponIndex slotWeaponIndex;
     private bool isInitialize = false;
-   
+    public Sprite IconActualGun;
 }
 
 public enum SlotWeaponIndex

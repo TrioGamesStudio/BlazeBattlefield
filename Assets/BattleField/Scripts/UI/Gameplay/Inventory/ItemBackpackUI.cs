@@ -41,7 +41,7 @@ public class ItemBackpackUI : BaseUIItem, IPoolCallback<ItemBackpackUI>
     {
         if (currentItem == null) return;
         Debug.Log($"Add to UI{currentItem.displayName},amoumt {currentItem.amount},item type {currentItem.ItemType},max stack {currentItem.maxStack}");
-
+        SetIcon(currentItem.Icon);
         SetItemName(currentItem.displayName);
         SetItemCount(currentItem.amount);
     }
