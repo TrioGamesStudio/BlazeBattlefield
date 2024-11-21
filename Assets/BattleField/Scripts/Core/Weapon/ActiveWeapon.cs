@@ -39,7 +39,6 @@ public partial class ActiveWeapon : NetworkBehaviour
         var networkObject = ItemDatabase.instance.SpawnItem(prefab, position, _tag);
         Debug.Log("Start set parent", gameObject);
         RPC_SetParentWeapon(networkObject, isLocal, index);
-        GetComponent<HPHandler>().LocalGun = prefab;
         return networkObject;
     }
 
