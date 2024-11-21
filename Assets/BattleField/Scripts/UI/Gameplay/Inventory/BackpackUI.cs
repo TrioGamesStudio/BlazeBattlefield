@@ -85,6 +85,7 @@ public class BackpackUI : MonoBehaviour
         }
         HideDropAmount();
         HideButton();
+        previousItemBackpackUI?.UnHighlight();
         Debug.Log("Drop With Count:" + newDropCount);
     }
 
