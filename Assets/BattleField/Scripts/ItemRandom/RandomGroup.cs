@@ -63,6 +63,7 @@ public class RandomGroup : NetworkBehaviour
             );
                 Vector3 spawnPosition = validSpawnPos.position + randomOffset;
                 var item = Runner.Spawn(ItemDatabase.instance.GetRandomItemPrefab(), spawnPosition);
+                item.transform.SetParent(transform);
             }
         }
     }
