@@ -19,7 +19,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private Button readyButton;
     [SerializeField] private Button playButton;
     private NetworkRunner networkRunner;
-    private const int MAX_PLAYER = 3;
+    private const int MAX_PLAYER = 2;
     public GameObject localPlayer;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     private PlayerRoomController localPlayerRoomController;

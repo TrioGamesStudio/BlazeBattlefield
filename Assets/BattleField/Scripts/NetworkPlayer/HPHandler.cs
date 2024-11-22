@@ -27,7 +27,7 @@ public class HPHandler : NetworkBehaviour
     List<FlashMeshRender> flashMeshRenders = new List<FlashMeshRender>();
 
     [SerializeField] GameObject playerModel;
-    [SerializeField] GameObject localGun;
+    [SerializeField] GameObject localGunHolder;
     [SerializeField] GameObject deathParticlePf;
     HitboxRoot hitboxRoot;
     CharacterMovementHandler characterMovementHandler;
@@ -270,7 +270,8 @@ public class HPHandler : NetworkBehaviour
     void OnDeath() {
         Debug.Log($"{Time.time} onDeath");
         playerModel.gameObject.SetActive(false);
-        localGun.gameObject.SetActive(false);   // khi death tat luon local gun
+        if(localGunHolder)
+            localGunHolder.gameObject.SetActive(false);   // khi death tat luon local gun
         hitboxRoot.HitboxRootActive = false; // ko de nhan them damage
         characterMovementHandler.CharacterControllerEnable(false);
         Instantiate(deathParticlePf, transform.position + Vector3.up * 1, Quaternion.identity);
@@ -283,7 +284,8 @@ public class HPHandler : NetworkBehaviour
             uiOnHitImage.color = new Color(0,0,0,0);
         }
         playerModel.gameObject.SetActive(true);
-        localGun.SetActive(true);
+        if(localGunHolder)
+            localGunHolder.SetActive(true);
         hitboxRoot.HitboxRootActive = true;
         characterMovementHandler.CharacterControllerEnable(true);
     }

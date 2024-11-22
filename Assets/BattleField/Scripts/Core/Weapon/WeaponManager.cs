@@ -185,19 +185,4 @@ public class WeaponManager : MonoBehaviour
         weaponSlotHandlers[currentWeaponIndex].Shoot();
     }
 
-    public AudioClip GetWeaponSound()
-    {
-        if(currentWeaponIndex == -1)
-        {
-            Debug.LogError("player is not show the gun",gameObject);
-            return null;
-        }
-
-        return weaponSlotHandlers[currentWeaponIndex].Config.shootingSound;
-    }
-
-    public float GetWeaponDamage()
-    {
-        return weaponSlotHandlers[currentWeaponIndex].Config.damagePerHit;
-    }
 }

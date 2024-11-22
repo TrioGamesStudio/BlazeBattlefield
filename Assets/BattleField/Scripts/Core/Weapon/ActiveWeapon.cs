@@ -73,6 +73,7 @@ public partial class ActiveWeapon : NetworkBehaviour
         weapon.transform.SetParent(isLocal ? weaponHoldersLocal[index] : weaponHoldersRemote[index], false);
         weapon.GetComponent<NetworkTransform>().Teleport(isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position);
 
+
         /* weapon.transform.SetParent(parent.transform);
         Debug.Log($"Weapon name {weapon.name}"); */
 
