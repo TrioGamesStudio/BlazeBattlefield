@@ -47,6 +47,7 @@ public partial class ActiveWeapon
             currentWeaponRemote = activeWeapon.SpawnItem(weaponSlotHandler.Prefab, false, index, "Untagged");
 
             activeWeapon.SetRenderForLocalAndRomoteBody();
+            
         }
 
         private void Drop()
