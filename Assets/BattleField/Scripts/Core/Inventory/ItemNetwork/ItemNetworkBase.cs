@@ -27,6 +27,9 @@ public interface ItemDataEnum
 
     void SetQuantity(int newAmount);
     void SetCustomData(string key, float value);
+
+    ItemRarity GetItemRarity();
+    byte GetItemWeight();
 }
 
 public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, ItemDataEnum, 
@@ -173,5 +176,15 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
             customDatas[0].key = key;
             customDatas[0].value = value;
         }
+    }
+
+    public ItemRarity GetItemRarity()
+    {
+        return ItemRarity;
+    }
+
+    public byte GetItemWeight()
+    {
+        return ItemWeight;
     }
 }

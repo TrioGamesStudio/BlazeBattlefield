@@ -31,8 +31,10 @@ public class ItemPrefabDatabase: ScriptableObject
         gameObjects = LoadAssetHeplder.GetListTypeInAssets<GameObject>(LoadAssetHeplder.SearchType.Label, "Item");
     }
 #endif
+    [Button]
     public void Convert()
     {
+        itemRarityDatas.Clear();
         itemRarityDatas.Add(ItemRarity.Common, new());
         itemRarityDatas.Add(ItemRarity.Rare, new());
         itemRarityDatas.Add(ItemRarity.Epic, new());
@@ -60,14 +62,19 @@ public class ItemPrefabDatabase: ScriptableObject
         {
             bigData[(key1, key2)] = item;
         }
-        if(itemRarityDatas.TryGetValue(itemEnum.GetItemRarity(),out var list))
+        if (itemRarityDatas.TryGetValue(itemEnum.GetItemRarity(), out var list))
         {
-            if(list.Contains(itemEnum) == false)
+            if (list.Contains(itemEnum) == false)
             {
                 list.Add(itemEnum);
             }
         }
-        
+
+    }
+    [Button]
+    private void Test()
+    {
+        Debug.Log(GetRandomItemPrefabByRarity(ItemRarity.Common));
     }
 
     public GameObject GetRandomItemPrefabByRarity(ItemRarity rarity)
@@ -93,4 +100,22 @@ public class ItemPrefabDatabase: ScriptableObject
         }
         return null;
     }
+    private ItemRarity GetRandomItemRarity()
+    {
+        float randomValue = UnityEngine.Random.Range(0f, 100f);
+        float cumulativeChance = 0f;
+        foreach (var rarity in rarityChances)
+        {
+            cumulativeChance += rarity.Value;
+            if (randomValue <= cumulativeChance)
+                return rarity.Key;
+        }
+        return ItemRarity.Common;
+    }
+    Dictionary<ItemRarity, float> rarityChances = new Dictionary<ItemRarity, float>
+{
+    { ItemRarity.Common, 60f },
+    { ItemRarity.Rare, 30f },
+    { ItemRarity.Epic, 8f }
+};
 }

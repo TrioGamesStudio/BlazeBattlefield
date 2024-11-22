@@ -1,4 +1,5 @@
 using Fusion;
+using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +9,12 @@ public class ItemDatabase : NetworkBehaviour
     public static ItemDatabase instance;
     [SerializeField] public ItemConfigDatabase ItemConfigDatabase;
     [SerializeField] private ItemPrefabDatabase ItemPrefabDatabase;
-
+    Dictionary<ItemRarity, float> rarityChances = new Dictionary<ItemRarity, float>
+{
+    { ItemRarity.Common, 60f },
+    { ItemRarity.Rare, 30f },
+    { ItemRarity.Epic, 8f }
+};
     public Transform PlayerObject;
 
     private void Awake()
@@ -72,16 +78,16 @@ public class ItemDatabase : NetworkBehaviour
         //RPC_SetParentWeapon(networkObject, isLocal, index);
         return networkObject;
     }
-    Dictionary<ItemRarity, float> rarityChances = new Dictionary<ItemRarity, float>
-{
-    { ItemRarity.Common, 60f },
-    { ItemRarity.Rare, 30f },
-    { ItemRarity.Epic, 8f }
-};
+
     public GameObject GetRandomItemPrefab()
     {
         var rarity = GetRandomItemRarity();
         return ItemPrefabDatabase.GetRandomItemPrefabByRarity(rarity);
+    }
+    [Button]
+    private void Test()
+    {
+        Debug.Log(GetRandomItemPrefab());
     }
 
     private ItemRarity GetRandomItemRarity()

@@ -18,9 +18,6 @@ public class ItemConfig<SubType> : ScriptableObject where SubType : Enum
     public int maxStack;
     public ItemType ItemType;
 
-    public ItemRarity ItemRarity;
-    [MinValue(0),MaxValue(100)] public byte ItemWeight;
-
 #if UNITY_EDITOR
     [Button]
     private void RenameByDisplayName()

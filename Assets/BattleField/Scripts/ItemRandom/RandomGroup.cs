@@ -1,5 +1,4 @@
 using Fusion;
-using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +13,7 @@ public class RandomGroup : NetworkBehaviour
     [SerializeField] private bool drawBoundOfGroup = false;
     [SerializeField] private Vector3 sizeOfLocation = Vector3.one;
     [SerializeField] private bool drawChildLocation = false;
-    [Button]
+    [EditorButton]
     private void GetSpawnPointInChild()
     {
         spawnPoints.Clear();
@@ -27,11 +26,16 @@ public class RandomGroup : NetworkBehaviour
     public override void Spawned()
     {
         base.Spawned();
-        GenerateItem();
+        Debug.Log("Spawned in random group",gameObject);
+        if (Object.HasStateAuthority)
+        {
+            Debug.Log("Generate item");
+            GenerateItem();
+        }
     }
 
 
-    [Button]
+    [EditorButton]
     private void GenerateItem()
     {
         List<Transform> validSpawnItem = new();
