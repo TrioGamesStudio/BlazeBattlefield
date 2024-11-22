@@ -340,6 +340,40 @@ public class LoginManager : MonoBehaviour
             SetPlayerPref(email, password);
         });
     }
+
+    public void LoginQuest()
+    {
+        loadingScreen.SetActive(true);
+        FirebaseAuth auth = FirebaseAuth.DefaultInstance;
+        auth.SignInAnonymouslyAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SignIn Guest was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("SignIn Guest encountered an error: " + task.Exception);
+                return;
+            }
+
+            loadingScreen.SetActive(false);
+            AuthResult result = task.Result;
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+                result.User.DisplayName, result.User.UserId);
+
+
+            ShowLogMsg("Log in Successful");
+            loginUi.SetActive(false);
+            SuccessUi.SetActive(true);
+            id.text = $"ID: {result.User.UserId}";
+
+            //? gan userId cho saveLoadHander Firebase | FireStore
+            DataSaver.Instance.userId = result.User.UserId;
+            SceneManager.LoadSceneAsync("MainLobby");
+        });
+    }
     #endregion
 
     #region extra
