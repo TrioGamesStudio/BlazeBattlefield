@@ -1,4 +1,5 @@
 ﻿using Fusion;
+using NaughtyAttributes;
 using System;
 using System.Xml;
 using Unity.VisualScripting;
@@ -37,6 +38,9 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     public CustomData[] customDatas;
     public _Config config;
     private BoundItem boundItem;
+
+    public ItemRarity ItemRarity;
+    [MinValue(0), MaxValue(100)] public byte ItemWeight;
 
 
     private void Awake()

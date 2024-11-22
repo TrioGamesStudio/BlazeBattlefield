@@ -4,7 +4,12 @@ using System;
 using UnityEditor;
 #endif
 using UnityEngine;
-
+public enum ItemRarity
+{
+    Common,
+    Rare,
+    Epic
+}
 public class ItemConfig<SubType> : ScriptableObject where SubType : Enum
 {
     public string displayName;
@@ -12,6 +17,10 @@ public class ItemConfig<SubType> : ScriptableObject where SubType : Enum
     public SubType SubItemType;
     public int maxStack;
     public ItemType ItemType;
+
+    public ItemRarity ItemRarity;
+    [MinValue(0),MaxValue(100)] public byte ItemWeight;
+
 #if UNITY_EDITOR
     [Button]
     private void RenameByDisplayName()

@@ -1,15 +1,16 @@
 using Fusion;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 public class ItemDatabase : NetworkBehaviour
 {
     public static ItemDatabase instance;
     [SerializeField] public ItemConfigDatabase ItemConfigDatabase;
     [SerializeField] private ItemPrefabDatabase ItemPrefabDatabase;
-    
+
     public Transform PlayerObject;
-    
+
     private void Awake()
     {
         instance = this;
@@ -32,7 +33,7 @@ public class ItemDatabase : NetworkBehaviour
     {
         var key1 = inventoryItem.ItemType;
         var key2 = inventoryItem._SubItemEnum;
-     
+
         CreateItemInWorld(newAmount, key1, key2, PlayerObject.position);
     }
 
@@ -59,7 +60,7 @@ public class ItemDatabase : NetworkBehaviour
         return item;
     }
 
-    public NetworkObject SpawnItem(GameObject prefab,Vector3 position, string _tag)
+    public NetworkObject SpawnItem(GameObject prefab, Vector3 position, string _tag)
     {
         //var position = isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position;
         var networkObject = Runner.Spawn(prefab, position, Quaternion.Euler(0, 0, 0), null, (runner, obj) =>
@@ -70,5 +71,29 @@ public class ItemDatabase : NetworkBehaviour
         Debug.Log("Start set parent", gameObject);
         //RPC_SetParentWeapon(networkObject, isLocal, index);
         return networkObject;
+    }
+    Dictionary<ItemRarity, float> rarityChances = new Dictionary<ItemRarity, float>
+{
+    { ItemRarity.Common, 60f },
+    { ItemRarity.Rare, 30f },
+    { ItemRarity.Epic, 8f }
+};
+    public GameObject GetRandomItemPrefab()
+    {
+        var rarity = GetRandomItemRarity();
+        return ItemPrefabDatabase.GetRandomItemPrefabByRarity(rarity);
+    }
+
+    private ItemRarity GetRandomItemRarity()
+    {
+        float randomValue = UnityEngine.Random.Range(0f, 100f);
+        float cumulativeChance = 0f;
+        foreach (var rarity in rarityChances)
+        {
+            cumulativeChance += rarity.Value;
+            if (randomValue <= cumulativeChance)
+                return rarity.Key;
+        }
+        return ItemRarity.Common;
     }
 }
