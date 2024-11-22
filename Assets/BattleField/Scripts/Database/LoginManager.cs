@@ -87,13 +87,15 @@ public class LoginManager : MonoBehaviour
 
             if (result.User.IsEmailVerified)
             {
-                ShowLogMsg_SingUP("Sign up Successful");
+                //ShowLogMsg_SingUP("Sign up Successful");
+                
             }
             else {
-                ShowLogMsg_SingUP("Please verify your email!!");
+                //ShowLogMsg_SingUP("Please verify your email!!");
                 SendEmailVerification();
             }
 
+            StartCoroutine(TextFadeOut_SignUp(2f));
             // save after having email and password
             DataSaver.Instance.SaveToSignup(useName, result.User.UserId);
         });
