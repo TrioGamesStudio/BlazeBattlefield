@@ -7,7 +7,7 @@ using Firebase;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class EmailLogin : MonoBehaviour
+public class LoginManager : MonoBehaviour
 {
     #region variables
     [Header("Login")]
@@ -28,7 +28,9 @@ public class EmailLogin : MonoBehaviour
     public GameObject loadingScreen;
     public TextMeshProUGUI logTxt;
 
-    public GameObject loginUi, signupUi, SuccessUi;
+    public GameObject loginUi, signupUi, SuccessUi, loginOptionsPanel;
+    public Button emailLoginButton;
+    public Button guestLoginButton;
     [SerializeField] TextMeshProUGUI id;
     #endregion
 
