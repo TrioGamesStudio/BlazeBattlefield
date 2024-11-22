@@ -413,6 +413,11 @@ public class LoginManager : MonoBehaviour
         PlayerPrefs.SetString(PASSKEY, password);
         PlayerPrefs.Save();
     }
+
+    public void QuickBattle()
+    {
+        SceneManager.LoadScene("Quang_Scene");
+    }
     #endregion
 
 
