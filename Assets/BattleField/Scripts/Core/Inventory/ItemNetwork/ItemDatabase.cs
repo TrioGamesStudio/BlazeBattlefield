@@ -9,12 +9,7 @@ public class ItemDatabase : NetworkBehaviour
     public static ItemDatabase instance;
     [SerializeField] public ItemConfigDatabase ItemConfigDatabase;
     [SerializeField] private ItemPrefabDatabase ItemPrefabDatabase;
-    Dictionary<ItemRarity, float> rarityChances = new Dictionary<ItemRarity, float>
-{
-    { ItemRarity.Common, 60f },
-    { ItemRarity.Rare, 30f },
-    { ItemRarity.Epic, 8f }
-};
+
     public Transform PlayerObject;
 
     private void Awake()
@@ -81,25 +76,8 @@ public class ItemDatabase : NetworkBehaviour
 
     public GameObject GetRandomItemPrefab()
     {
-        var rarity = GetRandomItemRarity();
-        return ItemPrefabDatabase.GetRandomItemPrefabByRarity(rarity);
+        return ItemPrefabDatabase.GetRandomItemPrefabByRarity();
     }
-    [Button]
-    private void Test()
-    {
-        Debug.Log(GetRandomItemPrefab());
-    }
-
-    private ItemRarity GetRandomItemRarity()
-    {
-        float randomValue = UnityEngine.Random.Range(0f, 100f);
-        float cumulativeChance = 0f;
-        foreach (var rarity in rarityChances)
-        {
-            cumulativeChance += rarity.Value;
-            if (randomValue <= cumulativeChance)
-                return rarity.Key;
-        }
-        return ItemRarity.Common;
-    }
+ 
+    
 }

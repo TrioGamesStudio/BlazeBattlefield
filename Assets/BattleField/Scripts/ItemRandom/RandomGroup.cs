@@ -39,7 +39,7 @@ public class RandomGroup : NetworkBehaviour
     private void GenerateItem()
     {
         List<Transform> validSpawnItem = new();
-        int spawnCount = spawnPoints.Count / 4;
+        int spawnCount = spawnPoints.Count / 3;
         HashSet<int> usedIndices = new();
 
         while (validSpawnItem.Count < spawnCount)
@@ -51,15 +51,20 @@ public class RandomGroup : NetworkBehaviour
                 validSpawnItem.Add(spawnPoints[randomIndex]);
             }
         }
-        int count = Random.Range(1, 3);
+        int count = Random.Range(3, 7);
         foreach (var validSpawnPos in validSpawnItem)
         {
             for (int i = 0; i < count; i++)
             {
-                Runner.Spawn(ItemDatabase.instance.GetRandomItemPrefab(), validSpawnPos.position);
+                Vector3 randomOffset = new Vector3(
+                Random.Range(-sizeOfLocation.x / 2, sizeOfLocation.x / 2),
+                Random.Range(-sizeOfLocation.y / 2, sizeOfLocation.y / 2),
+                Random.Range(-sizeOfLocation.z / 2, sizeOfLocation.z / 2)
+            );
+                Vector3 spawnPosition = validSpawnPos.position + randomOffset;
+                var item = Runner.Spawn(ItemDatabase.instance.GetRandomItemPrefab(), spawnPosition);
             }
         }
-
     }
 
     private void OnDrawGizmos()

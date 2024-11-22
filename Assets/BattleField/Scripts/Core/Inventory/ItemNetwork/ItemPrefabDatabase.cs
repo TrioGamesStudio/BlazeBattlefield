@@ -36,8 +36,8 @@ public class ItemPrefabDatabase: ScriptableObject
     {
         itemRarityDatas.Clear();
         itemRarityDatas.Add(ItemRarity.Common, new());
-        itemRarityDatas.Add(ItemRarity.Rare, new());
-        itemRarityDatas.Add(ItemRarity.Epic, new());
+        //itemRarityDatas.Add(ItemRarity.Rare, new());
+        //itemRarityDatas.Add(ItemRarity.Epic, new());
 
         foreach (var item in gameObjects)
         {
@@ -74,12 +74,12 @@ public class ItemPrefabDatabase: ScriptableObject
     [Button]
     private void Test()
     {
-        Debug.Log(GetRandomItemPrefabByRarity(ItemRarity.Common));
+        Debug.Log(GetRandomItemPrefabByRarity());
     }
 
-    public GameObject GetRandomItemPrefabByRarity(ItemRarity rarity)
+    public GameObject GetRandomItemPrefabByRarity()
     {
-        if (itemRarityDatas.TryGetValue(rarity, out var list))
+        if (itemRarityDatas.TryGetValue(ItemRarity.Common, out var list))
         {
             int totalWeight = list.Sum(item => item.GetItemWeight());
 
