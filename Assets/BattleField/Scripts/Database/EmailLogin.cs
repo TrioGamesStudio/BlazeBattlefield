@@ -5,6 +5,7 @@ using Firebase.Extensions;
 using Firebase.Auth;
 using Firebase;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class EmailLogin : MonoBehaviour
 {
@@ -326,6 +327,7 @@ public class EmailLogin : MonoBehaviour
                 //? gan userId cho saveLoadHander Firebase | FireStore
                 DataSaver.Instance.userId = result.User.UserId;
                 /* DataSaveLoadHander.Instance.userId = result.User.UserId; */
+                SceneManager.LoadSceneAsync("MainLobby");
             }
             else {
                 ShowLogMsg("Please verify email!!");
