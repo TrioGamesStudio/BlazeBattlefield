@@ -146,14 +146,8 @@ public class WeaponManager : MonoBehaviour
         currentWeaponIndex = newIndex;
         WeaponUIManager.instance.Hightligh(currentWeaponIndex);
 
-        if(newIndex == -1)
+        if(newIndex != -1)
         {
-            Debug.Log("Cat cay sung vao");
-        }
-        else
-        {
-            Debug.Log("trang bi sung moi voi index :" + newIndex);
-
             weaponHandler.SetFireSound(weaponSlotHandlers[currentWeaponIndex].Config.shootingSound);
             weaponHandler.SetFireDamage(weaponSlotHandlers[currentWeaponIndex].Config.damagePerHit);
         }
