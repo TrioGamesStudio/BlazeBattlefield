@@ -12,6 +12,7 @@ public class WeaponManager : MonoBehaviour
     public int CurrentWeaponIndex { get => currentWeaponIndex; }
     public Animator playerAnimator;
     public ActiveWeapon activeWeapon;
+    public WeaponHandler weaponHandler;
     public WeaponSlotHandler[] WeaponSlotHandlers { get => weaponSlotHandlers; }
 
     public event Action<WeaponSlotHandler> OnEquipAction;
@@ -94,32 +95,6 @@ public class WeaponManager : MonoBehaviour
         }
 
     }
-    private IEnumerator Startsdaw(WeaponSlotHandler currentWeapon, GunItemConfig newConfig)
-    {
-        yield return new WaitForSeconds(.2f);
-        currentWeapon.AddNewWeapon(newConfig);
-        currentWeapon.Equip();
-        currentWeapon.Show();
-    }
-    [Button]
-    private void TestDropItem()
-    {
-        weaponSlotHandlers[currentWeaponIndex].DeleteAndSpawnWorld();
-        currentWeaponIndex = -1;
-    }
-    [Button]
-    private void TestHideWeapon()
-    {
-        weaponSlotHandlers[currentWeaponIndex].Hide();
-    }
-    [Button]
-    private void TestShowWeapon()
-    {
-        weaponSlotHandlers[currentWeaponIndex].Show();
-    }
-
-
-
 
     public void OnActiveWeapon(int activeIndexButton)
     {
@@ -170,7 +145,20 @@ public class WeaponManager : MonoBehaviour
     {
         currentWeaponIndex = newIndex;
         WeaponUIManager.instance.Hightligh(currentWeaponIndex);
+
+        if(newIndex == -1)
+        {
+            Debug.Log("Cat cay sung vao");
+        }
+        else
+        {
+            Debug.Log("trang bi sung moi voi index :" + newIndex);
+
+            weaponHandler.SetFireSound(weaponSlotHandlers[currentWeaponIndex].Config.shootingSound);
+            weaponHandler.SetFireDamage(weaponSlotHandlers[currentWeaponIndex].Config.damagePerHit);
+        }
     }
+
 
     public bool IsReadyToShoot()
     {
@@ -184,5 +172,6 @@ public class WeaponManager : MonoBehaviour
         TimerActionHandler.instance.Cancel();
         weaponSlotHandlers[currentWeaponIndex].Shoot();
     }
+
 
 }

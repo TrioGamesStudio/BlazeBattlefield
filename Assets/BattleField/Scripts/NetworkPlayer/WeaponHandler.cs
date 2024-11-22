@@ -78,6 +78,11 @@ public class WeaponHandler : NetworkBehaviour
     public override void Spawned()
     {
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+
+        if (HasStateAuthority)
+        {
+            WeaponManager.instance.weaponHandler = this;
+        }
     }
 
     private void Update()
@@ -305,4 +310,15 @@ public class WeaponHandler : NetworkBehaviour
 
         
     }
+
+    public void SetFireDamage(byte damage)
+    {
+        weaponDamageCurr = damage;
+    }
+
+    public void SetFireSound(AudioClip audioClip)
+    {
+        weaponSoundCurr = audioClip;
+    }
+
 }

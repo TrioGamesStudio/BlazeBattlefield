@@ -13,7 +13,7 @@ public class GunItemConfig : ItemConfig<GunType>
     public Sprite IconActualGun;
     public AudioClip shootingSound;
     public AudioClip reloadSound;
-    public float damagePerHit = 1;
+    public byte damagePerHit = 1;
 }
 
 public enum SlotWeaponIndex
