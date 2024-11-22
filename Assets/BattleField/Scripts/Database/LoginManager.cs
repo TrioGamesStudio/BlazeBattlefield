@@ -19,8 +19,12 @@ public class LoginManager : MonoBehaviour
     public TMP_InputField signupEmail;
     public TMP_InputField userName;
     public TMP_InputField signupPassword;
-
     public TMP_InputField signupPasswordConfirm;
+
+    public TextMeshProUGUI signupPlaceholder;
+    public TextMeshProUGUI usernamePlaceholder;
+    public TextMeshProUGUI signupPasswordPlaceholder;
+    public TextMeshProUGUI signupPasswordConfirmPlaceholder;
     [SerializeField] Button signUpButton;
 
 
@@ -84,6 +88,11 @@ public class LoginManager : MonoBehaviour
             userName.text = "";
             signupPassword.text = "";
             signupPasswordConfirm.text = "";
+
+            signupPlaceholder.text = "Enter Email...";
+            usernamePlaceholder.text = "Enter User Name...";
+            signupPasswordPlaceholder.text = "Enter Password...";
+            signupPasswordConfirmPlaceholder.text = "Confirm Password...";
 
             if (result.User.IsEmailVerified)
             {
