@@ -6,13 +6,17 @@ using UnityEngine;
 public class RandomGroup : NetworkBehaviour
 {
     [SerializeField] private List<Transform> spawnPoints;
-    [SerializeField] private int maxItems = 10;
+    [SerializeField] private List<Transform> validSpawnPoints;
+    [SerializeField] private int maxItemBoxInGroup = 10;
+    [SerializeField] private int validSpawnPointCount;
     [Header("Gizmos Settings")]
     [SerializeField] private Color groupColor = Color.white;
     [SerializeField] private Color childColor = Color.red;
-    [SerializeField] private bool drawBoundOfGroup = false;
+    [SerializeField] private Color validSpawnPointColor = Color.blue;
     [SerializeField] private Vector3 sizeOfLocation = Vector3.one;
-    [SerializeField] private bool drawChildLocation = false;
+    [SerializeField] private bool drawBoundOfGroup = false;
+    [SerializeField] private bool drawAllChildLocation = false;
+    [SerializeField] private bool drawValidSpawnPoint = false;
     [EditorButton]
     private void GetSpawnPointInChild()
     {
@@ -35,24 +39,11 @@ public class RandomGroup : NetworkBehaviour
     }
 
 
-    [EditorButton]
     private void GenerateItem()
     {
-        List<Transform> validSpawnItem = new();
-        int spawnCount = spawnPoints.Count / 3;
-        HashSet<int> usedIndices = new();
-
-        while (validSpawnItem.Count < spawnCount)
-        {
-            int randomIndex = Random.Range(0, spawnPoints.Count);
-            if (!usedIndices.Contains(randomIndex))
-            {
-                usedIndices.Add(randomIndex);
-                validSpawnItem.Add(spawnPoints[randomIndex]);
-            }
-        }
+        
         int count = Random.Range(3, 7);
-        foreach (var validSpawnPos in validSpawnItem)
+        foreach (var validSpawnPos in validSpawnPoints)
         {
             for (int i = 0; i < count; i++)
             {
@@ -67,10 +58,27 @@ public class RandomGroup : NetworkBehaviour
             }
         }
     }
+    [EditorButton]
+    private void CreateValidSpawnPoints()
+    {
+        validSpawnPoints.Clear();
+        int spawnCount = Mathf.Clamp(validSpawnPointCount,0, maxItemBoxInGroup);
+        HashSet<int> usedIndices = new();
+
+        while (validSpawnPoints.Count < spawnCount)
+        {
+            int randomIndex = Random.Range(0, spawnPoints.Count);
+            if (!usedIndices.Contains(randomIndex))
+            {
+                usedIndices.Add(randomIndex);
+                validSpawnPoints.Add(spawnPoints[randomIndex]);
+            }
+        }
+    }
 
     private void OnDrawGizmos()
     {
-        if (drawChildLocation)
+        if (drawAllChildLocation)
         {
             Gizmos.color = childColor;
             foreach (var child in spawnPoints)
@@ -89,6 +97,15 @@ public class RandomGroup : NetworkBehaviour
                 bounds.Encapsulate(child.transform.position);
             }
             Gizmos.DrawWireCube(bounds.center, bounds.size);
+        }
+
+        if (drawValidSpawnPoint)
+        {
+            Gizmos.color = validSpawnPointColor;
+            foreach (var child in validSpawnPoints)
+            {
+                Gizmos.DrawWireCube(child.transform.position, sizeOfLocation);
+            }
         }
     }
 }
