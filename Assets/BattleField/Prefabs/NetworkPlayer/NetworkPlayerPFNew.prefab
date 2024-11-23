@@ -13703,8 +13703,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -10}
-  m_SizeDelta: {x: 600, y: 200}
+  m_AnchoredPosition: {x: 134.70618, y: -10}
+  m_SizeDelta: {x: 475.2938, y: 162.5881}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &116550042497990492
 MonoBehaviour:
@@ -30930,7 +30930,7 @@ Transform:
   m_GameObject: {fileID: 6365760838098563679}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.57, y: 0.7, z: 0.78999996}
+  m_LocalPosition: {x: 0.57, y: 1.5, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -31561,6 +31561,7 @@ GameObject:
   - component: {fileID: 2577614603369078220}
   - component: {fileID: 5717655937548043561}
   - component: {fileID: 4356114935845866614}
+  - component: {fileID: -2990588145623987026}
   m_Layer: 0
   m_Name: NetworkPlayerPFNew
   m_TagString: Player
@@ -31906,9 +31907,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96a9f281bc84a7649a7fc90269073128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeWeapon: {fileID: 2577614603369078220}
   animator: {fileID: 189564311054050457}
-  weaponHandler: {fileID: 4082113178450429096}
 --- !u!82 &4356114935845866614
 AudioSource:
   m_ObjectHideFlags: 0
@@ -32005,6 +32004,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-2990588145623987026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6593664972719329374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1541381998, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Guid:
+    RawGuidValue: 186bd84a5fd2246e6952883bc3ebd58f
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0
