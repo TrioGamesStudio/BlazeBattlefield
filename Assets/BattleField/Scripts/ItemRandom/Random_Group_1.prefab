@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2314996586593488976}
   - component: {fileID: 8139926900121993745}
+  - component: {fileID: 1637064391621451934}
   m_Layer: 0
   m_Name: Random_Group_1
   m_TagString: Untagged
@@ -61,6 +62,24 @@ MonoBehaviour:
   drawBoundOfGroup: 1
   sizeOfLocation: {x: 2, y: 1, z: 2}
   drawChildLocation: 1
+--- !u!114 &1637064391621451934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7180703931743576242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 2397004260
+  ObjectInterest: 1
+  Flags: 1
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 8139926900121993745}
 --- !u!1001 &339548940152973282
 PrefabInstance:
   m_ObjectHideFlags: 0
