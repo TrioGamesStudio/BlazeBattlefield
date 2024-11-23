@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -12,6 +13,7 @@ public class HealthBarUI : MonoBehaviour
     [SerializeField] private Slider healthSlider;
     [SerializeField] private Slider healthRegenSlider;
     [SerializeField] private Slider healthLostSlider;
+    [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private float minValue;
     [SerializeField] private float maxValue;
     [Header("Settings")] 
@@ -26,6 +28,8 @@ public class HealthBarUI : MonoBehaviour
         healthSlider.value = maxValue;
         healthRegenSlider.value = minValue;
         healthLostSlider.value = minValue;
+        
+        healthText.text = maxValue.ToString();
 
         OnHealthChangeAction += OnHealthChange;
     }
@@ -63,9 +67,9 @@ public class HealthBarUI : MonoBehaviour
         {
             // show lost health slider
         }
-
         healthSlider.value = newHealthValue;
         healthLostSlider.value = currentHealthValue;
+        healthText.text = newHealthValue.ToString();
         Debug.Log($"Health change debug: current health {newHealthValue} ; old value {currentHealthValue}", gameObject);
         Invoke(nameof(DelayTest), healthLostDelay);
     }
@@ -74,6 +78,6 @@ public class HealthBarUI : MonoBehaviour
     {
         healthLostSlider.value = healthSlider.value;
     }
-    
-   
+
+
 }

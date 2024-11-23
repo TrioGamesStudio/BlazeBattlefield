@@ -13,23 +13,10 @@ using UnityEngine.SceneManagement;
 public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 {
     public static Matchmaking Instance;
-    [SerializeField] private NetworkRunner networkRunnerPrefab;
-    [SerializeField] private PlayerRoomController playerControllerPrefab;
-    [SerializeField] private List<Transform> memberPos = new();
-    [SerializeField] private Button readyButton;
-    [SerializeField] private Button playButton;
-    private NetworkRunner networkRunner;
-    private const int MAX_PLAYER = 2;
     public GameObject localPlayer;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
-    private PlayerRoomController localPlayerRoomController;
-    private Vector3 spawnPosition;
     public Mode currentMode = Mode.Solo;
-    private bool isAutoMatch;
-    public int alivePlayer;
-    bool isDone = false;
-    public bool IsDone{get => isDone;}
-    private PlayerRoomController localSoloPlayer;
+    public bool IsDone { get => isDone; }
     public Dictionary<PlayerRef, string> matchSolo = new();
     public bool IsAutoMatch
     {
@@ -44,19 +31,29 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             }
         }
     }
-
-    enum SceneBuildIndex
-    {
-        PlayScene = 2,
-    }
-
-    public int currentSceneIndex = 2; // This variable will hold the current scene index
-
-
+    public int currentSceneIndex = 2;
     public enum Mode
     {
         Solo,
         Duo
+    }
+
+    [SerializeField] private NetworkRunner networkRunnerPrefab;
+    [SerializeField] private PlayerRoomController playerControllerPrefab;
+    [SerializeField] private List<Transform> memberPos = new();
+    [SerializeField] private Button readyButton;
+    [SerializeField] private Button playButton;
+    [SerializeField] private int MAX_PLAYER = 2;
+
+    private NetworkRunner networkRunner;   
+    private PlayerRoomController localPlayerRoomController;
+    private Vector3 spawnPosition;  
+    private bool isAutoMatch;
+    private bool isDone = false;
+    private PlayerRoomController localSoloPlayer;
+    private enum SceneBuildIndex
+    {
+        PlayScene = 2,
     }
 
     private void Awake()

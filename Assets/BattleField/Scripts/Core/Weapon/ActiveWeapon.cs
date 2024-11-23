@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static ActiveWeapon;
-public partial class ActiveWeapon : NetworkBehaviour
+public partial class ActiveWeapon : NetworkBehaviour, INetworkInitialize
 {
 
     public Transform[] weaponHoldersLocal;
@@ -14,7 +14,7 @@ public partial class ActiveWeapon : NetworkBehaviour
     [Networked, Capacity(4)] NetworkDictionary<byte, bool> activeWeaponState => default;
     [SerializeField] CharacterInputHandler characterInputHandler;
     [SerializeField] Transform gunLocalHolder;
-    public void Init()
+    public void Initialize()
     {
         //WeaponSlotHandlers = WeaponManager.instance.WeaponSlotHandlers;
         if (WeaponManager.instance == null) return;
