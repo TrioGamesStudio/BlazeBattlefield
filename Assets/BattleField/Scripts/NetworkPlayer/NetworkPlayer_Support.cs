@@ -2,9 +2,8 @@ using Fusion;
 using UnityEngine;
 public class NetworkPlayer_Support : NetworkBehaviour
 {
-    [SerializeField] ActiveWeapon activeWeapon;
     [SerializeField] private Animator animator;
-   
+    
     public void Init()
     {
         if(WeaponManager.instance != null)
@@ -16,6 +15,15 @@ public class NetworkPlayer_Support : NetworkBehaviour
         {
             ItemDatabase.instance.PlayerObject = transform;
         }
-        activeWeapon.Init();
+        
+        var INetworkInitializes = GetComponentsInChildren<INetworkInitialize>();
+        foreach(var item in INetworkInitializes)
+        {
+            item.Initialize();
+        }
     }
+}
+public interface INetworkInitialize
+{
+    void Initialize();
 }

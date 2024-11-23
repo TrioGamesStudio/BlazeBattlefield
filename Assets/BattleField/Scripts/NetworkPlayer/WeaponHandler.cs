@@ -4,7 +4,7 @@ using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class WeaponHandler : NetworkBehaviour
+public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 {
     [SerializeField] BulletHandler bulletVFXPF; // vien dan chua class BulletHandler (chi co chua hieu ung vxf tai noi raycast hit vao)
     [Header("Effects")]
@@ -42,7 +42,7 @@ public class WeaponHandler : NetworkBehaviour
 
     //! testing
     [SerializeField] LocalCameraHandler localCameraHandler;
-    float aiFireRate = 2f;
+    float fireRateCurrent = 2f;
     [SerializeField] byte weaponDamageCurr = 1;
     Vector3 spawnPointRaycastCam = Vector3.zero;
 
@@ -79,10 +79,7 @@ public class WeaponHandler : NetworkBehaviour
     {
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 
-        if (HasStateAuthority)
-        {
-            WeaponManager.instance.weaponHandler = this;
-        }
+        
     }
 
     private void Update()
@@ -261,7 +258,7 @@ public class WeaponHandler : NetworkBehaviour
         lastTimeFired = Time.time;
 
         // lam cho ai ban theo tan suat random khoang time
-        aiFireRate = Random.Range(0.1f, 1.5f);
+        fireRateCurrent = Random.Range(0.1f, 1.5f);
     }
 
     private bool IsTeammate(RaycastHit hit)
@@ -311,14 +308,15 @@ public class WeaponHandler : NetworkBehaviour
         
     }
 
-    public void SetFireDamage(byte damage)
+    public void SetConfig(GunItemConfig config)
     {
-        weaponDamageCurr = damage;
+        weaponSoundCurr = config.shootingSound;
+        weaponDamageCurr = config.damagePerHit;
+        fireRateCurrent = config.fireRate;
     }
 
-    public void SetFireSound(AudioClip audioClip)
+    public void Initialize()
     {
-        weaponSoundCurr = audioClip;
+        WeaponManager.instance.weaponHandler = this;
     }
-
 }
