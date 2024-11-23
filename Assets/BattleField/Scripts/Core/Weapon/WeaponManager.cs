@@ -146,10 +146,14 @@ public class WeaponManager : MonoBehaviour
         currentWeaponIndex = newIndex;
         WeaponUIManager.instance.Hightligh(currentWeaponIndex);
 
-        if(newIndex != -1)
+        if(newIndex == -1)
         {
-            weaponHandler.SetFireSound(weaponSlotHandlers[currentWeaponIndex].Config.shootingSound);
-            weaponHandler.SetFireDamage(weaponSlotHandlers[currentWeaponIndex].Config.damagePerHit);
+            Debug.Log("Player cat sung");
+        }
+        else
+        {
+            Debug.Log("Player cam sung");
+            weaponHandler.SetConfig(weaponSlotHandlers[currentWeaponIndex].Config);
         }
     }
 
