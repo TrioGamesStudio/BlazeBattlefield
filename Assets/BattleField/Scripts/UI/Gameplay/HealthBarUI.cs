@@ -26,6 +26,14 @@ public class HealthBarUI : MonoBehaviour
         healthSlider.value = maxValue;
         healthRegenSlider.value = minValue;
         healthLostSlider.value = minValue;
+
+        OnHealthChangeAction += OnHealthChange;
+    }
+
+    private void OnDestroy()
+    {
+        OnHealthChangeAction -= OnHealthChange;
+
     }
 
 

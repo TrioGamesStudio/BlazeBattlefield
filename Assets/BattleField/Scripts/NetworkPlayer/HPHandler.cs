@@ -195,7 +195,8 @@ public class HPHandler : NetworkBehaviour
         else {
             this.Networked_IsDead = false;
             this.Networked_Killer = null;
-        } 
+        }
+        HealthBarUI.OnHealthChangeAction?.Invoke(hp);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
