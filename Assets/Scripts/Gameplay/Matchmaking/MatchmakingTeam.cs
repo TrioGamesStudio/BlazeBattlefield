@@ -13,20 +13,22 @@ using System.Threading.Tasks;
 public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 {
     public static MatchmakingTeam Instance;
-    [SerializeField] private NetworkRunner networkRunnerPrefab;
-    [SerializeField] private PlayerRoomController playerControllerPrefab;
-    private NetworkRunner networkRunner;
     public Dictionary<PlayerRef, PlayerRoomController> players = new();
     public TextMeshProUGUI StatusText;
-    private const int MAX_PLAYER = 4;
-    string roomID;
-    string teamID = "";
-    string roomAutoMatch = "";
-    bool isDone = false;
     public bool IsDone { get => isDone; }
     public Dictionary<string, List<PlayerRef>> teams = new();
     public Dictionary<PlayerRef, string> matchTeam = new();
-    enum SceneBuildIndex
+
+    [SerializeField] private NetworkRunner networkRunnerPrefab;
+    [SerializeField] private PlayerRoomController playerControllerPrefab;
+    [SerializeField] private int MAX_PLAYER = 4;
+
+    private NetworkRunner networkRunner;
+    private string roomID;
+    private string teamID = "";
+    private string roomAutoMatch = "";
+    private bool isDone = false;
+    private enum SceneBuildIndex
     {
         PlayScene = 2,
     }
