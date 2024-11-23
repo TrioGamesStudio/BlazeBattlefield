@@ -5,8 +5,9 @@ using Firebase.Extensions;
 using Firebase.Auth;
 using Firebase;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class EmailLogin : MonoBehaviour
+public class LoginManager : MonoBehaviour
 {
     #region variables
     [Header("Login")]
@@ -18,8 +19,12 @@ public class EmailLogin : MonoBehaviour
     public TMP_InputField signupEmail;
     public TMP_InputField userName;
     public TMP_InputField signupPassword;
-
     public TMP_InputField signupPasswordConfirm;
+
+    public TextMeshProUGUI signupPlaceholder;
+    public TextMeshProUGUI usernamePlaceholder;
+    public TextMeshProUGUI signupPasswordPlaceholder;
+    public TextMeshProUGUI signupPasswordConfirmPlaceholder;
     [SerializeField] Button signUpButton;
 
 
@@ -27,7 +32,9 @@ public class EmailLogin : MonoBehaviour
     public GameObject loadingScreen;
     public TextMeshProUGUI logTxt;
 
-    public GameObject loginUi, signupUi, SuccessUi;
+    public GameObject loginUi, signupUi, SuccessUi, loginOptionsPanel;
+    public Button emailLoginButton;
+    public Button guestLoginButton;
     [SerializeField] TextMeshProUGUI id;
     #endregion
 
@@ -82,15 +89,22 @@ public class EmailLogin : MonoBehaviour
             signupPassword.text = "";
             signupPasswordConfirm.text = "";
 
+            signupPlaceholder.text = "Enter Email...";
+            usernamePlaceholder.text = "Enter User Name...";
+            signupPasswordPlaceholder.text = "Enter Password...";
+            signupPasswordConfirmPlaceholder.text = "Confirm Password...";
+
             if (result.User.IsEmailVerified)
             {
-                ShowLogMsg_SingUP("Sign up Successful");
+                //ShowLogMsg_SingUP("Sign up Successful");
+                
             }
             else {
-                ShowLogMsg_SingUP("Please verify your email!!");
+                //ShowLogMsg_SingUP("Please verify your email!!");
                 SendEmailVerification();
             }
 
+            StartCoroutine(TextFadeOut_SignUp(2f));
             // save after having email and password
             DataSaver.Instance.SaveToSignup(useName, result.User.UserId);
         });
@@ -326,6 +340,7 @@ public class EmailLogin : MonoBehaviour
                 //? gan userId cho saveLoadHander Firebase | FireStore
                 DataSaver.Instance.userId = result.User.UserId;
                 /* DataSaveLoadHander.Instance.userId = result.User.UserId; */
+                SceneManager.LoadSceneAsync("MainLobby");
             }
             else {
                 ShowLogMsg("Please verify email!!");
@@ -334,6 +349,40 @@ public class EmailLogin : MonoBehaviour
             //Load data
             DataSaver.Instance.LoadData();
             SetPlayerPref(email, password);
+        });
+    }
+
+    public void LoginQuest()
+    {
+        loadingScreen.SetActive(true);
+        FirebaseAuth auth = FirebaseAuth.DefaultInstance;
+        auth.SignInAnonymouslyAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SignIn Guest was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("SignIn Guest encountered an error: " + task.Exception);
+                return;
+            }
+
+            loadingScreen.SetActive(false);
+            AuthResult result = task.Result;
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+                result.User.DisplayName, result.User.UserId);
+
+
+            ShowLogMsg("Log in Successful");
+            loginUi.SetActive(false);
+            SuccessUi.SetActive(true);
+            id.text = $"ID: {result.User.UserId}";
+
+            //? gan userId cho saveLoadHander Firebase | FireStore
+            DataSaver.Instance.userId = result.User.UserId;
+            SceneManager.LoadSceneAsync("MainLobby");
         });
     }
     #endregion
@@ -374,6 +423,11 @@ public class EmailLogin : MonoBehaviour
         PlayerPrefs.SetString(MAILKEY, mail);
         PlayerPrefs.SetString(PASSKEY, password);
         PlayerPrefs.Save();
+    }
+
+    public void QuickBattle()
+    {
+        SceneManager.LoadScene("Quang_Scene");
     }
     #endregion
 

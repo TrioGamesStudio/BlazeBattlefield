@@ -66,7 +66,7 @@ public class ShowPlayerInfo : MonoBehaviour
         SceneManager.LoadSceneAsync(MAINLOBBY);
     }
 
-    private void GoToQickBattle()
+    public void GoToQickBattle()
     {
         StartCoroutine(LoadToQuickBattle(0.5f));
     }
