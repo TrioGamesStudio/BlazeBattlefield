@@ -672,6 +672,7 @@ Transform:
   - {fileID: 4677683620025187720}
   - {fileID: 4806533071108029046}
   - {fileID: 69732658926714579}
+  - {fileID: 8444047040249924681}
   - {fileID: 8814744861130382656}
   - {fileID: 1364516145020676474}
   m_Father: {fileID: 4946146826298080308}
@@ -1299,7 +1300,7 @@ GameObject:
   - component: {fileID: 4269555637738142386}
   - component: {fileID: 3957909077283196264}
   m_Layer: 0
-  m_Name: MiniMapCam
+  m_Name: MiniMap_Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1313,12 +1314,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 941111001725956368}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5053250945003214250}
+  m_Father: {fileID: 4946146826298080308}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3544562235007312176
 MonoBehaviour:
@@ -1332,8 +1333,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18acad7698377f46b2ffe8c585867e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 4946146826298080308}
-  miniMapCam_Player: {fileID: 4269555637738142386}
+  miniMapCamera: {fileID: 4269555637738142386}
+  minimapAnchorPoint: {fileID: 8444047040249924681}
+  miniMap: {fileID: 3627536906605282188}
+  miniMapTeamMate: {fileID: 126457008134508638}
+  playerRoomController: {fileID: 4043879867669260240}
+  matchmakingTeam: {fileID: 0}
 --- !u!20 &4269555637738142386
 Camera:
   m_ObjectHideFlags: 0
@@ -1875,38 +1880,6 @@ Transform:
   - {fileID: 4309451977145496327}
   m_Father: {fileID: 5616822864426718423}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1415162190412827740
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5053250945003214250}
-  m_Layer: 0
-  m_Name: MiniMap_Camera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5053250945003214250
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1415162190412827740}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2649115610918867012}
-  m_Father: {fileID: 4946146826298080308}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1446588449261625847
 GameObject:
   m_ObjectHideFlags: 0
@@ -21082,6 +21055,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.3452602, y: 0.039159335, z: 0}
     m_Extent: {x: 0.30438936, y: 0.2339578, z: 0.29138315}
   m_DirtyAABB: 0
+--- !u!1 &5577163648371259793
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8444047040249924681}
+  m_Layer: 0
+  m_Name: CameraMinimapAnchorPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8444047040249924681
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5577163648371259793}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6861560686829112150}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &5622474840573399126
 GameObject:
   m_ObjectHideFlags: 0
@@ -32048,7 +32052,7 @@ Transform:
   - {fileID: 6861560686829112150}
   - {fileID: 2765225612460693475}
   - {fileID: 944937579383811275}
-  - {fileID: 5053250945003214250}
+  - {fileID: 2649115610918867012}
   - {fileID: 6172455221678213933}
   - {fileID: 7529519651389035531}
   m_Father: {fileID: 0}
@@ -32119,6 +32123,7 @@ MonoBehaviour:
   _NetDict:
     _items: []
   nickName_TM: {fileID: 1115899688476449492}
+  miniMap_Image: {fileID: 3627536906605282188}
   playerModel: {fileID: 6861560686829112150}
   localCameraHandler: {fileID: 0}
   localUI: {fileID: 1446588449261625847}
@@ -32320,6 +32325,7 @@ MonoBehaviour:
     _value: 0
   teamMemberPanel: {fileID: 4443500529871716872}
   isLocalPlayer: 0
+  miniMapTeamMateImage: {fileID: 126457008134508638}
 --- !u!114 &4143770320003914217
 MonoBehaviour:
   m_ObjectHideFlags: 0
