@@ -15,6 +15,9 @@ public class DropBox : NetworkBehaviour
 
     [SerializeField] private bool isRandom = false;
     [SerializeField] private int randomItemCount = 3;
+
+    [SerializeField] private AudioClip openAudioClip;
+
     private bool isOpen = false;
     private void Start()
     {
@@ -28,9 +31,9 @@ public class DropBox : NetworkBehaviour
     private void Open()
     {
         if (isOpen) return;
-
         crate_Lid.transform.eulerAngles = new Vector3(-90, 0, 0);
         isOpen = true;
+        SoundRequestManager.instance.PlayOneTime(openAudioClip, transform.position);
         if (HasStateAuthority)
         {
             if (isRandom)
