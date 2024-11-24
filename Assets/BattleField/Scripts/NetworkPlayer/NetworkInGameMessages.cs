@@ -1,5 +1,6 @@
 using UnityEngine;
 using Fusion;
+using Unity.VisualScripting;
 
 //todo gameobject = player
 //todo HasInputAuthority input local name -> RPC_SetNickName() -> thong bao ten ra man hinh
@@ -18,6 +19,8 @@ public class NetworkInGameMessages : NetworkBehaviour
         Debug.Log($"[RPC] InGameMessage {message}");
 
         if(inGameMessagesUIHandler == null) {
+            if(NetworkPlayer.Local.LocalCameraHandler == null) return;
+            
             inGameMessagesUIHandler = NetworkPlayer.Local.LocalCameraHandler
                                     .GetComponentInChildren<InGameMessagesUIHandler>();
             

@@ -37,6 +37,9 @@ public class CharacterMovementHandler : NetworkBehaviour
     HPHandler hPHandler;
     CharacterInputHandler characterInputHandler;
     Vector3 moveDir;
+    const int maxSpeedWalk = 5;
+    const int maxSpeedSprint = 6;
+
     private void Awake() {
         characterInputHandler = GetComponent<CharacterInputHandler>();
         networkCharacterController = GetComponent<NetworkCharacterController>();
@@ -96,11 +99,11 @@ public class CharacterMovementHandler : NetworkBehaviour
     public void SetMovementInput(bool isSprinted) {
         this.isSprinted = isSprinted;
         if(isSprinted) {
-            networkCharacterController.maxSpeed = 6;
+            networkCharacterController.maxSpeed = maxSpeedSprint;
             speedAnimRate = 4;
         }
         else {
-            networkCharacterController.maxSpeed = 4;
+            networkCharacterController.maxSpeed = maxSpeedWalk;
             speedAnimRate = 1;
         }
     }
