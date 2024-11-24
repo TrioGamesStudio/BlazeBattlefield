@@ -14,6 +14,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
     NetworkInGameMessages networkInGameMessages;
     [SerializeField] TextMeshProUGUI nickName_TM;
+    [SerializeField] GameObject miniMap_Image;
+
     ChangeDetector changeDetector;
 
     public static NetworkPlayer Local { get; set; }
@@ -22,6 +24,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
     // camera
     [SerializeField] private LocalCameraHandler localCameraHandler;
     public LocalCameraHandler LocalCameraHandler => localCameraHandler;
+    [SerializableType] MiniMapCameraHandler miniMapCameraHandler;
 
     // UI chua crossHair, red image get damage
     public GameObject localUI; // game object = PlayerUICanvas (canvas cua ca player)
@@ -52,6 +55,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
     private void Awake() {
         localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
+        miniMapCameraHandler = GetComponentInChildren<MiniMapCameraHandler>();
+
         networkInGameMessages = GetComponent<NetworkInGameMessages>();
         /* spawner = FindObjectOfType<Spawner>(); */
         networkRunner = FindObjectOfType<NetworkRunner>();
@@ -92,7 +97,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
         if(this.Object.HasStateAuthority) {
             Local = this;
-            GetComponent<NetworkPlayer_Support>()?.Init();
             // kiem tra Ready scene de ON MainCam OF LocalCam
             if (isReadyScene) {
                 // (this.sceneToStart) networkPlayer <- spawner.cs <- dropdownscenename.cs
@@ -103,16 +107,22 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
                 // OF localCam
                 localCameraHandler.gameObject.SetActive(false);
                 localCameraHandler.localCamera.enabled = false;
+
+                miniMapCameraHandler.gameObject.SetActive(false);
+                miniMapCameraHandler.miniMapCamera.enabled = false;
+                
                 // OF localPlayer UI
                 localUI.SetActive(false);
 
                 // ON nickName if readyScene
                 nickName_TM.gameObject.SetActive(true);
+                miniMap_Image.SetActive(false);
 
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
             else {
+                GetComponent<NetworkPlayer_Support>()?.Init();
                 Debug.Log($"_____co chay NOT IsReadyScene");
                 Utils.SetRenderLayerInChildren(playerModel, LayerMask.NameToLayer("LocalPlayerModel"));
 
@@ -124,14 +134,19 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
                 localCameraHandler.localCamera.enabled = true;  // ON camera component
                 localCameraHandler.gameObject.SetActive(true);  //ON ca gameObject LocalCameraHandler(co camera + gun)
 
+                miniMapCameraHandler.miniMapCamera.enabled = true;
+                miniMapCameraHandler.gameObject.SetActive(true);
+
                 //? deAttach neu localCamera dang enable ra khoi folder cha
                 localCameraHandler.transform.parent = null;
+                miniMapCameraHandler.transform.parent = null;
 
                 //? bat local UI | canvas cua ca local player(crossHair, onDamageImage, messages rpc send)
                 localUI.SetActive(true); // con cua localCamera transform
 
                 //? OFF nickName if KO dang o readyScene
                 nickName_TM.gameObject.SetActive(false);
+                miniMap_Image.SetActive(true);
 
                 //? disable mouse de play
                 Cursor.lockState = CursorLockMode.Locked;
@@ -167,6 +182,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         else {
             localCameraHandler.localCamera.enabled = false;
             localCameraHandler.gameObject.SetActive(false);
+
+            // tat miniMap camera
+            miniMapCameraHandler.miniMapCamera.enabled = false;
+            miniMapCameraHandler.gameObject.SetActive(false);
+            miniMap_Image.SetActive(false); // ko show cho player clone
+
             localUI.SetActive(false);
         }
 
@@ -184,6 +205,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
     private void OnNickNameChanged() {
         Debug.Log($"NickName changed to {nickName_Network} for player {gameObject.name}");
         nickName_TM.text = nickName_Network.ToString();
+
+        if(!Object.HasStateAuthority) {
+            //miniMap.SetActive(false);
+        }
+        
     }
 
     private void OnIsEnemyChanged() {
@@ -248,6 +274,10 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
             Debug.Log("SU KIEN ONDESTROY LOCAL CAMERA HANDLER IN NETWORKPLAYER.CS");
             Destroy(localCameraHandler.gameObject);
         }
+        if(miniMapCameraHandler != null) {
+            Destroy(miniMapCameraHandler.gameObject);
+        }
+
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
