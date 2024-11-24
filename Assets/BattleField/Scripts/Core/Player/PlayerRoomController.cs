@@ -19,11 +19,12 @@ public class PlayerRoomController : NetworkBehaviour
     string localRoomId;
     public bool isLocalPlayer = false;
 
+    public GameObject miniMapTeamMateImage;
     //bool isCursorShowed = false;
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame

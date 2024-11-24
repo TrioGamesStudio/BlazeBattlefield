@@ -21,6 +21,7 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
         if(Object.HasInputAuthority) {
             if(SceneManager.GetActiveScene().name == "MainLobby") {
                 RPC_RandomSKinsNumsGenerator(defaultSkinsNumber);
+                return;
             }
             else {
                 int skinsNums = Random.Range(0, skinsList.Count);
