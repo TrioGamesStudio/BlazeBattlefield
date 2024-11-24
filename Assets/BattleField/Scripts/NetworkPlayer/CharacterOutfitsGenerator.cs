@@ -41,6 +41,7 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
 
     public override void Render()
     {
+        if (SceneManager.GetActiveScene().name == "MainLobby") return;
         foreach (var change in changeDetector.DetectChanges(this, out var previousBuffer, out var currentBuffer)) {
             switch (change)
             {

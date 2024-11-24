@@ -8,7 +8,8 @@ public class GameHandler : MonoBehaviour
 {
     public Dictionary<string, List<PlayerRoomController>> teamsOriginal = new();
     public Dictionary<string, List<PlayerRoomController>> teams = new();
-    string teamID;
+    private string teamID;
+
     public void InitializeTeams()
     {
         PlayerRoomController[] players = FindObjectsByType<PlayerRoomController>(FindObjectsSortMode.None);
@@ -47,6 +48,8 @@ public class GameHandler : MonoBehaviour
             {
                 NetworkPlayer networkPlayer = player.GetComponent<NetworkPlayer>();
                 networkPlayer.SetNicknameUIColor(Color.blue); //Set teamate name plate UI color to blue
+                if (!player.isLocalPlayer)
+                    FindObjectOfType<TeammateInfo>().CreateTeammemberInfo(networkPlayer.nickName, 5);
             }
             else
             {
