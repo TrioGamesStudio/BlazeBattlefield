@@ -38,23 +38,29 @@ public class WeaponManager : MonoBehaviour
     private void RegisterEvent()
     {
         InputCombatControl.Instance.Enable();
-        InputCombatControl.SwapGun1 += () => OnActiveWeapon(0);
-        InputCombatControl.SwapGun2 += () => OnActiveWeapon(1);
-        InputCombatControl.SwapGun3 += () => OnActiveWeapon(2);
-        InputCombatControl.SwapMeele += () => OnActiveWeapon(3);
+        InputCombatControl.SwapGun1 += OnActiveWeapon0;
+        InputCombatControl.SwapGun2 += OnActiveWeapon1;
+        InputCombatControl.SwapGun3 += OnActiveWeapon2;
+        InputCombatControl.SwapMeele += OnActiveWeapon3;
         InputCombatControl.Reload += Reload;
 
     }
 
     private void OnDestroy()
     {
-        InputCombatControl.SwapGun1 -= () => OnActiveWeapon(0);
-        InputCombatControl.SwapGun2 -= () => OnActiveWeapon(1);
-        InputCombatControl.SwapGun3 -= () => OnActiveWeapon(2);
-        InputCombatControl.SwapMeele -= () => OnActiveWeapon(3);
+        InputCombatControl.SwapGun1 -= OnActiveWeapon0;
+        InputCombatControl.SwapGun2 -= OnActiveWeapon1;
+        InputCombatControl.SwapGun3 -= OnActiveWeapon2;
+        InputCombatControl.SwapMeele -= OnActiveWeapon3;
         InputCombatControl.Reload -= Reload;
 
     }
+
+    private void OnActiveWeapon0() => OnActiveWeapon(0);
+    private void OnActiveWeapon1() => OnActiveWeapon(1);
+    private void OnActiveWeapon2() => OnActiveWeapon(2);
+    private void OnActiveWeapon3() => OnActiveWeapon(3);
+
 
     public void Reload()
     {
