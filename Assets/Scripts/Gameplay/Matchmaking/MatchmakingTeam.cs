@@ -21,7 +21,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private PlayerRoomController playerControllerPrefab;
-    [SerializeField] private int MAX_PLAYER = 2;
+    [SerializeField] private int MAX_PLAYER = 3;
 
     private NetworkRunner networkRunner;
     private string roomID;

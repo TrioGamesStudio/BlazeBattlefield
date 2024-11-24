@@ -49,7 +49,7 @@ public class GameHandler : MonoBehaviour
                 NetworkPlayer networkPlayer = player.GetComponent<NetworkPlayer>();
                 networkPlayer.SetNicknameUIColor(Color.blue); //Set teamate name plate UI color to blue
                 if (!player.isLocalPlayer)
-                    FindObjectOfType<TeammateInfo>().CreateTeammemberInfo(networkPlayer.nickName_Network.ToString(), 5);
+                    FindObjectOfType<TeammateInfo>().CreateTeammemberInfo(networkPlayer.nickName_Network.ToString(), 5, player.GetComponent<HPHandler>());
             }
             else
             {
