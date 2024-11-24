@@ -1,5 +1,4 @@
 
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -28,6 +27,7 @@ public class MiniMapCameraHandler : MonoBehaviour
     void LateUpdate()
     {
         transform.position = minimapAnchorPoint.position + new Vector3(0, 5, 0);
+
         transform.rotation = Quaternion.Euler(90f, minimapAnchorPoint.eulerAngles.y, 0f);
     }
 
