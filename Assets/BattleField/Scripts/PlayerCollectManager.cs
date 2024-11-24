@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 [RequireComponent(typeof(Rigidbody))]
-public class Test : NetworkBehaviour
+public class PlayerCollectManager : NetworkBehaviour
 {
     private Rigidbody Rigidbody;
     private void Awake()
@@ -26,13 +26,21 @@ public class Test : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         CollectItem(other, true);
+        TriggerDropBox(other);
 
     }
 
     private void OnTriggerExit(Collider other)
     {
         CollectItem(other, false);
+    }
 
+    private void TriggerDropBox(Collider other)
+    {
+        if(other.TryGetComponent(out DropBox dropBox))
+        {
+            dropBox.RPC_Open();
+        }
     }
 
     private void CollectItem(Collider other, bool showing)

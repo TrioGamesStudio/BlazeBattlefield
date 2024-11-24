@@ -111,6 +111,8 @@ MonoBehaviour:
   _quantity: 30
   customDatas: []
   config: {fileID: 0}
+  ItemRarity: 0
+  ItemWeight: 0
 --- !u!114 &-3292781355194832252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,8 +128,8 @@ MonoBehaviour:
   isInBoundCollider: 0
   height: 1.2
   BoundItemsCollider: {fileID: 0}
-  _collider: {fileID: 5659457353509585042}
   _allowAddToCollider: 1
+  itemGroundPositioner: {fileID: 0}
 --- !u!114 &911242941516078503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,7 +142,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db6977ad3f1869048bd5ddf9e3ea4076, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ObjectTag: 
 --- !u!1001 &6296839182833915075
 PrefabInstance:
   m_ObjectHideFlags: 0

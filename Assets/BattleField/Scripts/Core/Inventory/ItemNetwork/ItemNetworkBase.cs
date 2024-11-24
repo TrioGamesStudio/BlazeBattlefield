@@ -11,7 +11,7 @@ public class CustomData
     {
 
     }
-    public CustomData(string _key,float _value)
+    public CustomData(string _key, float _value)
     {
         key = _key;
         value = _value;
@@ -32,7 +32,7 @@ public interface ItemDataEnum
     byte GetItemWeight();
 }
 
-public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, ItemDataEnum, 
+public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, ItemDataEnum,
     IRunTimeItem where _EnumType : Enum where _Config : ItemConfig<_EnumType>
 {
     [Networked] public int quantity { get; set; }
@@ -53,18 +53,22 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     public override void Spawned()
     {
         base.Spawned();
-        Invoke(nameof(BoundItemSetup), .5f);
+        if (HasStateAuthority)
+        {
+            //Invoke(nameof(BoundItemSetup), .3f);
+            BoundItemSetup();
+        }
     }
 
     public void BoundItemSetup()
     {
-        if(boundItem == null)
+        if (boundItem == null)
         {
             Debug.LogError("Bound item is null in item", gameObject);
             return;
         }
 
-        boundItem.Setup();
+        boundItem.SetupFromStateAuthority();
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -162,7 +166,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         }
     }
 
-    
+
 
     public void SetCustomData(string key, float value)
     {

@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 6363563498561027299}
   - component: {fileID: 3623116779160750169}
   - component: {fileID: 2166488189649057410}
+  - component: {fileID: 4830646565693160809}
+  - component: {fileID: 5270364719498573067}
   m_Layer: 0
   m_Name: ItemBox_Ver_1
   m_TagString: Untagged
@@ -26,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4132290135586794951}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.022010555, w: 0.99975777}
+  m_LocalRotation: {x: 0, y: 0, z: -0.022006877, w: 0.9997579}
   m_LocalPosition: {x: 12.37, y: 0.00020703673, z: 0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -49,7 +51,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -68,6 +70,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crate_Lid: {fileID: 1694966217802676195}
+--- !u!114 &4830646565693160809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4132290135586794951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 2213678034
+  ObjectInterest: 1
+  Flags: 524289
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 2166488189649057410}
+  - {fileID: 5270364719498573067}
+--- !u!114 &5270364719498573067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4132290135586794951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1001 &1696478251227284333
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -90,19 +127,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4120077771109518, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.70693547
+      value: 0.99975777
       objectReference: {fileID: 0}
     - target: {fileID: 4120077771109518, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.70693547
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4120077771109518, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.015563813
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4120077771109518, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.015563813
+      value: 0.022010555
       objectReference: {fileID: 0}
     - target: {fileID: 4635846456799096, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalPosition.x
