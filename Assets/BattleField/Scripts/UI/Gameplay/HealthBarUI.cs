@@ -54,7 +54,7 @@ public class HealthBarUI : MonoBehaviour
         OnHealthChange(Random.Range(0, 101));
     }
 
-    private void OnHealthChange(float newHealthValue)
+    public void OnHealthChange(float newHealthValue)
     {
         CancelInvoke();
         var currentHealthValue = healthSlider.value;

@@ -53,6 +53,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
     //Spawner spawner;
     NetworkRunner networkRunner;
 
+    public string nickName;
+
     private void Awake() {
         localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
         miniMapCameraHandler = GetComponentInChildren<MiniMapCameraHandler>();
@@ -155,7 +157,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
             // lay gia tri Gamemanager.playerNickName gan vao
             //RPC_SetNickName(GameManager.playerNickName);
-            string nickName = DataSaver.Instance.dataToSave.userName;
+            nickName = DataSaver.Instance.dataToSave.userName;
             if (nickName == "")
                 nickName = "Guest";
             RPC_SetNickName(nickName);

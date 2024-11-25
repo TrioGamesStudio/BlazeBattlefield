@@ -345,6 +345,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
     public void Initialize()
     {
+        if (SceneManager.GetActiveScene().name == "MainLobby") return;
         WeaponManager.instance.weaponHandler = this;
     }
 }
