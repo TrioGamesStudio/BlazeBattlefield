@@ -8,7 +8,6 @@ using System;
 using Random = UnityEngine.Random;
 public class DropBox : NetworkBehaviour
 {
-    [SerializeField] private Transform crate_Lid;
     [SerializeField] private BoxCollider boxCollider;
     [SerializeField] private AudioClip openAudioClip;
     [Header("Drop Settings")]
@@ -32,7 +31,7 @@ public class DropBox : NetworkBehaviour
     private void Open()
     {
         if (isOpen) return;
-        crate_Lid.transform.eulerAngles = new Vector3(-90, 0, 0);
+        //crate_Lid.transform.eulerAngles = new Vector3(-90, 0, 0);
         isOpen = true;
         SoundRequestManager.instance.PlayOneTime(openAudioClip, transform.position);
         if (HasStateAuthority)
@@ -87,7 +86,7 @@ public class DropBox : NetworkBehaviour
     [EditorButton]
     private void Close()
     {
-        crate_Lid.transform.eulerAngles = new Vector3(0, 0, 0);
+        //crate_Lid.transform.eulerAngles = new Vector3(0, 0, 0);
         isOpen = false;
     }
 
@@ -96,6 +95,7 @@ public class DropBox : NetworkBehaviour
     {
         Open();
     }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
