@@ -19,6 +19,7 @@ public class DropBox : NetworkBehaviour
     [SerializeField] private AudioClip openAudioClip;
 
     private bool isOpen = false;
+
     private void Start()
     {
         boxCollider = GetComponent<BoxCollider>();
@@ -46,9 +47,13 @@ public class DropBox : NetworkBehaviour
 
             }
 
-            Runner.Despawn(Object);
-
+            Invoke(nameof(DestroyItemDelay), .5f);
         }
+    }
+
+    private void DestroyItemDelay()
+    {
+        Runner.Despawn(Object);
     }
 
 

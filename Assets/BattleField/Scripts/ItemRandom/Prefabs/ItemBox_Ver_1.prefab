@@ -74,8 +74,9 @@ MonoBehaviour:
   boxCollider: {fileID: 0}
   dropTransform: {fileID: 0}
   isRandom: 1
-  randomItemCount: 3
+  randomItemCount: 0
   openAudioClip: {fileID: 8300000, guid: d4854e912eb31fe4fae59966799d4599, type: 3}
+  dropBoxAnimation: {fileID: 0}
 --- !u!114 &4830646565693160809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,23 +134,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4120077771109518, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7069356
+      value: 0.9997579
       objectReference: {fileID: 0}
     - target: {fileID: 4120077771109518, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.7069356
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4120077771109518, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.015561145
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4120077771109518, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.015561145
+      value: 0.022006782
       objectReference: {fileID: 0}
     - target: {fileID: 4120077771109518, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4120077771109518, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -204,6 +205,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6118775000883612978}
+    - targetCorrespondingSourceObject: {fileID: 1423096165325760, guid: 00a13970af147ef4ebfcd56832d3a930,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6391319896691842556}
   m_SourcePrefab: {fileID: 100100000, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
 --- !u!4 &1694966217802676195 stripped
 Transform:
@@ -235,6 +240,21 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!114 &6391319896691842556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697320185536338093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b8ac51e82c1df24fb6cf13f36f32f69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timePeriod: 15
+  height: 0.25
+  pivot: {x: 0, y: 0, z: 0}
 --- !u!4 &1701060745164123157 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4635846456799096, guid: 00a13970af147ef4ebfcd56832d3a930,
