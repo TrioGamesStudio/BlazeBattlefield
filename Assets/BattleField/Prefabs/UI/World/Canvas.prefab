@@ -1582,6 +1582,7 @@ GameObject:
   - component: {fileID: 8719977105677502529}
   - component: {fileID: 8082038272847309164}
   - component: {fileID: 9182006860090598779}
+  - component: {fileID: 8737503512823117720}
   m_Layer: 5
   m_Name: Panel_TeamInfo
   m_TagString: Untagged
@@ -1647,6 +1648,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8737503512823117720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4030121297093464630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2096a978ebad74011b0f6ddbfce949c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teammemberPrefab: {fileID: 2083291662434859864, guid: 086a464fd871b487f9ed1ce6124f29eb,
+    type: 3}
+  teamInfoPanel: {fileID: 1663442052986165663}
 --- !u!1 &4310669097322002539
 GameObject:
   m_ObjectHideFlags: 0
@@ -3603,6 +3619,7 @@ GameObject:
   - component: {fileID: 1663442052986165663}
   - component: {fileID: 1437768972485635788}
   - component: {fileID: 8135484819369509108}
+  - component: {fileID: 6418268405956581655}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -3650,7 +3667,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3667,6 +3684,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6418268405956581655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9052747451646816393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &9131170620247099145
 GameObject:
   m_ObjectHideFlags: 0

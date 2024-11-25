@@ -45,7 +45,7 @@ public class HPHandler : NetworkBehaviour
     // show thong tin player in game HP
     [SerializeField] InGamePlayerStatusUIHandler inGamePlayerStatusUIHandler;
     bool isShowResultTable = false;
-    public UnityEvent<int> OnTakeDamageEvent = new UnityEvent<int>();
+    public UnityEvent<float> OnTakeDamageEvent = new UnityEvent<float>();
     private void Awake() {
         characterMovementHandler = GetComponent<CharacterMovementHandler>();
         hitboxRoot = GetComponent<HitboxRoot>();
