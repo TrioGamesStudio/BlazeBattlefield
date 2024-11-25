@@ -17,7 +17,8 @@ MonoBehaviour:
   SubItemType: 501
   maxStack: 1
   ItemType: 0
-  fireRate: 5
+  isSingleMode: 1
+  cooldownTime: 0.5
   maxRounds: 30
   ammoUsingType: {fileID: 11400000, guid: efe0a45e38273ed4293075d538c5e17e, type: 2}
   slotWeaponIndex: 0
@@ -25,3 +26,9 @@ MonoBehaviour:
   shootingSound: {fileID: 8300000, guid: 88837867717b25946b0196121cd6b357, type: 3}
   reloadSound: {fileID: 0}
   damagePerHit: 1
+  recoil:
+    currentRecoilX: 2
+    currentRecoilY: 2
+    currentRecoilZ: 2
+    currentReturnSpeed: 2
+    currentSnappiness: 2
