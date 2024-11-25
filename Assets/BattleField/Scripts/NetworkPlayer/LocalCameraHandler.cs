@@ -25,6 +25,7 @@ public class LocalCameraHandler : NetworkBehaviour
     public Vector3 raycastSpawnPointCam_Network {get; set;} = Vector3.zero;
     Ray ray;
     RaycastHit hitInfo;
+
     [Header("Collisons")]
     [SerializeField] LayerMask collisionLayers;
 
@@ -34,12 +35,28 @@ public class LocalCameraHandler : NetworkBehaviour
     //others
     [SerializeField] CharacterInputHandler characterInputHandler;
     CinemachineVirtualCamera cinemachineVirtualCamera;
+
+    #region Recoil
+    Vector3 currentRotation;
+    Vector3 targetRotation;
+
+    [Header("Recoil")]
+    [SerializeField] float recoilX;
+    [SerializeField] float recoilY;
+    [SerializeField] float recoilZ;
+    [SerializeField] float snappiness;
+    [SerializeField] float returnSpeed;
+    Animator animator;
+    #endregion Recoil
+
     private void Awake() {
         characterInputHandler = GetComponentInParent<CharacterInputHandler>();
 
         localCamera = GetComponent<Camera>();
         networkCharacterController = GetComponentInParent<NetworkCharacterController>();
         inGameMessagesUIHandler = GetComponentInChildren<InGameMessagesUIHandler>();
+
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void Update() {
@@ -50,6 +67,8 @@ public class LocalCameraHandler : NetworkBehaviour
         aim = characterInputHandler.AimDir;
         viewInput.x = aim.x;
         viewInput.y = aim.y * -1f;
+
+        RecoilUpdate();
     }
 
     void LateUpdate()
@@ -100,7 +119,8 @@ public class LocalCameraHandler : NetworkBehaviour
         _cameraRotationX = Mathf.Clamp(_cameraRotationX, -90, 90);
         _cameraRotationY += viewInput.x * Time.deltaTime * networkCharacterController.rotationSpeed;
 
-        localCamera.transform.rotation = Quaternion.Euler(_cameraRotationX, _cameraRotationY, 0);
+        //localCamera.transform.rotation = Quaternion.Euler(_cameraRotationX, _cameraRotationY, 0);
+        localCamera.transform.rotation = Quaternion.Euler(new Vector3(_cameraRotationX, _cameraRotationY, 0) + currentRotation);
     }
 
     public void RaycastHitPoint() {
@@ -127,5 +147,21 @@ public class LocalCameraHandler : NetworkBehaviour
         this.spawnedPointOnHand_Network = spawnedPointVector_;
     }
 
+    void RecoilUpdate() {
+        targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, returnSpeed * Time.deltaTime);
+        currentRotation = Vector3.Slerp(currentRotation, targetRotation, snappiness * Time.fixedDeltaTime);
+    }
+    public void SetRecoil(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
+        animator.SetTrigger("trigger");
+        this.returnSpeed = returnSpeed;
+        this.snappiness = snappiness;
+        targetRotation += new Vector3(recoilX, Random.Range(-recoilY, recoilY), Random.Range(-recoilZ, recoilZ));
+
+    }
+
+    public void SetRecoil(RecoilGunSettings recoil)
+    {
+        SetRecoil(recoil.currentRecoilX, recoil.currentRecoilY, recoil.currentRecoilZ, recoil.currentReturnSpeed, recoil.currentSnappiness);
+    }
 
 }

@@ -5,6 +5,7 @@ public class CharacterInputHandler : MonoBehaviour
     ActiveWeapon ActiveWeapon;
     PlayerInputAction playerInputActions;
     CharacterMovementHandler characterMovementHandler;
+    WeaponHandler weaponHandler;
     Vector2 move;
     bool isJumped = false;
     bool isFired = false;
@@ -23,6 +24,7 @@ public class CharacterInputHandler : MonoBehaviour
 
     
     private void Awake() {
+        weaponHandler = GetComponent<WeaponHandler>();
         ActiveWeapon = GetComponent<ActiveWeapon>();
         characterMovementHandler = GetComponent<CharacterMovementHandler>();
         playerInputActions = new PlayerInputAction();
@@ -30,8 +32,8 @@ public class CharacterInputHandler : MonoBehaviour
         playerInputActions.PlayerMovement.Jumping.started += _ => isJumped = true;
         playerInputActions.PlayerMovement.Jumping.canceled += _ => isJumped = false;
 
-        playerInputActions.Combat.Attack.started += _ => isFired = true;
-        playerInputActions.Combat.Attack.canceled += _ => isFired = false;
+        playerInputActions.Combat.Attack.started += _ => weaponHandler.SetFireInput(true);
+        playerInputActions.Combat.Attack.canceled += _ => weaponHandler.SetFireInput(false);
 
         /* playerInputActions.PlayerMovement.SwitchCam.started += _ => isSwitchCam = true;
         playerInputActions.PlayerMovement.SwitchCam.canceled += _ => isSwitchCam = false; */
