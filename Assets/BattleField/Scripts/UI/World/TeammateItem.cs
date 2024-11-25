@@ -17,12 +17,10 @@ public class TeammateItem : MonoBehaviour
         hpText.text = hp.ToString();
         playerHPHandler.OnTakeDamageEvent.AddListener(UpdateHPText);
         healthBarUI.SetMaxHealthAmount(hp);
-        Debug.Log("+++Assign event HP");
     }
 
     void UpdateHPText(float damageAmount)
     {
-        Debug.Log("+++Reduce HP");
         currentHP -= damageAmount;
         hpText.text = currentHP.ToString();
         healthBarUI.OnHealthChange(damageAmount);

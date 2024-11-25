@@ -129,7 +129,6 @@ public class HPHandler : NetworkBehaviour
         if(damageAmount > Networked_HP) damageAmount = Networked_HP;
 
         Networked_HP -= damageAmount;
-        Debug.Log("+++ I was hit");
         RPC_UpdateTeammateHP(damageAmount);
         killerName = damageCausedByPlayerNickName;
         RPC_SetNetworkedHP(Networked_HP, damageCausedByPlayerNickName);
