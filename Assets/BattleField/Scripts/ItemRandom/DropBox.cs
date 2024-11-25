@@ -8,17 +8,17 @@ using System;
 using Random = UnityEngine.Random;
 public class DropBox : NetworkBehaviour
 {
-    [SerializeField] private List<GameObject> itemDropList;
     [SerializeField] private Transform crate_Lid;
     [SerializeField] private BoxCollider boxCollider;
-    [SerializeField] private Transform dropTransform;
-
-    [SerializeField] private bool isRandom = false;
-    [SerializeField] private int randomItemCount = 3;
-
     [SerializeField] private AudioClip openAudioClip;
-
+    [Header("Drop Settings")]
+    [SerializeField] private List<GameObject> itemDropList;
+    [SerializeField] private bool allowRandomItem = false;
+    [SerializeField] private int randomItemCount = 3;
+    [SerializeField] private float delayDestroyTime = .5f;
+    [SerializeField] private Vector3 dropBoundVector3;
     private bool isOpen = false;
+
 
     private void Start()
     {
@@ -37,7 +37,7 @@ public class DropBox : NetworkBehaviour
         SoundRequestManager.instance.PlayOneTime(openAudioClip, transform.position);
         if (HasStateAuthority)
         {
-            if (isRandom)
+            if (allowRandomItem)
             {
                 CreateRandomItem();
             }
@@ -47,7 +47,7 @@ public class DropBox : NetworkBehaviour
 
             }
 
-            Invoke(nameof(DestroyItemDelay), .5f);
+            Invoke(nameof(DestroyItemDelay), delayDestroyTime);
         }
     }
 
@@ -100,12 +100,14 @@ public class DropBox : NetworkBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, transform.forward);
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireCube(transform.position, dropBoundVector3);
     }
 
     private Vector3 GetRandomPositionInBoxCollider(BoxCollider boxCollider)
     {
         Vector3 center = boxCollider.center;
-        Vector3 size = boxCollider.size;
+        Vector3 size = dropBoundVector3;
 
         float randomX = Random.Range(center.x - size.x / 2, center.x + size.x / 2);
         float randomZ = Random.Range(center.z - size.z / 2, center.z + size.z / 2);

@@ -56,7 +56,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.32, y: 0.61, z: 0.87}
-  m_Center: {x: 0, y: 0.19, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2166488189649057410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,14 +69,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c45f1b553cae24544bf724f9479320ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemDropList: []
   crate_Lid: {fileID: 1694966217802676195}
   boxCollider: {fileID: 0}
-  dropTransform: {fileID: 0}
-  isRandom: 1
-  randomItemCount: 0
   openAudioClip: {fileID: 8300000, guid: d4854e912eb31fe4fae59966799d4599, type: 3}
-  dropBoxAnimation: {fileID: 0}
+  itemDropList: []
+  allowRandomItem: 1
+  randomItemCount: 3
+  delayDestroyTime: 0.5
+  dropBoundVector3: {x: 1.07, y: 0.35, z: 0.56}
 --- !u!114 &4830646565693160809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,7 +162,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4635846456799096, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.268
       objectReference: {fileID: 0}
     - target: {fileID: 4635846456799096, guid: 00a13970af147ef4ebfcd56832d3a930, type: 3}
       propertyPath: m_LocalPosition.z
