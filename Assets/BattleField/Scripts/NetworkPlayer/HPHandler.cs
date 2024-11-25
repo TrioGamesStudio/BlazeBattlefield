@@ -3,6 +3,7 @@ using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class HPHandler : NetworkBehaviour
 {
@@ -44,6 +45,7 @@ public class HPHandler : NetworkBehaviour
     // show thong tin player in game HP
     [SerializeField] InGamePlayerStatusUIHandler inGamePlayerStatusUIHandler;
     bool isShowResultTable = false;
+    public UnityEvent<float> OnTakeDamageEvent = new UnityEvent<float>();
     private void Awake() {
         characterMovementHandler = GetComponent<CharacterMovementHandler>();
         hitboxRoot = GetComponent<HitboxRoot>();
@@ -127,7 +129,7 @@ public class HPHandler : NetworkBehaviour
         if(damageAmount > Networked_HP) damageAmount = Networked_HP;
 
         Networked_HP -= damageAmount;
-
+        RPC_UpdateTeammateHP(damageAmount);
         killerName = damageCausedByPlayerNickName;
         RPC_SetNetworkedHP(Networked_HP, damageCausedByPlayerNickName);
 
@@ -197,6 +199,14 @@ public class HPHandler : NetworkBehaviour
             this.Networked_Killer = null;
         }
         HealthBarUI.OnHealthChangeAction?.Invoke(hp);
+    }
+
+    //RPC
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    void RPC_UpdateTeammateHP(float damageAmount)
+    {
+        Debug.Log("+++ " + gameObject.name + " was hit");
+        OnTakeDamageEvent.Invoke(damageAmount);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
