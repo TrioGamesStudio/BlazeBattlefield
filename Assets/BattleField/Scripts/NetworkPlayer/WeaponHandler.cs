@@ -62,12 +62,13 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     const string ARML = "Shoulder_L";
     const string ARMR = "Shoulder_R";
 
-    [Header("Recoil")]
-    [SerializeField] float currentRecoilX = -2;
-    [SerializeField] float currentRecoilY = 2;
-    [SerializeField] float currentRecoilZ = 0.35f;
-    [SerializeField] float currentReturnSpeed = 2;
-    [SerializeField] float currentSnappiness = 6;
+    //[Header("Recoil")]
+    //[SerializeField] float currentRecoilX = -2;
+    //[SerializeField] float currentRecoilY = 2;
+    //[SerializeField] float currentRecoilZ = 0.35f;
+    //[SerializeField] float currentReturnSpeed = 2;
+    //[SerializeField] float currentSnappiness = 6;
+    [SerializeField] private RecoilGunSettings recoil = new();
     private void Awake()
     {
         characterInputHandler = GetComponent<CharacterInputHandler>();
@@ -84,7 +85,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     {
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 
-        
+
     }
 
     private void Update()
@@ -94,7 +95,13 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
         // nhan mouse 0 fire bullet
         //if(Input.GetKeyDown(KeyCode.Mouse0)) isFired = true;
-        isFired = characterInputHandler.IsFired;
+        ////isFired = characterInputHandler.IsFired;
+    }
+
+    [SerializeField] private bool isSingleMode = false;
+    public void SetFireInput(bool isFire)
+    {
+        isFired = isFire;
     }
 
     public override void FixedUpdateNetwork()
@@ -107,11 +114,11 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         }
         if (Object.HasStateAuthority)
         {
-            if (WeaponManager.instance.IsReadyToShoot() && 
+            if (WeaponManager.instance.IsReadyToShoot() &&
                 !hPHandler.Networked_IsDead && hPHandler.Networked_HP > 0)
             {
                 Fire();
-                
+
             }
         }
 
@@ -121,6 +128,11 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     {
         if (!isFiredPressed && isFired)
         {
+            if(isSingleMode)
+            {
+                isFired = !isFired;
+            }
+
             isFiredPressed = true;
             WeaponManager.instance.Shoot();
             StartCoroutine(FireCO(coolTimeWeapon));
@@ -132,15 +144,18 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     {
         // chi tao ra hieu ung laser no o nong sung va bay toi muc tieu va cham
         localCameraHandler.RaycastHitPoint();
-        localCameraHandler.SetRecoil(currentRecoilX, currentRecoilY, currentRecoilZ, currentReturnSpeed, currentSnappiness);
+        localCameraHandler.SetRecoil(recoil);
 
         var hitPointVector3 = localCameraHandler.hitPoint_Network;
 
-        if (hitPointVector3 != Vector3.zero) {
-            if(!characterInputHandler.IsThirdCam) {
+        if (hitPointVector3 != Vector3.zero)
+        {
+            if (!characterInputHandler.IsThirdCam)
+            {
                 FireBulletVFX(hitPointVector3, aimPoint_grandeRocket.position);
-            } else FireBulletVFX(hitPointVector3, aimPoint_grandeRocket_3rd.position);
-        } 
+            }
+            else FireBulletVFX(hitPointVector3, aimPoint_grandeRocket_3rd.position);
+        }
 
         Fire(localCameraHandler.transform.forward, aimPoint);  // neu player thi aimpoint = vi tri 1st cam
         yield return new WaitForSeconds(coolTime);
@@ -215,11 +230,12 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             if (hit.distance > 0) hitDis = hit.distance;
 
             // check body part
-            if(hit.collider.transform.TryGetComponent<CheckBodyParts>(out var part)) {
+            if (hit.collider.transform.TryGetComponent<CheckBodyParts>(out var part))
+            {
                 string bodyName = hit.collider.transform.name;
                 Debug.Log($"_____bodyName = {bodyName}");
-                if(bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
-                else if(bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
+                if (bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
+                else if (bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
 
                 if (Object.HasStateAuthority)
                 {
@@ -237,16 +253,16 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                 // ban trung dau get full hp
                 string bodyName = hit.collider.transform.name;
                 Debug.Log($"_____bodyName = {bodyName}");
-                if(bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
-                else if(bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
-                
+                if (bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
+                else if (bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
+
                 if (Object.HasStateAuthority)
                 {
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
                     hit.collider.GetComponent<HitboxRoot>().GetComponent<HPHandler>().
                                 OnTakeDamage(networkPlayer.nickName_Network.ToString(), weaponDamageCurr, this);
                 }
-                
+
                 isHitOtherRemotePlayers = true;
             }
             else if (hit.collider != null)
@@ -283,12 +299,13 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         isFiring = true;
 
         //? show cho localPlayer thay hieu ung ban ra
-        if(characterInputHandler.IsThirdCam)
+        if (characterInputHandler.IsThirdCam)
             fireParticleSystemRemote.Play();
-        else 
+        else
             fireParticleSystemLocal.Play();
 
-        if(audioSource) {
+        if (audioSource)
+        {
             audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
         }
 
@@ -304,22 +321,26 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
     void OnFireRemote()
     {
-        if (!Object.HasStateAuthority) {
+        if (!Object.HasStateAuthority)
+        {
             fireParticleSystemRemote.Play();
 
-            if(audioSource) {
+            if (audioSource)
+            {
                 audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
             }
         }
 
-        
+
     }
 
     public void SetConfig(GunItemConfig config)
     {
         weaponSoundCurr = config.shootingSound;
         weaponDamageCurr = config.damagePerHit;
-        fireRateCurrent = config.fireRate;
+        coolTimeWeapon = config.cooldownTime;
+        isSingleMode = config.isSingleMode;
+        recoil = config.recoil;
     }
 
     public void Initialize()

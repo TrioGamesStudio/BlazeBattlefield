@@ -158,4 +158,10 @@ public class LocalCameraHandler : NetworkBehaviour
         targetRotation += new Vector3(recoilX, Random.Range(-recoilY, recoilY), Random.Range(-recoilZ, recoilZ));
 
     }
+
+    public void SetRecoil(RecoilGunSettings recoil)
+    {
+        SetRecoil(recoil.currentRecoilX, recoil.currentRecoilY, recoil.currentRecoilZ, recoil.currentReturnSpeed, recoil.currentSnappiness);
+    }
+
 }
