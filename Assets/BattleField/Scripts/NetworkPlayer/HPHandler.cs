@@ -130,7 +130,7 @@ public class HPHandler : NetworkBehaviour
 
         Networked_HP -= damageAmount;
         Debug.Log("+++ I was hit");
-        RPC_UpdateTeammateHP();
+        RPC_UpdateTeammateHP(damageAmount);
         killerName = damageCausedByPlayerNickName;
         RPC_SetNetworkedHP(Networked_HP, damageCausedByPlayerNickName);
 
@@ -204,10 +204,10 @@ public class HPHandler : NetworkBehaviour
 
     //RPC
     [Rpc(RpcSources.All, RpcTargets.All)]
-    void RPC_UpdateTeammateHP()
+    void RPC_UpdateTeammateHP(float damageAmount)
     {
         Debug.Log("+++ " + gameObject.name + " was hit");
-        OnTakeDamageEvent.Invoke(1);
+        OnTakeDamageEvent.Invoke(damageAmount);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
