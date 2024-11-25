@@ -1,6 +1,5 @@
 using System.Collections;
 using Fusion;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -63,6 +62,12 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     const string ARML = "Shoulder_L";
     const string ARMR = "Shoulder_R";
 
+    [Header("Recoil")]
+    [SerializeField] float currentRecoilX = -2;
+    [SerializeField] float currentRecoilY = 2;
+    [SerializeField] float currentRecoilZ = 0.35f;
+    [SerializeField] float currentReturnSpeed = 2;
+    [SerializeField] float currentSnappiness = 6;
     private void Awake()
     {
         characterInputHandler = GetComponent<CharacterInputHandler>();
@@ -127,6 +132,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     {
         // chi tao ra hieu ung laser no o nong sung va bay toi muc tieu va cham
         localCameraHandler.RaycastHitPoint();
+        localCameraHandler.SetRecoil(currentRecoilX, currentRecoilY, currentRecoilZ, currentReturnSpeed, currentSnappiness);
 
         var hitPointVector3 = localCameraHandler.hitPoint_Network;
 
@@ -138,6 +144,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
         Fire(localCameraHandler.transform.forward, aimPoint);  // neu player thi aimpoint = vi tri 1st cam
         yield return new WaitForSeconds(coolTime);
+
         isFiredPressed = false;
     }
 
@@ -258,7 +265,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         lastTimeFired = Time.time;
 
         // lam cho ai ban theo tan suat random khoang time
-        fireRateCurrent = Random.Range(0.1f, 1.5f);
+        //fireRateCurrent = Random.Range(0.1f, 1.5f);
     }
 
     private bool IsTeammate(RaycastHit hit)
