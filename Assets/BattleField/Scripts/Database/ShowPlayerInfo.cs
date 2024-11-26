@@ -29,16 +29,16 @@ public class ShowPlayerInfo : MonoBehaviour
     DataSaver _dataSaver;
     private void Awake() {
         _dataSaver = FindObjectOfType<DataSaver>();
+        _dataSaver.LoadData();
     }
 
     private void Start() {
-        saveButton.onClick.AddListener(SaveManualTest);
-        loadButton.onClick.AddListener(LoadMaunalTest);
-        gotoLobby.onClick.AddListener(GoToLobby);
-        quickPlay.onClick.AddListener(GoToQickBattle);
-
-
-        StartCoroutine(ShowPlayerDataCo(0.5f));
+        //saveButton?.onClick.AddListener(SaveManualTest);
+        //loadButton?.onClick.AddListener(LoadMaunalTest);
+        //gotoLobby?.onClick.AddListener(GoToLobby);
+        //quickPlay?.onClick.AddListener(GoToQickBattle);
+        ShowPlayerName();
+        //StartCoroutine(ShowPlayerDataCo(0.5f));
     }
 
     IEnumerator ShowPlayerDataCo(float time) {
@@ -76,12 +76,17 @@ public class ShowPlayerInfo : MonoBehaviour
         SceneManager.LoadSceneAsync(WORLD1);
     }
     
-    void ShowInfo() {
+    public void ShowInfo() {
         // Debug.Log($"_____show player info");
         userName.text = "User name: " + DataSaver.Instance.dataToSave.userName;
         currentLevel.text = "Current Level: " + DataSaver.Instance.dataToSave.currLevel.ToString();
         winSolo.text = "Win: " + DataSaver.Instance.dataToSave.winSolo.ToString();
         winTeam.text = "Win Team: " + DataSaver.Instance.dataToSave.winTeam.ToString();
         coin.text = "Coin: " + DataSaver.Instance.dataToSave.coins.ToString();
+    }
+
+    public void ShowPlayerName()
+    {
+        userName.text = DataSaver.Instance.dataToSave.userName;
     }
 }
