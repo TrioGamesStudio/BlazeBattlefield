@@ -38,18 +38,18 @@ public class DropBox : NetworkBehaviour
         SoundRequestManager.instance.PlayOneTime(openAudioClip, transform.position);
         if (HasStateAuthority)
         {
-            if (allowRandomItem)
+            
+            openBoxTransform.DOShakePosition(.3f).OnComplete(() =>
             {
-                CreateRandomItem();
-            }
-            else
-            {
-                CreateItemByList();
-
-            }
-            openBoxTransform.DOShakePosition(.2f).OnComplete(() =>
-            {
-                openBoxTransform.DOScale(Vector3.zero, .5f).SetEase(Ease.InOutBack).OnComplete(() =>
+                if (allowRandomItem)
+                {
+                    CreateRandomItem();
+                }
+                else
+                {
+                    CreateItemByList();
+                }
+                openBoxTransform.DOScale(Vector3.zero, .3f).SetEase(Ease.InOutBack).OnComplete(() =>
                 {
                     Invoke(nameof(DestroyItemDelay), delayDestroyTime);
                 });
