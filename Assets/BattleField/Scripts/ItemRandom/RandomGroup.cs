@@ -17,6 +17,8 @@ public class RandomGroup : NetworkBehaviour
     [SerializeField] private bool drawBoundOfGroup = false;
     [SerializeField] private bool drawAllChildLocation = false;
     [SerializeField] private bool drawValidSpawnPoint = false;
+
+    [SerializeField] private DropBox dropBoxPrefab;
     [EditorButton]
     private void GetSpawnPointInChild()
     {
@@ -34,6 +36,7 @@ public class RandomGroup : NetworkBehaviour
         if (Object.HasStateAuthority)
         {
             Debug.Log("Generate item");
+            CreateValidSpawnPoints();
             GenerateItem();
         }
     }
@@ -45,16 +48,17 @@ public class RandomGroup : NetworkBehaviour
         int count = Random.Range(3, 7);
         foreach (var validSpawnPos in validSpawnPoints)
         {
-            for (int i = 0; i < count; i++)
-            {
-                Vector3 randomOffset = new Vector3(
+            Vector3 randomOffset = new Vector3(
                 Random.Range(-sizeOfLocation.x / 2, sizeOfLocation.x / 2),
                 Random.Range(-sizeOfLocation.y / 2, sizeOfLocation.y / 2),
                 Random.Range(-sizeOfLocation.z / 2, sizeOfLocation.z / 2)
             );
-                Vector3 spawnPosition = validSpawnPos.position + randomOffset;
-            }
+            Vector3 spawnPosition = validSpawnPos.position + randomOffset;
+
+            var networkObject = Runner.Spawn(dropBoxPrefab, spawnPosition);
+            networkObject.transform.SetParent(validSpawnPos);
         }
+        Debug.Log($"This check point is create {validSpawnPoints.Count}");
     }
     [EditorButton]
     private void CreateValidSpawnPoints()
@@ -72,6 +76,7 @@ public class RandomGroup : NetworkBehaviour
                 validSpawnPoints.Add(spawnPoints[randomIndex]);
             }
         }
+        Debug.Log($"Create {validSpawnPoints.Count} valid point");
     }
 
     private void OnDrawGizmos()
