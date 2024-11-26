@@ -51,14 +51,16 @@ public class BackpackUI : MonoBehaviour
     {
         if (currentItem == null) return;
         var healthConfig = ItemDatabase.instance.ItemConfigDatabase.FindHealthItem(currentItem._SubItemEnum);
+        healthAmount = healthConfig.healthAmount;
         TimerActionHandler.instance.StartTimer(healthConfig.usingTime, () => { OnUseHealthItem(currentItem); },null);
     }
-
+    private byte healthAmount = 0;
     private void OnUseHealthItem(InventoryItem currentItem)
     {
         
         currentItem.amount -= 1;
         currentItem?.OnUpdateData();
+        NetworkPlayer.Local.GetComponent<HPHandler>().OnHealRPC(healthAmount);
         if (currentItem.amount == 0)
         {
             StorageManager.instance.Remove(currentItem.ItemType, currentItem._SubItemEnum, currentItem);

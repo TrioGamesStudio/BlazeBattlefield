@@ -70,9 +70,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c45f1b553cae24544bf724f9479320ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crate_Lid: {fileID: 0}
   boxCollider: {fileID: 0}
   openAudioClip: {fileID: 8300000, guid: d4854e912eb31fe4fae59966799d4599, type: 3}
+  openBoxTransform: {fileID: 6205694502453600169}
   itemDropList: []
   allowRandomItem: 1
   randomItemCount: 3
@@ -149,7 +149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4846357125400108, guid: 7d261aef3b84ccb4b91a005a110cdafe, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.287
       objectReference: {fileID: 0}
     - target: {fileID: 4846357125400108, guid: 7d261aef3b84ccb4b91a005a110cdafe, type: 3}
       propertyPath: m_LocalPosition.z

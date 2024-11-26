@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
+using DG.Tweening;
 public class DropBox : NetworkBehaviour
 {
     [SerializeField] private BoxCollider boxCollider;
     [SerializeField] private AudioClip openAudioClip;
+    [SerializeField] private Transform openBoxTransform;
     [Header("Drop Settings")]
     [SerializeField] private List<GameObject> itemDropList;
     [SerializeField] private bool allowRandomItem = false;
@@ -45,8 +47,13 @@ public class DropBox : NetworkBehaviour
                 CreateItemByList();
 
             }
-
-            Invoke(nameof(DestroyItemDelay), delayDestroyTime);
+            openBoxTransform.DOShakePosition(.2f).OnComplete(() =>
+            {
+                openBoxTransform.DOScale(Vector3.zero, .5f).SetEase(Ease.InOutBack).OnComplete(() =>
+                {
+                    Invoke(nameof(DestroyItemDelay), delayDestroyTime);
+                });
+            });
         }
     }
 

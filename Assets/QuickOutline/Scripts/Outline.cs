@@ -132,7 +132,7 @@ public class Outline : MonoBehaviour {
   void Update() {
     if (needsUpdate) {
       needsUpdate = false;
-
+      
       UpdateMaterialProperties();
     }
   }
