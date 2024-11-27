@@ -122,7 +122,7 @@ public class StorageManager : MonoBehaviour
         {
             return 0;
         }
-
+        List<InventoryItem> itemNeedUpdateUI = new();
         foreach (var ammo in list) 
         {
             int ammoToTake = Math.Min(ammo.amount, ammoNeed - ammoCanGet);
@@ -138,7 +138,8 @@ public class StorageManager : MonoBehaviour
                 }
                 else
                 {
-                    ammo.OnUpdateData();
+                    itemNeedUpdateUI.Add(ammo);
+                    //ammo.OnUpdateData();
                 }
 
                 if (ammoCanGet >= ammoNeed)
@@ -147,6 +148,9 @@ public class StorageManager : MonoBehaviour
                 }
             }
         }
+
+        foreach (var item in itemNeedUpdateUI)
+            item.OnUpdateData();
 
         return ammoCanGet;
     }
