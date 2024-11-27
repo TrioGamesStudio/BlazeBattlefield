@@ -14,12 +14,12 @@ public class RankSystem
         100, 500, 1000, 3000, 5000, 10000, 15000, 20000, 30000, 50000
     };
 
-    public static string GetRankName(int xp)
+    public static string GetRankName(int rank)
     {
         for (int i = XPThresholds.Length - 1; i >= 0; i--)
         {
-            if (xp >= XPThresholds[i])
-                return RankNames[i + 1];
+            if (XPThresholds[rank] >= XPThresholds[i])
+                return RankNames[i];
         }
         return RankNames[0]; // Default to "Recruit"
     }

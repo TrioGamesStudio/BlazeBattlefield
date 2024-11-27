@@ -125,7 +125,7 @@ public class ShowPlayerInfo : MonoBehaviour
         // Debug.Log($"_____show player info");
         //userName.text = "User name: " + DataSaver.Instance.dataToSave.userName;
         //currentLevel.text = "Current Level: " + DataSaver.Instance.dataToSave.currLevel.ToString();
-        rankName.text = "Rank: " + RankSystem.GetRankName(DataSaver.Instance.dataToSave.experience);
+        rankName.text = "Rank: " + RankSystem.GetRankName(DataSaver.Instance.dataToSave.rank);
         winSolo.text = "Win: " + DataSaver.Instance.dataToSave.winSolo.ToString();
         winTeam.text = "Win Team: " + DataSaver.Instance.dataToSave.winTeam.ToString();
         coin.text = "Coin: " + DataSaver.Instance.dataToSave.coins.ToString();

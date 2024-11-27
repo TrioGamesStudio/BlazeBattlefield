@@ -201,7 +201,7 @@ public class PlayerRoomController : NetworkBehaviour
         while (playerData.experience >= nextThreshold)
         {
             playerData.rank++;
-            Debug.Log($"Rank Up! New Rank: {RankSystem.GetRankName(playerData.experience)}");
+            Debug.Log($"Rank Up! New Rank: {RankSystem.GetRankName(playerData.rank)}");
             nextThreshold = RankSystem.GetNextThreshold(playerData.rank);
         }
 
