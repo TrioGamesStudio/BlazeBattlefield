@@ -1,24 +1,33 @@
 using NaughtyAttributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RandomGroupManager : MonoBehaviour
 {
-    public static RandomGroupManager instance;
+    public static Action StartSpawnEvent;
+
     [SerializeField] private GameObject container;
     [SerializeField] private DropBox dropBoxPrefab;
     [Header("Settings")]
     [SerializeField,Min(1)] private int totalBoxCountInAllRegion;
     [SerializeField] private RandomGroup[] randomGroups;
-    
+
+
     private void Awake()
     {
         randomGroups = container.GetComponentsInChildren<RandomGroup>();
+
+        StartSpawnEvent += StartSpawn;
+    }
+    private void OnDestroy()
+    {
+        StartSpawnEvent -= StartSpawn;
     }
 
     [Button]
-    public void StartSpawn()
+    private void StartSpawn()
     {
         Debug.Log("Start spawn",gameObject);
         int countPerRegion = totalBoxCountInAllRegion / randomGroups.Length;
@@ -30,6 +39,4 @@ public class RandomGroupManager : MonoBehaviour
 
         Debug.Log($"HAVE TOTAL: {countPerRegion * randomGroups.Length} drop box in area",gameObject);
     }
-
-
 }
