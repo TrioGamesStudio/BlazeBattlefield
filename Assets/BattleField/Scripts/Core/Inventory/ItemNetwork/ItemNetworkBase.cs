@@ -56,8 +56,8 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         if (HasStateAuthority)
         {
             //Invoke(nameof(BoundItemSetup), .3f);
-            BoundItemSetup();
         }
+        BoundItemSetup();
     }
 
     public void BoundItemSetup()

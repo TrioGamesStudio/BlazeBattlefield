@@ -16,7 +16,8 @@ public class BoundItem : NetworkBehaviour
     {
         if(allowAddToCollider)
         {
-            ItemGroundPositioner.instance.SetItemNearGround(GetComponent<BoxCollider>());
+            if(HasStateAuthority)
+                ItemGroundPositioner.instance.SetItemNearGround(GetComponent<BoxCollider>());
             ColliderCreator.instance.Add(this);
         }
         
