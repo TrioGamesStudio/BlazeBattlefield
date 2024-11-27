@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Health", menuName = "Config/Health")]
 public class HealthItemConfig : ItemConfig<HealingItemType>
 {
-    public float healthAmount;
+    public byte healthAmount;
     public float usingTime;
 
     public override void ShowDebug()

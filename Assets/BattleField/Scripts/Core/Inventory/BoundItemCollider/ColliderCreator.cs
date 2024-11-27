@@ -11,6 +11,9 @@ public class ColliderCreator : MonoBehaviour
     public LayerMask itemLayerMask;
     public LayerMask boundColliderLayerMask;
     public BoundItemsCollider boundItemPrefab;
+
+    public bool isDebugMode = false;
+
     private void Awake()
     {
         instance = this;
@@ -41,6 +44,10 @@ public class ColliderCreator : MonoBehaviour
 
         if (firstBoundItem.CanAddToBound() == false)
         {
+            if (isDebugMode)
+            {
+                Debug.Log($"{firstBoundItem} cannot add to bound", firstBoundItem.gameObject);
+            }
             return;
         }
         // check bound collider here
@@ -56,6 +63,10 @@ public class ColliderCreator : MonoBehaviour
                     _boundCollider.AddItemList(firstBoundItem);
                     firstBoundItem.IsInBoundCollider = true;
                     firstBoundItem.BoundItemsCollider = _boundCollider;
+                    if (isDebugMode)
+                    {
+                        Debug.Log($"Finded bound {_boundCollider.name} and added {firstBoundItem.name}", firstBoundItem.gameObject);
+                    }
                     break;
                 }
             }
@@ -75,6 +86,7 @@ public class ColliderCreator : MonoBehaviour
         //firstBoundItem.isInBoundCollider = true;
         var ItemResult = Physics.OverlapBox(firstBoundItem.transform.position, minSize, Quaternion.identity, itemLayerMask);
         //Debug.Log("Source: " + firstBoundItem.name);
+        Debug.Log("Item result: "+ItemResult.Length, gameObject);
         if (ItemResult != null && ItemResult.Length > 0)
         {
             foreach (var item in ItemResult)
@@ -88,7 +100,10 @@ public class ColliderCreator : MonoBehaviour
                     _boundItem.IsInBoundCollider = true;
                     _boundItem.BoundItemsCollider = BoundItemsCollider;
 
-                    //Debug.Log($"AddBound: Source {firstBoundItem.name} Add: {_boundItem.name}");
+                    if (isDebugMode)
+                    {
+                        Debug.Log($"AddBound: Source {firstBoundItem.name} Add: {_boundItem.name}");
+                    }
                     if (processingList.Contains(_boundItem))
                     {
                         processingList.Remove(_boundItem);

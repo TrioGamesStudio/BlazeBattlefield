@@ -5,16 +5,19 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="Item_Data",menuName ="Config/Gun")]
 public class GunItemConfig : ItemConfig<GunType>
 {
-    public bool isSingleMode = true;
-    public float cooldownTime = 0.5f;
-    public int maxRounds;
+    [Header("Gun Settings 1")]
+    public Sprite IconActualGun;
     public AmmoItemConfig ammoUsingType;
     public SlotWeaponIndex slotWeaponIndex;
-    private bool isInitialize = false;
-    public Sprite IconActualGun;
+    [Header("Gun Settings 2")]
+    public bool isSingleMode = true;
+    public bool isContainScope = false;
+    public float cooldownTime = 0.5f;
+    public byte damagePerHit = 1;
+    public int maxRounds;
+    [Header("Audio")]
     public AudioClip shootingSound;
     public AudioClip reloadSound;
-    public byte damagePerHit = 1;
     public RecoilGunSettings recoil;
 }
 
