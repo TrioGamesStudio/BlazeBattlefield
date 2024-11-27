@@ -11,7 +11,7 @@ public class RankSystem
 
     public static readonly int[] XPThresholds =
     {
-        0, 100, 500, 1000, 3000, 5000, 10000, 15000, 20000, 30000
+        100, 500, 1000, 3000, 5000, 10000, 15000, 20000, 30000, 50000
     };
 
     public static string GetRankName(int xp)
@@ -19,7 +19,7 @@ public class RankSystem
         for (int i = XPThresholds.Length - 1; i >= 0; i--)
         {
             if (xp >= XPThresholds[i])
-                return RankNames[i];
+                return RankNames[i + 1];
         }
         return RankNames[0]; // Default to "Recruit"
     }

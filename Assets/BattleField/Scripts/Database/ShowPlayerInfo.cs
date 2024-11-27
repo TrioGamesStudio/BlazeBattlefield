@@ -30,6 +30,8 @@ public class ShowPlayerInfo : MonoBehaviour
     const string MAINLOBBY = "MainLobby";
     const string WORLD1 = "Quang_Scene";
 
+    private int currentRank;
+    private bool isSetup = false;
     //ohters
     DataSaver _dataSaver;
     private void Awake()
@@ -52,7 +54,7 @@ public class ShowPlayerInfo : MonoBehaviour
     {
         if (scene.name == "MainLobby")
         {
-            Debug.Log("MainLobby scene loaded. Restarting coroutine.");
+            //ebug.Log("MainLobby scene loaded. Restarting coroutine.");
             StartCoroutine(ShowPlayerDataCo(0.5f));
         }
     }
@@ -65,7 +67,15 @@ public class ShowPlayerInfo : MonoBehaviour
         //quickPlay?.onClick.AddListener(GoToQickBattle);
         //ShowPlayerName();
         //Debug.Log("xxx Update player info");
-        //StartCoroutine(ShowPlayerDataCo(0.5f));   
+        //StartCoroutine(ShowPlayerDataCo(0.5f));
+        StartCoroutine(LoadPlayerDataCo(0.3f));
+    }
+
+    IEnumerator LoadPlayerDataCo(float time)
+    {
+        yield return new WaitForSeconds(time);
+        currentRank = DataSaver.Instance.dataToSave.rank;
+        Debug.Log("xxx " + currentRank);
     }
 
     IEnumerator ShowPlayerDataCo(float time)
@@ -147,11 +157,18 @@ public class ShowPlayerInfo : MonoBehaviour
 
         // Update experience display
         float currentXP = playerData.experience;
-        int currentRank = playerData.rank;
-        float nextThreshold = RankSystem.GetNextThreshold(currentRank);
-
-        Debug.Log("xxx " + currentXP + " save experince" + playerData.experience);
-
+        int updateRank = playerData.rank;
+        float nextThreshold = RankSystem.GetNextThreshold(updateRank);
+        if (updateRank != currentRank)
+        {
+            Debug.Log("xxx LEVEL UP");
+            currentRank = updateRank;
+            playerData.experience = 0;
+            // save to firebase datatosave
+            DataSaver.Instance.SaveData();
+        }
+        //Debug.Log("xxx " + currentXP + " save experince" + playerData.experience);
+        currentXP = playerData.experience;
         experienceText.text = $"{currentXP}/{nextThreshold}exp";
 
         // Update experience slider
