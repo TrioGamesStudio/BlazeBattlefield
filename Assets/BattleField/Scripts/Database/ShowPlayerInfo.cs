@@ -9,10 +9,13 @@ public class ShowPlayerInfo : MonoBehaviour
 {
     // show info UI
     [SerializeField] TextMeshProUGUI userName;
+    [SerializeField] TextMeshProUGUI rankName;
     [SerializeField] TextMeshProUGUI currentLevel;
     [SerializeField] TextMeshProUGUI winSolo;
     [SerializeField] TextMeshProUGUI winTeam;
     [SerializeField] TextMeshProUGUI coin;
+    [SerializeField] TextMeshProUGUI experienceText;
+    [SerializeField] Slider experienceSlider;
     [SerializeField] Image rankIcon; // For player rank icon
     [SerializeField] Sprite[] rankIcons; // Array of rank icons based on rank index
 
@@ -52,6 +55,7 @@ public class ShowPlayerInfo : MonoBehaviour
         //ShowInfo();
         ShowPlayerName();
         UpdateRankUI();
+        UpdateExperienceUI();
         StopAllCoroutines();
     }
 
@@ -93,6 +97,7 @@ public class ShowPlayerInfo : MonoBehaviour
         // Debug.Log($"_____show player info");
         //userName.text = "User name: " + DataSaver.Instance.dataToSave.userName;
         //currentLevel.text = "Current Level: " + DataSaver.Instance.dataToSave.currLevel.ToString();
+        rankName.text = "Rank: " + RankSystem.GetRankName(DataSaver.Instance.dataToSave.experience);
         winSolo.text = "Win: " + DataSaver.Instance.dataToSave.winSolo.ToString();
         winTeam.text = "Win Team: " + DataSaver.Instance.dataToSave.winTeam.ToString();
         coin.text = "Coin: " + DataSaver.Instance.dataToSave.coins.ToString();
@@ -117,6 +122,25 @@ public class ShowPlayerInfo : MonoBehaviour
         {
             Debug.LogWarning("Rank icon not found for rank: " + playerData.rank);
             rankIcon.gameObject.SetActive(false);
+        }
+    }
+
+    void UpdateExperienceUI()
+    {
+        var playerData = DataSaver.Instance.dataToSave;
+
+        // Update experience display
+        float currentXP = playerData.experience;
+        int currentRank = playerData.rank;
+        float nextThreshold = RankSystem.GetNextThreshold(currentRank);
+        //int prevThreshold = currentRank > 0 ? RankSystem.XPThresholds[currentRank - 1] : 0;
+
+        experienceText.text = $"{currentXP}/{nextThreshold}exp";
+
+        // Update experience slider
+        if (experienceSlider != null)
+        {
+            experienceSlider.value = currentXP/nextThreshold;
         }
     }
 }
