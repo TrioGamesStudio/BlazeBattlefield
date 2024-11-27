@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4766262467189898410}
+  - component: {fileID: 6075214330416767720}
   m_Layer: 0
-  m_Name: World_1
+  m_Name: RND_World_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,6 +41,23 @@ Transform:
   - {fileID: 6226243405967234777}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6075214330416767720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9144004629091454753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6761b71fb9d98ac4d8101760e5131ceb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  container: {fileID: 9144004629091454753}
+  dropBoxPrefab: {fileID: 2166488189649057410, guid: fcb660b0ccb6ee34298675817055a665,
+    type: 3}
+  totalBoxCountInAllRegion: 5
+  randomGroups: []
 --- !u!1001 &205443227906051553
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -918,7 +936,7 @@ PrefabInstance:
         type: 3}
       propertyPath: spawnPoints.Array.data[17]
       value: 
-      objectReference: {fileID: 8495377620018566657}
+      objectReference: {fileID: 306327802913744897}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[18]
@@ -947,7 +965,7 @@ PrefabInstance:
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: validSpawnPoints.Array.size
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
@@ -1066,7 +1084,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 180255268
+  SortKey: 1583379190
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -2391,7 +2409,7 @@ PrefabInstance:
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: validSpawnPoints.Array.size
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
@@ -2506,7 +2524,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 4092902472
+  SortKey: 831428481
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -2761,7 +2779,7 @@ PrefabInstance:
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.size
-      value: 24
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
@@ -2787,101 +2805,106 @@ PrefabInstance:
         type: 3}
       propertyPath: spawnPoints.Array.data[5]
       value: 
-      objectReference: {fileID: 522729025164526044}
+      objectReference: {fileID: 556690395663946410}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[6]
       value: 
-      objectReference: {fileID: 2002510511578220871}
+      objectReference: {fileID: 522729025164526044}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[7]
       value: 
-      objectReference: {fileID: 8431891362630152186}
+      objectReference: {fileID: 2002510511578220871}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[8]
       value: 
-      objectReference: {fileID: 7605274973116608398}
+      objectReference: {fileID: 8431891362630152186}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[9]
       value: 
-      objectReference: {fileID: 8936145758158230372}
+      objectReference: {fileID: 7605274973116608398}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[10]
       value: 
-      objectReference: {fileID: 6853358626931802964}
+      objectReference: {fileID: 8936145758158230372}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[11]
       value: 
-      objectReference: {fileID: 4554989614868943270}
+      objectReference: {fileID: 6853358626931802964}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[12]
       value: 
-      objectReference: {fileID: 7702237988824285353}
+      objectReference: {fileID: 4554989614868943270}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[13]
       value: 
-      objectReference: {fileID: 2731555844402795312}
+      objectReference: {fileID: 7702237988824285353}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[14]
       value: 
-      objectReference: {fileID: 2844396633106869904}
+      objectReference: {fileID: 2731555844402795312}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[15]
       value: 
-      objectReference: {fileID: 541180244480739399}
+      objectReference: {fileID: 2844396633106869904}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[16]
       value: 
-      objectReference: {fileID: 8578622289445637582}
+      objectReference: {fileID: 541180244480739399}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[17]
       value: 
-      objectReference: {fileID: 2610967315475970946}
+      objectReference: {fileID: 8578622289445637582}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[18]
       value: 
-      objectReference: {fileID: 5353673315743003493}
+      objectReference: {fileID: 2610967315475970946}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[19]
       value: 
-      objectReference: {fileID: 2843238806797348164}
+      objectReference: {fileID: 5353673315743003493}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[20]
       value: 
-      objectReference: {fileID: 951814568094062268}
+      objectReference: {fileID: 2843238806797348164}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[21]
       value: 
-      objectReference: {fileID: 884890230579489764}
+      objectReference: {fileID: 951814568094062268}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[22]
       value: 
-      objectReference: {fileID: 4974739279724070252}
+      objectReference: {fileID: 884890230579489764}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[23]
+      value: 
+      objectReference: {fileID: 4974739279724070252}
+    - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
+        type: 3}
+      propertyPath: spawnPoints.Array.data[24]
       value: 
       objectReference: {fileID: 64209886717616208}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: validSpawnPoints.Array.size
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
@@ -2994,6 +3017,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2617441082584615451}
   m_SourcePrefab: {fileID: 100100000, guid: ede4e3d8abaf92044855f72f608dced0, type: 3}
+--- !u!4 &556690395663946410 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1581931955166734452, guid: ede4e3d8abaf92044855f72f608dced0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1318961282936126174}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2164407498718712224 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 883938541136292734, guid: ede4e3d8abaf92044855f72f608dced0,
@@ -6188,7 +6217,7 @@ PrefabInstance:
         type: 3}
       propertyPath: spawnPoints.Array.data[19]
       value: 
-      objectReference: {fileID: 5694368503410019981}
+      objectReference: {fileID: 3902358932264762133}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[20]
@@ -6207,7 +6236,7 @@ PrefabInstance:
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: validSpawnPoints.Array.size
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
@@ -6346,7 +6375,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 2733481063
+  SortKey: 3376762202
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -10184,72 +10213,77 @@ PrefabInstance:
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.size
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[1]
       value: 
-      objectReference: {fileID: 5936150559921191575}
+      objectReference: {fileID: 5661207729007400661}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[2]
       value: 
-      objectReference: {fileID: 7633488321563715157}
+      objectReference: {fileID: 5936150559921191575}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[3]
       value: 
-      objectReference: {fileID: 471392229102014499}
+      objectReference: {fileID: 7633488321563715157}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[4]
       value: 
-      objectReference: {fileID: 7261396570825717329}
+      objectReference: {fileID: 471392229102014499}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[5]
       value: 
-      objectReference: {fileID: 2514475420171333266}
+      objectReference: {fileID: 7261396570825717329}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[6]
       value: 
-      objectReference: {fileID: 5210007245218798012}
+      objectReference: {fileID: 2514475420171333266}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[7]
       value: 
-      objectReference: {fileID: 2115027895082693368}
+      objectReference: {fileID: 5210007245218798012}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[8]
       value: 
-      objectReference: {fileID: 5141913961865479399}
+      objectReference: {fileID: 2115027895082693368}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[9]
       value: 
-      objectReference: {fileID: 4468483958348190085}
+      objectReference: {fileID: 5141913961865479399}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[10]
       value: 
-      objectReference: {fileID: 5729397777333314633}
+      objectReference: {fileID: 4468483958348190085}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[11]
       value: 
-      objectReference: {fileID: 8145304500986153729}
+      objectReference: {fileID: 5729397777333314633}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[12]
+      value: 
+      objectReference: {fileID: 8145304500986153729}
+    - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
+        type: 3}
+      propertyPath: spawnPoints.Array.data[13]
       value: 
       objectReference: {fileID: 5304349966607395741}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: validSpawnPoints.Array.size
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
@@ -10374,6 +10408,12 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 3139665036306873520}
+--- !u!4 &5661207729007400661 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1581931955166734452, guid: ede4e3d8abaf92044855f72f608dced0,
+    type: 3}
+  m_PrefabInstance: {fileID: 6585530203976760993}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8882230916542787313 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2314996586593488976, guid: ede4e3d8abaf92044855f72f608dced0,
@@ -13574,7 +13614,7 @@ PrefabInstance:
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: validSpawnPoints.Array.size
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
@@ -13909,72 +13949,97 @@ PrefabInstance:
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.size
-      value: 13
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[1]
       value: 
-      objectReference: {fileID: 2812782830962097997}
+      objectReference: {fileID: 3492267291921523075}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[2]
       value: 
-      objectReference: {fileID: 6526233337989635215}
+      objectReference: {fileID: 8837019410985867776}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[3]
       value: 
-      objectReference: {fileID: 2978769569613353996}
+      objectReference: {fileID: 3650983472247759325}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[4]
       value: 
-      objectReference: {fileID: 2449390720927653382}
+      objectReference: {fileID: 8843973640912901003}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[5]
       value: 
-      objectReference: {fileID: 4432936202078836459}
+      objectReference: {fileID: 7137181744338423937}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[6]
       value: 
-      objectReference: {fileID: 9057626636293075537}
+      objectReference: {fileID: 2812782830962097997}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[7]
       value: 
-      objectReference: {fileID: 712525382638996379}
+      objectReference: {fileID: 6526233337989635215}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[8]
       value: 
-      objectReference: {fileID: 3292277379186921781}
+      objectReference: {fileID: 2978769569613353996}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[9]
       value: 
-      objectReference: {fileID: 2416949707409210253}
+      objectReference: {fileID: 2449390720927653382}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[10]
       value: 
-      objectReference: {fileID: 6201219412183871178}
+      objectReference: {fileID: 4432936202078836459}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[11]
       value: 
-      objectReference: {fileID: 8230809649374881146}
+      objectReference: {fileID: 9057626636293075537}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: spawnPoints.Array.data[12]
+      value: 
+      objectReference: {fileID: 712525382638996379}
+    - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
+        type: 3}
+      propertyPath: spawnPoints.Array.data[13]
+      value: 
+      objectReference: {fileID: 3292277379186921781}
+    - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
+        type: 3}
+      propertyPath: spawnPoints.Array.data[14]
+      value: 
+      objectReference: {fileID: 2416949707409210253}
+    - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
+        type: 3}
+      propertyPath: spawnPoints.Array.data[15]
+      value: 
+      objectReference: {fileID: 6201219412183871178}
+    - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
+        type: 3}
+      propertyPath: spawnPoints.Array.data[16]
+      value: 
+      objectReference: {fileID: 8230809649374881146}
+    - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
+        type: 3}
+      propertyPath: spawnPoints.Array.data[17]
       value: 
       objectReference: {fileID: 8740347660940867360}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
       propertyPath: validSpawnPoints.Array.size
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
@@ -14095,9 +14160,39 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 436477680546200292}
+--- !u!4 &3492267291921523075 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5084419777343920502, guid: ede4e3d8abaf92044855f72f608dced0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8572736307040401653}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3650983472247759325 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4923169278499936552, guid: ede4e3d8abaf92044855f72f608dced0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8572736307040401653}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6258032476155357349 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2314996586593488976, guid: ede4e3d8abaf92044855f72f608dced0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8572736307040401653}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7137181744338423937 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1581931955166734452, guid: ede4e3d8abaf92044855f72f608dced0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8572736307040401653}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8837019410985867776 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 890336229184758517, guid: ede4e3d8abaf92044855f72f608dced0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8572736307040401653}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8843973640912901003 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 883938541136292734, guid: ede4e3d8abaf92044855f72f608dced0,
     type: 3}
   m_PrefabInstance: {fileID: 8572736307040401653}
   m_PrefabAsset: {fileID: 0}
@@ -14347,8 +14442,13 @@ PrefabInstance:
       objectReference: {fileID: 6502976133153261627}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}
+      propertyPath: spawnPoints.Array.data[19]
+      value: 
+      objectReference: {fileID: 6502976133153261627}
+    - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
+        type: 3}
       propertyPath: validSpawnPoints.Array.size
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8139926900121993745, guid: ede4e3d8abaf92044855f72f608dced0,
         type: 3}

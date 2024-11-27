@@ -7,10 +7,11 @@ using UnityEngine;
 public class RandomGroup : NetworkBehaviour
 {
     [SerializeField] private DropBox dropBoxPrefab;
+    [SerializeField] private GameObject dropBoxContainer;
     [SerializeField] private List<Transform> spawnPoints;
     [SerializeField] private List<Transform> validSpawnPoints;
-    [SerializeField] private int maxItemBoxInGroup = 10;
-    [SerializeField] private int validSpawnPointCount;
+    //[SerializeField] private int maxItemBoxInGroup = 10;
+    //[SerializeField] private int validSpawnPointCount;
     [Header("Gizmos Settings")]
     [SerializeField] private Color groupColor = Color.white;
     [SerializeField] private Color childColor = Color.red;
@@ -20,52 +21,43 @@ public class RandomGroup : NetworkBehaviour
     [SerializeField] private bool drawAllChildLocation = false;
     [SerializeField] private bool drawValidSpawnPoint = false;
     [SerializeField] private bool isRefreshChild = false;
-    [EditorButton]
-    private void GetSpawnPointInChild()
+
+    private int spawnCount = 1;
+
+    public void SetDropBoxPrefab(DropBox newDropBoxPrefab)
     {
-        spawnPoints.Clear();
-        foreach (Transform child in transform)
-        {
-            spawnPoints.Add(child);
-        }
+        dropBoxPrefab = newDropBoxPrefab;
     }
 
-    public override void Spawned()
+    public void SpawnDropBoxesInGroup(int _spawnCount)
     {
-        base.Spawned();
-        Debug.Log("Spawned in random group",gameObject);
-        if (Object.HasStateAuthority)
+        if (dropBoxPrefab == null)
         {
-            Debug.Log("Generate item");
-            CreateValidSpawnPoints();
-            GenerateItem();
+            Debug.LogError("Please add drop box prefab before spawning", gameObject);
+            return;
         }
+        spawnCount = _spawnCount;
+        if (validSpawnPoints.Count == 0)
+        {
+            SelectValidSpawnPoints();
+        }
+        SpawnDropBoxes();
     }
 
-
-    private void GenerateItem()
+    private void SpawnDropBoxes()
     {
-        
-        int count = Random.Range(3, 7);
         foreach (var validSpawnPos in validSpawnPoints)
         {
-            Vector3 randomOffset = new Vector3(
-                Random.Range(-sizeOfLocation.x / 2, sizeOfLocation.x / 2),
-                Random.Range(-sizeOfLocation.y / 2, sizeOfLocation.y / 2),
-                Random.Range(-sizeOfLocation.z / 2, sizeOfLocation.z / 2)
-            );
-            Vector3 spawnPosition = validSpawnPos.position + randomOffset;
-
-            var networkObject = Runner.Spawn(dropBoxPrefab, spawnPosition);
-            networkObject.transform.SetParent(validSpawnPos);
+            var networkObject = Runner.Spawn(dropBoxPrefab, validSpawnPos.position);
+            networkObject.transform.SetParent(dropBoxContainer.transform);
         }
         Debug.Log($"This check point is create {validSpawnPoints.Count}");
     }
+
     [EditorButton]
-    private void CreateValidSpawnPoints()
+    private void SelectValidSpawnPoints()
     {
         validSpawnPoints.Clear();
-        int spawnCount = Mathf.Clamp(validSpawnPointCount,0, maxItemBoxInGroup);
         HashSet<int> usedIndices = new();
 
         while (validSpawnPoints.Count < spawnCount)
@@ -80,6 +72,7 @@ public class RandomGroup : NetworkBehaviour
         Debug.Log($"Create {validSpawnPoints.Count} valid point");
     }
 
+    #region Gizmos
 
 #if UNITY_EDITOR
     [Button]
@@ -97,7 +90,16 @@ public class RandomGroup : NetworkBehaviour
     {
         drawValidSpawnPoint = !drawValidSpawnPoint;
     }
-
+    [EditorButton]
+    private void GetSpawnPointInChild()
+    {
+        spawnPoints.Clear();
+        foreach (Transform child in transform)
+        {
+            if (child.name.Equals("DROP_BOX_CONTAINER")) continue;
+            spawnPoints.Add(child);
+        }
+    }
     private void OnDrawGizmos()
     {
         if (Application.isEditor == false) return;
@@ -152,5 +154,5 @@ public class RandomGroup : NetworkBehaviour
     }
 #endif
 
-
+    #endregion
 }

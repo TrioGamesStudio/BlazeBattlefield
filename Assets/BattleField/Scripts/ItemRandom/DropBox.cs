@@ -24,7 +24,7 @@ public class DropBox : NetworkBehaviour
     private void Start()
     {
         boxCollider = GetComponent<BoxCollider>();
-        ItemGroundPositioner.instance.SetItemNearGround(boxCollider);
+        //ItemGroundPositioner.instance.SetItemNearGround(boxCollider);
         Close();
     }
 
