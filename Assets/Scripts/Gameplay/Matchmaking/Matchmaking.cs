@@ -511,6 +511,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         FindObjectOfType<UIController>().StartCountdown();
         StartCoroutine(ReleasePlayer());
         StartCoroutine(InitializeTeams());
+        RandomGroupManager.RaiseStartSpawnEvent();
     }
 
     private IEnumerator ReleasePlayer()

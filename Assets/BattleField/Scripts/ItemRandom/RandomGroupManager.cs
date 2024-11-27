@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class RandomGroupManager : MonoBehaviour
 {
-    public static Action StartSpawnEvent;
+    public static event Action StartSpawnEvent;
 
     [SerializeField] private GameObject container;
     [SerializeField] private DropBox dropBoxPrefab;
@@ -14,6 +14,10 @@ public class RandomGroupManager : MonoBehaviour
     [SerializeField,Min(1)] private int totalBoxCountInAllRegion;
     [SerializeField] private RandomGroup[] randomGroups;
 
+    public static void RaiseStartSpawnEvent()
+    {
+        StartSpawnEvent?.Invoke();
+    }
 
     private void Awake()
     {
