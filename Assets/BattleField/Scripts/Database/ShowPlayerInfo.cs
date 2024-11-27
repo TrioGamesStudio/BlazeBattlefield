@@ -38,6 +38,25 @@ public class ShowPlayerInfo : MonoBehaviour
         _dataSaver.LoadData();
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "MainLobby")
+        {
+            Debug.Log("MainLobby scene loaded. Restarting coroutine.");
+            StartCoroutine(ShowPlayerDataCo(0.5f));
+        }
+    }
+
     private void Start()
     {
         //saveButton?.onClick.AddListener(SaveManualTest);
@@ -45,18 +64,17 @@ public class ShowPlayerInfo : MonoBehaviour
         //gotoLobby?.onClick.AddListener(GoToLobby);
         //quickPlay?.onClick.AddListener(GoToQickBattle);
         //ShowPlayerName();
-        StartCoroutine(ShowPlayerDataCo(0.5f));
-        Debug.Log("xxx Update player info");
+        //Debug.Log("xxx Update player info");
+        //StartCoroutine(ShowPlayerDataCo(0.5f));   
     }
 
     IEnumerator ShowPlayerDataCo(float time)
     {
         yield return new WaitForSeconds(time);
-        //ShowInfo();
-        ShowPlayerName();
-        UpdateRankUI();
+        //Debug.Log("xxx Update exp" );
         UpdateExperienceUI();
-        StopAllCoroutines();
+        ShowPlayerName();
+        UpdateRankUI();     
     }
 
     void SaveManualTest()
@@ -116,12 +134,10 @@ public class ShowPlayerInfo : MonoBehaviour
         if (rankIcons != null && playerData.rank < rankIcons.Length)
         {
             rankIcon.sprite = rankIcons[playerData.rank];
-            rankIcon.gameObject.SetActive(true);
         }
         else
         {
             Debug.LogWarning("Rank icon not found for rank: " + playerData.rank);
-            rankIcon.gameObject.SetActive(false);
         }
     }
 
@@ -133,7 +149,8 @@ public class ShowPlayerInfo : MonoBehaviour
         float currentXP = playerData.experience;
         int currentRank = playerData.rank;
         float nextThreshold = RankSystem.GetNextThreshold(currentRank);
-        //int prevThreshold = currentRank > 0 ? RankSystem.XPThresholds[currentRank - 1] : 0;
+
+        Debug.Log("xxx " + currentXP + " save experince" + playerData.experience);
 
         experienceText.text = $"{currentXP}/{nextThreshold}exp";
 
