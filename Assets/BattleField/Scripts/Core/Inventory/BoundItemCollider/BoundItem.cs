@@ -16,12 +16,18 @@ public class BoundItem : NetworkBehaviour
     {
         if(allowAddToCollider)
         {
+            ColliderCreator.instance.Add(this);
             if(HasStateAuthority)
                 ItemGroundPositioner.instance.SetItemNearGround(GetComponent<BoxCollider>());
-            ColliderCreator.instance.Add(this);
         }
         
     }
+
+    [EditorButton] private void AddToColliderCreator()
+    {
+        ColliderCreator.instance.Add(this);
+    }
+
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {

@@ -2,15 +2,20 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 public class BackpackUI : MonoBehaviour
 {
     public static BackpackUI instance;
     protected UnityPool<ItemBackpackUI> poolItemsUI;
     [SerializeField] protected ItemBackpackUI itemCollectUIPrefab;
     [SerializeField] protected GameObject content;
-    [SerializeField] protected ItemConfigDatabase itemDefaultConfig;
     [SerializeField] protected BackpackButtonGroupUI buttonGroupUI;
     [SerializeField] protected DropAmountUI dropAmountUI;
+
+    [SerializeField] private Button acceptDropAllBtn;
+    [SerializeField] private Button deliceDropAllBtn;
+    [SerializeField] private GameObject acceptDropPanel;
+
     [SerializeField] protected int dropCount;
     private InventoryItem currentItem;
 
@@ -26,11 +31,15 @@ public class BackpackUI : MonoBehaviour
 
 
         HideButton();
-        buttonGroupUI.SetOnDropFull(DropAllItem);
+        HideAcceptDropPanel();
+        buttonGroupUI.SetOnDropFull(ShowAcceptDropPanel);
         buttonGroupUI.SetOndropItemAmount(ShowDropAmount);
         buttonGroupUI.SetOnUseItem(ActiveHealthTimer);
         dropAmountUI.Hide();
         dropAmountUI.SetAcceptDrop(OnAcceptDrop);
+
+        acceptDropAllBtn.onClick.AddListener(DropAllItem);
+        deliceDropAllBtn.onClick.AddListener(HideAcceptDropPanel);
     }
 
 
@@ -44,7 +53,18 @@ public class BackpackUI : MonoBehaviour
 
         dropAmountUI.SetAcceptDrop(null);
 
-        
+
+        acceptDropAllBtn.onClick.RemoveListener(DropAllItem);
+        deliceDropAllBtn.onClick.RemoveListener(HideAcceptDropPanel);
+    }
+
+    private void ShowAcceptDropPanel()
+    {
+        acceptDropPanel.gameObject.SetActive(true);
+    }
+    private void HideAcceptDropPanel()
+    {
+        acceptDropPanel.gameObject.SetActive(false);
     }
 
     public void ActiveHealthTimer()
@@ -86,19 +106,22 @@ public class BackpackUI : MonoBehaviour
         {
             StorageManager.instance.SplitItem(currentItem, newDropCount);
         }
-        HideDropAmount();
-        HideButton();
+        HideAll();
         previousItemBackpackUI?.UnHighlight();
         Debug.Log("Drop With Count:" + newDropCount);
     }
 
     private void DropAllItem()
     {
-        HideButton();
-        HideDropAmount();
+        HideAll();
         StorageManager.instance.DropAll(currentItem);
     }
-
+    private void HideAll()
+    {
+        HideButton();
+        HideDropAmount();
+        HideAcceptDropPanel();
+    }
 
     private void HandleItemAdded(InventoryItem item)
     {
