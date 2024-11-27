@@ -29,14 +29,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4132290135586794951}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.022006877, w: 0.9997579}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 12.37, y: 0.00020703673, z: 0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6205694502453600169}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -2.522}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &3623116779160750169
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -78,7 +78,6 @@ MonoBehaviour:
   randomItemCount: 3
   delayDestroyTime: 0.5
   dropBoundVector3: {x: 0.78, y: 0.35, z: 0.56}
-  crashVfxPrefab: {fileID: 0}
 --- !u!114 &4830646565693160809
 MonoBehaviour:
   m_ObjectHideFlags: 0

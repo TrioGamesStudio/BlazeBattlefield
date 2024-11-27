@@ -1,10 +1,12 @@
 using Fusion;
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RandomGroup : NetworkBehaviour
 {
+    [SerializeField] private DropBox dropBoxPrefab;
     [SerializeField] private List<Transform> spawnPoints;
     [SerializeField] private List<Transform> validSpawnPoints;
     [SerializeField] private int maxItemBoxInGroup = 10;
@@ -17,8 +19,7 @@ public class RandomGroup : NetworkBehaviour
     [SerializeField] private bool drawBoundOfGroup = false;
     [SerializeField] private bool drawAllChildLocation = false;
     [SerializeField] private bool drawValidSpawnPoint = false;
-
-    [SerializeField] private DropBox dropBoxPrefab;
+    [SerializeField] private bool isRefreshChild = false;
     [EditorButton]
     private void GetSpawnPointInChild()
     {
@@ -79,13 +80,41 @@ public class RandomGroup : NetworkBehaviour
         Debug.Log($"Create {validSpawnPoints.Count} valid point");
     }
 
+
+#if UNITY_EDITOR
+    [Button]
+    private void ToggleDrawChildSpawn()
+    {
+        drawAllChildLocation = !drawAllChildLocation;
+    }
+    [Button]
+    private void ToggleDrawBoundOfGroup()
+    {
+        drawBoundOfGroup = !drawBoundOfGroup;
+    }
+    [Button]
+    private void ToggleDrawValidSpawnPoint()
+    {
+        drawValidSpawnPoint = !drawValidSpawnPoint;
+    }
+
     private void OnDrawGizmos()
     {
+        if (Application.isEditor == false) return;
+
         if (drawAllChildLocation)
         {
-            Gizmos.color = childColor;
+            
             foreach (var child in spawnPoints)
             {
+                if (child == null)
+                {
+                    GetSpawnPointInChild();
+                    break;
+                }
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(child.transform.position, child.transform.position + Vector3.up);
+                Gizmos.color = childColor;
                 Gizmos.DrawWireCube(child.transform.position, sizeOfLocation);
             }
         }
@@ -97,6 +126,11 @@ public class RandomGroup : NetworkBehaviour
             bounds.center = transform.position;
             foreach (var child in spawnPoints)
             {
+                if (child == null)
+                {
+                    GetSpawnPointInChild();
+                    break;
+                }
                 bounds.Encapsulate(child.transform.position);
             }
             Gizmos.DrawWireCube(bounds.center, bounds.size);
@@ -107,8 +141,16 @@ public class RandomGroup : NetworkBehaviour
             Gizmos.color = validSpawnPointColor;
             foreach (var child in validSpawnPoints)
             {
+                if (child == null)
+                {
+                    GetSpawnPointInChild();
+                    break;
+                }
                 Gizmos.DrawWireCube(child.transform.position, sizeOfLocation);
             }
         }
     }
+#endif
+
+
 }
