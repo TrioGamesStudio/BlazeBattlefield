@@ -13,6 +13,8 @@ public class ShowPlayerInfo : MonoBehaviour
     [SerializeField] TextMeshProUGUI winSolo;
     [SerializeField] TextMeshProUGUI winTeam;
     [SerializeField] TextMeshProUGUI coin;
+    [SerializeField] Image rankIcon; // For player rank icon
+    [SerializeField] Sprite[] rankIcons; // Array of rank icons based on rank index
 
     // buttons
     [Header("       Buttons")]
@@ -27,42 +29,50 @@ public class ShowPlayerInfo : MonoBehaviour
 
     //ohters
     DataSaver _dataSaver;
-    private void Awake() {
+    private void Awake()
+    {
         _dataSaver = FindObjectOfType<DataSaver>();
         _dataSaver.LoadData();
     }
 
-    private void Start() {
+    private void Start()
+    {
         //saveButton?.onClick.AddListener(SaveManualTest);
         //loadButton?.onClick.AddListener(LoadMaunalTest);
         //gotoLobby?.onClick.AddListener(GoToLobby);
         //quickPlay?.onClick.AddListener(GoToQickBattle);
         //ShowPlayerName();
         StartCoroutine(ShowPlayerDataCo(0.5f));
+        Debug.Log("xxx Update player info");
     }
 
-    IEnumerator ShowPlayerDataCo(float time) {
+    IEnumerator ShowPlayerDataCo(float time)
+    {
         yield return new WaitForSeconds(time);
         //ShowInfo();
         ShowPlayerName();
+        UpdateRankUI();
         StopAllCoroutines();
     }
 
-    void SaveManualTest() {
+    void SaveManualTest()
+    {
         _dataSaver.SaveData();
     }
 
-    void LoadMaunalTest() {
+    void LoadMaunalTest()
+    {
         _dataSaver.LoadData();
         StartCoroutine(ShowPlayerDataCo(0.5f));
     }
-    
+
     private void GoToLobby()
     {
         StartCoroutine(LoadToMainLobby(0.5f));
     }
 
-    IEnumerator LoadToMainLobby(float time) {
+    IEnumerator LoadToMainLobby(float time)
+    {
         yield return new WaitForSeconds(time);
         SceneManager.LoadSceneAsync(MAINLOBBY);
     }
@@ -72,15 +82,17 @@ public class ShowPlayerInfo : MonoBehaviour
         StartCoroutine(LoadToQuickBattle(0.5f));
     }
 
-    IEnumerator LoadToQuickBattle(float time) {
+    IEnumerator LoadToQuickBattle(float time)
+    {
         yield return new WaitForSeconds(time);
         SceneManager.LoadSceneAsync(WORLD1);
     }
-    
-    public void ShowInfo() {
+
+    public void ShowInfo()
+    {
         // Debug.Log($"_____show player info");
-        userName.text = "User name: " + DataSaver.Instance.dataToSave.userName;
-        currentLevel.text = "Current Level: " + DataSaver.Instance.dataToSave.currLevel.ToString();
+        //userName.text = "User name: " + DataSaver.Instance.dataToSave.userName;
+        //currentLevel.text = "Current Level: " + DataSaver.Instance.dataToSave.currLevel.ToString();
         winSolo.text = "Win: " + DataSaver.Instance.dataToSave.winSolo.ToString();
         winTeam.text = "Win Team: " + DataSaver.Instance.dataToSave.winTeam.ToString();
         coin.text = "Coin: " + DataSaver.Instance.dataToSave.coins.ToString();
@@ -89,5 +101,22 @@ public class ShowPlayerInfo : MonoBehaviour
     public void ShowPlayerName()
     {
         userName.text = DataSaver.Instance.dataToSave.userName;
+    }
+
+    void UpdateRankUI()
+    {
+        var playerData = DataSaver.Instance.dataToSave;
+
+        // Update rank icon
+        if (rankIcons != null && playerData.rank < rankIcons.Length)
+        {
+            rankIcon.sprite = rankIcons[playerData.rank];
+            rankIcon.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("Rank icon not found for rank: " + playerData.rank);
+            rankIcon.gameObject.SetActive(false);
+        }
     }
 }
