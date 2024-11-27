@@ -11,18 +11,18 @@ public class WeaponBackpackUI : BindingWeaponUI
     [SerializeField] private TextMeshProUGUI gunName;
     [SerializeField] private TextMeshProUGUI ammoTypeName;
 
-    protected override void UpdateGunInfor()
+    protected override void UpdateNewGunInformation()
     {
-        base.UpdateGunInfor();
+        base.UpdateNewGunInformation();
 
         //Debug.Log("On Update Gun Infor");
         gunName.text = weaponSlotHandler.Config.displayName;
         ammoTypeName.text = weaponSlotHandler.Config.ammoUsingType.displayName;
     }
 
-    protected override void ResetUIState()
+    protected override void ResetToDefaultState()
     {
-        base.ResetUIState();
+        base.ResetToDefaultState();
         gunName.text = "";
         ammoTypeName.text = "";
     }

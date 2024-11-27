@@ -19,21 +19,25 @@ public class WeaponSlotHandler: IWeaponSlotAction
 
     public int currentAmmo;
 
-    public List<BindingWeaponUI> UIList = new();
+    //public List<BindingWeaponUI> UIList = new();
+
+
+
 
     public bool IsEmpty => Prefab == null && Config == null;
-
-
-
-    [SerializeField] private bool isShowInHand;
     public bool IsShowInHand { get => isShowInHand; }
     public bool HasAmmo { get => currentAmmo > 0;  }
     public bool isReloading = false;
-    #region Action
+
+    [SerializeField] private bool isShowInHand;
+    #region FeatureAction
     public Action ShowWeaponAction { get; set; }
     public Action HideWeaponAction { get; set; }
     public Action EquipWeaponAction { get; set; }
     public Action DropWeaponAction { get; set; }
+
+    public Action OnUpdateCurrentAmmo;
+    public Action OnUpdateTotalAmmo;
     #endregion Action
     public void AddNewWeapon(GunItemConfig newConfig)
     {
@@ -53,11 +57,12 @@ public class WeaponSlotHandler: IWeaponSlotAction
 
     public void OnTotalAmmoChange()
     {
-        int totalAmmo = TotalAmmo();
-        foreach(var item in UIList)
-        {
-            item.UpdateTotalAmmo(totalAmmo);
-        }
+        //int totalAmmo = TotalAmmo();
+        //foreach(var item in UIList)
+        //{
+        //    item.UpdateTotalAmmo(totalAmmo);
+        //}
+        OnUpdateTotalAmmo?.Invoke();
     }
 
     public void Show()
@@ -92,6 +97,7 @@ public class WeaponSlotHandler: IWeaponSlotAction
         
         DropWeaponAction?.Invoke();
         currentAmmo = 0;
+        OnUpdateCurrentAmmo?.Invoke();
     }
 
     private void TurnAmmoBackWhenDrop()
@@ -120,6 +126,7 @@ public class WeaponSlotHandler: IWeaponSlotAction
                 int ammoInStorage = StorageManager.instance.AcquireAmmoItem(Config.ammoUsingType.SubItemType, ammoNeed);
 
                 currentAmmo += ammoInStorage;
+                OnUpdateCurrentAmmo?.Invoke();
                 isReloading = false;
             },
             () =>
@@ -145,5 +152,6 @@ public class WeaponSlotHandler: IWeaponSlotAction
     public void Shoot()
     {
         currentAmmo--;
+        OnUpdateCurrentAmmo?.Invoke();
     }
 }

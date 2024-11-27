@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,9 +14,11 @@ public class BindingWeaponUI : MonoBehaviour
 
     public virtual void BindWeaponSlot(WeaponSlotHandler newWeaponSlotHandler)
     {
-        newWeaponSlotHandler.UIList.Add(this);
+        //newWeaponSlotHandler.UIList.Add(this);
         weaponSlotHandler = newWeaponSlotHandler;
         weaponSlotHandler.OnUpdateNewGunUIAction += OnUpdateNewGun;
+        weaponSlotHandler.OnUpdateCurrentAmmo += () => UpdateCurrentAmmo(weaponSlotHandler.currentAmmo);
+        weaponSlotHandler.OnUpdateTotalAmmo += () => UpdateTotalAmmo(weaponSlotHandler.TotalAmmo());
         OnUpdateNewGun();
     }
     
@@ -26,45 +29,51 @@ public class BindingWeaponUI : MonoBehaviour
         {
             // remove callback UI of ammo
             Debug.Log("Reset UI callback", gameObject);
-            ResetUIState();
+            ResetToDefaultState();
         }
         else
         {
             // add ammocallback
-            UpdateGunInfor();
+            UpdateNewGunInformation();
         }
     }
-    protected virtual void UpdateGunInfor()
+    protected virtual void UpdateNewGunInformation()
     {
         //Debug.Log("IsEmpty: " + weaponSlotHandler.IsEmpty);
         UpdateTotalAmmo(weaponSlotHandler.TotalAmmo());
+        UpdateCurrentAmmo(weaponSlotHandler.currentAmmo);
         UpdateIcon();
         Debug.Log("Update data:" + weaponSlotHandler.Config.Icon);
     }
-
+    protected virtual void ResetToDefaultState()
+    {
+        UpdateTotalAmmo(0);
+        UpdateCurrentAmmo(0);
+        IconImage.gameObject.SetActive(false);
+    }
     protected virtual void UpdateIcon()
     {
         IconImage.gameObject.SetActive(true);
         IconImage.sprite = weaponSlotHandler.Config.Icon;
     }
-  
-    public void UpdateTotalAmmo(int totalAmmo)
+    protected virtual void UpdateTotalAmmo(int totalAmmo)
     {
         totalGunAmmoText.text = totalAmmo.ToString();
     }
-    private void Update()
+    protected virtual void UpdateCurrentAmmo(int currentAmmo)
     {
-        currentGunAmmoText.text = weaponSlotHandler.currentAmmo.ToString() + "/";
+        Debug.Log("Set text current ammo: " + currentAmmo);
+        currentGunAmmoText.text = currentAmmo.ToString();
+    }
+    protected virtual void Update()
+    {
         if (weaponSlotHandler.IsEmpty) return;
         float lerpvalue = (float)weaponSlotHandler.currentAmmo / (float)weaponSlotHandler.Config.maxStack;
         currentGunAmmoText.color = Color.Lerp(Color.red, Color.white, lerpvalue * 1.5f);
     }
 
-    protected virtual void ResetUIState()
-    {
-        UpdateTotalAmmo(0);
-        IconImage.gameObject.SetActive(false);
-    }
+   
 
-    
+  
+
 }
