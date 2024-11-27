@@ -37,13 +37,14 @@ public class ShowPlayerInfo : MonoBehaviour
         //loadButton?.onClick.AddListener(LoadMaunalTest);
         //gotoLobby?.onClick.AddListener(GoToLobby);
         //quickPlay?.onClick.AddListener(GoToQickBattle);
-        ShowPlayerName();
-        //StartCoroutine(ShowPlayerDataCo(0.5f));
+        //ShowPlayerName();
+        StartCoroutine(ShowPlayerDataCo(0.5f));
     }
 
     IEnumerator ShowPlayerDataCo(float time) {
         yield return new WaitForSeconds(time);
-        ShowInfo();
+        //ShowInfo();
+        ShowPlayerName();
         StopAllCoroutines();
     }
 

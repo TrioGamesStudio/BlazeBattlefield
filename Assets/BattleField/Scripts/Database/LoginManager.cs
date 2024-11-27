@@ -382,6 +382,7 @@ public class LoginManager : MonoBehaviour
 
             //? gan userId cho saveLoadHander Firebase | FireStore
             DataSaver.Instance.userId = result.User.UserId;
+            DataSaver.Instance.dataToSave.userName = "Quest";
             SceneManager.LoadSceneAsync("MainLobby");
         });
     }

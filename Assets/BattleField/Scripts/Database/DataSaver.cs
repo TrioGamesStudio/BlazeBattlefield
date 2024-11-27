@@ -11,7 +11,9 @@ public class DataToSave {
     public int winSolo;
     public int winTeam;
     public int coins;
-    
+    public int experience = 0; // Tracks total XP
+    public int rank = 1;       // Tracks current rank
+
     public DataToSave() {
         
     }
