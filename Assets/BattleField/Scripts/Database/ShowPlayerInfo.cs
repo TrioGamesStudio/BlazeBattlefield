@@ -162,6 +162,7 @@ public class ShowPlayerInfo : MonoBehaviour
         if (updateRank != currentRank)
         {
             Debug.Log("xxx LEVEL UP");
+            FindObjectOfType<LevelUpPanel>().ShowLevelUpPanel(currentRank, updateRank);
             currentRank = updateRank;
             playerData.experience = 0;
             // save to firebase datatosave
