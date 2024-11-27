@@ -33,10 +33,16 @@ public class RandomGroupManager : MonoBehaviour
     [Button]
     private void StartSpawn()
     {
+        if(NetworkPlayer.Local.Runner.IsSharedModeMasterClient == false)
+        {
+            return;
+        }
+
         Debug.Log("Start spawn",gameObject);
         int countPerRegion = totalBoxCountInAllRegion / randomGroups.Length;
         foreach(var group in randomGroups)
         {
+            if (group.gameObject.activeSelf == false) continue;
             group.SetDropBoxPrefab(dropBoxPrefab);
             group.SpawnDropBoxesInGroup(countPerRegion);
         }

@@ -48,8 +48,8 @@ public class RandomGroup : NetworkBehaviour
     {
         foreach (var validSpawnPos in validSpawnPoints)
         {
-            var networkObject = Runner.Spawn(dropBoxPrefab, validSpawnPos.position);
-            networkObject.transform.SetParent(dropBoxContainer.transform);
+            Runner.Spawn(dropBoxPrefab, validSpawnPos.position);
+            //networkObject.transform.SetParent(dropBoxContainer.transform);
         }
         Debug.Log($"This check point is create {validSpawnPoints.Count}");
     }

@@ -36,25 +36,18 @@ public class DropBox : NetworkBehaviour
         //crate_Lid.transform.eulerAngles = new Vector3(-90, 0, 0);
         isOpen = true;
         SoundRequestManager.instance.PlayOneTime(openAudioClip, transform.position);
-        if (HasStateAuthority)
+        openBoxTransform.DOShakePosition(.3f).OnComplete(() =>
         {
-            
-            openBoxTransform.DOShakePosition(.3f).OnComplete(() =>
+            if (allowRandomItem && HasStateAuthority)
             {
-                if (allowRandomItem)
-                {
-                    CreateRandomItem();
-                }
-                else
-                {
-                    CreateItemByList();
-                }
-                openBoxTransform.DOScale(Vector3.zero, .3f).SetEase(Ease.InOutBack).OnComplete(() =>
-                {
+                CreateRandomItem();
+            }
+            openBoxTransform.DOScale(Vector3.zero, .3f).SetEase(Ease.InOutBack).OnComplete(() =>
+            {
+                if(HasStateAuthority)
                     Invoke(nameof(DestroyItemDelay), delayDestroyTime);
-                });
             });
-        }
+        });
     }
 
     private void DestroyItemDelay()
