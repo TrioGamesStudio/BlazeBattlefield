@@ -24,7 +24,6 @@ public class RandomGroupManager : NetworkBehaviour
         base.Spawned();
         if (Runner.IsSharedModeMasterClient)
         {
-            RaiseStartSpawnEvent();
         }
     }
     private void Awake()

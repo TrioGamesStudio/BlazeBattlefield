@@ -21,7 +21,6 @@ public class MiniMapCameraHandler : MonoBehaviour
         if(isMiniMapShowed == false && MatchmakingTeam.Instance.IsDone || Matchmaking.Instance.IsDone) {
             isMiniMapShowed = true;
             ShowMinimapTeamMate();
-            RandomGroupManager.RaiseStartSpawnEvent();
         }
     }
 
