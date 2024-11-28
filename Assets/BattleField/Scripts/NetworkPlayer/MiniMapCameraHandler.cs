@@ -18,9 +18,10 @@ public class MiniMapCameraHandler : MonoBehaviour
         if(SceneManager.GetActiveScene().name == "MainLobby") return;
 
         //! check neu choi o che do team && ready battle && roi xuong dat
-        if(isMiniMapShowed == false && MatchmakingTeam.Instance.IsDone) {
+        if(isMiniMapShowed == false && MatchmakingTeam.Instance.IsDone || Matchmaking.Instance.IsDone) {
             isMiniMapShowed = true;
             ShowMinimapTeamMate();
+            RandomGroupManager.RaiseStartSpawnEvent();
         }
     }
 
