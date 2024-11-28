@@ -8,24 +8,29 @@ public class BoundItem : NetworkBehaviour
 {
     [SerializeField] private bool isInBoundCollider = false;
     [SerializeField] private float height = 1.2f;
-    public bool IsInBoundCollider { get => isInBoundCollider; set => isInBoundCollider =value; }
+    public bool IsInBoundCollider { get => isInBoundCollider; set => isInBoundCollider = value; }
     public BoundItemsCollider BoundItemsCollider;
     [Networked] public bool allowAddToCollider { get; set; }
 
     public void SetupFromStateAuthority()
     {
-        if(allowAddToCollider)
-        {
-            ColliderCreator.instance.Add(this);
-            if(HasStateAuthority)
-                ItemGroundPositioner.instance.SetItemNearGround(GetComponent<BoxCollider>());
-        }
-        
+        ColliderCreator.instance.Add(this);
     }
 
-    [EditorButton] private void AddToColliderCreator()
+    public override void Spawned()
     {
-        ColliderCreator.instance.Add(this);
+        base.Spawned();
+        Invoke(nameof(SetupFromStateAuthority), .5f);
+    }
+
+
+    [EditorButton]
+    private void AddToColliderCreator()
+    {
+        if (allowAddToCollider)
+        {
+            ColliderCreator.instance.Add(this);
+        }
     }
 
 
@@ -38,9 +43,9 @@ public class BoundItem : NetworkBehaviour
             BoundItemsCollider.RemoveItemFromBoundss(this);
         }
     }
-    
 
-    
+
+
     public bool CanAddToBound()
     {
         return isInBoundCollider == false && allowAddToCollider && BoundItemsCollider == null;
