@@ -183,7 +183,21 @@ public class HPHandler : NetworkBehaviour
         characterMovementHandler.RequestRespawn();
     }
 
-
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void OnHealRPC(byte amount)
+    {
+        var temp = Networked_HP;
+        if(temp + amount >= startingHP)
+        {
+            Networked_HP = startingHP;
+        }
+        else
+        {
+            Networked_HP += amount;
+        }
+        OnTakeDamageEvent.Invoke(-amount);
+        HealthBarUI.OnHealthChangeAction?.Invoke(Networked_HP);
+    }
 
     //RPC
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]

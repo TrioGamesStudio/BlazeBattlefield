@@ -1,6 +1,6 @@
 ﻿public static class ItemConfigFactory
 {
-    public static HealthItemConfig CreateHealthItem(HealthItemConfig config,HealingItemType type, string displayName, int maxStack, float healthAmount, float usingItem)
+    public static HealthItemConfig CreateHealthItem(HealthItemConfig config,HealingItemType type, string displayName, int maxStack, byte healthAmount, float usingItem)
     {
         config.displayName = displayName;
         config.maxStack = maxStack;

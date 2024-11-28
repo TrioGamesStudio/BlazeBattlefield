@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b6166844acfe242a255b1043c0e9fb, type: 3}
+  m_Name: Aka47
+  m_EditorClassIdentifier: 
+  displayName: AKM
+  Icon: {fileID: 21300000, guid: 9551e81aec1d0754a800a4ac0443fcfc, type: 3}
+  SubItemType: 101
+  maxStack: 1
+  ItemType: 0
+  IconActualGun: {fileID: 21300000, guid: 1125c03a9371ed54caffb036fca13904, type: 3}
+  ammoUsingType: {fileID: 11400000, guid: 966ba81660ca8964aa9e8ab7ccb9d033, type: 2}
+  slotWeaponIndex: 0
+  isSingleMode: 0
+  isContainScope: 0
+  cooldownTime: 0.1
+  damagePerHit: 1
+  maxRounds: 30
+  shootingSound: {fileID: 0}
+  reloadSound: {fileID: 0}
+  recoil:
+    currentRecoilX: -2
+    currentRecoilY: 2
+    currentRecoilZ: 0.35
+    currentReturnSpeed: 2
+    currentSnappiness: 6

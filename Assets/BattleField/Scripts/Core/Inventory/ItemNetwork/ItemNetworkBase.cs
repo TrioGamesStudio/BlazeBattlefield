@@ -1,4 +1,5 @@
 ﻿using Fusion;
+using NaughtyAttributes;
 using System;
 using System.Xml;
 using Unity.VisualScripting;
@@ -10,7 +11,7 @@ public class CustomData
     {
 
     }
-    public CustomData(string _key,float _value)
+    public CustomData(string _key, float _value)
     {
         key = _key;
         value = _value;
@@ -26,9 +27,12 @@ public interface ItemDataEnum
 
     void SetQuantity(int newAmount);
     void SetCustomData(string key, float value);
+
+    ItemRarity GetItemRarity();
+    byte GetItemWeight();
 }
 
-public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, ItemDataEnum, 
+public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, ItemDataEnum,
     IRunTimeItem where _EnumType : Enum where _Config : ItemConfig<_EnumType>
 {
     [Networked] public int quantity { get; set; }
@@ -38,6 +42,9 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     public _Config config;
     private BoundItem boundItem;
 
+    public ItemRarity ItemRarity;
+    [MinValue(0), MaxValue(100)] public byte ItemWeight;
+
 
     private void Awake()
     {
@@ -46,18 +53,10 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     public override void Spawned()
     {
         base.Spawned();
-        Invoke(nameof(BoundItemSetup), .5f);
-    }
-
-    public void BoundItemSetup()
-    {
-        if(boundItem == null)
+        if (HasStateAuthority)
         {
-            Debug.LogError("Bound item is null in item", gameObject);
-            return;
+            //Invoke(nameof(BoundItemSetup), .3f);
         }
-
-        boundItem.Setup();
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -155,7 +154,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         }
     }
 
-    
+
 
     public void SetCustomData(string key, float value)
     {
@@ -169,5 +168,15 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
             customDatas[0].key = key;
             customDatas[0].value = value;
         }
+    }
+
+    public ItemRarity GetItemRarity()
+    {
+        return ItemRarity;
+    }
+
+    public byte GetItemWeight()
+    {
+        return ItemWeight;
     }
 }

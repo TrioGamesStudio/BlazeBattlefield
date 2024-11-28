@@ -118,12 +118,17 @@ public class StorageManager : MonoBehaviour
         if (ammoNeed <= 0) return 0;
 
         int ammoCanGet = 0;
-        if (!bigData.TryGetValue((ItemType.Ammo, ammoType), out var list))
+        if (!bigData.TryGetValue((ItemType.Ammo, ammoType), out var ammoList))
         {
             return 0;
         }
-
-        foreach (var ammo in list) 
+        
+        var sortedAmmoList = ammoList.OrderBy(ammo => ammo.amount).ToList();
+        ammoList = sortedAmmoList;
+        
+        List<InventoryItem> itemNeedUpdateUI = new();
+        List<InventoryItem> removeItem = new();
+        foreach (var ammo in ammoList) 
         {
             int ammoToTake = Math.Min(ammo.amount, ammoNeed - ammoCanGet);
 
@@ -134,11 +139,11 @@ public class StorageManager : MonoBehaviour
 
                 if (ammo.amount <= 0)
                 {
-                    Remove(ItemType.Ammo, ammoType, ammo);
+                    removeItem.Add(ammo);
                 }
                 else
                 {
-                    ammo.OnUpdateData();
+                    itemNeedUpdateUI.Add(ammo);
                 }
 
                 if (ammoCanGet >= ammoNeed)
@@ -148,6 +153,12 @@ public class StorageManager : MonoBehaviour
             }
         }
 
+        foreach (var item in itemNeedUpdateUI)
+            item.OnUpdateData();
+        foreach(var item in removeItem)
+        {
+            Remove(ItemType.Ammo, ammoType, item);
+        }
         return ammoCanGet;
     }
 }

@@ -1,15 +1,17 @@
 using Fusion;
+using NaughtyAttributes;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 public class ItemDatabase : NetworkBehaviour
 {
     public static ItemDatabase instance;
     [SerializeField] public ItemConfigDatabase ItemConfigDatabase;
     [SerializeField] private ItemPrefabDatabase ItemPrefabDatabase;
-    
+
     public Transform PlayerObject;
-    
+
     private void Awake()
     {
         instance = this;
@@ -32,7 +34,7 @@ public class ItemDatabase : NetworkBehaviour
     {
         var key1 = inventoryItem.ItemType;
         var key2 = inventoryItem._SubItemEnum;
-     
+
         CreateItemInWorld(newAmount, key1, key2, PlayerObject.position);
     }
 
@@ -59,7 +61,7 @@ public class ItemDatabase : NetworkBehaviour
         return item;
     }
 
-    public NetworkObject SpawnItem(GameObject prefab,Vector3 position, string _tag)
+    public NetworkObject SpawnItem(GameObject prefab, Vector3 position, string _tag)
     {
         //var position = isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position;
         var networkObject = Runner.Spawn(prefab, position, Quaternion.Euler(0, 0, 0), null, (runner, obj) =>
@@ -71,4 +73,11 @@ public class ItemDatabase : NetworkBehaviour
         //RPC_SetParentWeapon(networkObject, isLocal, index);
         return networkObject;
     }
+
+    public GameObject GetRandomItemPrefab()
+    {
+        return ItemPrefabDatabase.GetRandomItemPrefabByRarity();
+    }
+ 
+    
 }
