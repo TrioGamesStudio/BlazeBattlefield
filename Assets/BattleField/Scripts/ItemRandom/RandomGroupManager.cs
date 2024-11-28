@@ -19,13 +19,7 @@ public class RandomGroupManager : NetworkBehaviour
     {
         StartSpawnEvent?.Invoke();
     }
-    public override void Spawned()
-    {
-        base.Spawned();
-        if (Runner.IsSharedModeMasterClient)
-        {
-        }
-    }
+ 
     private void Awake()
     {
         randomGroups = container.GetComponentsInChildren<RandomGroup>();
