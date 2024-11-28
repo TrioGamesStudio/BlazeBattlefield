@@ -359,6 +359,7 @@ public class LoginManager : MonoBehaviour
                 SceneManager.LoadSceneAsync("MainLobby").completed += (operation) =>
                 {
                     loginCanvas.SetActive(false);
+                    FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
                 };
             }
             else {
@@ -406,6 +407,7 @@ public class LoginManager : MonoBehaviour
             SceneManager.LoadSceneAsync("MainLobby").completed += (operation) =>
             {
                 loginCanvas.SetActive(false);
+                FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
             };
         });       
     }
@@ -424,10 +426,12 @@ public class LoginManager : MonoBehaviour
         FirebaseAuth auth = FirebaseAuth.DefaultInstance;
         auth.SignOut();
 
-        Debug.Log("User signed out successfully.");
+        //Debug.Log("User signed out successfully.");
+        DataSaver.Instance.ResetData();
 
         loginCanvas.SetActive(true);
         loginOptionsPanel.SetActive(true);
+        FindObjectOfType<ShowPlayerInfo>().ResetRank();
         // Load the Login scene
         SceneManager.LoadSceneAsync("Login");
     }

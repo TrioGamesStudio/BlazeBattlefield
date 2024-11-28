@@ -30,8 +30,8 @@ public class ShowPlayerInfo : MonoBehaviour
     const string MAINLOBBY = "MainLobby";
     const string WORLD1 = "Quang_Scene";
 
-    private int currentRank;
-    private bool isSetup = false;
+    public int currentRank;
+    private bool isLeveUp = false;
     //ohters
     DataSaver _dataSaver;
     private void Awake()
@@ -55,6 +55,7 @@ public class ShowPlayerInfo : MonoBehaviour
         if (scene.name == "MainLobby")
         {
             //ebug.Log("MainLobby scene loaded. Restarting coroutine.");
+           
             StartCoroutine(ShowPlayerDataCo(0.5f));
         }
     }
@@ -159,11 +160,12 @@ public class ShowPlayerInfo : MonoBehaviour
         float currentXP = playerData.experience;
         int updateRank = playerData.rank;
         float nextThreshold = RankSystem.GetNextThreshold(updateRank);
-        if (updateRank != currentRank)
+        if (currentRank != updateRank)
         {
             Debug.Log("xxx LEVEL UP");
-            FindObjectOfType<LevelUpPanel>().ShowLevelUpPanel(currentRank, updateRank);
+            FindObjectOfType<LevelUpPanel>().ShowLevelUpPanel(updateRank - 1, updateRank);
             currentRank = updateRank;
+            isLeveUp = false;
             playerData.experience = 0;
             // save to firebase datatosave
             DataSaver.Instance.SaveData();
@@ -177,5 +179,15 @@ public class ShowPlayerInfo : MonoBehaviour
         {
             experienceSlider.value = currentXP/nextThreshold;
         }
+    }
+
+    public void ResetRank()
+    {
+        currentRank = 0;
+    }
+
+    public void SetLevelUp()
+    {
+        isLeveUp = true;
     }
 }

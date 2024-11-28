@@ -202,6 +202,7 @@ public class PlayerRoomController : NetworkBehaviour
         {
             playerData.rank++;
             Debug.Log($"Rank Up! New Rank: {RankSystem.GetRankName(playerData.rank)}");
+            //FindObjectOfType<ShowPlayerInfo>().SetLevelUp();
             nextThreshold = RankSystem.GetNextThreshold(playerData.rank);
         }
 
