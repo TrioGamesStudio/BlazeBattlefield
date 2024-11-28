@@ -37,7 +37,7 @@ public class RandomGroupManager : NetworkBehaviour
         StartSpawnEvent -= StartSpawn;
     }
 
-    [Button]
+    [EditorButton]
     private void StartSpawn()
     {
         if (NetworkPlayer.Local.Runner.IsSharedModeMasterClient == false)
