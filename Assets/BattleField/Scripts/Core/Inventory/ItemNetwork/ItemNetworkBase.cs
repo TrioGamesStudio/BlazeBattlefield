@@ -57,18 +57,6 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         {
             //Invoke(nameof(BoundItemSetup), .3f);
         }
-        BoundItemSetup();
-    }
-
-    public void BoundItemSetup()
-    {
-        if (boundItem == null)
-        {
-            Debug.LogError("Bound item is null in item", gameObject);
-            return;
-        }
-
-        boundItem.SetupFromStateAuthority();
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)

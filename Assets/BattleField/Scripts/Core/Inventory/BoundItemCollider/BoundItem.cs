@@ -14,14 +14,15 @@ public class BoundItem : NetworkBehaviour
 
     public void SetupFromStateAuthority()
     {
-        if(allowAddToCollider)
-        {
-            ColliderCreator.instance.Add(this);
-            if(HasStateAuthority)
-                ItemGroundPositioner.instance.SetItemNearGround(GetComponent<BoxCollider>());
-        }
-        
+        ColliderCreator.instance.Add(this);
     }
+
+    public override void Spawned()
+    {
+        base.Spawned();
+        Invoke(nameof(SetupFromStateAuthority), .5f);
+    }
+
 
     [EditorButton] private void AddToColliderCreator()
     {

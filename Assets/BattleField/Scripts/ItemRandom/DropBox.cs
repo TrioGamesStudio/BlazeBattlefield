@@ -42,12 +42,11 @@ public class DropBox : NetworkBehaviour
             {
                 CreateRandomItem();
             }
-            openBoxTransform.DOScale(Vector3.zero, .3f).SetEase(Ease.InOutBack).OnComplete(() =>
-            {
-                if(HasStateAuthority)
-                    Invoke(nameof(DestroyItemDelay), delayDestroyTime);
-            });
+
+            openBoxTransform.DOScale(Vector3.zero, .3f).SetEase(Ease.InOutBack);
         });
+        if (HasStateAuthority)
+            Invoke(nameof(DestroyItemDelay), 0.6f);
     }
 
     private void DestroyItemDelay()
