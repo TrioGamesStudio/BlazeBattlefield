@@ -21,11 +21,6 @@ public class NetworkPlayer_Support : NetworkBehaviour
         {
             item.Initialize();
         }
-
-        if (Runner.IsSharedModeMasterClient)
-        {
-            RandomGroupManager.RaiseStartSpawnEvent();
-        }
     }
 }
 public interface INetworkInitialize
