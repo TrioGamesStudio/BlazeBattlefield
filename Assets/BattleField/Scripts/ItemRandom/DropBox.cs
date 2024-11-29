@@ -38,9 +38,12 @@ public class DropBox : NetworkBehaviour
         SoundRequestManager.instance.PlayOneTime(openAudioClip, transform.position);
         openBoxTransform.DOShakePosition(.3f).OnComplete(() =>
         {
-            if (allowRandomItem && HasStateAuthority)
+            if (HasStateAuthority)
             {
-                CreateRandomItem();
+                if (allowRandomItem)
+                    CreateRandomItem();
+                else
+                    CreateItemByList();
             }
 
             openBoxTransform.DOScale(Vector3.zero, .3f).SetEase(Ease.InOutBack);
