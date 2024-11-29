@@ -68,8 +68,8 @@ public class BindingWeaponUI : MonoBehaviour
     protected virtual void Update()
     {
         if (weaponSlotHandler.IsEmpty) return;
-        float lerpvalue = (float)weaponSlotHandler.currentAmmo / (float)weaponSlotHandler.Config.maxStack;
-        currentGunAmmoText.color = Color.Lerp(Color.red, Color.white, lerpvalue * 1.5f);
+        //float lerpvalue = (float)weaponSlotHandler.currentAmmo / (float)weaponSlotHandler.Config.maxStack;
+        //currentGunAmmoText.color = Color.Lerp(Color.red, Color.white, lerpvalue * 1.5f);
     }
 
    
