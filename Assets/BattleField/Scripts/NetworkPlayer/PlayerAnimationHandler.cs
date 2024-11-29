@@ -6,23 +6,17 @@ public class PlayerAnimationHandler : MonoBehaviour
 {
     AudioSource audioSource;
     // Start is called before the first frame update
+    //private const string FOOD_STEP_SOUND_1 = "food_step_1";
+    [SerializeField] private string food_step_1;
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        audioSource.clip = SoundManager.soundAsset.GetSound(food_step_1);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void FootSound() 
     {
-        
+        audioSource.CustomPlaySound();
     }
-
-    public void FootSound() {
-        
-        audioSource.clip = SoundManager.Instance.footStepSound;
-        audioSource.Play();
-    }
-    
-    
     
 }

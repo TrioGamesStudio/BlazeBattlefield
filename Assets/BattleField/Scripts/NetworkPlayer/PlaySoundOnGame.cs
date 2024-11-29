@@ -1,8 +1,9 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlaySound : MonoBehaviour
+public class PlaySoundOnGame : MonoBehaviour
 {
     AudioSource audioSource;
     [SerializeField] string playSoundNam;
@@ -10,10 +11,7 @@ public class PlaySound : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-
-        audioSource.clip = SoundManager.Instance.scene1Sound;
         audioSource.Play();
     }
 
-    
 }
