@@ -162,6 +162,7 @@ public class HPHandler : NetworkBehaviour
             //}
 
             //deadCount ++;
+            PlayerMessageManager.instance.SendKillLog("some one","anybody");
             weaponHandler.killCount ++;
         }
     }
