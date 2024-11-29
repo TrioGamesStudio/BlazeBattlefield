@@ -121,6 +121,7 @@ public class CharacterMovementHandler : NetworkBehaviour
 
         moveDir.Normalize();
         networkCharacterController.Move(moveDir);
+        
 
         // animator
         Vector2 walkVector = new Vector2(networkCharacterController.Velocity.x,
