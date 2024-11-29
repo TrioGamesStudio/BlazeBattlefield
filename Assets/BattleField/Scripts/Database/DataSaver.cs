@@ -11,7 +11,9 @@ public class DataToSave {
     public int winSolo;
     public int winTeam;
     public int coins;
-    
+    public int experience = 0; // Tracks total XP
+    public int rank = 0;       // Tracks current rank
+
     public DataToSave() {
         
     }
@@ -100,6 +102,23 @@ public class DataSaver : MonoBehaviour
         else {
             Debug.Log("jsonData not found");
         }
+    }
+
+    public void ResetData()
+    {
+        // Reset all data fields to default values
+        dataToSave.userName = "";
+        dataToSave.currLevel = 1;
+        dataToSave.winSolo = 0;
+        dataToSave.winTeam = 0;
+        dataToSave.coins = 0;
+        dataToSave.experience = 0;
+        dataToSave.rank = 0;
+
+        // Optionally save the reset data to Firebase
+        //SaveData();
+
+        Debug.Log("Player data has been reset.");
     }
     #endregion SAVE LOAD FIREBASE
 
