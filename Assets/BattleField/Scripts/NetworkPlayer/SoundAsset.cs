@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="asd",menuName ="asd")]
+[CreateAssetMenu(fileName = "SoundAsset", menuName = "SoundAsset")]
 public class SoundAsset : ScriptableObject
 {
-
+    public static SoundAsset GetInstance => Resources.Load<SoundAsset>("SoundAsset");
 
     public List<_SoundAsset> _SoundAssets = new();
     private Dictionary<string, AudioClip> keyValuePairs;
