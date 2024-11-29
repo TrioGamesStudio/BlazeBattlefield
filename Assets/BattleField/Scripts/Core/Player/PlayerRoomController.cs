@@ -175,18 +175,37 @@ public class PlayerRoomController : NetworkBehaviour
     {
         ShowCursor();
         Debug.Log("===WIN ROIIIIII");
+        int xpGained = 0;
         if (matchmaking.currentMode == Matchmaking.Mode.Duo)
         {
             FindObjectOfType<WorldUI>().ShowHideWinUITeam();
             // set winteam variable
             DataSaver.Instance.dataToSave.winTeam += 1;
+            xpGained = 50; // XP for duo win
         }       
         else
         {
             FindObjectOfType<WorldUI>().ShowHideWinUI();
             // save achivement winSolo
             DataSaver.Instance.dataToSave.winSolo += 1;
+            xpGained = 50; // XP for duo win
         }
+
+        // Update XP and rank
+        var playerData = DataSaver.Instance.dataToSave;
+        playerData.experience += xpGained;
+
+        int currentRank = playerData.rank;
+        int nextThreshold = RankSystem.GetNextThreshold(currentRank);
+
+        while (playerData.experience >= nextThreshold)
+        {
+            playerData.rank++;
+            Debug.Log($"Rank Up! New Rank: {RankSystem.GetRankName(playerData.rank)}");
+            //FindObjectOfType<ShowPlayerInfo>().SetLevelUp();
+            nextThreshold = RankSystem.GetNextThreshold(playerData.rank);
+        }
+
         // save to firebase datatosave
         DataSaver.Instance.SaveData();
         GetComponent<NetworkPlayer>().localUI.SetActive(false);

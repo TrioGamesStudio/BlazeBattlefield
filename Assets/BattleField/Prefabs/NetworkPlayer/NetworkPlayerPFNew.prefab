@@ -32053,6 +32053,7 @@ GameObject:
   - component: {fileID: 2577614603369078220}
   - component: {fileID: 5717655937548043561}
   - component: {fileID: 4356114935845866614}
+  - component: {fileID: 8989959332078115293}
   m_Layer: 0
   m_Name: NetworkPlayerPFNew
   m_TagString: Player
@@ -32511,6 +32512,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8989959332078115293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6593664972719329374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b0bb0bc7410ff549a1865be88be6c99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localCam: {fileID: 9085586436348920549}
+  anim: {fileID: 5420681915650926364}
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0

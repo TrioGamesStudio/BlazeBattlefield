@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 
 public class LoginManager : MonoBehaviour
 {
+    public static LoginManager Instance;
     #region variables
     [Header("Login")]
     public TMP_InputField loginEmail;
@@ -35,18 +36,33 @@ public class LoginManager : MonoBehaviour
     public GameObject loginUi, signupUi, SuccessUi, loginOptionsPanel;
     public Button emailLoginButton;
     public Button guestLoginButton;
+    public GameObject loginCanvas;
     [SerializeField] TextMeshProUGUI id;
     #endregion
 
-    [SerializeField] GameObject PlayerInfoUI;
+    //[SerializeField] GameObject PlayerInfoUI;
 
     const string MAILKEY = "mail";
     const string PASSKEY = "pass";
+
+    private void Awake()
+    {
+        if (Instance != null && this.gameObject != null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     private void Start() {
+        DontDestroyOnLoad(this);
         loginButton.onClick.AddListener(Login);
         signUpButton.onClick.AddListener(SignUp);
 
-        PlayerInfoUI.SetActive(false);
+        //PlayerInfoUI.SetActive(false);
 
         // show mail and pass if PlayerPrefs having key "mail" "pass"
         if(PlayerPrefs.HasKey(MAILKEY) && PlayerPrefs.HasKey(PASSKEY)) {
@@ -340,7 +356,11 @@ public class LoginManager : MonoBehaviour
                 //? gan userId cho saveLoadHander Firebase | FireStore
                 DataSaver.Instance.userId = result.User.UserId;
                 /* DataSaveLoadHander.Instance.userId = result.User.UserId; */
-                SceneManager.LoadSceneAsync("MainLobby");
+                SceneManager.LoadSceneAsync("MainLobby").completed += (operation) =>
+                {
+                    loginCanvas.SetActive(false);
+                    FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
+                };
             }
             else {
                 ShowLogMsg("Please verify email!!");
@@ -354,6 +374,7 @@ public class LoginManager : MonoBehaviour
 
     public void LoginQuest()
     {
+        Debug.Log("Login quest");
         loadingScreen.SetActive(true);
         FirebaseAuth auth = FirebaseAuth.DefaultInstance;
         auth.SignInAnonymouslyAsync().ContinueWithOnMainThread(task =>
@@ -382,8 +403,37 @@ public class LoginManager : MonoBehaviour
 
             //? gan userId cho saveLoadHander Firebase | FireStore
             DataSaver.Instance.userId = result.User.UserId;
-            SceneManager.LoadSceneAsync("MainLobby");
-        });
+            DataSaver.Instance.dataToSave.userName = "Quest";
+            SceneManager.LoadSceneAsync("MainLobby").completed += (operation) =>
+            {
+                loginCanvas.SetActive(false);
+                FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
+            };
+        });       
+    }
+
+    public void LoginTest()
+    {
+        Debug.Log("Login quest");
+
+    }
+    public void SignOut()
+    {
+        // Show loading screen while signing out
+        //loadingScreen.SetActive(true);
+
+        // Firebase sign-out
+        FirebaseAuth auth = FirebaseAuth.DefaultInstance;
+        auth.SignOut();
+
+        //Debug.Log("User signed out successfully.");
+        DataSaver.Instance.ResetData();
+
+        loginCanvas.SetActive(true);
+        loginOptionsPanel.SetActive(true);
+        FindObjectOfType<ShowPlayerInfo>().ResetRank();
+        // Load the Login scene
+        SceneManager.LoadSceneAsync("Login");
     }
     #endregion
 
@@ -392,15 +442,16 @@ public class LoginManager : MonoBehaviour
     {
         logTxt.text = msg;
         //logTxt.GetComponent<Animation>().Play("FadeOutAnimation");
-        StartCoroutine(TextFadeOut(1f));
+        StartCoroutine(TextFadeOut(0.1f));
     }
     IEnumerator TextFadeOut(float time) {
         yield return new WaitForSeconds(time);
         logTxt.text = "";
 
-        SuccessUi.SetActive(false);
-
-        PlayerInfoUI.SetActive(true);
+        if (SuccessUi != null)
+            SuccessUi.SetActive(false);
+        //if (PlayerInfoUI != null)
+        //    PlayerInfoUI.SetActive(true);
     }
 
     void ShowLogMsg_SingUP(string msg)
