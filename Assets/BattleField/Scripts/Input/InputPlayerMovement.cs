@@ -11,6 +11,7 @@ public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovemen
     public static Action SprintAction;
 
 
+
     //private void OnEnable()
     public override void SetCallbacks()
     {
@@ -56,6 +57,7 @@ public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovemen
     {
         SprintAction?.Invoke();
     }
+
 }
 
 public abstract class InputReader : ScriptableObject

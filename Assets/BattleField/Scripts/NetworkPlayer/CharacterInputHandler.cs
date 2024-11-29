@@ -22,6 +22,7 @@ public class CharacterInputHandler : MonoBehaviour
     [SerializeField] bool isThirdCam = false;
     public bool IsThirdCam{get => isThirdCam;}
 
+    public bool IsZoomed = false;
     
     private void Awake() {
         weaponHandler = GetComponent<WeaponHandler>();
@@ -34,6 +35,10 @@ public class CharacterInputHandler : MonoBehaviour
 
         playerInputActions.Combat.Attack.started += _ => weaponHandler.SetFireInput(true);
         playerInputActions.Combat.Attack.canceled += _ => weaponHandler.SetFireInput(false);
+
+        playerInputActions.Combat.Scope.started += _ => weaponHandler.SetZoomInput(true);
+        playerInputActions.Combat.Scope.canceled += _ => weaponHandler.SetZoomInput(false);
+
 
         /* playerInputActions.PlayerMovement.SwitchCam.started += _ => isSwitchCam = true;
         playerInputActions.PlayerMovement.SwitchCam.canceled += _ => isSwitchCam = false; */
@@ -70,6 +75,9 @@ public class CharacterInputHandler : MonoBehaviour
         playerInputActions.PlayerMovement.Moving.Enable();
         playerInputActions.PlayerMovement.Jumping.Enable();
         playerInputActions.Combat.Attack.Enable();
+        playerInputActions.Combat.Scope.Enable();
+
+
 
         playerInputActions.PlayerMovement.Look.Enable();
 
@@ -81,6 +89,8 @@ public class CharacterInputHandler : MonoBehaviour
         playerInputActions.PlayerMovement.Moving.Disable();
         playerInputActions.PlayerMovement.Jumping.Disable();
         playerInputActions.Combat.Attack.Disable();
+        playerInputActions.Combat.Scope.Disable();
+
 
         playerInputActions.PlayerMovement.Look.Disable();
 

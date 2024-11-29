@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using Fusion;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -69,6 +71,10 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     //[SerializeField] float currentReturnSpeed = 2;
     //[SerializeField] float currentSnappiness = 6;
     [SerializeField] private RecoilGunSettings recoil = new();
+    public event EventHandler OnRifeUp;
+    public event EventHandler OnRifeDown;
+    bool isZoom = false;
+    bool isScope = false;
     private void Awake()
     {
         characterInputHandler = GetComponent<CharacterInputHandler>();
@@ -96,12 +102,18 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         // nhan mouse 0 fire bullet
         //if(Input.GetKeyDown(KeyCode.Mouse0)) isFired = true;
         ////isFired = characterInputHandler.IsFired;
+        
     }
 
     [SerializeField] private bool isSingleMode = false;
+    [SerializeField] bool isScopeMode = false;
     public void SetFireInput(bool isFire)
     {
         isFired = isFire;
+    }
+
+    public void SetZoomInput(bool isZoom) {
+        this.isZoom = isZoom;
     }
 
     public override void FixedUpdateNetwork()
@@ -117,9 +129,11 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             if (WeaponManager.instance.IsReadyToShoot() &&
                 !hPHandler.Networked_IsDead && hPHandler.Networked_HP > 0)
             {
+                if(isScopeMode) ZoomScope();
                 Fire();
-
             }
+
+
         }
 
     }
@@ -161,6 +175,18 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         yield return new WaitForSeconds(coolTime);
 
         isFiredPressed = false;
+    }
+
+    void ZoomScope() {
+        if(isZoom) {
+            isZoom = !isZoom;
+            isScope = !isScope;
+            if(isScope) {
+                OnRifeUp?.Invoke(this, EventArgs.Empty);
+            } else {
+                OnRifeDown?.Invoke(this, EventArgs.Empty);
+            }
+        }
     }
 
     public override void Render()
@@ -341,6 +367,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         coolTimeWeapon = config.cooldownTime;
         isSingleMode = config.isSingleMode;
         recoil = config.recoil;
+        isScopeMode = config.isContainScope;
     }
 
     public void Initialize()
