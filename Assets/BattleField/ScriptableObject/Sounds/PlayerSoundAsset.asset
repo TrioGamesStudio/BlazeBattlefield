@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: PlayerSoundAsset
   m_EditorClassIdentifier: 
   _SoundAssets:
-  - soundName: reload
-    AudioClip: {fileID: 8300000, guid: 90b9f7fb9bd03b341ac73b53232ac97d, type: 3}
-  - soundName: pickup
-    AudioClip: {fileID: 8300000, guid: 14b999d337d35b34e92b14fee8823d8b, type: 3}
-  - soundName: equip
-    AudioClip: {fileID: 8300000, guid: 88837867717b25946b0196121cd6b357, type: 3}
-  - soundName: swap
-    AudioClip: {fileID: 8300000, guid: b28487cf6be07bb4a92bdf750664a356, type: 3}
+  - soundName: hurt_0
+    AudioClip: {fileID: 8300000, guid: 883133fffbfc825499eb9c4b2ed56a0d, type: 3}
+  - soundName: hurt_1
+    AudioClip: {fileID: 8300000, guid: 9e44953b7c3080d478b9e242a67ab9c0, type: 3}
+  - soundName: hurt_2
+    AudioClip: {fileID: 8300000, guid: 365a9af404d6b914294286970243326f, type: 3}
+  - soundName: hurt_3
+    AudioClip: {fileID: 8300000, guid: afce792d0e1e3a841ab2f4ae603db0a1, type: 3}
+  prefix: hurt_
+  addClip: []
