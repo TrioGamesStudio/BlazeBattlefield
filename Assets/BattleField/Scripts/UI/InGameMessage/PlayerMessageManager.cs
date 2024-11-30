@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using static Fusion.Sockets.NetBitBuffer;
 
 public class PlayerMessageManager : NetworkBehaviour
 {
@@ -40,4 +41,3 @@ public class PlayerMessageManager : NetworkBehaviour
     }
 
 }
-
