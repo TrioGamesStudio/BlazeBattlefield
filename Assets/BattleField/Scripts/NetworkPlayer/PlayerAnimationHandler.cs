@@ -11,7 +11,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = SoundManager.soundAsset.GetSound(food_step_1);
+        audioSource.clip = SoundManager.SoundAsset.GetSound(food_step_1);
     }
 
     public void FootSound() 

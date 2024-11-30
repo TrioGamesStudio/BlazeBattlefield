@@ -6,20 +6,24 @@ using UnityEngine;
 public class SoundAsset : ScriptableObject
 {
     public static SoundAsset GetInstance => Resources.Load<SoundAsset>("SoundAsset");
+    public List<SmallSoundAsset> _SoundAssets = new();
 
-    public List<_SoundAsset> _SoundAssets = new();
-    private Dictionary<string, AudioClip> keyValuePairs;
+    private Dictionary<string, AudioClip> keyValuePairs = new();
 
     private void Convert()
     {
-        foreach(var item in _SoundAssets)
+        foreach (var soundSmallAsset in _SoundAssets)
         {
-            if (keyValuePairs.ContainsKey(item.soundName))
+            foreach (var item in soundSmallAsset._SoundAssets)
             {
-                return;
+                if (keyValuePairs.ContainsKey(item.soundName))
+                {
+                    return;
+                }
+                keyValuePairs.Add(item.soundName, item.AudioClip);
             }
-            keyValuePairs.Add(item.soundName, item.AudioClip);
         }
+        
     }
 
     public AudioClip GetSound(string audioName)
@@ -28,7 +32,7 @@ public class SoundAsset : ScriptableObject
         {
             Debug.Log("This audio name is null or empty");
         }
-        if(keyValuePairs == null)
+        if(keyValuePairs.Count == 0)
         {
             Convert();
         }
