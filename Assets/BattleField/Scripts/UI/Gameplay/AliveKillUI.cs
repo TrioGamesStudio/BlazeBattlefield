@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
 public class AliveKillUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI killText;
@@ -16,8 +15,9 @@ public class AliveKillUI : MonoBehaviour
     {
         UpdateKillCount += UpdateKillText;
         UpdateAliveCount += UpdateAliveText;
+        UpdateKillText(0);
+        UpdateAliveText(0);
     }
-
     private void OnDestroy()
     {
         UpdateKillCount -= UpdateKillText;
@@ -26,12 +26,13 @@ public class AliveKillUI : MonoBehaviour
 
     private void UpdateKillText(int killCount)
     {
-        killText.text = $"Hạ gục: {killCount}";
-        
+        killText.text = $"Kill: {killCount}";
+        Debug.Log("Kill:" + killCount);
     }
 
     private void UpdateAliveText(int aliveCount)
     {
-        aliveText.text = $"Còn sống: {aliveCount}";
+        aliveText.text = $"Alive: {aliveCount}";
+        Debug.Log("Alive:" + aliveCount);
     }
 }

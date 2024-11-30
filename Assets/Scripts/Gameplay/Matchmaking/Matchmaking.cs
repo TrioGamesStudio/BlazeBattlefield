@@ -506,6 +506,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void StartBattle()
     {
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+
         networkRunner.SessionInfo.IsOpen = false;
         isDone = true;
         FindObjectOfType<UIController>().StartCountdown();
