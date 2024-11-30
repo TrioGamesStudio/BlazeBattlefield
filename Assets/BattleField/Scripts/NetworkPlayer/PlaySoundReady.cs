@@ -9,12 +9,13 @@ public class PlaySoundReady : MonoBehaviour
     bool isPlayReady = false;
     void Start()
     {
+        isPlayReady = false;
         audioSource = GetComponent<AudioSource>();
         audioSource.clip = SoundManager.SoundAsset.GetSound(GET_READY_);
     }
 
     private void Update() {
-        if(Matchmaking.Instance.IsDone && !isPlayReady) {
+        if((Matchmaking.Instance.IsDone || MatchmakingTeam.Instance.IsDone) && !isPlayReady) {
             isPlayReady = true;
             audioSource.CustomPlaySound();
         }
