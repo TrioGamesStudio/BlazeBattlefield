@@ -489,6 +489,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 if (players.Count == MAX_PLAYER)
                 {
                     Debug.Log("=== Start battle.......");
+                    
                     StartBattle();
                 }
                 matchSolo[player] = players[player].TeamID.ToString();
@@ -511,6 +512,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         FindObjectOfType<UIController>().StartCountdown();
         StartCoroutine(ReleasePlayer());
         StartCoroutine(InitializeTeams());
+
     }
 
     private IEnumerator ReleasePlayer()

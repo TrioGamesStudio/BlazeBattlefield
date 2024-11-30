@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 049a3bfc458d8fd46952d624d50c2ffb, type: 3}
+  m_Name: PlayerSoundAsset
+  m_EditorClassIdentifier: 
+  _SoundAssets:
+  - soundName: hurt_0
+    AudioClip: {fileID: 8300000, guid: 883133fffbfc825499eb9c4b2ed56a0d, type: 3}
+  - soundName: hurt_1
+    AudioClip: {fileID: 8300000, guid: 9e44953b7c3080d478b9e242a67ab9c0, type: 3}
+  - soundName: hurt_2
+    AudioClip: {fileID: 8300000, guid: 365a9af404d6b914294286970243326f, type: 3}
+  - soundName: hurt_3
+    AudioClip: {fileID: 8300000, guid: afce792d0e1e3a841ab2f4ae603db0a1, type: 3}
+  prefix: hurt_
+  addClip: []

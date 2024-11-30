@@ -3,6 +3,8 @@ using Fusion;
 using UnityEngine.SceneManagement;
 using System;
 using System.Collections;
+using ExitGames.Client.Photon.StructWrapping;
+using Unity.VisualScripting;
 
 public class CharacterMovementHandler : NetworkBehaviour
 {
@@ -40,7 +42,11 @@ public class CharacterMovementHandler : NetworkBehaviour
     const int maxSpeedWalk = 5;
     const int maxSpeedSprint = 6;
 
+    [SerializeField] AudioSource audioSource;
+    bool isPlaySound = false;
+
     private void Awake() {
+        //audioSource = GetComponent<AudioSource>();
         characterInputHandler = GetComponent<CharacterInputHandler>();
         networkCharacterController = GetComponent<NetworkCharacterController>();
         localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
@@ -50,6 +56,10 @@ public class CharacterMovementHandler : NetworkBehaviour
         hPHandler = GetComponent<HPHandler>();
 
         speedAnimRate = 1;
+    }
+
+    private void Start() {
+        audioSource.clip = SoundManager.SoundAsset.GetSound("walk_slow_0");
     }
 
 
@@ -121,6 +131,7 @@ public class CharacterMovementHandler : NetworkBehaviour
 
         moveDir.Normalize();
         networkCharacterController.Move(moveDir);
+        
 
         // animator
         Vector2 walkVector = new Vector2(networkCharacterController.Velocity.x,
@@ -130,6 +141,16 @@ public class CharacterMovementHandler : NetworkBehaviour
 
         currentSpeedAnim = Mathf.Lerp(currentSpeedAnim, Mathf.Clamp01(walkVector.magnitude), Runner.DeltaTime * 10f);
         anim.SetFloat("walkSpeed", currentSpeedAnim * speedAnimRate);
+
+        // sound
+        if(moveDir.magnitude > 0.1 && !isPlaySound) {
+            isPlaySound = true;
+            audioSource.Play();
+        }
+        else if(moveDir.magnitude < 0.1) {
+            audioSource.Stop();
+            isPlaySound = false;
+        } 
     }
 
     void Jump() {
