@@ -3,15 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlaySoundOnGame : MonoBehaviour
+public class PlaySoundBackGround : MonoBehaviour
 {
     AudioSource audioSource;
-    [SerializeField] string playSoundNam;
+    [SerializeField] string BACKGROUND_MUSIC_INDEX = "background_music_";
+
     // Start is called before the first frame update
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        audioSource.Play();
+        audioSource.clip = SoundManager.SoundAsset.GetSound(BACKGROUND_MUSIC_INDEX);
+        audioSource.CustomPlaySound();
     }
 
 }

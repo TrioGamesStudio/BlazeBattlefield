@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class PlayerAnimationHandler : MonoBehaviour
 {
-    AudioSource audioSource;
-    // Start is called before the first frame update
-    //private const string FOOD_STEP_SOUND_1 = "food_step_1";
-    [SerializeField] private string food_step_1;
+    [SerializeField] AudioSource audioSource;
+
+    [SerializeField] private string WALK_SLOW_ = "walk_slow_0";
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
-        audioSource.clip = SoundManager.SoundAsset.GetSound(food_step_1);
+        audioSource.clip = SoundManager.SoundAsset.GetSound(WALK_SLOW_);
     }
 
     public void FootSound() 
