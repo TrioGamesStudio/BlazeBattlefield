@@ -39,6 +39,7 @@ public class MessageDisplayUI : MonoBehaviour
         var messageUI = CreateInstance();
         messageUI.gameObject.SetActive(true);
         messageUI.name = "Local Message" + uiElements.Count;
+        messageUI.text = message;
         messageUI.DestroyCallback += () =>
         {
             uiElements.Remove(messageUI);
