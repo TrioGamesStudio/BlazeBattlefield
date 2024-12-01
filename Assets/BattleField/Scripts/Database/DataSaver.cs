@@ -81,6 +81,12 @@ public class DataSaver : MonoBehaviour
     }
 
     public void LoadData() {
+        #if UNITY_WEBGL || UNITY_IOS
+            Debug.Log("===This is webgl");
+            return;
+        #endif
+
+        Debug.Log("===This is not webgl");
         StartCoroutine(LoadDataCO());
 
         if(SceneManager.GetActiveScene().name == "Login") return;
@@ -120,6 +126,6 @@ public class DataSaver : MonoBehaviour
 
         Debug.Log("Player data has been reset.");
     }
-    #endregion SAVE LOAD FIREBASE
+#endregion SAVE LOAD FIREBASE
 
 }

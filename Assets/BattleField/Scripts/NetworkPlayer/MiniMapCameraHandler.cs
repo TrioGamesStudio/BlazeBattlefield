@@ -36,7 +36,7 @@ public class MiniMapCameraHandler : MonoBehaviour
         string playerTeamID = playerRoomController.TeamID.ToString();
 
         var playerRoomControllerArr = FindObjectsOfType<PlayerRoomController>();
-        Debug.Log($"_____check playerControllerArr = {playerRoomControllerArr.Length}");
+        //Debug.Log($"_____check playerControllerArr = {playerRoomControllerArr.Length}");
 
         foreach (var item in playerRoomControllerArr) {
             if(item == playerRoomController) continue;
