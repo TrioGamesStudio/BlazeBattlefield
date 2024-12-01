@@ -51,7 +51,6 @@ public class HPHandler : NetworkBehaviour
         hitboxRoot = GetComponent<HitboxRoot>();
         networkInGameMessages = GetComponent<NetworkInGameMessages>();
         networkPlayer = GetComponent<NetworkPlayer>();
-
     }
     void Start() {
         if(!isSkipSettingStartValues) {
@@ -174,14 +173,13 @@ public class HPHandler : NetworkBehaviour
     {
 
     }
-
     void CheckPlayerDeath(byte networkHP) {
         if(networkHP <= 0 && !isPublicDeathMessageSent) {
             isPublicDeathMessageSent = true;
             if(Object.HasStateAuthority) {
                 networkInGameMessages.SendInGameRPCMessage(Networked_Killer.ToString(),
                     $" killed <b>{networkPlayer.nickName_Network.ToString()}<b>");
-                PlayerMessageManager.instance.SendKillLog(Networked_Killer.ToString(), networkPlayer.nickName_Network.ToString());
+                GetComponent<PlayerMessageManager>().SendKillLogRPC(Networked_Killer.ToString(), networkPlayer.nickName_Network.ToString());
             }
         }
     }

@@ -72,7 +72,13 @@ public class DropBox : NetworkBehaviour
     {
         for (int i = 0; i < randomItemCount; i++)
         {
-            Runner.Spawn(ItemDatabase.instance.GetRandomItemPrefab(), GetRandomPositionInBoxCollider(boxCollider));
+            var prefab = ItemDatabase.instance.GetRandomItemPrefab();
+            if (prefab.TryGetComponent(out GunItem gunPrefab))
+            {
+                var ammoPrefab = ItemDatabase.instance.GetItemPrefab(ItemType.Ammo, gunPrefab.config.ammoUsingType.SubItemType);
+                Runner.Spawn(ammoPrefab, GetRandomPositionInBoxCollider(boxCollider));
+            }
+            Runner.Spawn(prefab, GetRandomPositionInBoxCollider(boxCollider));
         }
     }
 

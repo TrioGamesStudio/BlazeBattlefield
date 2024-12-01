@@ -1,5 +1,4 @@
 ﻿using Fusion;
-using NaughtyAttributes;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -13,43 +12,49 @@ public enum MessageLogType
 }
 public class PlayerMessageManager : NetworkBehaviour
 {
-    public static PlayerMessageManager instance;
     [SerializeField] MessageDisplayUI localMessageDisplayUI;
-    [SerializeField] MessageDisplayUI globalMessageDisplayUI;
     [SerializeField] IconMessageSO IconMessageSO;
     [SerializeField] private bool isShowEnterExitLog = true;
-    //public void MessageLogType(string fullText, MessageLogType type, bool isLocal)
-    //{
-    //    localMessageDisplayUI.CreateFullMessage(fullText, IconMessageSO.GetIcon(type));
 
-    //}
-    public void FallOffLog(string playerName)
+
+    public void Fall(string playerName)
     {
+        FallOffLogRPC(playerName);
+    }
+
+    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
+    public void FallOffLogRPC(string playerName)
+    {
+        Check();
         localMessageDisplayUI.CreateFullMessage(playerName, IconMessageSO.GetIcon(MessageLogType.FallOff));
     }
 
-    public string fullTextTest;
-    public MessageLogType type;
-    [EditorButton]
-    public void SendLog()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void SendKillLogRPC(string v1, string v2)
     {
-        //MessageLogType(fullTextTest, type, true);
-    }
-
-    public void SendKillLog(string v1, string v2)
-    {
+        Check();
         localMessageDisplayUI.CreateLogMessage(v1, v2, IconMessageSO.GetIcon(MessageLogType.KillLog));
     }
-
-    public void ExitLog(string v)
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void ExitLogRPC(string v)
     {
+        Check();
         if (isShowEnterExitLog == false) return;
         localMessageDisplayUI.CreateFullMessage(v, IconMessageSO.GetIcon(MessageLogType.LeaveLog));
     }
-
-    public void EnterLog(string v)
+     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
+    public void EnterLogRPC(string v)
     {
+        Check();
         if (isShowEnterExitLog == false) return;
         localMessageDisplayUI.CreateFullMessage(v, IconMessageSO.GetIcon(MessageLogType.JoinLog));
+    }
+    
+    private void Check()
+    {
+        if(localMessageDisplayUI == null)
+        {
+            localMessageDisplayUI = NetworkPlayer.Local.LocalCameraHandler.GetComponentInChildren<MessageDisplayUI>();
+        } 
     }
 }

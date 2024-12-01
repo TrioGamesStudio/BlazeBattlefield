@@ -69,6 +69,7 @@ public class CharacterInputHandler : MonoBehaviour
     private void ChangeLookVector(Vector2 lookVector)
     {
         //Debug.Log("Look vector");
+        if (InventoryUI.instance.IsOpen) return;
         aimDir = lookVector;
     }
     private void OnEnable() {

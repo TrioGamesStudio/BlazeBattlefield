@@ -25,7 +25,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
     [SerializeField] private LocalCameraHandler localCameraHandler;
     public LocalCameraHandler LocalCameraHandler => localCameraHandler;
     [SerializableType] MiniMapCameraHandler miniMapCameraHandler;
-
     // UI chua crossHair, red image get damage
     public GameObject localUI; // game object = PlayerUICanvas (canvas cua ca player)
 
@@ -253,7 +252,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         yield return new WaitForSeconds(0.5f);
         if(!isPublicJoinMessageSent) {
             networkInGameMessages.SendInGameRPCMessage(nickName_Network.ToString(), " -> Joined Room");
-            PlayerMessageManager.instance.EnterLog(nickName_Network.ToString());
+            GetComponent<PlayerMessageManager>().EnterLogRPC(nickName_Network.ToString());
             isPublicJoinMessageSent = true;
         }
     }
@@ -263,7 +262,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
         // Who create room will send message playerLeft
         if(LocalDict.TryGetValue(player.PlayerId, out var value)) {
             networkInGameMessages.SendInGameRPCMessage(value.ToString(), " -> Left room");
-            PlayerMessageManager.instance.ExitLog(nickName_Network.ToString());
+            GetComponent<PlayerMessageManager>().ExitLogRPC(nickName_Network.ToString());
         }
 
         if(player == Object.StateAuthority) {
