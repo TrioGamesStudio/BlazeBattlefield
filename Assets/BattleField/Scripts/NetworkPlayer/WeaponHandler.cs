@@ -47,8 +47,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     [SerializeField] byte weaponDamageCurr = 1;
     Vector3 spawnPointRaycastCam = Vector3.zero;
 
-    [Networked]
-    public int killCount { get; set; }
+    [Networked] public int killCount { get; set; }
 
     bool isFired = false;
     bool isFiredPressed = false;
@@ -102,7 +101,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         // nhan mouse 0 fire bullet
         //if(Input.GetKeyDown(KeyCode.Mouse0)) isFired = true;
         ////isFired = characterInputHandler.IsFired;
-        
+
     }
 
     [SerializeField] private bool isSingleMode = false;
@@ -112,7 +111,8 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         isFired = isFire;
     }
 
-    public void SetZoomInput(bool isZoom) {
+    public void SetZoomInput(bool isZoom)
+    {
         this.isZoom = isZoom;
     }
 
@@ -129,30 +129,49 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             if (WeaponManager.instance.IsReadyToShoot() &&
                 !hPHandler.Networked_IsDead && hPHandler.Networked_HP > 0)
             {
-                if(isScopeMode) ZoomScope();
+                if (isScopeMode) ZoomScope();
                 Fire();
             }
-
-
         }
 
     }
-
+    private bool isCallReloadEmpty = false;
+    private bool previousInput;
     void Fire()
     {
+        if (previousInput != isFired)
+        {
+            isCallReloadEmpty = false;
+        }
         if (!isFiredPressed && isFired)
         {
-            if(isSingleMode)
+            
+            if (WeaponManager.instance.HasAmmo())
             {
-                isFired = !isFired;
+                if (isSingleMode)
+                {
+                    isFired = !isFired;
+                }
+
+                isFiredPressed = true;
+                WeaponManager.instance.Shoot();
+                StartCoroutine(FireCO(coolTimeWeapon));
             }
+            else
+            {
+                
 
-            isFiredPressed = true;
-            WeaponManager.instance.Shoot();
-            StartCoroutine(FireCO(coolTimeWeapon));
+                if (isCallReloadEmpty == false)
+                {
+                    isCallReloadEmpty = true;
+                    WeaponManager.instance.PlayReloadEmptySound();
+                    previousInput = isFired;
+                }
+            }
         }
-
+        
     }
+
 
     IEnumerator FireCO(float coolTime)
     {
@@ -175,15 +194,21 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         yield return new WaitForSeconds(coolTime);
 
         isFiredPressed = false;
+        isCallReloadEmpty = false;
     }
 
-    void ZoomScope() {
-        if(isZoom) {
+    void ZoomScope()
+    {
+        if (isZoom)
+        {
             isZoom = !isZoom;
             isScope = !isScope;
-            if(isScope) {
+            if (isScope)
+            {
                 OnRifeUp?.Invoke(this, EventArgs.Empty);
-            } else {
+            }
+            else
+            {
                 OnRifeDown?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -374,5 +399,14 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     {
         if (SceneManager.GetActiveScene().name == "MainLobby") return;
         WeaponManager.instance.weaponHandler = this;
+    }
+
+    public void RequestUpdateKillCount()
+    {
+        killCount += 1;
+        if (HasStateAuthority)
+        {
+            AliveKillUI.UpdateKillCount?.Invoke(killCount);
+        }
     }
 }

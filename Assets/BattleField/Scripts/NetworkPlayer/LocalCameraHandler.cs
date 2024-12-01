@@ -10,6 +10,7 @@ public class LocalCameraHandler : NetworkBehaviour
     [SerializeField] Transform spawnedPointGun_OnHand; // nah dan cua sung trong tay player
 
     //Rotation
+    [SerializeField] private int angleLimit = 70;
     float _cameraRotationX = 0f;
     float _cameraRotationY = 0f;
     Vector2 viewInput;
@@ -96,7 +97,7 @@ public class LocalCameraHandler : NetworkBehaviour
                 }
                 cinemachineVirtualCamera.transform.position = cameraAnchorPoint.position; // localCam di theo | ko phai nam ben trong
                 _cameraRotationX += viewInput.y * Time.deltaTime * networkCharacterController.viewRotationSpeed;
-                _cameraRotationX = Mathf.Clamp(_cameraRotationX, -30, 30);
+                _cameraRotationX = Mathf.Clamp(_cameraRotationX, -angleLimit, angleLimit);
                 _cameraRotationY += viewInput.x * Time.deltaTime * networkCharacterController.rotationSpeed;
 
                 cinemachineVirtualCamera.transform.rotation = Quaternion.Euler(_cameraRotationX, _cameraRotationY, 0);
@@ -117,7 +118,7 @@ public class LocalCameraHandler : NetworkBehaviour
         localCamera.transform.position = cameraAnchorPoint.position; // localCam di theo | ko phai nam ben trong
 
         _cameraRotationX += viewInput.y * Time.deltaTime * networkCharacterController.viewRotationSpeed;
-        _cameraRotationX = Mathf.Clamp(_cameraRotationX, -30, 30);
+        _cameraRotationX = Mathf.Clamp(_cameraRotationX, -angleLimit, angleLimit);
         _cameraRotationY += viewInput.x * Time.deltaTime * networkCharacterController.rotationSpeed;
 
         //localCamera.transform.rotation = Quaternion.Euler(_cameraRotationX, _cameraRotationY, 0);

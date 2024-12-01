@@ -65,15 +65,4 @@ public class BindingWeaponUI : MonoBehaviour
         Debug.Log("Set text current ammo: " + currentAmmo);
         currentGunAmmoText.text = currentAmmo.ToString();
     }
-    protected virtual void Update()
-    {
-        if (weaponSlotHandler.IsEmpty) return;
-        float lerpvalue = (float)weaponSlotHandler.currentAmmo / (float)weaponSlotHandler.Config.maxStack;
-        currentGunAmmoText.color = Color.Lerp(Color.red, Color.white, lerpvalue * 1.5f);
-    }
-
-   
-
-  
-
 }

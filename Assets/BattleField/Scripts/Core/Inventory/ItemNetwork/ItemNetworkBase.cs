@@ -45,10 +45,11 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     public ItemRarity ItemRarity;
     [MinValue(0), MaxValue(100)] public byte ItemWeight;
 
-
+    [SerializeField] private AudioClip collectSound;
     private void Awake()
     {
         boundItem = GetComponent<BoundItem>();
+        collectSound = SoundManager.SoundAsset.GetSound("pickup_0");
     }
     public override void Spawned()
     {
@@ -88,8 +89,9 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         InventoryItem inventoryItem = new();
         inventoryItem.Create(config, quantity);
         StorageManager.instance.Add(config.ItemType, config.SubItemType, inventoryItem);
+        NetworkPlayer.Local.GetComponent<AudioSource>().CustomPlaySound(collectSound);
     }
-
+    
     public void DestroyItem()
     {
         DestroyRPC();
