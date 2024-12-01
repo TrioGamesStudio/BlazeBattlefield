@@ -30,27 +30,41 @@ public class MessageDisplayUI : MonoBehaviour
     [Button]
     private void Test()
     {
-        CreateMessage(index.ToString());
         index++;
     }
 
-    public void CreateMessage(string message)
+    public void CreateFullMessage(string message,Sprite icon)
     {
-        var messageUI = CreateInstance();
-        messageUI.gameObject.SetActive(true);
-        messageUI.name = "Local Message" + uiElements.Count;
-        messageUI.DestroyCallback += () =>
+        var localMessageUI = CreateInstance();
+
+        localMessageUI.FullMessage(message, icon);
+
+        ModifyMessage(localMessageUI); 
+    }
+
+    public void CreateLogMessage(string invokerName,string listenerName,Sprite icon)
+    {
+        var localMessageUI = CreateInstance();
+
+        localMessageUI.PassMessageData(invokerName, listenerName, icon);
+
+        ModifyMessage(localMessageUI);
+    }
+
+    private void ModifyMessage(LocalMessageUI localMessageUI)
+    {
+        localMessageUI.gameObject.SetActive(true);
+        localMessageUI.name = "Local Message" + uiElements.Count;
+        localMessageUI.DestroyCallback += () =>
         {
-            uiElements.Remove(messageUI);
-            Destroy(messageUI.gameObject);
+            uiElements.Remove(localMessageUI);
+            Destroy(localMessageUI.gameObject);
         };
 
         RemoveOldestMessage();
 
         SortingMessagesPosition();
-
     }
-
   
 
     private LocalMessageUI CreateInstance()

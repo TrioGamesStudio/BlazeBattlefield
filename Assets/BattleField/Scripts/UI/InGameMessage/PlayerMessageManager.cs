@@ -1,43 +1,37 @@
 ﻿using Fusion;
+using NaughtyAttributes;
 using System;
 using System.Collections;
 using UnityEngine;
-using static Fusion.Sockets.NetBitBuffer;
-
+public enum MessageLogType
+{
+    None,
+    KillLog = 5,
+    JoinLog = 10,
+    LeaveLog = 15
+}
 public class PlayerMessageManager : NetworkBehaviour
 {
     public static PlayerMessageManager instance;
-
-    public enum MessageLogType
+    [SerializeField] MessageDisplayUI localMessageDisplayUI;
+    [SerializeField] MessageDisplayUI globalMessageDisplayUI;
+    [SerializeField] IconMessageSO IconMessageSO;
+    public void MessageLogType(string fullText, MessageLogType type, bool isLocal)
     {
-        KillLog = 0,
-        JoinLog = 10,
-        LeaveLog = 15
+        if (isLocal)
+        {
+            localMessageDisplayUI.CreateFullMessage(fullText, IconMessageSO.GetIcon(type));
+        }
+        else
+        {
+            globalMessageDisplayUI.CreateFullMessage(fullText, IconMessageSO.GetIcon(type));
+        }
     }
-    [SerializeField] private LocalMessageUI localMessageUIPrefab;
-    [SerializeField] private GameObject globalMessageHolder;
-    [SerializeField] private GameObject localMessageHolder;
-    private LocalMessageUI CreateRawMessage()
-    {
-        return Instantiate(localMessageUIPrefab, globalMessageHolder.transform);
-    }
-
-    public void SendKillLog(string killedName,string killerName )
-    {
-        var message = CreateRawMessage();
-
-        message.PassMessageData(killerName, killedName);
-
-        message.gameObject.SetActive(true);
-
-        Destroy(message.gameObject, 3f);
-    }
-    int index = 0;
+    public string fullTextTest;
+    public MessageLogType type;
     [EditorButton]
-    private void Test()
+    public void SendLog()
     {
-        index++;
-        SendKillLog("some one"+ index.ToString(), "anybody");
+        MessageLogType(fullTextTest, type, true);
     }
-
 }
