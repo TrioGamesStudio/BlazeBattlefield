@@ -132,27 +132,46 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                 if (isScopeMode) ZoomScope();
                 Fire();
             }
-
-
         }
 
     }
-
+    private bool isCallReloadEmpty = false;
+    private bool previousInput;
     void Fire()
     {
+        if (previousInput != isFired)
+        {
+            isCallReloadEmpty = false;
+        }
         if (!isFiredPressed && isFired)
         {
-            if (isSingleMode)
+            
+            if (WeaponManager.instance.HasAmmo())
             {
-                isFired = !isFired;
+                if (isSingleMode)
+                {
+                    isFired = !isFired;
+                }
+
+                isFiredPressed = true;
+                WeaponManager.instance.Shoot();
+                StartCoroutine(FireCO(coolTimeWeapon));
             }
+            else
+            {
+                
 
-            isFiredPressed = true;
-            WeaponManager.instance.Shoot();
-            StartCoroutine(FireCO(coolTimeWeapon));
+                if (isCallReloadEmpty == false)
+                {
+                    isCallReloadEmpty = true;
+                    WeaponManager.instance.PlayReloadEmptySound();
+                    previousInput = isFired;
+                }
+            }
         }
-
+        
     }
+
 
     IEnumerator FireCO(float coolTime)
     {
@@ -175,6 +194,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         yield return new WaitForSeconds(coolTime);
 
         isFiredPressed = false;
+        isCallReloadEmpty = false;
     }
 
     void ZoomScope()

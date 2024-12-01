@@ -10,12 +10,12 @@ public class Player_SniperScopeZoom : MonoBehaviour
     [SerializeField] Camera localCam;
     [SerializeField] Animator anim;
     [SerializeField] WeaponHandler weaponHandler;
-
+    private AudioClip aimUpSound;
     private void Start() {
         weaponHandler = GetComponent<WeaponHandler>();
         weaponHandler.OnRifeDown += WeaponHandler_OnRifleDown;
         weaponHandler.OnRifeUp += WeaponHandler_OnRifleUp;
-
+        aimUpSound = SoundManager.SoundAsset.GetSound("aim_up_0");
     }
 
     private void WeaponHandler_OnRifleDown(object sender, EventArgs e)
@@ -23,6 +23,7 @@ public class Player_SniperScopeZoom : MonoBehaviour
         anim.SetBool("isScopeZoom", false);
         localCam.nearClipPlane = 0.3f;
         localCam.fieldOfView = 60;
+        NetworkPlayer.Local.GetComponent<AudioSource>().CustomPlaySound(aimUpSound);
     }
 
     private void WeaponHandler_OnRifleUp(object sender, EventArgs e)
