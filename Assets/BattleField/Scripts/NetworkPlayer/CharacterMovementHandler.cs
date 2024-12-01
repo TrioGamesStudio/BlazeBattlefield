@@ -172,6 +172,7 @@ public class CharacterMovementHandler : NetworkBehaviour
 
                 //? thong bao khi fall out
                 networkInGameMessages.SendInGameRPCMessage(networkPlayer.nickName_Network.ToString(), " -> fall off");
+                PlayerMessageManager.instance.FallOffLog($"{networkPlayer.nickName_Network.ToString()}");
                 Respawn();
             }
         }

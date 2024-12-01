@@ -179,8 +179,9 @@ public class HPHandler : NetworkBehaviour
         if(networkHP <= 0 && !isPublicDeathMessageSent) {
             isPublicDeathMessageSent = true;
             if(Object.HasStateAuthority) {
-                networkInGameMessages.SendInGameRPCMessage(Networked_Killer.ToString(), 
+                networkInGameMessages.SendInGameRPCMessage(Networked_Killer.ToString(),
                     $" killed <b>{networkPlayer.nickName_Network.ToString()}<b>");
+                PlayerMessageManager.instance.SendKillLog(Networked_Killer.ToString(), networkPlayer.nickName_Network.ToString());
             }
         }
     }

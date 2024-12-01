@@ -33,8 +33,8 @@ public class LocalMessageUI : MonoBehaviour
     {
         invokerNameText.text = _invokerName;
         listenerNameText.text = _listenerName;
-        HandleImage(iconActionImg, sprite);
         fullText.text = "";
+        HandleImage(iconActionImg, sprite);
         HandleImage(fullTextIcon, null);
 
     }
@@ -62,7 +62,10 @@ public class LocalMessageUI : MonoBehaviour
 
     private void ResetCustomLog()
     {
-        PassMessageData("", "", null);
+        invokerNameText.text = "";
+        listenerNameText.text = "";
+        HandleImage(iconActionImg, null);
+
     }
 }
 
