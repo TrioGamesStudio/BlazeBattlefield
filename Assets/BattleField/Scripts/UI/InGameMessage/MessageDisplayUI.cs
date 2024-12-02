@@ -35,6 +35,7 @@ public class MessageDisplayUI : MonoBehaviour
 
     public void CreateFullMessage(string message,Sprite icon)
     {
+        Debug.Log("Create local: " + message);
         var localMessageUI = CreateInstance();
 
         localMessageUI.FullMessage(message, icon);

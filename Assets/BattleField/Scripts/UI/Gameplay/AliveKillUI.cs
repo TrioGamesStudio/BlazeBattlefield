@@ -26,13 +26,13 @@ public class AliveKillUI : MonoBehaviour
 
     private void UpdateKillText(int killCount)
     {
-        killText.text = $"Kill: {killCount}";
+        killText.text = killCount.ToString();
         Debug.Log("Kill:" + killCount);
     }
 
     private void UpdateAliveText(int aliveCount)
     {
-        aliveText.text = $"Alive: {aliveCount}";
+        aliveText.text = aliveCount.ToString() ;
         Debug.Log("Alive:" + aliveCount);
     }
 }

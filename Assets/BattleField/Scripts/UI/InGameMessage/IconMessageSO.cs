@@ -9,7 +9,7 @@ public class IconMessageSO : ScriptableObject
     [SerializeField] private Sprite KillLog;
     [SerializeField] private Sprite JoinLog;
     [SerializeField] private Sprite LeaveLog;
-
+    [SerializeField] private Sprite FallOffLog;
     public Sprite GetIcon(MessageLogType type)
     {
         if(keyValuePairs == null || keyValuePairs.Count == 0)
@@ -18,7 +18,8 @@ public class IconMessageSO : ScriptableObject
             {
                 { MessageLogType.KillLog, KillLog },
                 { MessageLogType.JoinLog, JoinLog },
-                { MessageLogType.LeaveLog, LeaveLog }
+                { MessageLogType.LeaveLog, LeaveLog },
+                { MessageLogType.FallOff, FallOffLog }
             };
         }
         if(keyValuePairs.TryGetValue(type,out var sprite))

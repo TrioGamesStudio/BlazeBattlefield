@@ -203,8 +203,8 @@ MonoBehaviour:
   uiElements: []
   view: {fileID: 6053345136981152724}
   messagePrefab: {fileID: 2572810716981912935}
-  maxMessages: 3
-  offsetY: 35
+  maxMessages: 5
+  offsetY: 55
   customMessage: asd
 --- !u!1 &7905705021305224237
 GameObject:
@@ -301,6 +301,7 @@ GameObject:
   - component: {fileID: 8732482059342555101}
   - component: {fileID: 3082856575527925903}
   - component: {fileID: 4362250043950702670}
+  - component: {fileID: 7144206697410736697}
   m_Layer: 0
   m_Name: InGameMessageManager
   m_TagString: Untagged
@@ -339,8 +340,7 @@ MonoBehaviour:
   localMessageDisplayUI: {fileID: 3113036890766964845}
   globalMessageDisplayUI: {fileID: 0}
   IconMessageSO: {fileID: 11400000, guid: f93066490bbaeb0439f8eecce1bf3033, type: 2}
-  fullTextTest: 
-  type: 0
+  isShowEnterExitLog: 1
 --- !u!114 &4362250043950702670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,6 +359,21 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 3082856575527925903}
+  - {fileID: 7144206697410736697}
+--- !u!114 &7144206697410736697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8064506464756296356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d89b281b7045348814f3b7e5fe8797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName1: Player 1
+  playerName2: Player 2
 --- !u!1001 &3694588670564858427
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -367,11 +382,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8743384623980960236}
     m_Modifications:
-    - target: {fileID: 1220938827342094172, guid: 864a2717f919e0d4688dc18297766135,
-        type: 3}
-      propertyPath: fullTextIcon
-      value: 
-      objectReference: {fileID: 5379672900308338466}
     - target: {fileID: 2100399401736790362, guid: 864a2717f919e0d4688dc18297766135,
         type: 3}
       propertyPath: m_Name
@@ -415,7 +425,7 @@ PrefabInstance:
     - target: {fileID: 6400008714109280436, guid: 864a2717f919e0d4688dc18297766135,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 30
+      value: 49.3108
       objectReference: {fileID: 0}
     - target: {fileID: 6400008714109280436, guid: 864a2717f919e0d4688dc18297766135,
         type: 3}
@@ -460,7 +470,7 @@ PrefabInstance:
     - target: {fileID: 6400008714109280436, guid: 864a2717f919e0d4688dc18297766135,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -15
+      value: -5.3446045
       objectReference: {fileID: 0}
     - target: {fileID: 6400008714109280436, guid: 864a2717f919e0d4688dc18297766135,
         type: 3}
@@ -492,18 +502,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f179e6686d07db441a339ab19862235a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5379672900308338466 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8785855272722627865, guid: 864a2717f919e0d4688dc18297766135,
-    type: 3}
-  m_PrefabInstance: {fileID: 3694588670564858427}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &7752021890995067535 stripped

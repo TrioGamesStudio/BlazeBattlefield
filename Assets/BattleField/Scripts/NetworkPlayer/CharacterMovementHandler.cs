@@ -35,7 +35,6 @@ public class CharacterMovementHandler : NetworkBehaviour
     //...
     NetworkInGameMessages networkInGameMessages;
     NetworkPlayer networkPlayer;
-
     HPHandler hPHandler;
     CharacterInputHandler characterInputHandler;
     Vector3 moveDir;
@@ -54,7 +53,6 @@ public class CharacterMovementHandler : NetworkBehaviour
         networkPlayer = GetComponent<NetworkPlayer>();
         anim = GetComponentInChildren<Animator>();
         hPHandler = GetComponent<HPHandler>();
-
         speedAnimRate = 1;
     }
 
@@ -172,6 +170,7 @@ public class CharacterMovementHandler : NetworkBehaviour
 
                 //? thong bao khi fall out
                 networkInGameMessages.SendInGameRPCMessage(networkPlayer.nickName_Network.ToString(), " -> fall off");
+                GetComponent<PlayerMessageManager>().FallOffLogRPC($"{networkPlayer.nickName_Network.ToString()}");
                 Respawn();
             }
         }

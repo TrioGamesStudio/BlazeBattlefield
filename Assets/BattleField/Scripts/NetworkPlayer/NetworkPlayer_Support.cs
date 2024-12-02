@@ -3,7 +3,6 @@ using UnityEngine;
 public class NetworkPlayer_Support : NetworkBehaviour
 {
     [SerializeField] private Animator animator;
-    
     public void Init()
     {
         if(WeaponManager.instance != null)
