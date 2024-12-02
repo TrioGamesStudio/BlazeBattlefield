@@ -252,19 +252,20 @@ public class HPHandler : NetworkBehaviour
     }
     IEnumerator OnHitCountine() {
         // this.Object Run this.cs (do dang bi ban trung) 
+        // (Object.HasInputAuthority) => chi render tai man hinh MA THIS.OBJECT NAY DANG HasInputAuthority
+        if (Object.HasStateAuthority)
+        {
+            uiOnHitImage.color = uiOnHitColor;
+            BloodLens.OnSlashEffect?.Invoke();
+        }
+        // this.Object Run this.cs (do dang bi ban trung) 
         // render for Screen of this.Object - localPlayer + remotePlayer
         foreach (FlashMeshRender flashMeshRender in flashMeshRenders) {
             flashMeshRender.ChangeColor(Color.red);
         }
 
-        // this.Object Run this.cs (do dang bi ban trung) 
-        // (Object.HasInputAuthority) => chi render tai man hinh MA THIS.OBJECT NAY DANG HasInputAuthority
-        if (Object.HasStateAuthority) 
-        {
-            uiOnHitImage.color = uiOnHitColor;
-            BloodLens.OnSlashEffect?.Invoke();
-        }
         
+
         yield return new WaitForSeconds(0.2f);
         foreach (FlashMeshRender flashMeshRender in flashMeshRenders) {
             flashMeshRender.RestoreColor();
