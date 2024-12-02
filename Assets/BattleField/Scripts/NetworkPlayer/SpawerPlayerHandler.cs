@@ -11,15 +11,22 @@ public class SpawerPlayerHandler : NetworkBehaviour
         isSpawnPositionOnStartingBattle = false;
         characterMovementHandler = GetComponent<CharacterMovementHandler>();
     }
-
+    
     public override void FixedUpdateNetwork()
     {
-        if(Object.HasInputAuthority) {
+        if(HasStateAuthority == false) return;
+
+        if(Object.HasStateAuthority) {
             if(isSpawnPositionOnStartingBattle == false && (Matchmaking.Instance.IsDone || MatchmakingTeam.Instance.IsDone)) {
                 isSpawnPositionOnStartingBattle = true;
-                characterMovementHandler.RequestRespawn();
-                return;
+                StartCoroutine(Delay());
             }
         }
+    }
+
+    IEnumerator Delay() {
+        Debug.Log($"_____ delay then requestRespawn");
+        yield return new WaitForSeconds(0.1f);
+        characterMovementHandler.RequestRespawn();
     }
 }

@@ -74,6 +74,8 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     public event EventHandler OnRifeDown;
     bool isZoom = false;
     bool isScope = false;
+
+    [SerializeField] GameObject crossHair;
     private void Awake()
     {
         characterInputHandler = GetComponent<CharacterInputHandler>();
@@ -206,10 +208,13 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             if (isScope)
             {
                 OnRifeUp?.Invoke(this, EventArgs.Empty);
+                crossHair.SetActive(true);
             }
             else
             {
                 OnRifeDown?.Invoke(this, EventArgs.Empty);
+                crossHair.SetActive(false);
+
             }
         }
     }
@@ -397,7 +402,14 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         isSingleMode = config.isSingleMode;
         recoil = config.recoil;
         isScopeMode = config.isContainScope;
+
+        if(config.slotWeaponIndex == SlotWeaponIndex.Slot_1) {
+            crossHair.SetActive(false);
+        } else {
+            crossHair.SetActive(true);
+        }
     }
+
 
     public void Initialize()
     {

@@ -91,12 +91,21 @@ public class CharacterMovementHandler : NetworkBehaviour
         // ko chay doan duoi neu dang fall or respawn
         if (Object.HasStateAuthority) {
             if(isRespawnRequested_) {
-                if(!Matchmaking.Instance.IsDone || !MatchmakingTeam.Instance.IsDone) {
+                //! test cho nhung scene ben ngoai -> khong can check IsDone
+                if(SceneManager.GetActiveScene().name == "Quang_Scene") {
                     Respawn();
-                } else {
-                    RespawnOnStartingBattle();
+                    return;
                 }
-                return;
+
+                if(Matchmaking.Instance.IsDone || MatchmakingTeam.Instance.IsDone) {
+                    RespawnOnStartingBattle();
+                    return;
+                }
+                else {
+                    Respawn();
+                    return;
+                }
+                
             }
 
             // ko cap nhat vi tri movement khi player death
@@ -200,8 +209,10 @@ public class CharacterMovementHandler : NetworkBehaviour
     }
 
     private void RespawnOnStartingBattle() {
+        Debug.Log($"_____ random spawn before starting battle");
         CharacterControllerEnable(true);
         networkCharacterController.Teleport(Utils.GetRandomSpawnPointOnStartingBattle());
+        RPC_SetNetworkedIsDead(false);
     }
     
     public void RequestRespawn() {

@@ -8,7 +8,7 @@ public static class Utils
     }
 
     public static Vector3 GetRandomSpawnPointOnStartingBattle() {
-        return new Vector3(Random.Range(-4, 4), 2, Random.Range(-100, 0));
+        return new Vector3(Random.Range(-40, 60), 8, Random.Range(-80, 30));
     }
 
     // random spawnPoint Weapons
