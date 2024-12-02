@@ -38,8 +38,8 @@ public class LocalCameraHandler : NetworkBehaviour
     CinemachineVirtualCamera cinemachineVirtualCamera;
 
     #region Recoil
-    Vector3 currentRotation;
-    Vector3 targetRotation;
+    public Vector3 currentRotation;
+    public Vector3 targetRotation;
 
     [Header("Recoil")]
     [SerializeField] float recoilX;
@@ -148,9 +148,9 @@ public class LocalCameraHandler : NetworkBehaviour
         this.spawnedPointOnCam_Network = spawnedPointVector;
         this.spawnedPointOnHand_Network = spawnedPointVector_;
     }
-
     void RecoilUpdate() {
         targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, returnSpeed * Time.deltaTime);
+        //targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, returnSpeed * Time.deltaTime);
         currentRotation = Vector3.Slerp(currentRotation, targetRotation, snappiness * Time.fixedDeltaTime);
     }
     public void SetRecoil(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {

@@ -19,7 +19,7 @@ public class HPHandler : NetworkBehaviour
     //public int deadCount {get; set;}
 
     bool isInitialized = false;
-    const byte startingHP = 5;
+    const byte startingHP = 100;
 
     public Color uiOnHitColor;
     public Image uiOnHitImage;
@@ -68,6 +68,8 @@ public class HPHandler : NetworkBehaviour
 
         // show HP player on message box
         inGamePlayerStatusUIHandler.OnGamePlayerHpRecieved(Networked_HP);
+        if(Object.HasStateAuthority)
+            HealthBarUI.OnSetMaxHPAction(startingHP);
     }
 
     public override void Render()
@@ -248,16 +250,17 @@ public class HPHandler : NetworkBehaviour
     }
     void OnHPReduced() {
         if(!isInitialized) return;
-        StartCoroutine(OnHitCountine());
-    }
-    IEnumerator OnHitCountine() {
-        // this.Object Run this.cs (do dang bi ban trung) 
-        // (Object.HasInputAuthority) => chi render tai man hinh MA THIS.OBJECT NAY DANG HasInputAuthority
         if (Object.HasStateAuthority)
         {
             uiOnHitImage.color = uiOnHitColor;
             BloodLens.OnSlashEffect?.Invoke();
         }
+        StartCoroutine(OnHitCountine());
+    }
+    IEnumerator OnHitCountine() {
+        // this.Object Run this.cs (do dang bi ban trung) 
+        // (Object.HasInputAuthority) => chi render tai man hinh MA THIS.OBJECT NAY DANG HasInputAuthority
+        
         // this.Object Run this.cs (do dang bi ban trung) 
         // render for Screen of this.Object - localPlayer + remotePlayer
         foreach (FlashMeshRender flashMeshRender in flashMeshRenders) {
