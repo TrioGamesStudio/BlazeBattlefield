@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SoundAsset", menuName = "SoundAsset")]
@@ -24,6 +25,24 @@ public class SoundAsset : ScriptableObject
             }
         }
         
+    }
+
+    public List<AudioClip> GetSoundClip(string prefix, int length)
+    {
+        List<AudioClip> audioClips = new();
+        StringBuilder stringBuilder = new(prefix);
+        stringBuilder.Append("_");
+        for (int i = 0; i < length; i++)
+        {
+            stringBuilder.Append(i);
+            AudioClip clip = GetSound(stringBuilder.ToString());
+            if (clip != null)
+            {
+                audioClips.Add(clip);
+            }
+            stringBuilder.Length = prefix.Length + 1; // Reset the StringBuilder to the original prefix + "_"
+        }
+        return audioClips;
     }
 
     public AudioClip GetSound(string audioName)
