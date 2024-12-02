@@ -44,6 +44,7 @@ public class CharacterMovementHandler : NetworkBehaviour
     [SerializeField] AudioSource audioSource;
     bool isPlaySound = false;
 
+
     private void Awake() {
         //audioSource = GetComponent<AudioSource>();
         characterInputHandler = GetComponent<CharacterInputHandler>();
@@ -54,6 +55,7 @@ public class CharacterMovementHandler : NetworkBehaviour
         anim = GetComponentInChildren<Animator>();
         hPHandler = GetComponent<HPHandler>();
         speedAnimRate = 1;
+
     }
 
     private void Start() {
@@ -89,7 +91,11 @@ public class CharacterMovementHandler : NetworkBehaviour
         // ko chay doan duoi neu dang fall or respawn
         if (Object.HasStateAuthority) {
             if(isRespawnRequested_) {
-                Respawn();
+                if(!Matchmaking.Instance.IsDone || !MatchmakingTeam.Instance.IsDone) {
+                    Respawn();
+                } else {
+                    RespawnOnStartingBattle();
+                }
                 return;
             }
 
@@ -184,13 +190,18 @@ public class CharacterMovementHandler : NetworkBehaviour
         Debug.Log($"_____Starting Respawn");
         CharacterControllerEnable(true);
 
-        networkCharacterController.Teleport(Utils.GetRandomSpawnPoint());
+        networkCharacterController.Teleport(Utils.GetRandomSpawnPointOnWaitingArea());
         
         hPHandler.OnRespawned_ResetHPIsDead(); // khoi tao lai gia tri HP isDeath - false
         ////isRespawnRequested = false;
         RPC_SetNetworkedIsDead(false);
         Debug.Log($"_____Ending Respawn");
 
+    }
+
+    private void RespawnOnStartingBattle() {
+        CharacterControllerEnable(true);
+        networkCharacterController.Teleport(Utils.GetRandomSpawnPointOnStartingBattle());
     }
     
     public void RequestRespawn() {
@@ -203,5 +214,6 @@ public class CharacterMovementHandler : NetworkBehaviour
     public void RPC_SetNetworkedIsDead(bool isRespawnRequested) {
         this.isRespawnRequested_ = isRespawnRequested;
     }
+    
 
 }
