@@ -86,16 +86,19 @@ public class LoginManager : MonoBehaviour
             if (task.IsCanceled)
             {
                 Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
+                StartCoroutine(ResetLoadingScreenCo());
                 return;
             }
             if (task.IsFaulted)
             {
                 Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                ShowLogMsg_SingUP("Sign up unsuccessfully");
+                StartCoroutine(ResetLoadingScreenCo());
                 return;
             }
             // Firebase user has been created.
 
-            loadingScreen.SetActive(false);
+            StartCoroutine(ResetLoadingScreenCo());
             AuthResult result = task.Result;
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 result.User.DisplayName, result.User.UserId);
@@ -112,11 +115,11 @@ public class LoginManager : MonoBehaviour
 
             if (result.User.IsEmailVerified)
             {
-                //ShowLogMsg_SingUP("Sign up Successful");
+                ShowLogMsg_SingUP("Sign up Successfully");
                 
             }
             else {
-                //ShowLogMsg_SingUP("Please verify your email!!");
+                ShowLogMsg_SingUP("Please verify your email!!");
                 SendEmailVerification();
             }
 
@@ -124,6 +127,10 @@ public class LoginManager : MonoBehaviour
             // save after having email and password
             DataSaver.Instance.SaveToSignup(useName, result.User.UserId);
         });
+    }
+    IEnumerator ResetLoadingScreenCo() {
+        yield return new WaitForSeconds(1f);
+        loadingScreen.SetActive(false);
     }
 
     void SendEmailVerification() {
@@ -331,22 +338,26 @@ public class LoginManager : MonoBehaviour
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInAndRetrieveDataWithCredentialAsync was canceled.");
+                StartCoroutine(ResetLoadingScreenCo());
                 return;
             }
             if (task.IsFaulted)
             {
                 Debug.LogError("SignInAndRetrieveDataWithCredentialAsync encountered an error: " + task.Exception);
+                ShowLogMsg("Log in fail");
+                StartCoroutine(ResetLoadingScreenCo());
                 return;
             }
             
-            loadingScreen.SetActive(false);
+            // loadingScreen.SetActive(false);
+            StartCoroutine(ResetLoadingScreenCo());
             AuthResult result = task.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})",
                 result.User.DisplayName, result.User.UserId);
 
             if (result.User.IsEmailVerified)
             {
-                ShowLogMsg("Log in Successful");
+                ShowLogMsg("Login Successful");
 
                 loginUi.SetActive(false);
                 SuccessUi.SetActive(true);
@@ -355,12 +366,15 @@ public class LoginManager : MonoBehaviour
 
                 //? gan userId cho saveLoadHander Firebase | FireStore
                 DataSaver.Instance.userId = result.User.UserId;
+
                 /* DataSaveLoadHander.Instance.userId = result.User.UserId; */
-                SceneManager.LoadSceneAsync("MainLobby").completed += (operation) =>
+
+                /* SceneManager.LoadSceneAsync("MainLobby").completed += (operation) =>
                 {
                     loginCanvas.SetActive(false);
                     FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
-                };
+                }; */
+                StartCoroutine(LoadMainMenuLobby());
             }
             else {
                 ShowLogMsg("Please verify email!!");
@@ -370,6 +384,15 @@ public class LoginManager : MonoBehaviour
             DataSaver.Instance.LoadData();
             SetPlayerPref(email, password);
         });
+    }
+
+    IEnumerator LoadMainMenuLobby() {
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadSceneAsync("MainLobby").completed += (operation) =>
+        {
+            loginCanvas.SetActive(false);
+            FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
+        };
     }
 
     public void LoginQuest()
@@ -382,11 +405,13 @@ public class LoginManager : MonoBehaviour
             if (task.IsCanceled)
             {
                 Debug.LogError("SignIn Guest was canceled.");
+                //loadingScreen.SetActive(false);
                 return;
             }
             if (task.IsFaulted)
             {
                 Debug.LogError("SignIn Guest encountered an error: " + task.Exception);
+                loadingScreen.SetActive(false);
                 return;
             }
 
@@ -442,7 +467,7 @@ public class LoginManager : MonoBehaviour
     {
         logTxt.text = msg;
         //logTxt.GetComponent<Animation>().Play("FadeOutAnimation");
-        StartCoroutine(TextFadeOut(0.1f));
+        StartCoroutine(TextFadeOut(1.5f));
     }
     IEnumerator TextFadeOut(float time) {
         yield return new WaitForSeconds(time);
@@ -457,7 +482,7 @@ public class LoginManager : MonoBehaviour
     void ShowLogMsg_SingUP(string msg)
     {
         logTxt.text = msg;
-        StartCoroutine(TextFadeOut_SignUp(2f));
+        StartCoroutine(TextFadeOut_SignUp(3f));
     }
     IEnumerator TextFadeOut_SignUp(float time) {
         yield return new WaitForSeconds(time);
