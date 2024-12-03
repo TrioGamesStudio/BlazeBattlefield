@@ -110,6 +110,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     [SerializeField] bool isScopeMode = false;
     public void SetFireInput(bool isFire)
     {
+     
         isFired = isFire;
     }
 
@@ -128,6 +129,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         }
         if (Object.HasStateAuthority)
         {
+            
             if (WeaponManager.instance.IsReadyToShoot() &&
                 !hPHandler.Networked_IsDead && hPHandler.Networked_HP > 0)
             {
@@ -141,6 +143,10 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     private bool previousInput;
     void Fire()
     {
+        if (InventoryUI.instance.IsOpen)
+        {
+            return;
+        }
         if (previousInput != isFired)
         {
             isCallReloadEmpty = false;
