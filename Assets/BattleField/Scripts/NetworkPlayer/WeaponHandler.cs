@@ -321,6 +321,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
                 if (Object.HasStateAuthority)
                 {
+                    Debug.LogWarning($"Damgage !!!!!{localWeaponDamageCurr} {weaponDamageCurr}");
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
                     hit.collider.GetComponent<HitboxRoot>().GetComponent<HPHandler>().
                                 OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
@@ -332,7 +333,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             {
                 Debug.Log($"{Time.time} {transform.name} hit PhysiX Collier {hit.transform.root.name}");
             }
-
+            Debug.LogWarning($"Damgage !!!!!{localWeaponDamageCurr} {weaponDamageCurr}");
             //? ve ra tia neu ban trung remotePlayers
             if (isHitOtherRemotePlayers)
                 Debug.DrawRay(aimPoint.position, aimForwardVector * hitDis, Color.red, 1f);
