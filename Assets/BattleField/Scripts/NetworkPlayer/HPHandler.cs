@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class HPHandler : NetworkBehaviour
 {
     [Networked]
-    public byte Networked_HP { get; set; } = 5;
+    public byte Networked_HP { get; set; } = 100;
     
     [Networked]
     public bool Networked_IsDead {get; set;} = false;
