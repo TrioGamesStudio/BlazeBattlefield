@@ -275,7 +275,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         /* if(!networkPlayer.isBot) 
             spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network;
         else spawnPointRaycastCam = aiCameraAnchor.position; */
-
+        bool isHit = false;
 
         spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network;
 
@@ -303,6 +303,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                 if (Object.HasStateAuthority)
                 {
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
+                    isHit = true;
                     part.hPHandler.OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
                 }
             }
@@ -321,6 +322,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
                 if (Object.HasStateAuthority)
                 {
+                    isHit = true;
                     Debug.LogWarning($"Damgage !!!!!{localWeaponDamageCurr} {weaponDamageCurr}");
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
                     hit.collider.GetComponent<HitboxRoot>().GetComponent<HPHandler>().
@@ -342,6 +344,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
         }
 
+        CroshairManager.instance.HitTarget(isHit);
         lastTimeFired = Time.time;
 
         // lam cho ai ban theo tan suat random khoang time
@@ -368,14 +371,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         else
             fireParticleSystemLocal.Play();
 
-        if (audioSource)
-        {
-            audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
-            var _audioSource = new GameObject().AddComponent<AudioSource>();
-            _audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
-            _audioSource.loop = false;
-            Destroy(_audioSource.gameObject, weaponSoundCurr.length);
-        }
+      
 
         yield return new WaitForSeconds(0.09f);
         isFiring = false;
@@ -410,8 +406,9 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         isSingleMode = config.isSingleMode;
         recoil = config.recoil;
         isScopeMode = config.isContainScope;
+        CroshairManager.instance.SetGunSound(weaponSoundCurr);
 
-        if(config.slotWeaponIndex == SlotWeaponIndex.Slot_1) {
+        if (config.slotWeaponIndex == SlotWeaponIndex.Slot_1) {
             crossHair.SetActive(false);
         } else {
             crossHair.SetActive(true);
