@@ -276,6 +276,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         if (Physics.Raycast(spawnPointRaycastCam, aimForwardVector, out var hit, 100, collisionLayers))
         {
             // neu hitInfo do this.gameObject ban ra thi return
+            byte localWeaponDamageCurr = 0;
             if (hit.transform.GetComponent<WeaponHandler>() == this) return;
             // neu hitInfo la dong doi thi khong tru mau
             //if (hit.transform.CompareTag("TeamMate")) return;
@@ -290,16 +291,16 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             {
                 string bodyName = hit.collider.transform.name;
                 Debug.Log($"_____bodyName = {bodyName}");
-                if (bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
-                //else if (bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
+                if (bodyName == HEAD) localWeaponDamageCurr = hPHandler.Networked_HP;
+                else if (bodyName == ARML || bodyName == ARMR) localWeaponDamageCurr = this.weaponDamageCurr;
 
                 if (Object.HasStateAuthority)
                 {
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
-                    part.hPHandler.OnTakeDamage(networkPlayer.nickName_Network.ToString(), weaponDamageCurr, this);
+                    part.hPHandler.OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
                 }
             }
-            //else weaponDamageCurr = 1;
+            else localWeaponDamageCurr = this.weaponDamageCurr;
 
             // get damage ohters
             if (hit.transform.TryGetComponent<HPHandler>(out var health))
@@ -309,14 +310,14 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                 // ban trung dau get full hp
                 string bodyName = hit.collider.transform.name;
                 Debug.Log($"_____bodyName = {bodyName}");
-                if (bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
-                //else if (bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
+                if (bodyName == HEAD) localWeaponDamageCurr = hPHandler.Networked_HP;
+                else if (bodyName == ARML || bodyName == ARMR) localWeaponDamageCurr = this.weaponDamageCurr;
 
                 if (Object.HasStateAuthority)
                 {
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
                     hit.collider.GetComponent<HitboxRoot>().GetComponent<HPHandler>().
-                                OnTakeDamage(networkPlayer.nickName_Network.ToString(), weaponDamageCurr, this);
+                                OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
                 }
 
                 isHitOtherRemotePlayers = true;
