@@ -11,6 +11,7 @@ public class NetworkInGameMessages : NetworkBehaviour
 
     public void SendInGameRPCMessage(string nickName, string message)   // col 92 NetworkPlayer.cs
     {
+        return;
         RPC_InMessage($"<b>{nickName}<b>{message}");
     }
 
