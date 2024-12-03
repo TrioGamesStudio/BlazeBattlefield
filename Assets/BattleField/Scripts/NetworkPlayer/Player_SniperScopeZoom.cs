@@ -24,6 +24,7 @@ public class Player_SniperScopeZoom : MonoBehaviour
         localCam.nearClipPlane = 0.3f;
         localCam.fieldOfView = 60;
         NetworkPlayer.Local.GetComponent<AudioSource>().CustomPlaySound(aimUpSound);
+        CameraEffectControl.instance.HideEyeBlink();
     }
 
     private void WeaponHandler_OnRifleUp(object sender, EventArgs e)
@@ -33,6 +34,8 @@ public class Player_SniperScopeZoom : MonoBehaviour
         localCam.fieldOfView = 6;
         Debug.Log($"_____ co goi up");
         NetworkPlayer.Local.GetComponent<AudioSource>().CustomPlaySound(aimUpSound);
+        CameraEffectControl.instance.ShowEyeBlink();
+
     }
 
 }
