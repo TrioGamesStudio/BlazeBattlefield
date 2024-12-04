@@ -54,7 +54,8 @@ public class GameHandler : MonoBehaviour
             else
             {
                 NetworkPlayer networkPlayer = player.GetComponent<NetworkPlayer>();
-                networkPlayer.SetNicknameUIColor(Color.red); //Set enemy name plate UI color to red
+                if (networkPlayer != null)
+                    networkPlayer.SetNicknameUIColor(Color.red); //Set enemy name plate UI color to red
             }
         }
         Debug.Log("===AFTER initialize");

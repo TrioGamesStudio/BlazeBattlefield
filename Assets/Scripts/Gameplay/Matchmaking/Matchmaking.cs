@@ -40,10 +40,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private PlayerRoomController playerControllerPrefab;
+    [SerializeField] private PlayerRoomController aiControllerPrefab;
     [SerializeField] private List<Transform> memberPos = new();
     [SerializeField] private Button readyButton;
     [SerializeField] private Button playButton;
-    [SerializeField] private int MAX_PLAYER = 2;
+    [SerializeField] private int MAX_PLAYER = 3;
 
     private NetworkRunner networkRunner;   
     private PlayerRoomController localPlayerRoomController;
@@ -55,6 +56,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         PlayScene = 2,
     }
+    private int remainPlayer;
 
     private void Awake()
     {
@@ -488,9 +490,13 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
                 if (players.Count == MAX_PLAYER)
                 {
-                    Debug.Log("=== Start battle.......");
-                    
+                    Debug.Log("=== Start battle.......");                  
                     StartBattle();
+                }
+                else if (runner.IsSharedModeMasterClient)
+                {
+                    // Start a coroutine to wait for 10 seconds and spawn an AI bot if necessary
+                    StartCoroutine(WaitForRealPlayerOrSpawnBot(runner));
                 }
                 matchSolo[player] = players[player].TeamID.ToString();
             }
@@ -499,7 +505,13 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 // Handle remote player
                 StartCoroutine(WaitForPlayerObjectSolo(runner, player));
             }
-            int remainPlayer = MAX_PLAYER - networkRunner.ActivePlayers.Count();
+            //int allPlayers = FindObjectsOfType<PlayerRoomController>().Count();
+            //if (allPlayers == MAX_PLAYER)
+            //{
+            //    Debug.Log("=== Start battle.......");
+            //    StartBattle();
+            //}
+            remainPlayer = MAX_PLAYER - players.Count();
             string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(text);
         }
@@ -508,13 +520,43 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public void StartBattle()
     {
         AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
-
         networkRunner.SessionInfo.IsOpen = false;
         isDone = true;
         FindObjectOfType<UIController>().StartCountdown();
         StartCoroutine(ReleasePlayer());
         StartCoroutine(InitializeTeams());
 
+    }
+
+    private IEnumerator WaitForRealPlayerOrSpawnBot(NetworkRunner runner)
+    {
+        yield return new WaitForSeconds(10); // Wait for 10 seconds
+        Debug.Log("Waiting real player...");
+        if (players.Count < MAX_PLAYER)
+        {
+            Debug.Log("No additional player joined. Spawning an AI bot...");
+
+            // Spawn the AI bot
+            PlayerRoomController aiBot = runner.Spawn(aiControllerPrefab, new Vector3(0, 30, 0), Quaternion.identity);
+            aiBot.SetTeamID("AI"); // Assign an AI-specific team ID
+            //aiBot.SetAIPlayer();   // Set the bot as an AI
+            players[aiBot.Object.InputAuthority] = aiBot;
+            remainPlayer = MAX_PLAYER - players.Count();
+            string text = "Waiting other player: " + remainPlayer + " remain";
+            FindObjectOfType<UIController>().SetText(text);
+            // Check again if we can start the battle
+            if (players.Count == MAX_PLAYER)
+            {
+                Debug.Log("=== Start battle with AI bot.......");
+                StartBattle();
+            }
+            int allPlayers = FindObjectsOfType<PlayerRoomController>().Count();
+            if (allPlayers == MAX_PLAYER)
+            {
+                Debug.Log("=== Start battle.......");
+                StartBattle();
+            }
+        }
     }
 
     private IEnumerator ReleasePlayer()
@@ -575,6 +617,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 networkPlayer.SetNicknameUIColor(Color.red); //Set enemy name plate UI color to red
                 matchSolo[player] = players[player].TeamID.ToString();
                 if (players.Count == MAX_PLAYER)
+                {
+                    Debug.Log("=== Start battle.......");
+                    StartBattle();
+                }
+                int allPlayers = FindObjectsOfType<PlayerRoomController>().Count();
+                if (allPlayers == MAX_PLAYER)
                 {
                     Debug.Log("=== Start battle.......");
                     StartBattle();
