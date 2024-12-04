@@ -3,8 +3,12 @@ using UnityEngine;
 public static class Utils
 {
     //random spawnPoint Player
-    public static Vector3 GetRandomSpawnPoint() {
+    public static Vector3 GetRandomSpawnPointOnWaitingArea() {
         return new Vector3(Random.Range(-2, 0), 35, Random.Range(-2, -2));
+    }
+
+    public static Vector3 GetRandomSpawnPointOnStartingBattle() {
+        return new Vector3(Random.Range(-40, 60), 8, Random.Range(-80, 30));
     }
 
     // random spawnPoint Weapons

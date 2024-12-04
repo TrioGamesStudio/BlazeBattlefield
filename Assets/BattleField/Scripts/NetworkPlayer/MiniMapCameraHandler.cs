@@ -18,9 +18,9 @@ public class MiniMapCameraHandler : MonoBehaviour
         if(SceneManager.GetActiveScene().name == "MainLobby") return;
 
         //! check neu choi o che do team && ready battle && roi xuong dat
-        if(isMiniMapShowed == false && MatchmakingTeam.Instance.IsDone || Matchmaking.Instance.IsDone) {
+        if(isMiniMapShowed == false && (MatchmakingTeam.Instance.IsDone || Matchmaking.Instance.IsDone)) {
             isMiniMapShowed = true;
-            ShowMinimapTeamMate();
+            ShowMinimapTeamMateIcon();
         }
     }
 
@@ -31,7 +31,7 @@ public class MiniMapCameraHandler : MonoBehaviour
         transform.rotation = Quaternion.Euler(90f, minimapAnchorPoint.eulerAngles.y, 0f);
     }
 
-    void ShowMinimapTeamMate() {
+    void ShowMinimapTeamMateIcon() {
         
         string playerTeamID = playerRoomController.TeamID.ToString();
 

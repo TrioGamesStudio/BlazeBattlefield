@@ -123,7 +123,6 @@ public class WeaponManager : MonoBehaviour
     public void OnActiveWeapon(int activeIndexButton)
     {
         TimerActionHandler.instance.Cancel();
-
         if (currentWeaponIndex == -1) // T
         {
             // khong cam gi
@@ -157,6 +156,7 @@ public class WeaponManager : MonoBehaviour
             }
 
         }
+
     }
 
 
@@ -182,6 +182,8 @@ public class WeaponManager : MonoBehaviour
             NetworkPlayer.Local.GetComponent<AudioSource>().CustomPlaySound(un_holsterSound);
             weaponHandler.SetConfig(weaponSlotHandlers[currentWeaponIndex].Config);
         }
+
+
     }
 
 

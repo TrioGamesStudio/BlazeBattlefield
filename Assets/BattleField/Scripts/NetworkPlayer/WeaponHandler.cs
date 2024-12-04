@@ -74,6 +74,8 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     public event EventHandler OnRifeDown;
     bool isZoom = false;
     bool isScope = false;
+
+    [SerializeField] GameObject crossHair;
     private void Awake()
     {
         characterInputHandler = GetComponent<CharacterInputHandler>();
@@ -206,10 +208,13 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             if (isScope)
             {
                 OnRifeUp?.Invoke(this, EventArgs.Empty);
+                crossHair.SetActive(true);
             }
             else
             {
                 OnRifeDown?.Invoke(this, EventArgs.Empty);
+                crossHair.SetActive(false);
+
             }
         }
     }
@@ -286,7 +291,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                 string bodyName = hit.collider.transform.name;
                 Debug.Log($"_____bodyName = {bodyName}");
                 if (bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
-                else if (bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
+                //else if (bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
 
                 if (Object.HasStateAuthority)
                 {
@@ -294,7 +299,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                     part.hPHandler.OnTakeDamage(networkPlayer.nickName_Network.ToString(), weaponDamageCurr, this);
                 }
             }
-            else weaponDamageCurr = 1;
+            //else weaponDamageCurr = 1;
 
             // get damage ohters
             if (hit.transform.TryGetComponent<HPHandler>(out var health))
@@ -305,7 +310,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                 string bodyName = hit.collider.transform.name;
                 Debug.Log($"_____bodyName = {bodyName}");
                 if (bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
-                else if (bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
+                //else if (bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
 
                 if (Object.HasStateAuthority)
                 {
@@ -358,6 +363,10 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         if (audioSource)
         {
             audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
+            var _audioSource = new GameObject().AddComponent<AudioSource>();
+            _audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
+            _audioSource.loop = false;
+            Destroy(_audioSource.gameObject, weaponSoundCurr.length);
         }
 
         yield return new WaitForSeconds(0.09f);
@@ -393,7 +402,14 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         isSingleMode = config.isSingleMode;
         recoil = config.recoil;
         isScopeMode = config.isContainScope;
+
+        if(config.slotWeaponIndex == SlotWeaponIndex.Slot_1) {
+            crossHair.SetActive(false);
+        } else {
+            crossHair.SetActive(true);
+        }
     }
+
 
     public void Initialize()
     {
