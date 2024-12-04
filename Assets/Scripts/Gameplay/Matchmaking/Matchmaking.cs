@@ -57,6 +57,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         PlayScene = 2,
     }
     private int remainPlayer;
+    private bool battleStarted = false; // Track whether the battle has started
 
     private void Awake()
     {
@@ -488,12 +489,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
                 playerObject.GetComponent<PlayerRoomController>().SetLocalPlayer();
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
-                if (players.Count == MAX_PLAYER)
-                {
-                    Debug.Log("=== Start battle.......");                  
-                    StartBattle();
-                }
-                else if (runner.IsSharedModeMasterClient)
+                if (runner.IsSharedModeMasterClient)
                 {
                     // Start a coroutine to wait for 10 seconds and spawn an AI bot if necessary
                     StartCoroutine(WaitForRealPlayerOrSpawnBot(runner));
@@ -505,15 +501,29 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 // Handle remote player
                 StartCoroutine(WaitForPlayerObjectSolo(runner, player));
             }
-            //int allPlayers = FindObjectsOfType<PlayerRoomController>().Count();
-            //if (allPlayers == MAX_PLAYER)
-            //{
-            //    Debug.Log("=== Start battle.......");
-            //    StartBattle();
-            //}
             remainPlayer = MAX_PLAYER - players.Count();
             string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(text);
+        }
+    }
+
+    private void Update()
+    {
+        // If the battle has already started, exit the method
+        if (battleStarted)
+            return;
+
+        // Check the current player count
+        int allPlayers = FindObjectsOfType<PlayerRoomController>().Length;
+
+        // If enough players are present, start the battle
+        if (allPlayers == MAX_PLAYER)
+        {
+            Debug.Log("=== Start battle.......");
+            StartBattle();
+
+            // Mark the battle as started to stop further checks
+            battleStarted = true;
         }
     }
 
@@ -530,7 +540,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     private IEnumerator WaitForRealPlayerOrSpawnBot(NetworkRunner runner)
     {
-        yield return new WaitForSeconds(10); // Wait for 10 seconds
+        yield return new WaitForSeconds(15); // Wait for 10 seconds
         Debug.Log("Waiting for real players...");
 
         // Calculate the number of bots needed to fill the remaining slots
@@ -554,20 +564,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             if (players.Count == MAX_PLAYER)
             {
                 Debug.Log("=== All slots filled. Starting battle...");
-                StartBattle();
                 yield break; // Exit the coroutine
             }
 
             // Add a small delay between spawning bots to ensure game stability
             yield return new WaitForSeconds(1);
-        }
-
-        // Final check to ensure all players (real and bots) are ready
-        int allPlayers = FindObjectsOfType<PlayerRoomController>().Length;
-        if (allPlayers == MAX_PLAYER)
-        {
-            Debug.Log("=== All players (real and bots) are ready. Starting battle...");
-            StartBattle();
         }
     }
 
@@ -628,17 +629,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 NetworkPlayer networkPlayer = players[player].GetComponent<NetworkPlayer>();
                 networkPlayer.SetNicknameUIColor(Color.red); //Set enemy name plate UI color to red
                 matchSolo[player] = players[player].TeamID.ToString();
-                if (players.Count == MAX_PLAYER)
-                {
-                    Debug.Log("=== Start battle.......");
-                    StartBattle();
-                }
-                int allPlayers = FindObjectsOfType<PlayerRoomController>().Count();
-                if (allPlayers == MAX_PLAYER)
-                {
-                    Debug.Log("=== Start battle.......");
-                    StartBattle();
-                }
                 yield break;
             }
             elapsedTime += Time.deltaTime;
