@@ -531,31 +531,43 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     private IEnumerator WaitForRealPlayerOrSpawnBot(NetworkRunner runner)
     {
         yield return new WaitForSeconds(10); // Wait for 10 seconds
-        Debug.Log("Waiting real player...");
-        if (players.Count < MAX_PLAYER)
+        Debug.Log("Waiting for real players...");
+
+        // Calculate the number of bots needed to fill the remaining slots
+        int botsToSpawn = MAX_PLAYER - players.Count;
+
+        for (int i = 0; i < botsToSpawn; i++)
         {
-            Debug.Log("No additional player joined. Spawning an AI bot...");
+            Debug.Log("No additional players joined. Spawning an AI bot...");
 
             // Spawn the AI bot
             PlayerRoomController aiBot = runner.Spawn(aiControllerPrefab, new Vector3(0, 30, 0), Quaternion.identity);
             aiBot.SetTeamID("AI"); // Assign an AI-specific team ID
-            //aiBot.SetAIPlayer();   // Set the bot as an AI
             players[aiBot.Object.InputAuthority] = aiBot;
-            remainPlayer = MAX_PLAYER - players.Count();
-            string text = "Waiting other player: " + remainPlayer + " remain";
+
+            // Update remaining players count
+            int remainPlayer = MAX_PLAYER - players.Count;
+            string text = "Waiting for other players: " + remainPlayer + " remaining";
             FindObjectOfType<UIController>().SetText(text);
-            // Check again if we can start the battle
+
+            // Break out if we've reached the max player count
             if (players.Count == MAX_PLAYER)
             {
-                Debug.Log("=== Start battle with AI bot.......");
+                Debug.Log("=== All slots filled. Starting battle...");
                 StartBattle();
+                yield break; // Exit the coroutine
             }
-            int allPlayers = FindObjectsOfType<PlayerRoomController>().Count();
-            if (allPlayers == MAX_PLAYER)
-            {
-                Debug.Log("=== Start battle.......");
-                StartBattle();
-            }
+
+            // Add a small delay between spawning bots to ensure game stability
+            yield return new WaitForSeconds(1);
+        }
+
+        // Final check to ensure all players (real and bots) are ready
+        int allPlayers = FindObjectsOfType<PlayerRoomController>().Length;
+        if (allPlayers == MAX_PLAYER)
+        {
+            Debug.Log("=== All players (real and bots) are ready. Starting battle...");
+            StartBattle();
         }
     }
 
