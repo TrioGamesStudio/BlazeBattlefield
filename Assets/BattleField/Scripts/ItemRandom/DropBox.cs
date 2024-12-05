@@ -24,11 +24,18 @@ public class DropBox : NetworkBehaviour
     private void Start()
     {
         boxCollider = GetComponent<BoxCollider>();
-        //ItemGroundPositioner.instance.SetItemNearGround(boxCollider);
         Close();
+        Invoke(nameof(SetPosition), 1);
     }
-
-
+    private void SetPosition()
+    {
+        if(HasStateAuthority)
+            ItemGroundPositioner.instance.SetItemNearGround(boxCollider);
+    }
+    public override void Spawned()
+    {
+        base.Spawned();
+    }
     [EditorButton]
     private void Open()
     {
