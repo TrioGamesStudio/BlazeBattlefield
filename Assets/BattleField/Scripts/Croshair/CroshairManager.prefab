@@ -418,14 +418,16 @@ MonoBehaviour:
   hitmakerSoundPrefab: {fileID: 2630641911640982468}
   shootingSoundPrefab: {fileID: 714253997440805767}
   cooldownTime: 0.5
-  strength: 1
+  strength: 1.3
   easeUP: 24
   easeDown: 24
+  count: 1
   fadeUp: 0.3
   fadeDown: 0.3
-  isHit: 0
-  hitVolume: 0.45
-  noHitVolume: 0.5
+  isHit: 1
+  hitVolume: 1
+  noHitVolume: 1
+  rotateRandom: 5
 --- !u!1 &8089996971504687090
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,7 +472,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 21ec43f9d3335d5489ff31b8ead3170e, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.7
+  m_Volume: 0.4
   m_Pitch: 2
   Loop: 0
   Mute: 0

@@ -1,11 +1,15 @@
 using DG.Tweening;
 using NaughtyAttributes;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CroshairManager : MonoBehaviour
 {
     public static CroshairManager instance;
+
+    public static Action<bool> OnHitTarget;
+
     [SerializeField] private Image normalCroshair;
     [SerializeField] private Image hitCroshair;
     [SerializeField] private Transform croshairContainer;
@@ -15,27 +19,31 @@ public class CroshairManager : MonoBehaviour
     {
         normalCroshair.DOFade(1, 0);
         hitCroshair.DOFade(0, 0);
-
-        hitmakerSoundPrefab.gameObject.SetActive(false);
-        shootingSoundPrefab.gameObject.SetActive(false);
+        OnHitTarget += HitTarget;
+        //hitmakerSoundPrefab.gameObject.SetActive(false);
+        //shootingSoundPrefab.gameObject.SetActive(false);
+    }
+    private void OnDestroy()
+    {
+        OnHitTarget -= HitTarget;
     }
     public float cooldownTime = 0.5f;
     public float strength = 1;
     public Ease easeUP;
     public Ease easeDown;
+    public int count;
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            ShakeCroshair(strength, cooldownTime);
-            HitTarget(isHit);
-        }
+        //if (Input.GetKeyDown(KeyCode.F))
+        //{
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        ShakeCroshair(strength, cooldownTime);
+        //        HitTarget(isHit);
+        //    }
+        //}
     }
 
-    public void ShakeCroshair(float strength, float cooldownTime)
-    {
-        
-    }
     public float fadeUp;
     public float fadeDown;
     public bool isHit;
@@ -63,7 +71,7 @@ public class CroshairManager : MonoBehaviour
         CreateShootingAudio();
         if (isHit)
         {
-            hitCroshair.transform.rotation = Quaternion.Euler(0, 0, Random.Range(-rotateRandom, rotateRandom));
+            hitCroshair.transform.rotation = Quaternion.Euler(0, 0, UnityEngine.Random.Range(-rotateRandom, rotateRandom));
             normalCroshair.DOFade(0, fadeUp).OnComplete(() =>
             {
                 normalCroshair.DOFade(1, fadeDown);
@@ -80,20 +88,16 @@ public class CroshairManager : MonoBehaviour
         //hitCroshair.DOFade(0, 0.2f);
     }
 
-    private AudioSource CreateHitAudio()
+    private void CreateHitAudio()
     {
-        var audio = Instantiate(hitmakerSoundPrefab);
-        audio.gameObject.SetActive(true);
-        audio.Play();
-        Destroy(audio.gameObject, audio.clip.length);
-        return audio;
+        //var audio = Instantiate(hitmakerSoundPrefab);
+        //audio.gameObject.SetActive(true);
+        hitmakerSoundPrefab.Play();
+        //Destroy(audio.gameObject, audio.clip.length);
+        //return audio;
     }
-    private AudioSource CreateShootingAudio()
+    private void CreateShootingAudio()
     {
-        var audio = Instantiate(shootingSoundPrefab);
-        audio.gameObject.SetActive(true);
-        audio.Play();
-        Destroy(audio.gameObject, audio.clip.length);
-        return audio;
+        shootingSoundPrefab.Play();
     }
 }

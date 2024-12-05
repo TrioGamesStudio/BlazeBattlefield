@@ -344,7 +344,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
         }
 
-        CroshairManager.instance.HitTarget(isHit);
+        CroshairManager.OnHitTarget(isHit);
         lastTimeFired = Time.time;
 
         // lam cho ai ban theo tan suat random khoang time
