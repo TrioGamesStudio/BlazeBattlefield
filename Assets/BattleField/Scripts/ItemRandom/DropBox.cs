@@ -27,10 +27,18 @@ public class DropBox : NetworkBehaviour
         Close();
         Invoke(nameof(SetPosition), 1);
     }
+    [EditorButton]
     private void SetPosition()
     {
         if(HasStateAuthority)
             ItemGroundPositioner.instance.SetItemNearGround(boxCollider);
+    }
+
+    public Vector3 vector3;
+    [EditorButton]
+    public void Test()
+    {
+        transform.position = vector3;
     }
     public override void Spawned()
     {

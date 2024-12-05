@@ -76,7 +76,11 @@ public class ItemGroundPositioner : NetworkBehaviour
         {
             //Vector3 spawnPosition = groundHit.point + Vector3.up * (_collider.size.y / 2);
             Vector3 spawnPosition = groundHit.point + Vector3.up * (_collider.size.y / 2);
-            _collider.transform.position = spawnPosition;
+            //_collider.transform.position = spawnPosition;
+            if(_collider.TryGetComponent(out NetworkTransform networkTransform))
+            {
+                networkTransform.Teleport(spawnPosition);
+            }
             Debug.Log($"Grounded item: {groundHit.collider.gameObject.name} at {spawnPosition}", _collider.gameObject);
 
         }
