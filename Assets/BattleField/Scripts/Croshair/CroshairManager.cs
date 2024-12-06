@@ -15,8 +15,20 @@ public class CroshairManager : MonoBehaviour
     [SerializeField] private Transform croshairContainer;
     [SerializeField] private AudioSource hitmakerSoundPrefab;
     [SerializeField] private AudioSource shootingSoundPrefab;
+    [SerializeField] private float cooldownTime = 0.5f;
+    [SerializeField] private float strength = 1;
+    [SerializeField] private Ease easeUP;
+    [SerializeField] private Ease easeDown;
+    [SerializeField] private int count;
+    [SerializeField] private float fadeUp;
+    [SerializeField] private float fadeDown;
+    [SerializeField] private bool isHit;
+    [SerializeField] private float hitVolume = .5f;
+    [SerializeField] private float noHitVolume = .5f;
+    [SerializeField] private float rotateRandom = 5;
     private void Awake()
     {
+        instance = this;
         normalCroshair.DOFade(1, 0);
         hitCroshair.DOFade(0, 0);
         OnHitTarget += HitTarget;
@@ -27,29 +39,7 @@ public class CroshairManager : MonoBehaviour
     {
         OnHitTarget -= HitTarget;
     }
-    public float cooldownTime = 0.5f;
-    public float strength = 1;
-    public Ease easeUP;
-    public Ease easeDown;
-    public int count;
-    private void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.F))
-        //{
-        //    for (int i = 0; i < count; i++)
-        //    {
-        //        ShakeCroshair(strength, cooldownTime);
-        //        HitTarget(isHit);
-        //    }
-        //}
-    }
 
-    public float fadeUp;
-    public float fadeDown;
-    public bool isHit;
-    public float hitVolume = .5f;
-    public float noHitVolume = .5f;
-    public float rotateRandom = 5;
     public void SetGunSound(AudioClip audiclip)
     {
         shootingSoundPrefab.clip = audiclip;
