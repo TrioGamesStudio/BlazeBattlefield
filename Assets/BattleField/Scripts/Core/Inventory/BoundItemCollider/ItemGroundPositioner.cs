@@ -18,14 +18,14 @@ public class ItemGroundPositioner : NetworkBehaviour
 
     private void Update()
     {
-        if(colliderNeedToProcess.Count > 0 && isProcess == false)
+        if (colliderNeedToProcess.Count > 0 && isProcess == false)
         {
             isProcess = true;
             ProcessingItem(colliderNeedToProcess[0]);
         }
     }
 
- 
+
     private RaycastHit[] raycastHits = new RaycastHit[10];
     public void SetItemNearGround(BoxCollider _collider)
     {
@@ -70,14 +70,16 @@ public class ItemGroundPositioner : NetworkBehaviour
 
         var groundHit = raycastHits
             .Take(hits)
-            .FirstOrDefault(hit => hit.collider.CompareTag("Ground"));
+            .Where(hit => hit.collider.CompareTag("Ground"))
+            .OrderBy(hit => hit.distance)
+            .FirstOrDefault();
 
         if (groundHit.collider != null)
         {
             //Vector3 spawnPosition = groundHit.point + Vector3.up * (_collider.size.y / 2);
             Vector3 spawnPosition = groundHit.point + Vector3.up * (_collider.size.y / 2);
             //_collider.transform.position = spawnPosition;
-            if(_collider.TryGetComponent(out NetworkTransform networkTransform))
+            if (_collider.TryGetComponent(out NetworkTransform networkTransform))
             {
                 networkTransform.Teleport(spawnPosition);
             }
