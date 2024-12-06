@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -11,10 +10,13 @@ public class CameraEffectControl : MonoBehaviour
     private Volume volume;
 
     private Vignette vignette;
+    public EyeBlinkEffect EyeBlinkEffect;
+
     private void Awake()
     {
         instance = this;
         volume = GetComponent<Volume>();
+        EyeBlinkEffect = GetComponent<EyeBlinkEffect>();
         volume.profile.TryGet(out vignette);
 
         HideEyeBlink();
@@ -28,4 +30,5 @@ public class CameraEffectControl : MonoBehaviour
     {
         vignette.intensity.value = 0;
     }
+
 }
