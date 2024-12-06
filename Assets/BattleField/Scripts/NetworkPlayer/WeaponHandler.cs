@@ -215,11 +215,15 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             {
                 OnRifeUp?.Invoke(this, EventArgs.Empty);
                 //crossHair.SetActive(true);
+                CroshairManager.instance.ShowCroshair();
+
             }
             else
             {
                 OnRifeDown?.Invoke(this, EventArgs.Empty);
                 //crossHair.SetActive(false);
+                CroshairManager.instance.HideCroshair();
+
 
             }
         }
@@ -344,7 +348,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
         }
 
-        CroshairManager.OnHitTarget(isHit);
+        CroshairManager.OnHitTarget(NetworkPlayer.Local.transform.position,isHit);
         lastTimeFired = Time.time;
 
         // lam cho ai ban theo tan suat random khoang time
@@ -410,7 +414,10 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
         if (config.slotWeaponIndex == SlotWeaponIndex.Slot_1) {
             //crossHair.SetActive(false);
+            CroshairManager.instance.HideCroshair();
         } else {
+            CroshairManager.instance.ShowCroshair();
+
             //crossHair.SetActive(true);
         }
     }

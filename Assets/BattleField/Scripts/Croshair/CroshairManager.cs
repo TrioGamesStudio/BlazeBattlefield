@@ -8,7 +8,7 @@ public class CroshairManager : MonoBehaviour
 {
     public static CroshairManager instance;
 
-    public static Action<bool> OnHitTarget;
+    public static Action<Vector3,bool> OnHitTarget;
 
     [SerializeField] private Image normalCroshair;
     [SerializeField] private Image hitCroshair;
@@ -22,7 +22,7 @@ public class CroshairManager : MonoBehaviour
     [SerializeField] private int count;
     [SerializeField] private float fadeUp;
     [SerializeField] private float fadeDown;
-    [SerializeField] private bool isHit;
+    [SerializeField] private bool isAlwayHit;
     [SerializeField] private float hitVolume = .5f;
     [SerializeField] private float noHitVolume = .5f;
     [SerializeField] private float rotateRandom = 5;
@@ -45,20 +45,22 @@ public class CroshairManager : MonoBehaviour
         shootingSoundPrefab.clip = audiclip;
     }
     [Button]
-    public void HitTarget(bool isHit)
+    public void HitTarget(Vector3 spawnPosition,bool isHit)
     {
+        if (croshairContainer.gameObject.activeSelf == false) return;
+
         hitCroshair.DOKill();
         normalCroshair.DOKill();
-        if (isHit)
+        if (isHit || isAlwayHit)
         {
-            CreateHitAudio();
+            CreateHitAudio(spawnPosition);
             shootingSoundPrefab.volume = hitVolume;
         }
         else
         {
             shootingSoundPrefab.volume = noHitVolume;
         }
-        CreateShootingAudio();
+        CreateShootingAudio(spawnPosition);
         if (isHit)
         {
             hitCroshair.transform.rotation = Quaternion.Euler(0, 0, UnityEngine.Random.Range(-rotateRandom, rotateRandom));
@@ -78,16 +80,27 @@ public class CroshairManager : MonoBehaviour
         //hitCroshair.DOFade(0, 0.2f);
     }
 
-    private void CreateHitAudio()
+    private void CreateHitAudio(Vector3 spawnPosition)
     {
-        //var audio = Instantiate(hitmakerSoundPrefab);
-        //audio.gameObject.SetActive(true);
-        hitmakerSoundPrefab.Play();
-        //Destroy(audio.gameObject, audio.clip.length);
-        //return audio;
+        
+        var go = Instantiate(hitmakerSoundPrefab, spawnPosition, Quaternion.identity);
+        go.Play();
+        Destroy(go.gameObject, shootingSoundPrefab.clip.length);
     }
-    private void CreateShootingAudio()
+    private void CreateShootingAudio(Vector3 spawnPosition)
     {
-        shootingSoundPrefab.Play();
+        var go = Instantiate(shootingSoundPrefab, spawnPosition,Quaternion.identity);
+        go.Play();
+        Destroy(go.gameObject, shootingSoundPrefab.clip.length);
+    }
+
+    public void ShowCroshair()
+    {
+        croshairContainer.transform.gameObject.SetActive(true);
+    }
+
+    public void HideCroshair()
+    {
+        croshairContainer.transform.gameObject.SetActive(false);
     }
 }
