@@ -25,7 +25,7 @@ public class DropBox : NetworkBehaviour
     {
         boxCollider = GetComponent<BoxCollider>();
         Close();
-        Invoke(nameof(SetPosition), 1);
+        SetPosition();
     }
     [EditorButton]
     private void SetPosition()
