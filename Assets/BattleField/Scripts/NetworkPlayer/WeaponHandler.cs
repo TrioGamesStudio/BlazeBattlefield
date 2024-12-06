@@ -214,12 +214,12 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             if (isScope)
             {
                 OnRifeUp?.Invoke(this, EventArgs.Empty);
-                crossHair.SetActive(true);
+                //crossHair.SetActive(true);
             }
             else
             {
                 OnRifeDown?.Invoke(this, EventArgs.Empty);
-                crossHair.SetActive(false);
+                //crossHair.SetActive(false);
 
             }
         }
@@ -409,9 +409,9 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         CroshairManager.instance.SetGunSound(weaponSoundCurr);
 
         if (config.slotWeaponIndex == SlotWeaponIndex.Slot_1) {
-            crossHair.SetActive(false);
+            //crossHair.SetActive(false);
         } else {
-            crossHair.SetActive(true);
+            //crossHair.SetActive(true);
         }
     }
 
