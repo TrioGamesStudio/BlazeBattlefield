@@ -97,14 +97,14 @@ public class CharacterMovementHandler : NetworkBehaviour
                     return;
                 }
 
-                if(Matchmaking.Instance.IsDone || MatchmakingTeam.Instance.IsDone) {
-                    RespawnOnStartingBattle();
-                    return;
-                }
-                else {
-                    Respawn();
-                    return;
-                }
+                //if(Matchmaking.Instance.IsDone || MatchmakingTeam.Instance.IsDone) {
+                //    RespawnOnStartingBattle();
+                //    return;
+                //}
+                //else {
+                //    Respawn();
+                //    return;
+                //}
                 
             }
 
@@ -208,7 +208,7 @@ public class CharacterMovementHandler : NetworkBehaviour
 
     }
 
-    private void RespawnOnStartingBattle() {
+    public void RespawnOnStartingBattle() {
         Debug.Log($"_____ random spawn before starting battle");
         CharacterControllerEnable(true);
         networkCharacterController.Teleport(Utils.GetRandomSpawnPointOnStartingBattle());

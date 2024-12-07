@@ -185,12 +185,12 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void StartBattle()
     {
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
         networkRunner.SessionInfo.IsOpen = false;
         isDone = true;
-        FindObjectOfType<UIController>().StartCountdown();
-        StartCoroutine(ReleasePlayer());
-        StartCoroutine(InitializeTeams());
+        StartGameHandler.OnStartGameAction?.Invoke();
+        //FindObjectOfType<UIController>().StartCountdown();
+        //StartCoroutine(ReleasePlayer());
+        //StartCoroutine(InitializeTeams());
     }
 
     private IEnumerator ReleasePlayer()
