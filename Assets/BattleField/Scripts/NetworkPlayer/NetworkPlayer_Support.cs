@@ -1,4 +1,6 @@
+using DG.Tweening;
 using Fusion;
+using System.Collections;
 using UnityEngine;
 public class NetworkPlayer_Support : NetworkBehaviour
 {
@@ -6,7 +8,7 @@ public class NetworkPlayer_Support : NetworkBehaviour
     public void Init()
     {
         // this method call with object has state authority
-        if(WeaponManager.instance != null)
+        if (WeaponManager.instance != null)
         {
             WeaponManager.instance.playerAnimator = animator;
             WeaponManager.instance.ShowWeapon(false);
@@ -32,6 +34,7 @@ public class NetworkPlayer_Support : NetworkBehaviour
             GetComponent<CharacterMovementHandler>().Respawn();
         }
     }
+   
 }
 public interface INetworkInitialize
 {
