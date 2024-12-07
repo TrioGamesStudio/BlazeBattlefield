@@ -507,10 +507,10 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void StartBattle()
     {
-
+        Debug.Log("Start battle");
         networkRunner.SessionInfo.IsOpen = false;
         isDone = true;
-
+        StartGameHandler.OnStartGameAction?.Invoke();
         //FindObjectOfType<UIController>().StartCountdown();
         //StartCoroutine(ReleasePlayer());
         //StartCoroutine(InitializeTeams());

@@ -5,6 +5,7 @@ public class NetworkPlayer_Support : NetworkBehaviour
     [SerializeField] private Animator animator;
     public void Init()
     {
+        // this method call with object has state authority
         if(WeaponManager.instance != null)
         {
             WeaponManager.instance.playerAnimator = animator;
@@ -24,6 +25,11 @@ public class NetworkPlayer_Support : NetworkBehaviour
         if (Runner.IsSharedModeMasterClient)
         {
             RandomGroupManager.RaiseStartSpawnEvent();
+        }
+
+        if (StartGameHandler.instance)
+        {
+            GetComponent<CharacterMovementHandler>().Respawn();
         }
     }
 }

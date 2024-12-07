@@ -92,10 +92,10 @@ public class CharacterMovementHandler : NetworkBehaviour
         if (Object.HasStateAuthority) {
             if(isRespawnRequested_) {
                 //! test cho nhung scene ben ngoai -> khong can check IsDone
-                if(SceneManager.GetActiveScene().name == "Quang_Scene") {
-                    Respawn();
-                    return;
-                }
+                //if(SceneManager.GetActiveScene().name == "Quang_Scene") {
+                //    Respawn();
+                //    return;
+                //}
 
                 //if(Matchmaking.Instance.IsDone || MatchmakingTeam.Instance.IsDone) {
                 //    RespawnOnStartingBattle();
@@ -194,8 +194,8 @@ public class CharacterMovementHandler : NetworkBehaviour
     public void CharacterControllerEnable(bool isEnable) {
         networkCharacterController.enabled = isEnable;
     }
-
-    private void Respawn() {
+    [EditorButton]
+    public void Respawn() {
         Debug.Log($"_____Starting Respawn");
         CharacterControllerEnable(true);
 
@@ -207,7 +207,7 @@ public class CharacterMovementHandler : NetworkBehaviour
         Debug.Log($"_____Ending Respawn");
 
     }
-
+    [EditorButton]
     public void RespawnOnStartingBattle() {
         Debug.Log($"_____ random spawn before starting battle");
         CharacterControllerEnable(true);

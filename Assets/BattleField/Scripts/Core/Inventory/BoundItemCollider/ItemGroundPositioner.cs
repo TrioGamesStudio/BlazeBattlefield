@@ -41,12 +41,12 @@ public class ItemGroundPositioner : NetworkBehaviour
         }
 
         Vector3 rayOrigin = _collider.transform.position;
-        Debug.Log("Start check position" + rayOrigin);
+        //Debug.Log("Start check position" + rayOrigin);
         for (int i = 0; i < 10; i++)
         {
             if (SpawnPosNotInCollider(rayOrigin, _collider.size / 2))
             {
-                Debug.Log($"Grounded item:");
+                //Debug.Log($"Grounded item:");
                 break;
             }
             else
@@ -55,7 +55,7 @@ public class ItemGroundPositioner : NetworkBehaviour
                 rayOrigin += Vector3.up;
             }
         }
-        Debug.Log("End check position" + rayOrigin);
+        //Debug.Log("End check position" + rayOrigin);
 
         Ray ray = new Ray(rayOrigin, Vector3.down);
         ClearRaycastHits();
@@ -63,7 +63,7 @@ public class ItemGroundPositioner : NetworkBehaviour
 
         if (hits == 0)
         {
-            Debug.LogWarning($"No ground found for {_collider.gameObject.name}");
+            //Debug.LogWarning($"No ground found for {_collider.gameObject.name}");
             ResetProcess(_collider);
             return;
         }
@@ -83,12 +83,12 @@ public class ItemGroundPositioner : NetworkBehaviour
             {
                 networkTransform.Teleport(spawnPosition);
             }
-            Debug.Log($"Grounded item: {groundHit.collider.gameObject.name} at {spawnPosition}", _collider.gameObject);
+            //Debug.Log($"Grounded item: {groundHit.collider.gameObject.name} at {spawnPosition}", _collider.gameObject);
 
         }
         else
         {
-            Debug.LogWarning($"No suitable ground found for {_collider.gameObject.name}");
+            //Debug.LogWarning($"No suitable ground found for {_collider.gameObject.name}");
         }
         ResetProcess(_collider);
     }

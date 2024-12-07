@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class StartGameHandler : MonoBehaviour
 {
+    public static StartGameHandler instance;
     public static Action OnStartGameAction;
     public GameHandler gameHandler;
     public WaitingArea waitingArea;
     public UIController UIController;
+    public PlaySoundReady PlaySoundReady;
     private void Awake()
     {
+        instance = this;
         OnStartGameAction += PassAllPlayer;
         
     }
@@ -34,7 +37,6 @@ public class StartGameHandler : MonoBehaviour
         //    Debug.Log("Random", gameObject);
         //    Debug.Log("open eye", gameObject);
         //}
-        gameHandler.InitializeTeams();
         if (UIController)
         {
             UIController.StartCountdown();
@@ -44,9 +46,13 @@ public class StartGameHandler : MonoBehaviour
         {
             Debug.Log("dont have UI to countdown");
         }
-        yield return new WaitForSeconds(3.1f);
+        yield return new WaitForSeconds(6.1f);
+        PlaySoundReady.PlayReadySound();
+        yield return new WaitForSeconds(2);
+        gameHandler.InitializeTeams();
+        waitingArea.ReleasePlayer();
         NetworkPlayer.Local.GetComponent<CharacterMovementHandler>().RespawnOnStartingBattle();
-
+        Debug.Log("Start spawn");
     }
 
     public void StopAllPlayer()
