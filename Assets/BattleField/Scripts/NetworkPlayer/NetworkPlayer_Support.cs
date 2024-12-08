@@ -5,6 +5,13 @@ using UnityEngine;
 public class NetworkPlayer_Support : NetworkBehaviour
 {
     [SerializeField] private Animator animator;
+    public void Awake()
+    {
+        if (HasStateAuthority)
+        {
+            CameraEffectControl.instance.EyeBlinkEffect.CloseEyeImmediately();
+        }
+    }
     public void Init()
     {
         // this method call with object has state authority
@@ -33,8 +40,9 @@ public class NetworkPlayer_Support : NetworkBehaviour
         {
             GetComponent<CharacterMovementHandler>().Respawn();
         }
+        CameraEffectControl.instance.EyeBlinkEffect.OpenEye();
     }
-   
+ 
 }
 public interface INetworkInitialize
 {

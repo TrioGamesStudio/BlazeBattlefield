@@ -8,11 +8,12 @@ public class LerpValue
     public float currentValue;
 
     public Action<float> updateLerpAction;
+    public Action OnCompleteCallback;
     public float duration;
 
     private float elapsedTime;
     public bool canLerp = true;
-
+    public bool isRuning = false;
     public LerpValue(float _startValue, float _targetValue, float _duration, Action<float> _updateLerpAction)
     {
         startValue = _startValue;
@@ -21,7 +22,22 @@ public class LerpValue
         duration = _duration;
         updateLerpAction = _updateLerpAction;
 
+        RunAgain();
+    }
+    public void UpdateNewValue(float _startValue, float _targetValue, float _duration)
+    {
+        startValue = _startValue;
+        targetValue = _targetValue;
+        currentValue = _startValue;
+        duration = _duration;
+        elapsedTime = 0;
+    }
+
+    public void RunAgain()
+    {
+        elapsedTime = 0;
         LerpManager.Instance.AddToLerp(this);
+        isRuning = true;
     }
 
     public void Update(float deltaTime)
@@ -36,22 +52,9 @@ public class LerpValue
         if (t >= 1.0f)
         {
             LerpManager.Instance.RemoveToLerp(this);
+            OnCompleteCallback?.Invoke();
+            isRuning = false;
         }
     }
 
-    public void RestartLerp()
-    {
-        currentValue = startValue;
-        elapsedTime = 0;
-    }
-
-    public void Pause()
-    {
-        canLerp = false;
-    }
-
-    public void Resume()
-    {
-        canLerp = true;
-    }
 }

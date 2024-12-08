@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class StartGameHandler : MonoBehaviour
 {
@@ -30,13 +31,7 @@ public class StartGameHandler : MonoBehaviour
     {
         AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
         UIController = UIController.Instance;
-        //foreach (var playerRoomController in MatchmakingTeam.Instance.players.Values)
-        //{
-        //    Debug.Log("Stop input", gameObject);
-        //    Debug.Log("Play close eye effect", gameObject);
-        //    Debug.Log("Random", gameObject);
-        //    Debug.Log("open eye", gameObject);
-        //}
+   
         if (UIController)
         {
             UIController.StartCountdown();
@@ -48,15 +43,15 @@ public class StartGameHandler : MonoBehaviour
         }
         yield return new WaitForSeconds(6.1f);
         PlaySoundReady.PlayReadySound();
+        CameraEffectControl.instance.EyeBlinkEffect.CloseEye();
+
         yield return new WaitForSeconds(2);
         gameHandler.InitializeTeams();
         waitingArea.ReleasePlayer();
         NetworkPlayer.Local.GetComponent<CharacterMovementHandler>().RespawnOnStartingBattle();
         Debug.Log("Start spawn");
+        CameraEffectControl.instance.EyeBlinkEffect.OpenEyeImmediately();
     }
 
-    public void StopAllPlayer()
-    {
-
-    }
+    
 }

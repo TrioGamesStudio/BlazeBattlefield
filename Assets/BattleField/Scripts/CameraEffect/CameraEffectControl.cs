@@ -10,12 +10,16 @@ public class CameraEffectControl : MonoBehaviour
     // Start is called before the first frame update
     private Volume volume;
 
-    private Vignette vignette;
-    private ColorAdjustments colorAdjustments;
+    public Vignette vignette;
+    public ColorAdjustments colorAdjustments;
+    public EyeBlinkEffect EyeBlinkEffect;
 
     private void Awake()
     {
         instance = this;
+
+        EyeBlinkEffect = GetComponent<EyeBlinkEffect>();
+
         volume = GetComponent<Volume>();
         volume.profile.TryGet(out vignette);
         volume.profile.TryGet(out colorAdjustments);
@@ -28,19 +32,6 @@ public class CameraEffectControl : MonoBehaviour
     }
     public void HideEyeBlink()
     {
-        vignette.intensity.value = 0;
-    }
-    [Button]
-    public void LerpTest()
-    {
-        LerpValue lerpValue = new(0, 0.5f,1, (x) =>
-        {
-            vignette.intensity.value = x;
-        });
-        LerpValue lerpValue2 = new(1, 0, 3, (x) =>
-        {
-            Color color = new Color(x, x, x);
-            colorAdjustments.colorFilter.value = color;
-        });
+        vignette.intensity.value = .2f;
     }
 }

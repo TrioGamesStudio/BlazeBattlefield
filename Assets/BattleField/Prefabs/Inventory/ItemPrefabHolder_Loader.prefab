@@ -261,6 +261,7 @@ GameObject:
   - component: {fileID: 2677138938097078209}
   - component: {fileID: 218147775645945847}
   - component: {fileID: 2201308382725001432}
+  - component: {fileID: 6340702604669872996}
   m_Layer: 0
   m_Name: Global Volume
   m_TagString: Untagged
@@ -312,7 +313,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 394d8f1bf0c15264e902c47e685f2af1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  vignette: {fileID: 0}
+  colorAdjustments: {fileID: 0}
   EyeBlinkEffect: {fileID: 0}
+--- !u!114 &6340702604669872996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3415694142416002895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 488380eb51710394f9f2bad6e3d0e928, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _openStartValue: 0.5
+  _openEndValue: 0
+  _openTime: 0.5
+  _openStartColorValue: 0
+  _openEndColorValue: 1
+  _openColorTime: 1.5
+  _closeStartValue: 0
+  _closeEndValue: 0.5
+  _closeTime: 0.5
+  _closeStartColorValue: 1
+  _closeEndColorValue: 0
+  _closeColorTime: 1.5
 --- !u!1 &4066040581571779627
 GameObject:
   m_ObjectHideFlags: 0
