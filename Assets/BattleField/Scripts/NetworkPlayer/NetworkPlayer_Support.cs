@@ -15,6 +15,11 @@ public class NetworkPlayer_Support : NetworkBehaviour
     public void Init()
     {
         // this method call with object has state authority
+        if (StartGameHandler.instance)
+        {
+            GetComponent<CharacterMovementHandler>().Respawn();
+        }
+
         if (WeaponManager.instance != null)
         {
             WeaponManager.instance.playerAnimator = animator;
@@ -36,10 +41,7 @@ public class NetworkPlayer_Support : NetworkBehaviour
             RandomGroupManager.RaiseStartSpawnEvent();
         }
 
-        if (StartGameHandler.instance)
-        {
-            GetComponent<CharacterMovementHandler>().Respawn();
-        }
+        
         CameraEffectControl.instance.EyeBlinkEffect.OpenEye();
     }
  

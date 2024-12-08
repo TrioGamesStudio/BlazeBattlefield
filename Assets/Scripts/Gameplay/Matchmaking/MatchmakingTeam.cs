@@ -99,6 +99,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+
         roomID = PlayerPrefs.GetString("RoomID");
         
         if (player == runner.LocalPlayer)
@@ -181,6 +182,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
         string text = "Waiting other player: " + remainPlayer + " remain";   
         FindObjectOfType<UIController>().SetText(text);
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+
     }
 
     public void StartBattle()

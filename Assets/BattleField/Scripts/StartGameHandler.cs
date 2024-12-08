@@ -25,11 +25,12 @@ public class StartGameHandler : MonoBehaviour
 
     public void PassAllPlayer()
     {
-        StartCoroutine(PlayerCoroutine());
+        Debug.Log("PassAllPlayer",gameHandler);
+        NetworkPlayer.Local.StartCoroutine(PlayerCoroutine());
     }
+
     private IEnumerator PlayerCoroutine()
     {
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
         UIController = UIController.Instance;
    
         if (UIController)
@@ -46,9 +47,10 @@ public class StartGameHandler : MonoBehaviour
         CameraEffectControl.instance.EyeBlinkEffect.CloseEye();
 
         yield return new WaitForSeconds(2);
+        NetworkPlayer.Local.GetComponent<CharacterMovementHandler>().RespawnOnStartingBattle();
         gameHandler.InitializeTeams();
         waitingArea.ReleasePlayer();
-        NetworkPlayer.Local.GetComponent<CharacterMovementHandler>().RespawnOnStartingBattle();
+        yield return new WaitForSeconds(1);
         Debug.Log("Start spawn");
         CameraEffectControl.instance.EyeBlinkEffect.OpenEyeImmediately();
     }
