@@ -435,7 +435,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        
+
         if (currentMode == Mode.Duo)
         {
             localPlayer.SetActive(false);
@@ -503,17 +503,19 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(text);
         }
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+
     }
 
     public void StartBattle()
     {
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
-
+        Debug.Log("Start battle");
         networkRunner.SessionInfo.IsOpen = false;
         isDone = true;
-        FindObjectOfType<UIController>().StartCountdown();
-        StartCoroutine(ReleasePlayer());
-        StartCoroutine(InitializeTeams());
+        StartGameHandler.OnStartGameAction?.Invoke();
+        //FindObjectOfType<UIController>().StartCountdown();
+        //StartCoroutine(ReleasePlayer());
+        //StartCoroutine(InitializeTeams());
 
     }
 

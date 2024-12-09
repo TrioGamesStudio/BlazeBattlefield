@@ -4,7 +4,15 @@ using UnityEngine;
 public class AlivePlayerControl : MonoBehaviour
 {
     public static Action OnUpdateAliveCountAction;
-  
+
+    private void Awake()
+    {
+        OnUpdateAliveCountAction += OnUpdateAliveCount;
+    }
+    private void OnDestroy()
+    {
+        OnUpdateAliveCountAction -= OnUpdateAliveCount;
+    }
     private void OnUpdateAliveCount()
     {
         int alive = 0;

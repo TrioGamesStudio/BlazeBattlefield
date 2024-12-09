@@ -110,6 +110,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     [SerializeField] bool isScopeMode = false;
     public void SetFireInput(bool isFire)
     {
+     
         isFired = isFire;
     }
 
@@ -128,6 +129,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         }
         if (Object.HasStateAuthority)
         {
+            
             if (WeaponManager.instance.IsReadyToShoot() &&
                 !hPHandler.Networked_IsDead && hPHandler.Networked_HP > 0)
             {
@@ -141,6 +143,10 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     private bool previousInput;
     void Fire()
     {
+        if (InventoryUI.instance.IsOpen)
+        {
+            return;
+        }
         if (previousInput != isFired)
         {
             isCallReloadEmpty = false;
@@ -208,12 +214,16 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             if (isScope)
             {
                 OnRifeUp?.Invoke(this, EventArgs.Empty);
-                crossHair.SetActive(true);
+                //crossHair.SetActive(true);
+                CroshairManager.instance.ShowCroshair();
+
             }
             else
             {
                 OnRifeDown?.Invoke(this, EventArgs.Empty);
-                crossHair.SetActive(false);
+                //crossHair.SetActive(false);
+                CroshairManager.instance.HideCroshair();
+
 
             }
         }
@@ -269,13 +279,14 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         /* if(!networkPlayer.isBot) 
             spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network;
         else spawnPointRaycastCam = aiCameraAnchor.position; */
-
+        bool isHit = false;
 
         spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network;
 
         if (Physics.Raycast(spawnPointRaycastCam, aimForwardVector, out var hit, 100, collisionLayers))
         {
             // neu hitInfo do this.gameObject ban ra thi return
+            byte localWeaponDamageCurr = 0;
             if (hit.transform.GetComponent<WeaponHandler>() == this) return;
             // neu hitInfo la dong doi thi khong tru mau
             //if (hit.transform.CompareTag("TeamMate")) return;
@@ -290,16 +301,17 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             {
                 string bodyName = hit.collider.transform.name;
                 Debug.Log($"_____bodyName = {bodyName}");
-                if (bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
-                //else if (bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
+                if (bodyName == HEAD) localWeaponDamageCurr = hPHandler.Networked_HP;
+                else if (bodyName == ARML || bodyName == ARMR) localWeaponDamageCurr = this.weaponDamageCurr;
 
                 if (Object.HasStateAuthority)
                 {
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
-                    part.hPHandler.OnTakeDamage(networkPlayer.nickName_Network.ToString(), weaponDamageCurr, this);
+                    isHit = true;
+                    part.hPHandler.OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
                 }
             }
-            //else weaponDamageCurr = 1;
+            else localWeaponDamageCurr = this.weaponDamageCurr;
 
             // get damage ohters
             if (hit.transform.TryGetComponent<HPHandler>(out var health))
@@ -309,14 +321,16 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                 // ban trung dau get full hp
                 string bodyName = hit.collider.transform.name;
                 Debug.Log($"_____bodyName = {bodyName}");
-                if (bodyName == HEAD) weaponDamageCurr = hPHandler.Networked_HP;
-                //else if (bodyName == ARML || bodyName == ARMR) weaponDamageCurr = 1;
+                if (bodyName == HEAD) localWeaponDamageCurr = hPHandler.Networked_HP;
+                else if (bodyName == ARML || bodyName == ARMR) localWeaponDamageCurr = this.weaponDamageCurr;
 
                 if (Object.HasStateAuthority)
                 {
+                    isHit = true;
+                    Debug.LogWarning($"Damgage !!!!!{localWeaponDamageCurr} {weaponDamageCurr}");
                     /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
                     hit.collider.GetComponent<HitboxRoot>().GetComponent<HPHandler>().
-                                OnTakeDamage(networkPlayer.nickName_Network.ToString(), weaponDamageCurr, this);
+                                OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
                 }
 
                 isHitOtherRemotePlayers = true;
@@ -325,7 +339,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             {
                 Debug.Log($"{Time.time} {transform.name} hit PhysiX Collier {hit.transform.root.name}");
             }
-
+            Debug.LogWarning($"Damgage !!!!!{localWeaponDamageCurr} {weaponDamageCurr}");
             //? ve ra tia neu ban trung remotePlayers
             if (isHitOtherRemotePlayers)
                 Debug.DrawRay(aimPoint.position, aimForwardVector * hitDis, Color.red, 1f);
@@ -334,6 +348,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
         }
 
+        CroshairManager.OnHitTarget(NetworkPlayer.Local.transform.position,isHit);
         lastTimeFired = Time.time;
 
         // lam cho ai ban theo tan suat random khoang time
@@ -360,14 +375,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         else
             fireParticleSystemLocal.Play();
 
-        if (audioSource)
-        {
-            audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
-            var _audioSource = new GameObject().AddComponent<AudioSource>();
-            _audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
-            _audioSource.loop = false;
-            Destroy(_audioSource.gameObject, weaponSoundCurr.length);
-        }
+      
 
         yield return new WaitForSeconds(0.09f);
         isFiring = false;
@@ -402,11 +410,15 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         isSingleMode = config.isSingleMode;
         recoil = config.recoil;
         isScopeMode = config.isContainScope;
+        CroshairManager.instance.SetGunSound(weaponSoundCurr);
 
-        if(config.slotWeaponIndex == SlotWeaponIndex.Slot_1) {
-            crossHair.SetActive(false);
+        if (config.slotWeaponIndex == SlotWeaponIndex.Slot_1) {
+            //crossHair.SetActive(false);
+            CroshairManager.instance.HideCroshair();
         } else {
-            crossHair.SetActive(true);
+            CroshairManager.instance.ShowCroshair();
+
+            //crossHair.SetActive(true);
         }
     }
 

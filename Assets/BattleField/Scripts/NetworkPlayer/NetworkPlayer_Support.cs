@@ -1,11 +1,26 @@
+using DG.Tweening;
 using Fusion;
+using System.Collections;
 using UnityEngine;
 public class NetworkPlayer_Support : NetworkBehaviour
 {
     [SerializeField] private Animator animator;
+    public void Awake()
+    {
+        if (HasStateAuthority)
+        {
+            CameraEffectControl.instance.EyeBlinkEffect.CloseEyeImmediately();
+        }
+    }
     public void Init()
     {
-        if(WeaponManager.instance != null)
+        // this method call with object has state authority
+        if (StartGameHandler.instance)
+        {
+            GetComponent<CharacterMovementHandler>().Respawn();
+        }
+
+        if (WeaponManager.instance != null)
         {
             WeaponManager.instance.playerAnimator = animator;
             WeaponManager.instance.ShowWeapon(false);
@@ -25,7 +40,11 @@ public class NetworkPlayer_Support : NetworkBehaviour
         {
             RandomGroupManager.RaiseStartSpawnEvent();
         }
+
+        
+        CameraEffectControl.instance.EyeBlinkEffect.OpenEye();
     }
+ 
 }
 public interface INetworkInitialize
 {

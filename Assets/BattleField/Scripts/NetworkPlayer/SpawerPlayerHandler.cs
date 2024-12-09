@@ -14,6 +14,7 @@ public class SpawerPlayerHandler : NetworkBehaviour
     
     public override void FixedUpdateNetwork()
     {
+        return;
         if(HasStateAuthority == false) return;
 
         if(Object.HasStateAuthority) {

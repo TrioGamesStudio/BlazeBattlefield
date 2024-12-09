@@ -85,8 +85,8 @@ public class WorldUI : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (countdownValue > 0)
         {
-            yield return new WaitForSeconds(1f);             // Wait for 1 second
             informationText.text = countdownValue.ToString();  // Update the countdown text
+            yield return new WaitForSeconds(1f);             // Wait for 1 second
             //countdownText.gameObject.SetActive(true);        // Show the countdown UI        
             countdownValue--;
         }

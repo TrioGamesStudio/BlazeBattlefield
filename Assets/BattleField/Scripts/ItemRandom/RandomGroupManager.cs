@@ -34,20 +34,19 @@ public class RandomGroupManager : NetworkBehaviour
     [EditorButton]
     private void StartSpawn()
     {
-        if (NetworkPlayer.Local.Runner.IsSharedModeMasterClient == false)
+        if (NetworkPlayer.Local.Runner.IsSharedModeMasterClient || NetworkPlayer.Local.Runner.IsSinglePlayer)
         {
-            return;
+            Debug.Log("Start spawn", gameObject);
+            int countPerRegion = totalBoxCountInAllRegion / randomGroups.Length;
+            foreach (var group in randomGroups)
+            {
+                if (group.gameObject.activeSelf == false) continue;
+                group.SetDropBoxPrefab(dropBoxPrefab);
+                group.SpawnDropBoxesInGroup(countPerRegion);
+            }
+            Debug.Log($"HAVE TOTAL: {countPerRegion * randomGroups.Length} drop box in area", gameObject);
+
         }
 
-        Debug.Log("Start spawn", gameObject);
-        int countPerRegion = totalBoxCountInAllRegion / randomGroups.Length;
-        foreach (var group in randomGroups)
-        {
-            if (group.gameObject.activeSelf == false) continue;
-            group.SetDropBoxPrefab(dropBoxPrefab);
-            group.SpawnDropBoxesInGroup(countPerRegion);
-        }
-
-        Debug.Log($"HAVE TOTAL: {countPerRegion * randomGroups.Length} drop box in area", gameObject);
     }
 }

@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,11 +15,16 @@ public class PlaySoundReady : MonoBehaviour
         audioSource.clip = SoundManager.SoundAsset.GetSound(GET_READY_);
     }
 
-    private void Update() {
-        if((Matchmaking.Instance.IsDone || MatchmakingTeam.Instance.IsDone) && !isPlayReady) {
-            isPlayReady = true;
-            audioSource.CustomPlaySound();
-        }
+    //private void Update()
+    //{
+    //    if ((Matchmaking.Instance.IsDone || MatchmakingTeam.Instance.IsDone) && !isPlayReady)
+    //    {
+    //        isPlayReady = true;
+    //    }
+    //}
+    [Button]
+    public void PlayReadySound()
+    {
+        audioSource.CustomPlaySound();
     }
-
 }
