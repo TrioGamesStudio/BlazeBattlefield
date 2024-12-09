@@ -47,7 +47,7 @@ public class CroshairManager : MonoBehaviour
     [Button]
     public void HitTarget(Vector3 spawnPosition,bool isHit)
     {
-        if (croshairContainer.gameObject.activeSelf == false) return;
+        //if (croshairContainer.gameObject.activeSelf == false) return;
 
         hitCroshair.DOKill();
         normalCroshair.DOKill();
@@ -84,13 +84,13 @@ public class CroshairManager : MonoBehaviour
     {
         
         var go = Instantiate(hitmakerSoundPrefab, spawnPosition, Quaternion.identity);
-        go.Play();
+        go.CustomPlaySound();
         Destroy(go.gameObject, shootingSoundPrefab.clip.length);
     }
     private void CreateShootingAudio(Vector3 spawnPosition)
     {
         var go = Instantiate(shootingSoundPrefab, spawnPosition,Quaternion.identity);
-        go.Play();
+        go.CustomPlaySound();
         Destroy(go.gameObject, shootingSoundPrefab.clip.length);
     }
 

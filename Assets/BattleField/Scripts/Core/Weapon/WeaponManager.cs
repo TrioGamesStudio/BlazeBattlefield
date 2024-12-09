@@ -123,6 +123,7 @@ public class WeaponManager : MonoBehaviour
     public void OnActiveWeapon(int activeIndexButton)
     {
         TimerActionHandler.instance.Cancel();
+        Debug.Log("activeIndexButton la: " + activeIndexButton);
         if (currentWeaponIndex == -1) // T
         {
             // khong cam gi
