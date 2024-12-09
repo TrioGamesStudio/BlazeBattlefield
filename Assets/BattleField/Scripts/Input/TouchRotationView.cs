@@ -17,7 +17,7 @@ public class TouchRotationView : MonoBehaviour
     {
         var activeTouches = Touch.activeTouches;
         for (var i = 0; i < activeTouches.Count; ++i)
-            Debug.Log("Active touch: " + activeTouches[i]);
+            //Debug.Log("Active touch: " + activeTouches[i]);
 
         if(activeTouches.Count > 0)
         {

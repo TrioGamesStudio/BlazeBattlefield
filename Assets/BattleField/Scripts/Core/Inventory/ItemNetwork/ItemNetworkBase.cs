@@ -102,6 +102,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     {
         if (HasStateAuthority)
         {
+            Debug.Log("Destroy item rpc: "+gameObject.name);
             Runner.Despawn(Object);
         }
     }

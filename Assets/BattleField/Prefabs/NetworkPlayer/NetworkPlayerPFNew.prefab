@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8803314567172224241
 RectTransform:
   m_ObjectHideFlags: 0
@@ -32334,6 +32334,7 @@ MonoBehaviour:
   recoilZ: 0.4
   snappiness: 6
   returnSpeed: 2
+  accuryVector: {x: 0.02, y: 0, z: 0}
 --- !u!20 &9085586436348920549
 Camera:
   m_ObjectHideFlags: 0
@@ -33188,7 +33189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8de05c89c1fc1b49aa1e34795c76caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Networked_HP: 5
+  _Networked_HP: 100
   _Networked_IsDead: 0
   _Networked_Killer:
     _length: 0

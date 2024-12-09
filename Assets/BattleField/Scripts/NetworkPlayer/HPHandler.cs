@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class HPHandler : NetworkBehaviour
 {
     [Networked]
-    public byte Networked_HP { get; set; } = 5;
+    public byte Networked_HP { get; set; } = 100;
     
     [Networked]
     public bool Networked_IsDead {get; set;} = false;
@@ -124,12 +124,13 @@ public class HPHandler : NetworkBehaviour
 
     //? server call | coll 55 WeaponHandler.cs | khi hitInfo.HitBox tren player
     public void OnTakeDamage(string damageCausedByPlayerNickName, byte damageAmount, WeaponHandler weaponHandler) {
+        Debug.LogWarning("Before damge:" + Networked_HP);
         if(Networked_IsDead) return;
 
         //gioi han gia tri damageAmount
         if(damageAmount > Networked_HP) damageAmount = Networked_HP;
-
         Networked_HP -= damageAmount;
+        //Debug.LogWarning("After damge:" + Networked_HP);
         RPC_UpdateTeammateHP(damageAmount);
         killerName = damageCausedByPlayerNickName;
         RPC_SetNetworkedHP(Networked_HP, damageCausedByPlayerNickName);
