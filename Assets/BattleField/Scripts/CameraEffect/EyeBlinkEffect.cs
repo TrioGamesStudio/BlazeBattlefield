@@ -23,9 +23,20 @@ public class EyeBlinkEffect : MonoBehaviour
     [SerializeField, Range(0, 1)] private float _closeEndColorValue = 0;
     [SerializeField, Min(0)] private float _closeColorTime = 3;
 
+    [SerializeField] private bool closeEyeWhenStart = true;
+
     private LerpValue vignette;
     private LerpValue color;
     private LerpValue canvasGroup;
+
+    private void Awake()
+    {
+        if (closeEyeWhenStart)
+        {
+            CloseEyeImmediately();
+            Debug.Log("Close Eye Immediately !!!", gameObject);
+        }
+    }
 
     [Button]
     public void CloseEyeImmediately()
