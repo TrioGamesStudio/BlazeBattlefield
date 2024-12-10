@@ -1,6 +1,7 @@
 using Cinemachine;
 using Fusion;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class LocalCameraHandler : NetworkBehaviour
 {
@@ -124,11 +125,16 @@ public class LocalCameraHandler : NetworkBehaviour
         //localCamera.transform.rotation = Quaternion.Euler(_cameraRotationX, _cameraRotationY, 0);
         localCamera.transform.rotation = Quaternion.Euler(new Vector3(_cameraRotationX, _cameraRotationY, 0) + currentRotation);
     }
-
+    public Vector3 accuryVector = Vector3.one;
     public void RaycastHitPoint() {
         if(this.Object.HasStateAuthority) {
             ray.origin = this.transform.position;
             ray.direction = this.transform.forward;
+            var direction = ray.direction;
+            direction.x += Random.Range(-accuryVector.x, accuryVector.x);
+            direction.y += Random.Range(-accuryVector.y, accuryVector.y);
+            direction.z += Random.Range(-accuryVector.z, accuryVector.z);
+            ray.direction = direction;
             Physics.Raycast(ray, out hitInfo, 100, collisionLayers);
             RPC_SetHitPointRaycast(hitInfo.point, this.transform.position);
             RPC_SetBulletPoint(spawnedPointGun_OnCam.transform.position, spawnedPointGun_OnHand.transform.position);

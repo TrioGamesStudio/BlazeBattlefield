@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using NaughtyAttributes;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -10,13 +10,19 @@ public class CameraEffectControl : MonoBehaviour
     // Start is called before the first frame update
     private Volume volume;
 
-    private Vignette vignette;
+    public Vignette vignette;
+    public ColorAdjustments colorAdjustments;
+    public EyeBlinkEffect EyeBlinkEffect;
+
     private void Awake()
     {
         instance = this;
+
+        EyeBlinkEffect = GetComponent<EyeBlinkEffect>();
+
         volume = GetComponent<Volume>();
         volume.profile.TryGet(out vignette);
-
+        volume.profile.TryGet(out colorAdjustments);
         HideEyeBlink();
     }
 
@@ -26,6 +32,6 @@ public class CameraEffectControl : MonoBehaviour
     }
     public void HideEyeBlink()
     {
-        vignette.intensity.value = 0;
+        vignette.intensity.value = .2f;
     }
 }
