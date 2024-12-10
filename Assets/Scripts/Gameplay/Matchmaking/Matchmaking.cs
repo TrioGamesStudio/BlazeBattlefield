@@ -58,6 +58,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     [SerializeField] int skinSelectedNumber = 0;
     public int SkinSelectedNumber{get => skinSelectedNumber; set => skinSelectedNumber = value;}
+
     private void Awake()
     {
         if (FindObjectsOfType<Matchmaking>().Length > 1)
@@ -442,6 +443,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     private void InitializeSkinSelectedNumber(NetworkRunner runner, NetworkObject obj)
     {
         obj.GetComponent<CharacterOutfitsGenerator>().SetSkinSelectedNumber(this.skinSelectedNumber);
+        FindObjectOfType<SkinSelection>().ToggleSelectSkinButton(false);
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)

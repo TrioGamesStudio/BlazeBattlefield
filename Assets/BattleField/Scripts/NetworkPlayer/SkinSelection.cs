@@ -1,39 +1,47 @@
-using System.Collections.Generic;
-using Fusion;
+using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SkinSelection : NetworkBehaviour
+public class SkinSelection : MonoBehaviour
 {
+    static SkinSelection Instance;
+
     [SerializeField] Matchmaking matchmaking;
     [SerializeField] MatchmakingTeam matchmakingTeam;
 
     [SerializeField] int skinsNextNumber = 12;
     [SerializeField] Transform skinsParent;
-    List<Transform> skinsList;
     int skinMaxNumber;
     // buttons
     [SerializeField] Button selectButton;
 
+    
+
     private void Awake() {
+
+        if(Instance != null && Instance != this) {
+            Destroy(this.gameObject);
+            return;
+        } else {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        
         matchmaking = FindObjectOfType<Matchmaking>();
         matchmakingTeam = FindObjectOfType<MatchmakingTeam>();
-        
         skinMaxNumber = skinsParent.childCount;
 
         selectButton.onClick.AddListener(SkinSelectNext);
+
     }
 
     private void Start() {
-        //int randomSkinsLocal = Random.Range(0, skinsParent.childCount);
-
         if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo) {
             SkinsSlectionSoloUpdate(skinsNextNumber);
 
             matchmaking.SkinSelectedNumber = skinsNextNumber;
             matchmakingTeam.SkinSelectedNumber = skinsNextNumber;
         }
-
     }
 
     void SkinSelectNext() {
@@ -47,14 +55,6 @@ public class SkinSelection : NetworkBehaviour
 
         SkinsSlectionSoloUpdate(skinsNextNumber);
 
-        if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo) {
-            if(Object.HasStateAuthority) {
-                FindObjectOfType<CharacterOutfitsGenerator>().RPC_RandomSKinsNumsGenerator(skinsNextNumber);
-            }
-            
-        }
-        
-
         matchmaking.SkinSelectedNumber = skinsNextNumber;
         matchmakingTeam.SkinSelectedNumber = skinsNextNumber;
     }
@@ -65,8 +65,10 @@ public class SkinSelection : NetworkBehaviour
         }
 
         skinsParent.GetChild(skinNumber).gameObject.SetActive(true);
+    }
 
-
+    public void ToggleSelectSkinButton(bool isActive) {
+        selectButton.gameObject.SetActive(isActive);
     }
 
 }

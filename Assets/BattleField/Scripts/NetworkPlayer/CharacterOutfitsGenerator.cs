@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class CharacterOutfitsGenerator : NetworkBehaviour
 {
@@ -20,14 +19,6 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 
         if(Object.HasInputAuthority) {
-            /* if(SceneManager.GetActiveScene().name == "MainLobby") {
-                RPC_RandomSKinsNumsGenerator(0);
-                return;
-            }
-            else {
-                int skinsNums = Random.Range(0, skinsList.Count);
-                RPC_RandomSKinsNumsGenerator(skinsNums);
-            } */
 
             if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo) {
                 skinSelectedNum = Matchmaking.Instance.SkinSelectedNumber;
@@ -45,7 +36,7 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
         {
             skinsList.Add(item);
         }
-        
+
     }
 
     public override void Render()
@@ -63,6 +54,7 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.StateAuthority)]
     public void RPC_RandomSKinsNumsGenerator(int skinsNums) {
         skinsNumber_Network = skinsNums;
+        
     }
 
     private void OnSkinsChanged()
