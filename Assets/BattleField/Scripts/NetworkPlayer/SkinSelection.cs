@@ -28,6 +28,9 @@ public class SkinSelection : MonoBehaviour
 
         if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo) {
             SkinsSlectionSoloUpdate(skinsNextNumber);
+
+            matchmaking.SkinSelectedNumber = skinsNextNumber;
+            matchmakingTeam.SkinSelectedNumber = skinsNextNumber;
         }
 
     }
@@ -58,6 +61,8 @@ public class SkinSelection : MonoBehaviour
         }
 
         skinsParent.GetChild(skinNumber).gameObject.SetActive(true);
+
+
     }
 
 }

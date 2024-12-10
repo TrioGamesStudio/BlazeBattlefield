@@ -32,6 +32,7 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
             if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo) {
                 skinSelectedNum = Matchmaking.Instance.SkinSelectedNumber;
             }
+            
             RPC_RandomSKinsNumsGenerator(skinSelectedNum);
         }
         
