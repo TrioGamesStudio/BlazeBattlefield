@@ -7,7 +7,7 @@ public class SkinSelection : MonoBehaviour
     [SerializeField] Matchmaking matchmaking;
     [SerializeField] MatchmakingTeam matchmakingTeam;
 
-    [SerializeField] int skinsNextNumber = 0;
+    [SerializeField] int skinsNextNumber = 12;
     [SerializeField] Transform skinsParent;
     List<Transform> skinsList;
     int skinMaxNumber;
@@ -24,7 +24,7 @@ public class SkinSelection : MonoBehaviour
     }
 
     private void Start() {
-        int randomSkinsLocal = Random.Range(0, skinsParent.childCount);
+        //int randomSkinsLocal = Random.Range(0, skinsParent.childCount);
 
         if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo) {
             SkinsSlectionSoloUpdate(skinsNextNumber);
