@@ -44,7 +44,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private List<Transform> memberPos = new();
     [SerializeField] private Button readyButton;
     [SerializeField] private Button playButton;
-    [SerializeField] private int MAX_PLAYER = 3;
+    [SerializeField] private int MAX_PLAYER;
+    [SerializeField] private bool spawnAI = false;
 
     private NetworkRunner networkRunner;   
     private PlayerRoomController localPlayerRoomController;
@@ -75,6 +76,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        spawnAI = false;
     }
 
     void Start()
@@ -492,7 +494,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
                 playerObject.GetComponent<PlayerRoomController>().SetLocalPlayer();
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
-                if (runner.IsSharedModeMasterClient)
+                if (runner.IsSharedModeMasterClient && spawnAI)
                 {
                     // Start a coroutine to wait for 10 seconds and spawn an AI bot if necessary
                     StartCoroutine(WaitForRealPlayerOrSpawnBot(runner));
@@ -543,7 +545,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     private IEnumerator WaitForRealPlayerOrSpawnBot(NetworkRunner runner)
     {
-        yield return new WaitForSeconds(15); // Wait for 10 seconds
+        yield return new WaitForSeconds(15);
         Debug.Log("Waiting for real players...");
 
         // Calculate the number of bots needed to fill the remaining slots
