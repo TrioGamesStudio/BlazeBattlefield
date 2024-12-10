@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SkinSelection : MonoBehaviour
+public class SkinSelection : NetworkBehaviour
 {
     [SerializeField] Matchmaking matchmaking;
     [SerializeField] MatchmakingTeam matchmakingTeam;
@@ -47,7 +48,10 @@ public class SkinSelection : MonoBehaviour
         SkinsSlectionSoloUpdate(skinsNextNumber);
 
         if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo) {
-            FindObjectOfType<CharacterOutfitsGenerator>().RPC_RandomSKinsNumsGenerator(skinsNextNumber);
+            if(Object.HasStateAuthority) {
+                FindObjectOfType<CharacterOutfitsGenerator>().RPC_RandomSKinsNumsGenerator(skinsNextNumber);
+            }
+            
         }
         
 
