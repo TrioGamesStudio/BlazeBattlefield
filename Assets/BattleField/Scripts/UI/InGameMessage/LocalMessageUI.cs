@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static Fusion.Editor.FusionHubWindow;
 
 public class LocalMessageUI : MonoBehaviour
 {
