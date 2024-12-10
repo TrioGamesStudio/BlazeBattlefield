@@ -56,6 +56,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         PlayScene = 2,
     }
 
+    [SerializeField] int skinSelectedNumber = 0;
+    public int SkinSelectedNumber{get => skinSelectedNumber; set => skinSelectedNumber = value;}
     private void Awake()
     {
         if (FindObjectsOfType<Matchmaking>().Length > 1)
@@ -437,6 +439,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
     }
 
+    private void InitializeSkinSelectedNumber(NetworkRunner runner, NetworkObject obj)
+    {
+        obj.GetComponent<CharacterOutfitsGenerator>().SetSkinSelectedNumber(this.skinSelectedNumber);
+    }
+
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
 
@@ -446,7 +453,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             if (player == runner.LocalPlayer)
             {
                 spawnPosition = memberPos[runner.ActivePlayers.Count() - 1].position;
-                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, spawnPosition, Quaternion.identity, player);
+                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, spawnPosition, Quaternion.identity, player, InitializeSkinSelectedNumber);
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
                 players[player].TurnOnTeamMemberPanel();
@@ -483,7 +490,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             if (player == runner.LocalPlayer)
             {
-                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
+                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player, InitializeSkinSelectedNumber);
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
                 localSoloPlayer = playerObject.GetComponent<PlayerRoomController>();
                 playerObject.GetComponent<PlayerRoomController>().SetPlayerRef(player);

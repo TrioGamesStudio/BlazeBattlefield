@@ -7,26 +7,32 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
 {
     [Networked]
     public int skinsNumber_Network{get; set;}
-    [SerializeField] int defaultSkinsNumber = 12;
+    /* [SerializeField] int defaultSkinsNumber = 12; */
     [SerializeField] Transform skinsTrans;
     [SerializeField] List<Transform> skinsList;
-
+    [SerializeField] int skinSelectedNum;
     //others
     ChangeDetector changeDetector;
+
 
 
     public override void Spawned() {
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 
         if(Object.HasInputAuthority) {
-            if(SceneManager.GetActiveScene().name == "MainLobby") {
-                RPC_RandomSKinsNumsGenerator(defaultSkinsNumber);
+            /* if(SceneManager.GetActiveScene().name == "MainLobby") {
+                RPC_RandomSKinsNumsGenerator(0);
                 return;
             }
             else {
                 int skinsNums = Random.Range(0, skinsList.Count);
                 RPC_RandomSKinsNumsGenerator(skinsNums);
+            } */
+
+            if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo) {
+                skinSelectedNum = Matchmaking.Instance.SkinSelectedNumber;
             }
+            RPC_RandomSKinsNumsGenerator(skinSelectedNum);
         }
         
 
@@ -38,11 +44,11 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
         {
             skinsList.Add(item);
         }
+        
     }
 
     public override void Render()
     {
-        if (SceneManager.GetActiveScene().name == "MainLobby") return;
         foreach (var change in changeDetector.DetectChanges(this, out var previousBuffer, out var currentBuffer)) {
             switch (change)
             {
@@ -66,5 +72,9 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
         }
 
         skinsTrans.GetChild(skinsNumber_Network).gameObject.SetActive(true);
+    }
+
+    public void SetSkinSelectedNumber(int skinNum) {
+        this.skinSelectedNum = skinNum;
     }
 }
