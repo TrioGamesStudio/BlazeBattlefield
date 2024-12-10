@@ -321,12 +321,15 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (networkRunner != null)
         {
             Debug.Log("Leaving room...");
-            if (players[networkRunner.LocalPlayer].IsRoomOwner)
+            if (players.Count != 0)
             {
-                PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => p.Object.HasInputAuthority == false);
-                if (localPlayer != null)
+                if (players[networkRunner.LocalPlayer].IsRoomOwner)
                 {
-                    localPlayer.RPC_SetAsRoomOwner();
+                    PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => p.Object.HasInputAuthority == false);
+                    if (localPlayer != null)
+                    {
+                        localPlayer.RPC_SetAsRoomOwner();
+                    }
                 }
             }
             await networkRunner.Shutdown();

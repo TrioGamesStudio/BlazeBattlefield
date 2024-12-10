@@ -4,6 +4,7 @@ using Fusion;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class HPHandler : NetworkBehaviour
 {
@@ -65,7 +66,9 @@ public class HPHandler : NetworkBehaviour
     //? ham duoc goi khi Object was spawned
     public override void Spawned() {
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
-
+        // kiem tra co dang spawn tai ready scene hay khong
+        bool isReadyScene = SceneManager.GetActiveScene().name == "MainLobby";
+        if (isReadyScene) return;
         // show HP player on message box
         inGamePlayerStatusUIHandler.OnGamePlayerHpRecieved(Networked_HP);
         if(Object.HasStateAuthority)
