@@ -363,6 +363,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
         localPlayer.gameObject.SetActive(true);
         await JoinLobby();
+
+        if(currentMode == Mode.Duo) {
+            SkinSelection.Instance.ToggleSelectSkinButton(false);
+        } else {
+            SkinSelection.Instance.ToggleSelectSkinButton(true);
+        }
     }
 
     public void BackToLobbyAll()

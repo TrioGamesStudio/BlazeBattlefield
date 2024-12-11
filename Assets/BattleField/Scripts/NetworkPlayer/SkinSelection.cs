@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class SkinSelection : MonoBehaviour
 {
-    static SkinSelection Instance;
+    public static SkinSelection Instance;
 
     [SerializeField] Matchmaking matchmaking;
     [SerializeField] MatchmakingTeam matchmakingTeam;
