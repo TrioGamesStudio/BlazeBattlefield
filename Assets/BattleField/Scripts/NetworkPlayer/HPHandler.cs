@@ -47,6 +47,7 @@ public class HPHandler : NetworkBehaviour
     [SerializeField] InGamePlayerStatusUIHandler inGamePlayerStatusUIHandler;
     bool isShowResultTable = false;
     public UnityEvent<float> OnTakeDamageEvent = new UnityEvent<float>();
+
     private void Awake() {
         characterMovementHandler = GetComponent<CharacterMovementHandler>();
         hitboxRoot = GetComponent<HitboxRoot>();
@@ -210,8 +211,13 @@ public class HPHandler : NetworkBehaviour
         {
             Networked_HP += amount;
         }
-        OnTakeDamageEvent.Invoke(-amount);
+        
+        //OnTakeDamageEvent.Invoke(-amount);
+        RPC_UpdateTeammateHP(-amount);
+
         HealthBarUI.OnHealthChangeAction?.Invoke(Networked_HP);
+
+
     }
 
     //RPC

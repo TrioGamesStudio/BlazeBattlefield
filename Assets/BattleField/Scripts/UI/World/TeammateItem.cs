@@ -16,6 +16,7 @@ public class TeammateItem : MonoBehaviour
         teammateName.text = name;
         hpText.text = hp.ToString();
         playerHPHandler.OnTakeDamageEvent.AddListener(UpdateHPText);
+        
         healthBarUI.SetMaxHealthAmount(hp);
     }
 
@@ -25,4 +26,5 @@ public class TeammateItem : MonoBehaviour
         hpText.text = currentHP.ToString();
         healthBarUI.OnHealthChange(damageAmount);
     }
+
 }
