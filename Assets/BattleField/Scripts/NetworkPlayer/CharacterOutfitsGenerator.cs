@@ -1,32 +1,30 @@
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class CharacterOutfitsGenerator : NetworkBehaviour
 {
     [Networked]
     public int skinsNumber_Network{get; set;}
-    [SerializeField] int defaultSkinsNumber = 12;
+    /* [SerializeField] int defaultSkinsNumber = 12; */
     [SerializeField] Transform skinsTrans;
     [SerializeField] List<Transform> skinsList;
-
+    [SerializeField] int skinSelectedNum;
     //others
     ChangeDetector changeDetector;
+
 
 
     public override void Spawned() {
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 
         if(Object.HasInputAuthority) {
-            if(SceneManager.GetActiveScene().name == "MainLobby") {
-                RPC_RandomSKinsNumsGenerator(defaultSkinsNumber);
-                return;
+
+            if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo) {
+                skinSelectedNum = Matchmaking.Instance.SkinSelectedNumber;
             }
-            else {
-                int skinsNums = Random.Range(0, skinsList.Count);
-                RPC_RandomSKinsNumsGenerator(skinsNums);
-            }
+            
+            RPC_RandomSKinsNumsGenerator(skinSelectedNum);
         }
         
 
@@ -38,11 +36,11 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
         {
             skinsList.Add(item);
         }
+
     }
 
     public override void Render()
     {
-        if (SceneManager.GetActiveScene().name == "MainLobby") return;
         foreach (var change in changeDetector.DetectChanges(this, out var previousBuffer, out var currentBuffer)) {
             switch (change)
             {
@@ -56,6 +54,7 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.StateAuthority)]
     public void RPC_RandomSKinsNumsGenerator(int skinsNums) {
         skinsNumber_Network = skinsNums;
+        
     }
 
     private void OnSkinsChanged()
@@ -66,5 +65,9 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
         }
 
         skinsTrans.GetChild(skinsNumber_Network).gameObject.SetActive(true);
+    }
+
+    public void SetSkinSelectedNumber(int skinNum) {
+        this.skinSelectedNum = skinNum;
     }
 }

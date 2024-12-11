@@ -14,6 +14,7 @@ public class HealthBar : MonoBehaviour
     void Start()
     {
         deathIcon.SetActive(false);
+        
     }
     public void SetMaxHealthAmount(float amount)
     {
