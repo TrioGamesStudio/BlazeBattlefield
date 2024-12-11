@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NaughtyAttributes;
+using System;
 using UnityEngine;
 
 public class AlivePlayerControl : MonoBehaviour
@@ -13,6 +14,7 @@ public class AlivePlayerControl : MonoBehaviour
     {
         OnUpdateAliveCountAction -= OnUpdateAliveCount;
     }
+    [Button]
     private void OnUpdateAliveCount()
     {
         int alive = 0;

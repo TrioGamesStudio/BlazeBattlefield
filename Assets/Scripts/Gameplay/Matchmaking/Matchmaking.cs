@@ -644,7 +644,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 UIController.Instance.AllowSelectMapMode(true);
             }
             UpdatePlayButtonInteractability();
-        }   
+        }
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
     }
 
 

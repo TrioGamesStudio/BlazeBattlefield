@@ -452,6 +452,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         if (HasStateAuthority)
         {
             AliveKillUI.UpdateKillCount?.Invoke(killCount);
+            AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
         }
     }
 }

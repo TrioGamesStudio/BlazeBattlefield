@@ -323,6 +323,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         if (runner.ActivePlayers.Count() > 1)
             FindObjectOfType<GameHandler>().CheckWin();
         players.Remove(player);
+
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
