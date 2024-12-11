@@ -33,6 +33,10 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         PlayScene = 2,
     }
 
+    
+    [SerializeField] int skinSelectedNumber = 0;
+    public int SkinSelectedNumber{get => skinSelectedNumber; set => skinSelectedNumber = value;}
+
     private void Awake()
     {
         if (FindObjectsOfType<MatchmakingTeam>().Length > 1)
@@ -97,6 +101,10 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         }
     }
 
+    private void InitializeSkinSelectedNumber(NetworkRunner runner, NetworkObject obj)
+    {
+        obj.GetComponent<CharacterOutfitsGenerator>().SetSkinSelectedNumber(this.skinSelectedNumber);
+    }
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
 
@@ -104,7 +112,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         
         if (player == runner.LocalPlayer)
         {
-            PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
+            PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player, InitializeSkinSelectedNumber);
             runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);  
             players[player] = playerObject.GetComponent<PlayerRoomController>();
             players[player].SetRoomID(roomID);

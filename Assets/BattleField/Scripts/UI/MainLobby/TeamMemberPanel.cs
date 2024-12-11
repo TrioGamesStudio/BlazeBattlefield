@@ -32,6 +32,10 @@ public class TeamMemberPanel : MonoBehaviour
     public void LeaveRoom()
     {
         FindObjectOfType<Matchmaking>().LeaveRoom();
+
+        // neu roi dou thi ko show button
+        FindObjectOfType<SkinSelection>().ToggleSelectSkinButton(true);
+        
     }
 
     void Update()
