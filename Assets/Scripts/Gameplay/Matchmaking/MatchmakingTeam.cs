@@ -188,8 +188,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         }
 
         int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
-        string text = "Waiting other player: " + remainPlayer + " remain";   
-        FindObjectOfType<UIController>().SetText(text);
+        FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
         AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
 
     }
@@ -311,8 +310,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         if (!isDone)
         {
             int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
-            string text = "Waiting other player: " + remainPlayer + " remain";
-            FindObjectOfType<UIController>().SetText(text);
+            FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
         }
 
         if (player == runner.LocalPlayer)
@@ -323,6 +321,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         if (runner.ActivePlayers.Count() > 1)
             FindObjectOfType<GameHandler>().CheckWin();
         players.Remove(player);
+
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
     }
 
     public void OnConnectedToServer(NetworkRunner runner)

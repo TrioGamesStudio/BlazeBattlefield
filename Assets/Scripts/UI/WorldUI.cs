@@ -28,12 +28,19 @@ public class WorldUI : MonoBehaviour
         lobbyButtonWin.onClick.AddListener(BackToLobby);
 
         returnLobby.onClick.AddListener(BackToLobby);
+        InputPlayerMovement.ExitAction += ToggleCursor;
+    }
+
+    private void OnDestroy()
+    {
+        InputPlayerMovement.ExitAction -= ToggleCursor;
+
     }
 
     private void Update() {
-        if(Input.GetKeyDown(KeyCode.Escape)) {
-            ToggleCursor();
-        }
+        //if(Input.GetKeyDown(KeyCode.Escape)) {
+        //    ToggleCursor();
+        //}
     }
     
 

@@ -182,4 +182,14 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     {
         return ItemWeight;
     }
+
+    public void DisableOutline()
+    {
+        rpc_disableOutline();
+    }
+    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
+    private void rpc_disableOutline()
+    {
+        GetComponent<Outline>().enabled = false;
+    }
 }

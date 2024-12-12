@@ -200,11 +200,13 @@ public class UIController : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-
-    public  void SetText(string text)
+    [SerializeField] private Color textFormatColor;
+    public void SetText(string text)
     {
-        //informationText.text = text;
-        FindObjectOfType<WorldUI>().SetText(text);
+        textFormatColor = Color.yellow;
+        string colorHex = ColorUtility.ToHtmlStringRGBA(textFormatColor);
+        string formattedText = $"Waiting other player: <color=#{colorHex}>{text}</color> remain";
+        FindObjectOfType<WorldUI>().SetText(formattedText);
     }
 
     public void StartCountdown()

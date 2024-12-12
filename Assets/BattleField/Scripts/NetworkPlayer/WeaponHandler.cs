@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using Fusion;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -453,6 +452,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         if (HasStateAuthority)
         {
             AliveKillUI.UpdateKillCount?.Invoke(killCount);
+            AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
         }
     }
 }

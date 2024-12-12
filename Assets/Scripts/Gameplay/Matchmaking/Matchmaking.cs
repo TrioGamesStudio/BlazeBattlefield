@@ -519,8 +519,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 StartCoroutine(WaitForPlayerObjectSolo(runner, player));
             }
             int remainPlayer = MAX_PLAYER - networkRunner.ActivePlayers.Count();
-            string text = "Waiting other player: " + remainPlayer + " remain";
-            FindObjectOfType<UIController>().SetText(text);
+            //string text = "Waiting other player: " + remainPlayer + " remain";
+            FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
         }
         AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
 
@@ -617,8 +617,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (currentMode == Mode.Solo && !isDone)
         {
             int remainPlayer = MAX_PLAYER - networkRunner.ActivePlayers.Count();
-            string text = "Waiting other player: " + remainPlayer + " remain";
-            FindObjectOfType<UIController>().SetText(text);
+            //string text = "Waiting other player: " +  + " remain";
+            FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
         }
 
         if (currentMode == Mode.Solo && isDone)
@@ -644,7 +644,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 UIController.Instance.AllowSelectMapMode(true);
             }
             UpdatePlayButtonInteractability();
-        }   
+        }
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
     }
 
 
