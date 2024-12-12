@@ -266,7 +266,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3639674455687472884
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2789,7 +2789,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 7441864713629627726}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.99998766
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6227,7 +6227,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2337180642810028460}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.9999894
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8108,7 +8108,7 @@ MonoBehaviour:
   timerText: {fileID: 2316548943827216483}
   cancelButton: {fileID: 6376126367731671900}
   view: {fileID: 7536865883279746105}
-  circleFadeImage: {fileID: 7148216589855012037}
+  circleFadeImage: {fileID: 3539644823265361895}
 --- !u!1 &6399402930092071282
 GameObject:
   m_ObjectHideFlags: 0
@@ -10300,7 +10300,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &755083775906370188
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13321,6 +13321,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 301249421747516252, guid: 46f427103b9db4bcbb3ee535754bcbd3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1511543603760316574, guid: 46f427103b9db4bcbb3ee535754bcbd3,
         type: 3}
       propertyPath: m_Pivot.x
@@ -13451,6 +13456,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -753.128
       objectReference: {fileID: 0}
+    - target: {fileID: 4601916312601451633, guid: 46f427103b9db4bcbb3ee535754bcbd3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5002750106799507125, guid: 46f427103b9db4bcbb3ee535754bcbd3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6418268405956581655, guid: 46f427103b9db4bcbb3ee535754bcbd3,
         type: 3}
       propertyPath: m_ChildAlignment
@@ -13461,6 +13476,21 @@ PrefabInstance:
       propertyPath: returnLobby
       value: 
       objectReference: {fileID: 4168969006985462651}
+    - target: {fileID: 8448683097577472982, guid: 46f427103b9db4bcbb3ee535754bcbd3,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448683097577472982, guid: 46f427103b9db4bcbb3ee535754bcbd3,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448683097577472982, guid: 46f427103b9db4bcbb3ee535754bcbd3,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14683,6 +14713,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2660873368597838559}
     m_Modifications:
+    - target: {fileID: 1145631316666801058, guid: 21c457cccde2c4b9c82234b7af7a1cd8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3229864043713258571, guid: 21c457cccde2c4b9c82234b7af7a1cd8,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3806556491203796031, guid: 21c457cccde2c4b9c82234b7af7a1cd8,
         type: 3}
       propertyPath: m_Pivot.x
@@ -14802,6 +14842,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas Return Lobby
+      objectReference: {fileID: 0}
+    - target: {fileID: 7221669410667035512, guid: 21c457cccde2c4b9c82234b7af7a1cd8,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
