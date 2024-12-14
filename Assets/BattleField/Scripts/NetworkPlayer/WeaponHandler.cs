@@ -342,7 +342,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                     hit.collider.GetComponent<HitboxRoot>().GetComponent<HPHandler>().
                                 OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
                 }
-
+                PlayerStats.Instance.AddDamageDealt(localWeaponDamageCurr);
                 isHitOtherRemotePlayers = true;
             }
             else if (hit.collider != null)

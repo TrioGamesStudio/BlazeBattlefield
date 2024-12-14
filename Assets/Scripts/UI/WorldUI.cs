@@ -16,6 +16,7 @@ public class WorldUI : MonoBehaviour
     public TextMeshProUGUI informationText;
     public TextMeshProUGUI topText;
     public TextMeshProUGUI topTextTeam;
+    public StatsDisplay statsDisplay;
 
     // buttons
     [SerializeField] Button returnLobby;
@@ -35,14 +36,7 @@ public class WorldUI : MonoBehaviour
     {
         InputPlayerMovement.ExitAction -= ToggleCursor;
 
-    }
-
-    private void Update() {
-        //if(Input.GetKeyDown(KeyCode.Escape)) {
-        //    ToggleCursor();
-        //}
-    }
-    
+    }   
 
     public void ShowHideUI(int alivePlayer)
     {
@@ -111,13 +105,11 @@ public class WorldUI : MonoBehaviour
 
     private void BackToLobby()
     {
-        Debug.Log("BACK TO LOBBY NE");
         FindObjectOfType<Matchmaking>().BackToLobbyAll();
     }
 
     public void BackToLobbyTeam()
     {
-        Debug.Log("TEAM MEMBER BACK TO LOBBY NE");
         FindObjectOfType<MatchmakingTeam>().BackToLobby();
     }
 
@@ -136,6 +128,12 @@ public class WorldUI : MonoBehaviour
     void HideCursor() {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void ShowPlayerStats()
+    {
+        statsDisplay.gameObject.SetActive(true);
+        statsDisplay.DisplayStats(PlayerStats.Instance);
     }
 }
 
