@@ -320,6 +320,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                     isHit = true;
                     part.hPHandler.OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
                 }
+                PlayerStats.Instance.AddDamageDealt(localWeaponDamageCurr);
             }
             else localWeaponDamageCurr = this.weaponDamageCurr;
 
