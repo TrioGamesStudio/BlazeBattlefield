@@ -52,13 +52,6 @@ public class LocalCameraHandler : NetworkBehaviour
     #endregion Recoil
     
 
-    #region Shaking Camera
-    public Vector3 currentRotation_;
-    public Vector3 targetRotation_;
-    [SerializeField] float snappiness_;
-    [SerializeField] float returnSpeed_;
-    #endregion Shaking Camera
-
     private void Awake() {
         characterInputHandler = GetComponentInParent<CharacterInputHandler>();
 
@@ -80,8 +73,6 @@ public class LocalCameraHandler : NetworkBehaviour
 
         RecoilUpdate();
 
-        // neu ko di chuyen thi ko shaking
-        RecoilUpdate_();// shaking
     }
 
     void LateUpdate()
@@ -133,7 +124,7 @@ public class LocalCameraHandler : NetworkBehaviour
         _cameraRotationY += viewInput.x * Time.deltaTime * networkCharacterController.rotationSpeed;
 
         //localCamera.transform.rotation = Quaternion.Euler(_cameraRotationX, _cameraRotationY, 0);
-        localCamera.transform.rotation = Quaternion.Euler(new Vector3(_cameraRotationX, _cameraRotationY, 0) + currentRotation + currentRotation_);
+        localCamera.transform.rotation = Quaternion.Euler(new Vector3(_cameraRotationX, _cameraRotationY, 0) + currentRotation);
     }
     public Vector3 accuryVector = Vector3.one;
     public void RaycastHitPoint() {
@@ -171,7 +162,7 @@ public class LocalCameraHandler : NetworkBehaviour
         //targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, returnSpeed * Time.deltaTime);
         currentRotation = Vector3.Slerp(currentRotation, targetRotation, snappiness * Time.fixedDeltaTime);
     }
-    void SetRecoil(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
+    public void SetRecoil(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
         animator.SetTrigger("trigger");
         this.returnSpeed = returnSpeed;
         this.snappiness = snappiness;
@@ -184,15 +175,4 @@ public class LocalCameraHandler : NetworkBehaviour
         SetRecoil(recoil.currentRecoilX, recoil.currentRecoilY, recoil.currentRecoilZ, recoil.currentReturnSpeed, recoil.currentSnappiness);
     }
 
-    // Shaking camera when player moving
-    void RecoilUpdate_() {
-        targetRotation_ = Vector3.Lerp(targetRotation_, Vector3.zero, returnSpeed_ * Time.deltaTime);
-        currentRotation_ = Vector3.Slerp(currentRotation_, targetRotation_, snappiness_ * Time.fixedDeltaTime);
-    }
-    public void SetRecoil_(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
-        this.returnSpeed_ = returnSpeed;
-        this.snappiness_ = snappiness;
-        targetRotation_ += new Vector3(recoilX, Random.Range(-recoilY, recoilY), Random.Range(-recoilZ, recoilZ));
-
-    }
 }

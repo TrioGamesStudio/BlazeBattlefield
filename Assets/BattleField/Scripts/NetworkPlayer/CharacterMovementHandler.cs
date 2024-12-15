@@ -44,13 +44,6 @@ public class CharacterMovementHandler : NetworkBehaviour
     [SerializeField] AudioSource audioSource;
     bool isPlaySound = false;
 
-    [Header("Recoil")]
-    [SerializeField] float recoilX;
-    [SerializeField] float recoilY;
-    [SerializeField] float recoilZ;
-    [SerializeField] float snappiness_;
-    [SerializeField] float returnSpeed_;
-
     private void Awake() {
         //audioSource = GetComponent<AudioSource>();
         characterInputHandler = GetComponent<CharacterInputHandler>();
@@ -152,10 +145,6 @@ public class CharacterMovementHandler : NetworkBehaviour
         moveDir.Normalize();
         networkCharacterController.Move(moveDir);
         
-        // shaking camera
-        if(moveDir.magnitude > 0.1f) {
-            localCameraHandler.SetRecoil_(recoilX, recoilY, recoilZ, returnSpeed_, snappiness_);
-        }
         // animator
         Vector2 walkVector = new Vector2(networkCharacterController.Velocity.x,
                                         networkCharacterController.Velocity.z);

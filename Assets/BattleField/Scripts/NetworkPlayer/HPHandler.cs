@@ -48,11 +48,14 @@ public class HPHandler : NetworkBehaviour
     bool isShowResultTable = false;
     public UnityEvent<float> OnTakeDamageEvent = new UnityEvent<float>();
 
+    LocalCameraHandler localCameraHandler;
+
     private void Awake() {
         characterMovementHandler = GetComponent<CharacterMovementHandler>();
         hitboxRoot = GetComponent<HitboxRoot>();
         networkInGameMessages = GetComponent<NetworkInGameMessages>();
         networkPlayer = GetComponent<NetworkPlayer>();
+        localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
     }
     void Start() {
         if(!isSkipSettingStartValues) {
@@ -135,6 +138,12 @@ public class HPHandler : NetworkBehaviour
         //gioi han gia tri damageAmount
         if(damageAmount > Networked_HP) damageAmount = Networked_HP;
         Networked_HP -= damageAmount;
+
+        // shaking camera
+        if(localCameraHandler != null) {
+            localCameraHandler.SetRecoil(-2, 2, 0.35f, 2, 6);
+        }
+        
         //Debug.LogWarning("After damge:" + Networked_HP);
         RPC_UpdateTeammateHP(damageAmount);
         killerName = damageCausedByPlayerNickName;

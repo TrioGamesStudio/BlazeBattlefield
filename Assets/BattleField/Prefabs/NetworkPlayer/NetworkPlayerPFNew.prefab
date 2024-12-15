@@ -32921,6 +32921,7 @@ GameObject:
   - component: {fileID: 4437284930619975366}
   - component: {fileID: 6443099134368130598}
   - component: {fileID: 218787821313359930}
+  - component: {fileID: 6840208099668153488}
   m_Layer: 0
   m_Name: NetworkPlayerPFNew
   m_TagString: Player
@@ -33442,6 +33443,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76cb6aebcf171ed48a957724055f2e84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6840208099668153488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6593664972719329374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28a68c912c5d2d14a9e4c83fe4fc0cec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enable: 1
+  amplitude: 0.015
+  frequency: 10
+  _camera: {fileID: 69732658926714579}
+  cameraHolder: {fileID: 69732658926714579}
+  localCamera: {fileID: 8814744861130382656}
+  characterController: {fileID: 3481803327373413606}
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0
