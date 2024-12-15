@@ -139,11 +139,6 @@ public class HPHandler : NetworkBehaviour
         if(damageAmount > Networked_HP) damageAmount = Networked_HP;
         Networked_HP -= damageAmount;
 
-        // shaking camera
-        if(localCameraHandler != null) {
-            localCameraHandler.SetRecoil(-2, 2, 0.35f, 2, 6);
-        }
-        
         //Debug.LogWarning("After damge:" + Networked_HP);
         RPC_UpdateTeammateHP(damageAmount);
         killerName = damageCausedByPlayerNickName;
@@ -274,6 +269,11 @@ public class HPHandler : NetworkBehaviour
         {
             uiOnHitImage.color = uiOnHitColor;
             BloodLens.OnSlashEffect?.Invoke();
+
+            // shaking camera
+            if(localCameraHandler != null) {
+                localCameraHandler.SetRecoil_GetDamage(-7, 1, 0.35f, 2, 6);
+            }
         }
         StartCoroutine(OnHitCountine());
     }

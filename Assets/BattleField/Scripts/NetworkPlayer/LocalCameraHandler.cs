@@ -162,17 +162,22 @@ public class LocalCameraHandler : NetworkBehaviour
         //targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, returnSpeed * Time.deltaTime);
         currentRotation = Vector3.Slerp(currentRotation, targetRotation, snappiness * Time.fixedDeltaTime);
     }
-    public void SetRecoil(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
+    void SetRecoil(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
         animator.SetTrigger("trigger");
         this.returnSpeed = returnSpeed;
         this.snappiness = snappiness;
         targetRotation += new Vector3(recoilX, Random.Range(-recoilY, recoilY), Random.Range(-recoilZ, recoilZ));
-
     }
 
     public void SetRecoil(RecoilGunSettings recoil)
     {
         SetRecoil(recoil.currentRecoilX, recoil.currentRecoilY, recoil.currentRecoilZ, recoil.currentReturnSpeed, recoil.currentSnappiness);
+    }
+
+    public void SetRecoil_GetDamage(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
+        this.returnSpeed = returnSpeed;
+        this.snappiness = snappiness;
+        targetRotation += new Vector3(recoilX, Random.Range(-recoilY, recoilY), Random.Range(-recoilZ, recoilZ));
     }
 
 }
