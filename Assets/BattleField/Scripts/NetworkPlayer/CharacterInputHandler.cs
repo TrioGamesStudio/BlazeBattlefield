@@ -106,6 +106,11 @@ public class CharacterInputHandler : MonoBehaviour
     private void Update() {
         move = playerInputActions.PlayerMovement.Moving.ReadValue<Vector2>();
         move.Normalize();
+        
+        if(move.magnitude > 0.1f && isPrinted) {
+            isPrinted = !isPrinted;
+            characterMovementHandler.SetMovementInput(false);
+        } 
 
         //aimDir = playerInputActions.PlayerMovement.Look.ReadValue<Vector2>();
 
