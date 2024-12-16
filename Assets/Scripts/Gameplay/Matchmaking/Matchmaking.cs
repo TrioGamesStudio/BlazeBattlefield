@@ -583,7 +583,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     private IEnumerator WaitForPlayerObjectSolo(NetworkRunner runner, PlayerRef player)
     {
         NetworkObject playerObject = null;
-        float timeout = 8f; // 5 seconds timeout
+        float timeout = 5f; // 5 seconds timeout
         float elapsedTime = 0f;
 
         while (playerObject == null && elapsedTime < timeout)
