@@ -369,6 +369,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         } else {
             SkinSelection.Instance.ToggleSelectSkinButton(true);
         }
+        PlayerStats.Instance.ResetStats();
     }
 
     public void BackToLobbyAll()
@@ -377,6 +378,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             BackToLobby();
         else
             MatchmakingTeam.Instance.BackToLobby();
+        PlayerStats.Instance.ResetStats();
     }
 
     public async void JoinRoomByName(string roomName)
