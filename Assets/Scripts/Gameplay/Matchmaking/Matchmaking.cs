@@ -369,6 +369,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         } else {
             SkinSelection.Instance.ToggleSelectSkinButton(true);
         }
+        PlayerStats.Instance.ResetStats();
     }
 
     public void BackToLobbyAll()
@@ -377,6 +378,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             BackToLobby();
         else
             MatchmakingTeam.Instance.BackToLobby();
+        PlayerStats.Instance.ResetStats();
     }
 
     public async void JoinRoomByName(string roomName)
@@ -522,7 +524,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             //string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
         }
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+        //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
 
     }
 
@@ -645,7 +647,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             }
             UpdatePlayButtonInteractability();
         }
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count());
     }
 
 

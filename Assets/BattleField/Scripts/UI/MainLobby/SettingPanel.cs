@@ -7,5 +7,6 @@ public class SettingPanel : MonoBehaviour
     public void SignOut()
     {
         LoginManager.Instance.SignOut();
+        Matchmaking.Instance.LeaveRoom();
     }
 }

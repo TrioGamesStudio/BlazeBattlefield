@@ -189,7 +189,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 
         int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
         FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+        //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
 
     }
 
@@ -322,7 +322,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             FindObjectOfType<GameHandler>().CheckWin();
         players.Remove(player);
 
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count);
     }
 
     public void OnConnectedToServer(NetworkRunner runner)

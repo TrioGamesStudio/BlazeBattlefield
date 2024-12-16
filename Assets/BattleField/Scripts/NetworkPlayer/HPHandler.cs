@@ -143,7 +143,7 @@ public class HPHandler : NetworkBehaviour
         RPC_UpdateTeammateHP(damageAmount);
         killerName = damageCausedByPlayerNickName;
         RPC_SetNetworkedHP(Networked_HP, damageCausedByPlayerNickName);
-
+        RPC_UpdateStats(damageAmount);
         Debug.Log($"{Time.time} {transform.name} took damage {Networked_HP} left");
 
         if(Networked_HP <= 0) {
@@ -175,8 +175,8 @@ public class HPHandler : NetworkBehaviour
             //deadCount ++;
             //PlayerMessageManager.instance.SendKillLog("some one","anybody");
             weaponHandler.RequestUpdateKillCount();
-            AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
-
+            //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+            PlayerStats.Instance.AddTotalKill(1);
         }
     }
 
@@ -221,7 +221,7 @@ public class HPHandler : NetworkBehaviour
 
         HealthBarUI.OnHealthChangeAction?.Invoke(Networked_HP);
 
-
+        PlayerStats.Instance.AddHealthHealed(amount);
     }
 
     //RPC
@@ -246,6 +246,12 @@ public class HPHandler : NetworkBehaviour
     {
         Debug.Log("+++ " + gameObject.name + " was hit");
         OnTakeDamageEvent.Invoke(damageAmount);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_UpdateStats(int damageAmount)
+    {
+        PlayerStats.Instance.AddDamageReceived(damageAmount);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
