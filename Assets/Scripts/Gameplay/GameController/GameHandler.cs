@@ -67,6 +67,7 @@ public class GameHandler : MonoBehaviour
             }
         }
         Debug.Log("===Team count: " + teams.Count);
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count());
         if (teams.Count == 1)
             CheckWin();
     }
@@ -99,6 +100,7 @@ public class GameHandler : MonoBehaviour
             }
             Debug.Log("===Remain team after remove " + teams.Count);
         }
+        AlivePlayerControl.UpdateAliveCount(1);
     }
 
     public IEnumerator CheckLose(string teamID)

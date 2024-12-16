@@ -48,11 +48,14 @@ public class HPHandler : NetworkBehaviour
     bool isShowResultTable = false;
     public UnityEvent<float> OnTakeDamageEvent = new UnityEvent<float>();
 
+    LocalCameraHandler localCameraHandler;
+
     private void Awake() {
         characterMovementHandler = GetComponent<CharacterMovementHandler>();
         hitboxRoot = GetComponent<HitboxRoot>();
         networkInGameMessages = GetComponent<NetworkInGameMessages>();
         networkPlayer = GetComponent<NetworkPlayer>();
+        localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
     }
     void Start() {
         if(!isSkipSettingStartValues) {
@@ -135,11 +138,12 @@ public class HPHandler : NetworkBehaviour
         //gioi han gia tri damageAmount
         if(damageAmount > Networked_HP) damageAmount = Networked_HP;
         Networked_HP -= damageAmount;
+
         //Debug.LogWarning("After damge:" + Networked_HP);
         RPC_UpdateTeammateHP(damageAmount);
         killerName = damageCausedByPlayerNickName;
         RPC_SetNetworkedHP(Networked_HP, damageCausedByPlayerNickName);
-
+        RPC_UpdateStats(damageAmount);
         Debug.Log($"{Time.time} {transform.name} took damage {Networked_HP} left");
 
         if(Networked_HP <= 0) {
@@ -171,8 +175,8 @@ public class HPHandler : NetworkBehaviour
             //deadCount ++;
             //PlayerMessageManager.instance.SendKillLog("some one","anybody");
             weaponHandler.RequestUpdateKillCount();
-            AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
-
+            //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+            PlayerStats.Instance.AddTotalKill(1);
         }
     }
 
@@ -217,7 +221,7 @@ public class HPHandler : NetworkBehaviour
 
         HealthBarUI.OnHealthChangeAction?.Invoke(Networked_HP);
 
-
+        PlayerStats.Instance.AddHealthHealed(amount);
     }
 
     //RPC
@@ -245,6 +249,12 @@ public class HPHandler : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_UpdateStats(int damageAmount)
+    {
+        PlayerStats.Instance.AddDamageReceived(damageAmount);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     void RPC_SetNetworkedIsDead(bool isDead) {
         this.Networked_IsDead = isDead;
     }
@@ -265,6 +275,11 @@ public class HPHandler : NetworkBehaviour
         {
             uiOnHitImage.color = uiOnHitColor;
             BloodLens.OnSlashEffect?.Invoke();
+
+            // shaking camera
+            if(localCameraHandler != null) {
+                localCameraHandler.SetRecoil_GetDamage(-7, 1, 0.35f, 2, 6);
+            }
         }
         StartCoroutine(OnHitCountine());
     }
