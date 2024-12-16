@@ -171,8 +171,8 @@ public class HPHandler : NetworkBehaviour
             //deadCount ++;
             //PlayerMessageManager.instance.SendKillLog("some one","anybody");
             weaponHandler.RequestUpdateKillCount();
-            AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
-
+            //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+            PlayerStats.Instance.AddTotalKill(1);
         }
     }
 

@@ -522,7 +522,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             //string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
         }
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+        //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
 
     }
 
@@ -645,7 +645,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             }
             UpdatePlayButtonInteractability();
         }
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count());
     }
 
 

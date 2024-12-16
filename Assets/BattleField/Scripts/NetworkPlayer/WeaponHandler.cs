@@ -46,7 +46,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     [SerializeField] byte weaponDamageCurr = 1;
     Vector3 spawnPointRaycastCam = Vector3.zero;
 
-    [Networked] public int killCount { get; set; }
+    public int killCount = 0;
 
     bool isFired = false;
     bool isFiredPressed = false;
@@ -409,8 +409,6 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                 audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
             }
         }
-
-
     }
 
     public void SetConfig(GunItemConfig config)
@@ -450,10 +448,10 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     public void RequestUpdateKillCount()
     {
         killCount += 1;
-        if (HasStateAuthority)
+        //if (HasStateAuthority)
         {
             AliveKillUI.UpdateKillCount?.Invoke(killCount);
-            AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+            //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
         }
     }
 }
