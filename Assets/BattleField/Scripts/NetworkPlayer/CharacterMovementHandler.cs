@@ -44,7 +44,6 @@ public class CharacterMovementHandler : NetworkBehaviour
     [SerializeField] AudioSource audioSource;
     bool isPlaySound = false;
 
-
     private void Awake() {
         //audioSource = GetComponent<AudioSource>();
         characterInputHandler = GetComponent<CharacterInputHandler>();
@@ -76,6 +75,7 @@ public class CharacterMovementHandler : NetworkBehaviour
             //networkCharacterController.maxSpeed = 4;
         }
         else {
+
             movementInput = Vector2.up;
             //networkCharacterController.maxSpeed = 6;
         }
@@ -145,7 +145,6 @@ public class CharacterMovementHandler : NetworkBehaviour
         moveDir.Normalize();
         networkCharacterController.Move(moveDir);
         
-
         // animator
         Vector2 walkVector = new Vector2(networkCharacterController.Velocity.x,
                                         networkCharacterController.Velocity.z);

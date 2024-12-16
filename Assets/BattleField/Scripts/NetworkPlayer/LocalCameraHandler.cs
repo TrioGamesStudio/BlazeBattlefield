@@ -50,7 +50,7 @@ public class LocalCameraHandler : NetworkBehaviour
     [SerializeField] float returnSpeed;
     Animator animator;
     #endregion Recoil
-
+    
 
     private void Awake() {
         characterInputHandler = GetComponentInParent<CharacterInputHandler>();
@@ -72,6 +72,7 @@ public class LocalCameraHandler : NetworkBehaviour
         viewInput.y = aim.y * -1f;
 
         RecoilUpdate();
+
     }
 
     void LateUpdate()
@@ -154,22 +155,29 @@ public class LocalCameraHandler : NetworkBehaviour
         this.spawnedPointOnCam_Network = spawnedPointVector;
         this.spawnedPointOnHand_Network = spawnedPointVector_;
     }
+
+
     void RecoilUpdate() {
         targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, returnSpeed * Time.deltaTime);
         //targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, returnSpeed * Time.deltaTime);
         currentRotation = Vector3.Slerp(currentRotation, targetRotation, snappiness * Time.fixedDeltaTime);
     }
-    public void SetRecoil(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
+    void SetRecoil(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
         animator.SetTrigger("trigger");
         this.returnSpeed = returnSpeed;
         this.snappiness = snappiness;
         targetRotation += new Vector3(recoilX, Random.Range(-recoilY, recoilY), Random.Range(-recoilZ, recoilZ));
-
     }
 
     public void SetRecoil(RecoilGunSettings recoil)
     {
         SetRecoil(recoil.currentRecoilX, recoil.currentRecoilY, recoil.currentRecoilZ, recoil.currentReturnSpeed, recoil.currentSnappiness);
+    }
+
+    public void SetRecoil_GetDamage(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
+        this.returnSpeed = returnSpeed;
+        this.snappiness = snappiness;
+        targetRotation += new Vector3(recoilX, Random.Range(-recoilY, recoilY), Random.Range(-recoilZ, recoilZ));
     }
 
 }
