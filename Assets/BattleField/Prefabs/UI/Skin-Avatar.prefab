@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8915126347142064270}
   - component: {fileID: 4042061504236274827}
+  - component: {fileID: 1004310771313750712}
   m_Layer: 5
   m_Name: Skin-Avatar
   m_TagString: Untagged
@@ -157,6 +158,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1004310771313750712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1567407918758945367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cbe6f976f7b75a48abffe30cd530a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 4042061504236274827}
 --- !u!1 &1574017040436409003
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,8 +205,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.2369, y: -48.19342}
-  m_SizeDelta: {x: 90.728, y: 96.3868}
+  m_AnchoredPosition: {x: -0.2369, y: -51.85724}
+  m_SizeDelta: {x: 90.728, y: 89.0592}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5875918633684274861
 CanvasRenderer:
