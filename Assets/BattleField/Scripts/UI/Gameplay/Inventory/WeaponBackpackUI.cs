@@ -38,7 +38,7 @@ public class WeaponBackpackUI : BindingWeaponUI
         recoilValue = (float)Math.Round(recoilValue, 2); 
         damageText.text = $"Damage: <color=#{ColorUtility.ToHtmlStringRGB(damageColor)}>{weaponSlotHandler.Config.damagePerHit}</color>";
         recoilText.text = $"Recoil: <color=#{ColorUtility.ToHtmlStringRGB(recoilColor)}>{recoilValue}</color>";
-        fireRateText.text = $"Fire Rate: <color=#{ColorUtility.ToHtmlStringRGB(fireRateColor)}>{weaponSlotHandler.Config.recoil.currentReturnSpeed}</color>/s";
+        fireRateText.text = $"Fire Rate: <color=#{ColorUtility.ToHtmlStringRGB(fireRateColor)}>{weaponSlotHandler.Config.cooldownTime}</color>/s";
     }
 
     protected override void ResetToDefaultState()

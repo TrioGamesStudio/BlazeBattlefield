@@ -10,19 +10,16 @@ public class SkinSelectionUI : MonoBehaviour
     public GameObject skinSelectUIPrefab;
     public GameObject container;
     public List<Sprite> skinSpriteIcons = new();
-    public CanvasGroup mainLobbyCanvas;
-    public CanvasGroup view;
     public List<SkinAvatarUI> avatarUIList = new();
     public SkinSelection skinSelection;
-
     private void Awake()
     {
-        Hide();
         avatarUIList = GetComponentsInChildren<SkinAvatarUI>().ToList();
         foreach (var avatarUI in avatarUIList)
         {
             avatarUI.OnClickUI = OnClickUI;
         }
+ 
     }
 
     private void OnClickUI(int index)
@@ -45,18 +42,5 @@ public class SkinSelectionUI : MonoBehaviour
         }
     }
 
-    public void Hide()
-    {
-        view.DOFade(0, 0);
-        view.interactable = false;
-        mainLobbyCanvas.DOFade(1, .4f);
-        mainLobbyCanvas.interactable = true;
-    }
-    public void Show()
-    {
-        view.DOFade(1, .4f);
-        view.interactable = true;
-        mainLobbyCanvas.DOFade(0,0);
-        mainLobbyCanvas.interactable = false;   
-    }
+   
 }
