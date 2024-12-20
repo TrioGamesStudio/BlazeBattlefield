@@ -1,18 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class SkinData : MonoBehaviour
+[CreateAssetMenu(fileName ="SkinData",menuName ="SkinData")]
+public class SkinData : ScriptableObject
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public string skinName;
+    public string skinDescription;
+    public Sprite avatarIcon;
 }
