@@ -14,9 +14,6 @@ public class StorageUI : MonoBehaviour
     private void Awake()
     {
         ShowMainLobby();
-
-        openStorageBtn.transform.parent = mainLobbyCanvasGroup.transform;
-
         openStorageBtn.onClick.AddListener(ShowStorage);
         openMainLobby.onClick.AddListener(ShowMainLobby);
     }
@@ -29,17 +26,32 @@ public class StorageUI : MonoBehaviour
 
     public void ShowStorage()
     {
-        mainLobbyCanvasGroup.DOFade(0, 0);
-        mainLobbyCanvasGroup.interactable = false;
-        storageCanvasGroup.DOFade(1, .4f);
-        storageCanvasGroup.interactable = true;
+        ShowCanvasGroup(mainLobbyCanvasGroup, false);
+        ShowCanvasGroup(storageCanvasGroup, true);
+        //mainLobbyCanvasGroup.DOFade(0, 0);
+        //mainLobbyCanvasGroup.interactable = false;
+        //mainLobbyCanvasGroup.blocksRaycasts = false;
+        //storageCanvasGroup.DOFade(1, .4f);
+        //storageCanvasGroup.interactable = true;
+        //storageCanvasGroup.blocksRaycasts = true;
     }
 
     public void ShowMainLobby()
     {
-        storageCanvasGroup.DOFade(0, 0);
-        storageCanvasGroup.interactable = false;
-        mainLobbyCanvasGroup.DOFade(1, .4f);
-        mainLobbyCanvasGroup.interactable = true;
+        ShowCanvasGroup(mainLobbyCanvasGroup, true);
+        ShowCanvasGroup(storageCanvasGroup, false);
+        //storageCanvasGroup.DOFade(0, 0);
+        //storageCanvasGroup.interactable = false;
+        //mainLobbyCanvasGroup.DOFade(1, .4f);
+        //mainLobbyCanvasGroup.interactable = true;
+    }
+
+    private void ShowCanvasGroup(CanvasGroup canvasGroup,bool enable)
+    {
+        float time = enable ? .4f : 0;
+        float fade = enable ? 1 : 0;
+        canvasGroup.DOFade(fade, time);
+        canvasGroup.interactable = enable;
+        canvasGroup.blocksRaycasts = enable;
     }
 }
