@@ -210,7 +210,7 @@ public class CharacterMovementHandler : NetworkBehaviour
     public void RespawnOnStartingBattle() {
         Debug.Log($"_____ random spawn before starting battle");
         CharacterControllerEnable(true);
-        //networkCharacterController.Teleport(Utils.GetRandomSpawnPointOnStartingBattle());
+        networkCharacterController.Teleport(Utils.GetRandomSpawnPointOnStartingBattle());
         RPC_SetNetworkedIsDead(false);
     }
     
