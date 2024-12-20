@@ -26,24 +26,16 @@ public class StorageUI : MonoBehaviour
 
     public void ShowStorage()
     {
+        bool cannotOpen = Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo;
+        if (cannotOpen) return;
         ShowCanvasGroup(mainLobbyCanvasGroup, false);
         ShowCanvasGroup(storageCanvasGroup, true);
-        //mainLobbyCanvasGroup.DOFade(0, 0);
-        //mainLobbyCanvasGroup.interactable = false;
-        //mainLobbyCanvasGroup.blocksRaycasts = false;
-        //storageCanvasGroup.DOFade(1, .4f);
-        //storageCanvasGroup.interactable = true;
-        //storageCanvasGroup.blocksRaycasts = true;
     }
 
     public void ShowMainLobby()
     {
         ShowCanvasGroup(mainLobbyCanvasGroup, true);
         ShowCanvasGroup(storageCanvasGroup, false);
-        //storageCanvasGroup.DOFade(0, 0);
-        //storageCanvasGroup.interactable = false;
-        //mainLobbyCanvasGroup.DOFade(1, .4f);
-        //mainLobbyCanvasGroup.interactable = true;
     }
 
     private void ShowCanvasGroup(CanvasGroup canvasGroup,bool enable)
@@ -54,4 +46,41 @@ public class StorageUI : MonoBehaviour
         canvasGroup.interactable = enable;
         canvasGroup.blocksRaycasts = enable;
     }
+}
+public class TabSwitchingManager : MonoBehaviour
+{
+    private TabSwitchingUI[] tabSwitchingUIs;
+    private Button tabButtonSwapPrefab;
+    private GameObject tabButtonContainer;
+    private List<Button> buttonLists = new();
+    private void Awake()
+    {
+        tabSwitchingUIs = GetComponentsInChildren<TabSwitchingUI>();
+
+        foreach(var item in tabSwitchingUIs)
+        {
+            var btn = Instantiate(tabButtonSwapPrefab, tabButtonContainer.transform);
+            btn.image.sprite = item.TabIcon;
+            // setup button
+            btn.onClick.AddListener(() => { OnClickTabButton(btn); });
+        }
+    }
+
+    private void OnClickTabButton(Button tabBtn)
+    {
+        foreach(var btn in buttonLists)
+        {
+            btn.interactable = true;
+        }
+        tabBtn.interactable = false;
+    }
+}
+public class TabSwitchingUI : MonoBehaviour
+{
+    public Sprite TabIcon;
+    public byte priority = 0;
+    public byte order = 0;
+    public byte index;
+
+
 }

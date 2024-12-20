@@ -3,15 +3,22 @@ using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 public class SkinSelectionUI : MonoBehaviour
 {
     public GameObject skinSelectUIPrefab;
     public GameObject container;
-    public List<Sprite> skinSpriteIcons = new();
+
+    public List<SkinData> skinSpriteIcons = new();
     public List<SkinAvatarUI> avatarUIList = new();
+    
     public SkinSelection skinSelection;
+
+    public TextMeshProUGUI skinDescription;
+
     private void Awake()
     {
         avatarUIList = GetComponentsInChildren<SkinAvatarUI>().ToList();
@@ -30,17 +37,19 @@ public class SkinSelectionUI : MonoBehaviour
         }
         skinSelection.SetSkinByIndex(index);
         avatarUIList[index].button.interactable = false;
+
+        skinDescription.text = skinSpriteIcons[index].skinDescription;
     }
 
     [Button]
-    public void Init()
+    private void PreCreatingUIAvatar()
     {
-        foreach(var sprite in skinSpriteIcons)
+        // use for editor
+        foreach(var skinData in skinSpriteIcons)
         {
-            var icon = Instantiate(skinSelectUIPrefab, container.transform);
-            icon.transform.GetChild(1).GetComponent<Image>().sprite = sprite;
+            var icon = (GameObject)PrefabUtility.InstantiatePrefab(skinSelectUIPrefab, container.transform);
+            icon.GetComponent<SkinAvatarUI>().avatarImg.sprite = skinData.avatarIcon;
+            //icon.transform.GetChild(1).GetComponent<Image>().sprite = skinData.avatarIcon;
         }
     }
-
-   
 }

@@ -6,7 +6,7 @@ public class SkinAvatarUI : MonoBehaviour
 {
     public Action<int> OnClickUI;
     public Button button;
-
+    public Image avatarImg;
     private void Awake()
     {
         button.onClick.AddListener(RaiseEvent);
