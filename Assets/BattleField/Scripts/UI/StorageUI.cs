@@ -1,6 +1,5 @@
 using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,41 +45,4 @@ public class StorageUI : MonoBehaviour
         canvasGroup.interactable = enable;
         canvasGroup.blocksRaycasts = enable;
     }
-}
-public class TabSwitchingManager : MonoBehaviour
-{
-    private TabSwitchingUI[] tabSwitchingUIs;
-    private Button tabButtonSwapPrefab;
-    private GameObject tabButtonContainer;
-    private List<Button> buttonLists = new();
-    private void Awake()
-    {
-        tabSwitchingUIs = GetComponentsInChildren<TabSwitchingUI>();
-
-        foreach(var item in tabSwitchingUIs)
-        {
-            var btn = Instantiate(tabButtonSwapPrefab, tabButtonContainer.transform);
-            btn.image.sprite = item.TabIcon;
-            // setup button
-            btn.onClick.AddListener(() => { OnClickTabButton(btn); });
-        }
-    }
-
-    private void OnClickTabButton(Button tabBtn)
-    {
-        foreach(var btn in buttonLists)
-        {
-            btn.interactable = true;
-        }
-        tabBtn.interactable = false;
-    }
-}
-public class TabSwitchingUI : MonoBehaviour
-{
-    public Sprite TabIcon;
-    public byte priority = 0;
-    public byte order = 0;
-    public byte index;
-
-
 }
