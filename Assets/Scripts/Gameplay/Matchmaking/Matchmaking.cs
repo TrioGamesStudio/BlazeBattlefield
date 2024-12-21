@@ -193,6 +193,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (result.Ok)
         {
+            LoadingScene.Instance.ShowLoadingScreen(networkRunner);
             UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
             localPlayer.gameObject.SetActive(false);
             // all good

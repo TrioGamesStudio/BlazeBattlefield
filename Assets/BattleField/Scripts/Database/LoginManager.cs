@@ -374,7 +374,10 @@ public class LoginManager : MonoBehaviour
                     loginCanvas.SetActive(false);
                     FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
                 }; */
-                StartCoroutine(LoadMainMenuLobby());
+                //StartCoroutine(LoadMainMenuLobby());
+                LoadingScene.Instance.LoadScene("MainLobby");
+                loginCanvas.SetActive(false);
+                FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
             }
             else {
                 ShowLogMsg("Please verify email!!");
@@ -429,11 +432,14 @@ public class LoginManager : MonoBehaviour
             //? gan userId cho saveLoadHander Firebase | FireStore
             DataSaver.Instance.userId = result.User.UserId;
             DataSaver.Instance.dataToSave.userName = "Quest";
-            SceneManager.LoadSceneAsync("MainLobby").completed += (operation) =>
-            {
-                loginCanvas.SetActive(false);
-                FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
-            };
+            //SceneManager.LoadSceneAsync("MainLobby").completed += (operation) =>
+            //{
+            //    loginCanvas.SetActive(false);
+            //    FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
+            //};
+            LoadingScene.Instance.LoadScene("MainLobby");
+            loginCanvas.SetActive(false);
+            FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
         });       
     }
 
