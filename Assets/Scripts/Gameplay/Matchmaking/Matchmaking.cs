@@ -56,6 +56,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         PlayScene = 2,
     }
 
+    [SerializeField] int skinSelectedNumber = 0;
+    public int SkinSelectedNumber{get => skinSelectedNumber; set => skinSelectedNumber = value;}
+
     private void Awake()
     {
         if (FindObjectsOfType<Matchmaking>().Length > 1)
@@ -190,6 +193,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (result.Ok)
         {
+            LoadingScene.Instance.ShowLoadingScreen(networkRunner);
             UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
             localPlayer.gameObject.SetActive(false);
             // all good
@@ -318,14 +322,18 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (networkRunner != null)
         {
             Debug.Log("Leaving room...");
-            if (players[networkRunner.LocalPlayer].IsRoomOwner)
+            if (players.Count > 0)
             {
-                PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => p.Object.HasInputAuthority == false);
-                if (localPlayer != null)
+                if (players[networkRunner.LocalPlayer].IsRoomOwner)
                 {
-                    localPlayer.RPC_SetAsRoomOwner();
+                    PlayerRoomController localPlayer = players.Values.FirstOrDefault(p => p.Object.HasInputAuthority == false);
+                    if (localPlayer != null)
+                    {
+                        localPlayer.RPC_SetAsRoomOwner();
+                    }
                 }
             }
+
             await networkRunner.Shutdown();
 
             Debug.Log("You have left the room.");
@@ -356,6 +364,13 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
         localPlayer.gameObject.SetActive(true);
         await JoinLobby();
+
+        if(currentMode == Mode.Duo) {
+            SkinSelection.Instance.ToggleSelectSkinButton(false);
+        } else {
+            SkinSelection.Instance.ToggleSelectSkinButton(true);
+        }
+        PlayerStats.Instance.ResetStats();
     }
 
     public void BackToLobbyAll()
@@ -364,6 +379,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             BackToLobby();
         else
             MatchmakingTeam.Instance.BackToLobby();
+        PlayerStats.Instance.ResetStats();
     }
 
     public async void JoinRoomByName(string roomName)
@@ -433,16 +449,22 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
     }
 
+    private void InitializeSkinSelectedNumber(NetworkRunner runner, NetworkObject obj)
+    {
+        obj.GetComponent<CharacterOutfitsGenerator>().SetSkinSelectedNumber(this.skinSelectedNumber);
+        FindObjectOfType<SkinSelection>().ToggleSelectSkinButton(false);
+    }
+
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        
+
         if (currentMode == Mode.Duo)
         {
             localPlayer.SetActive(false);
             if (player == runner.LocalPlayer)
             {
                 spawnPosition = memberPos[runner.ActivePlayers.Count() - 1].position;
-                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, spawnPosition, Quaternion.identity, player);
+                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, spawnPosition, Quaternion.identity, player, InitializeSkinSelectedNumber);
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
                 players[player].TurnOnTeamMemberPanel();
@@ -479,7 +501,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             if (player == runner.LocalPlayer)
             {
-                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
+                PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player, InitializeSkinSelectedNumber);
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
                 localSoloPlayer = playerObject.GetComponent<PlayerRoomController>();
                 playerObject.GetComponent<PlayerRoomController>().SetPlayerRef(player);
@@ -500,18 +522,22 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 StartCoroutine(WaitForPlayerObjectSolo(runner, player));
             }
             int remainPlayer = MAX_PLAYER - networkRunner.ActivePlayers.Count();
-            string text = "Waiting other player: " + remainPlayer + " remain";
-            FindObjectOfType<UIController>().SetText(text);
+            //string text = "Waiting other player: " + remainPlayer + " remain";
+            FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
         }
+        //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+
     }
 
     public void StartBattle()
     {
+        Debug.Log("Start battle");
         networkRunner.SessionInfo.IsOpen = false;
         isDone = true;
-        FindObjectOfType<UIController>().StartCountdown();
-        StartCoroutine(ReleasePlayer());
-        StartCoroutine(InitializeTeams());
+        StartGameHandler.OnStartGameAction?.Invoke();
+        //FindObjectOfType<UIController>().StartCountdown();
+        //StartCoroutine(ReleasePlayer());
+        //StartCoroutine(InitializeTeams());
 
     }
 
@@ -594,8 +620,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (currentMode == Mode.Solo && !isDone)
         {
             int remainPlayer = MAX_PLAYER - networkRunner.ActivePlayers.Count();
-            string text = "Waiting other player: " + remainPlayer + " remain";
-            FindObjectOfType<UIController>().SetText(text);
+            //string text = "Waiting other player: " +  + " remain";
+            FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
         }
 
         if (currentMode == Mode.Solo && isDone)
@@ -621,7 +647,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 UIController.Instance.AllowSelectMapMode(true);
             }
             UpdatePlayButtonInteractability();
-        }   
+        }
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count());
     }
 
 

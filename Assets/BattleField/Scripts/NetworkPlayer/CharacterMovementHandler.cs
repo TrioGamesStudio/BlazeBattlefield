@@ -35,7 +35,6 @@ public class CharacterMovementHandler : NetworkBehaviour
     //...
     NetworkInGameMessages networkInGameMessages;
     NetworkPlayer networkPlayer;
-
     HPHandler hPHandler;
     CharacterInputHandler characterInputHandler;
     Vector3 moveDir;
@@ -54,8 +53,8 @@ public class CharacterMovementHandler : NetworkBehaviour
         networkPlayer = GetComponent<NetworkPlayer>();
         anim = GetComponentInChildren<Animator>();
         hPHandler = GetComponent<HPHandler>();
-
         speedAnimRate = 1;
+
     }
 
     private void Start() {
@@ -76,6 +75,7 @@ public class CharacterMovementHandler : NetworkBehaviour
             //networkCharacterController.maxSpeed = 4;
         }
         else {
+
             movementInput = Vector2.up;
             //networkCharacterController.maxSpeed = 6;
         }
@@ -91,8 +91,21 @@ public class CharacterMovementHandler : NetworkBehaviour
         // ko chay doan duoi neu dang fall or respawn
         if (Object.HasStateAuthority) {
             if(isRespawnRequested_) {
-                Respawn();
-                return;
+                //! test cho nhung scene ben ngoai -> khong can check IsDone
+                //if(SceneManager.GetActiveScene().name == "Quang_Scene") {
+                //    Respawn();
+                //    return;
+                //}
+
+                //if(Matchmaking.Instance.IsDone || MatchmakingTeam.Instance.IsDone) {
+                //    RespawnOnStartingBattle();
+                //    return;
+                //}
+                //else {
+                //    Respawn();
+                //    return;
+                //}
+                
             }
 
             // ko cap nhat vi tri movement khi player death
@@ -132,7 +145,6 @@ public class CharacterMovementHandler : NetworkBehaviour
         moveDir.Normalize();
         networkCharacterController.Move(moveDir);
         
-
         // animator
         Vector2 walkVector = new Vector2(networkCharacterController.Velocity.x,
                                         networkCharacterController.Velocity.z);
@@ -172,6 +184,7 @@ public class CharacterMovementHandler : NetworkBehaviour
 
                 //? thong bao khi fall out
                 networkInGameMessages.SendInGameRPCMessage(networkPlayer.nickName_Network.ToString(), " -> fall off");
+                GetComponent<PlayerMessageManager>().FallOffLogRPC($"{networkPlayer.nickName_Network.ToString()}");
                 Respawn();
             }
         }
@@ -180,18 +193,25 @@ public class CharacterMovementHandler : NetworkBehaviour
     public void CharacterControllerEnable(bool isEnable) {
         networkCharacterController.enabled = isEnable;
     }
-
-    private void Respawn() {
+    [EditorButton]
+    public void Respawn() {
         Debug.Log($"_____Starting Respawn");
         CharacterControllerEnable(true);
 
-        networkCharacterController.Teleport(Utils.GetRandomSpawnPoint());
+        networkCharacterController.Teleport(Utils.GetRandomSpawnPointOnWaitingArea());
         
         hPHandler.OnRespawned_ResetHPIsDead(); // khoi tao lai gia tri HP isDeath - false
         ////isRespawnRequested = false;
         RPC_SetNetworkedIsDead(false);
         Debug.Log($"_____Ending Respawn");
 
+    }
+    [EditorButton]
+    public void RespawnOnStartingBattle() {
+        Debug.Log($"_____ random spawn before starting battle");
+        CharacterControllerEnable(true);
+        networkCharacterController.Teleport(Utils.GetRandomSpawnPointOnStartingBattle());
+        RPC_SetNetworkedIsDead(false);
     }
     
     public void RequestRespawn() {
@@ -204,5 +224,6 @@ public class CharacterMovementHandler : NetworkBehaviour
     public void RPC_SetNetworkedIsDead(bool isRespawnRequested) {
         this.isRespawnRequested_ = isRespawnRequested;
     }
+    
 
 }

@@ -1,6 +1,7 @@
 using Cinemachine;
 using Fusion;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class LocalCameraHandler : NetworkBehaviour
 {
@@ -10,6 +11,7 @@ public class LocalCameraHandler : NetworkBehaviour
     [SerializeField] Transform spawnedPointGun_OnHand; // nah dan cua sung trong tay player
 
     //Rotation
+    [SerializeField] private int angleLimit = 70;
     float _cameraRotationX = 0f;
     float _cameraRotationY = 0f;
     Vector2 viewInput;
@@ -37,8 +39,8 @@ public class LocalCameraHandler : NetworkBehaviour
     CinemachineVirtualCamera cinemachineVirtualCamera;
 
     #region Recoil
-    Vector3 currentRotation;
-    Vector3 targetRotation;
+    public Vector3 currentRotation;
+    public Vector3 targetRotation;
 
     [Header("Recoil")]
     [SerializeField] float recoilX;
@@ -48,7 +50,7 @@ public class LocalCameraHandler : NetworkBehaviour
     [SerializeField] float returnSpeed;
     Animator animator;
     #endregion Recoil
-
+    
 
     private void Awake() {
         characterInputHandler = GetComponentInParent<CharacterInputHandler>();
@@ -70,6 +72,7 @@ public class LocalCameraHandler : NetworkBehaviour
         viewInput.y = aim.y * -1f;
 
         RecoilUpdate();
+
     }
 
     void LateUpdate()
@@ -96,7 +99,7 @@ public class LocalCameraHandler : NetworkBehaviour
                 }
                 cinemachineVirtualCamera.transform.position = cameraAnchorPoint.position; // localCam di theo | ko phai nam ben trong
                 _cameraRotationX += viewInput.y * Time.deltaTime * networkCharacterController.viewRotationSpeed;
-                _cameraRotationX = Mathf.Clamp(_cameraRotationX, -30, 30);
+                _cameraRotationX = Mathf.Clamp(_cameraRotationX, -angleLimit, angleLimit);
                 _cameraRotationY += viewInput.x * Time.deltaTime * networkCharacterController.rotationSpeed;
 
                 cinemachineVirtualCamera.transform.rotation = Quaternion.Euler(_cameraRotationX, _cameraRotationY, 0);
@@ -117,17 +120,22 @@ public class LocalCameraHandler : NetworkBehaviour
         localCamera.transform.position = cameraAnchorPoint.position; // localCam di theo | ko phai nam ben trong
 
         _cameraRotationX += viewInput.y * Time.deltaTime * networkCharacterController.viewRotationSpeed;
-        _cameraRotationX = Mathf.Clamp(_cameraRotationX, -30, 30);
+        _cameraRotationX = Mathf.Clamp(_cameraRotationX, -angleLimit, angleLimit);
         _cameraRotationY += viewInput.x * Time.deltaTime * networkCharacterController.rotationSpeed;
 
         //localCamera.transform.rotation = Quaternion.Euler(_cameraRotationX, _cameraRotationY, 0);
         localCamera.transform.rotation = Quaternion.Euler(new Vector3(_cameraRotationX, _cameraRotationY, 0) + currentRotation);
     }
-
+    public Vector3 accuryVector = Vector3.one;
     public void RaycastHitPoint() {
         if(this.Object.HasStateAuthority) {
             ray.origin = this.transform.position;
             ray.direction = this.transform.forward;
+            var direction = ray.direction;
+            direction.x += Random.Range(-accuryVector.x, accuryVector.x);
+            direction.y += Random.Range(-accuryVector.y, accuryVector.y);
+            direction.z += Random.Range(-accuryVector.z, accuryVector.z);
+            ray.direction = direction;
             Physics.Raycast(ray, out hitInfo, 100, collisionLayers);
             RPC_SetHitPointRaycast(hitInfo.point, this.transform.position);
             RPC_SetBulletPoint(spawnedPointGun_OnCam.transform.position, spawnedPointGun_OnHand.transform.position);
@@ -148,21 +156,28 @@ public class LocalCameraHandler : NetworkBehaviour
         this.spawnedPointOnHand_Network = spawnedPointVector_;
     }
 
+
     void RecoilUpdate() {
         targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, returnSpeed * Time.deltaTime);
+        //targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, returnSpeed * Time.deltaTime);
         currentRotation = Vector3.Slerp(currentRotation, targetRotation, snappiness * Time.fixedDeltaTime);
     }
-    public void SetRecoil(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
+    void SetRecoil(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
         animator.SetTrigger("trigger");
         this.returnSpeed = returnSpeed;
         this.snappiness = snappiness;
         targetRotation += new Vector3(recoilX, Random.Range(-recoilY, recoilY), Random.Range(-recoilZ, recoilZ));
-
     }
 
     public void SetRecoil(RecoilGunSettings recoil)
     {
         SetRecoil(recoil.currentRecoilX, recoil.currentRecoilY, recoil.currentRecoilZ, recoil.currentReturnSpeed, recoil.currentSnappiness);
+    }
+
+    public void SetRecoil_GetDamage(float recoilX, float recoilY, float recoilZ, float returnSpeed, float snappiness) {
+        this.returnSpeed = returnSpeed;
+        this.snappiness = snappiness;
+        targetRotation += new Vector3(recoilX, Random.Range(-recoilY, recoilY), Random.Range(-recoilZ, recoilZ));
     }
 
 }

@@ -4,11 +4,12 @@ using Fusion;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class HPHandler : NetworkBehaviour
 {
     [Networked]
-    public byte Networked_HP { get; set; } = 5;
+    public byte Networked_HP { get; set; } = 100;
     
     [Networked]
     public bool Networked_IsDead {get; set;} = false;
@@ -19,7 +20,7 @@ public class HPHandler : NetworkBehaviour
     //public int deadCount {get; set;}
 
     bool isInitialized = false;
-    const byte startingHP = 5;
+    const byte startingHP = 100;
 
     public Color uiOnHitColor;
     public Image uiOnHitImage;
@@ -46,12 +47,15 @@ public class HPHandler : NetworkBehaviour
     [SerializeField] InGamePlayerStatusUIHandler inGamePlayerStatusUIHandler;
     bool isShowResultTable = false;
     public UnityEvent<float> OnTakeDamageEvent = new UnityEvent<float>();
+
+    LocalCameraHandler localCameraHandler;
+
     private void Awake() {
         characterMovementHandler = GetComponent<CharacterMovementHandler>();
         hitboxRoot = GetComponent<HitboxRoot>();
         networkInGameMessages = GetComponent<NetworkInGameMessages>();
         networkPlayer = GetComponent<NetworkPlayer>();
-
+        localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
     }
     void Start() {
         if(!isSkipSettingStartValues) {
@@ -67,8 +71,13 @@ public class HPHandler : NetworkBehaviour
     public override void Spawned() {
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
 
+        // kiem tra co dang spawn tai ready scene hay khong
+        bool isReadyScene = SceneManager.GetActiveScene().name == "MainLobby";
+        if (isReadyScene) return;
         // show HP player on message box
         inGamePlayerStatusUIHandler.OnGamePlayerHpRecieved(Networked_HP);
+        if(Object.HasStateAuthority)
+            HealthBarUI.OnSetMaxHPAction(startingHP);
     }
 
     public override void Render()
@@ -123,16 +132,18 @@ public class HPHandler : NetworkBehaviour
 
     //? server call | coll 55 WeaponHandler.cs | khi hitInfo.HitBox tren player
     public void OnTakeDamage(string damageCausedByPlayerNickName, byte damageAmount, WeaponHandler weaponHandler) {
+        Debug.LogWarning("Before damge:" + Networked_HP);
         if(Networked_IsDead) return;
 
         //gioi han gia tri damageAmount
         if(damageAmount > Networked_HP) damageAmount = Networked_HP;
-
         Networked_HP -= damageAmount;
+
+        //Debug.LogWarning("After damge:" + Networked_HP);
         RPC_UpdateTeammateHP(damageAmount);
         killerName = damageCausedByPlayerNickName;
         RPC_SetNetworkedHP(Networked_HP, damageCausedByPlayerNickName);
-
+        RPC_UpdateStats(damageAmount);
         Debug.Log($"{Time.time} {transform.name} took damage {Networked_HP} left");
 
         if(Networked_HP <= 0) {
@@ -162,16 +173,25 @@ public class HPHandler : NetworkBehaviour
             //}
 
             //deadCount ++;
-            weaponHandler.killCount ++;
+            //PlayerMessageManager.instance.SendKillLog("some one","anybody");
+            weaponHandler.RequestUpdateKillCount();
+            //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+            PlayerStats.Instance.AddTotalKill(1);
         }
     }
 
+
+    [EditorButton] private void Test()
+    {
+
+    }
     void CheckPlayerDeath(byte networkHP) {
         if(networkHP <= 0 && !isPublicDeathMessageSent) {
             isPublicDeathMessageSent = true;
             if(Object.HasStateAuthority) {
-                networkInGameMessages.SendInGameRPCMessage(Networked_Killer.ToString(), 
+                networkInGameMessages.SendInGameRPCMessage(Networked_Killer.ToString(),
                     $" killed <b>{networkPlayer.nickName_Network.ToString()}<b>");
+                GetComponent<PlayerMessageManager>().SendKillLogRPC(Networked_Killer.ToString(), networkPlayer.nickName_Network.ToString());
             }
         }
     }
@@ -195,8 +215,13 @@ public class HPHandler : NetworkBehaviour
         {
             Networked_HP += amount;
         }
-        OnTakeDamageEvent.Invoke(-amount);
+        
+        //OnTakeDamageEvent.Invoke(-amount);
+        RPC_UpdateTeammateHP(-amount);
+
         HealthBarUI.OnHealthChangeAction?.Invoke(Networked_HP);
+
+        PlayerStats.Instance.AddHealthHealed(amount);
     }
 
     //RPC
@@ -224,6 +249,12 @@ public class HPHandler : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_UpdateStats(int damageAmount)
+    {
+        PlayerStats.Instance.AddDamageReceived(damageAmount);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     void RPC_SetNetworkedIsDead(bool isDead) {
         this.Networked_IsDead = isDead;
     }
@@ -240,19 +271,30 @@ public class HPHandler : NetworkBehaviour
     }
     void OnHPReduced() {
         if(!isInitialized) return;
+        if (Object.HasStateAuthority)
+        {
+            uiOnHitImage.color = uiOnHitColor;
+            BloodLens.OnSlashEffect?.Invoke();
+
+            // shaking camera
+            if(localCameraHandler != null) {
+                localCameraHandler.SetRecoil_GetDamage(-7, 1, 0.35f, 2, 6);
+            }
+        }
         StartCoroutine(OnHitCountine());
     }
     IEnumerator OnHitCountine() {
+        // this.Object Run this.cs (do dang bi ban trung) 
+        // (Object.HasInputAuthority) => chi render tai man hinh MA THIS.OBJECT NAY DANG HasInputAuthority
+        
         // this.Object Run this.cs (do dang bi ban trung) 
         // render for Screen of this.Object - localPlayer + remotePlayer
         foreach (FlashMeshRender flashMeshRender in flashMeshRenders) {
             flashMeshRender.ChangeColor(Color.red);
         }
+
         
-        // this.Object Run this.cs (do dang bi ban trung) 
-        // (Object.HasInputAuthority) => chi render tai man hinh MA THIS.OBJECT NAY DANG HasInputAuthority
-        if(Object.HasStateAuthority) uiOnHitImage.color = uiOnHitColor;
-        
+
         yield return new WaitForSeconds(0.2f);
         foreach (FlashMeshRender flashMeshRender in flashMeshRenders) {
             flashMeshRender.RestoreColor();

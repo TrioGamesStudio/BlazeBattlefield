@@ -10,6 +10,7 @@ using Random = UnityEngine.Random;
 public class HealthBarUI : MonoBehaviour
 {
     public static Action<float> OnHealthChangeAction;
+    public static Action<byte> OnSetMaxHPAction;
     [SerializeField] private Slider healthSlider;
     [SerializeField] private Slider healthRegenSlider;
     [SerializeField] private Slider healthLostSlider;
@@ -21,6 +22,7 @@ public class HealthBarUI : MonoBehaviour
 
     private void Awake()
     {
+
         SetMinMaxValue(healthSlider);
         SetMinMaxValue(healthRegenSlider);
         SetMinMaxValue(healthLostSlider);
@@ -32,15 +34,24 @@ public class HealthBarUI : MonoBehaviour
         healthText.text = maxValue.ToString();
 
         OnHealthChangeAction += OnHealthChange;
+        OnSetMaxHPAction += SetMaxValue;
     }
 
     private void OnDestroy()
     {
         OnHealthChangeAction -= OnHealthChange;
+        OnSetMaxHPAction -= SetMaxValue;
 
     }
 
+    private void SetMaxValue(byte maxValue)
+    {
+        this.maxValue = maxValue;
 
+        SetMinMaxValue(healthSlider);
+        SetMinMaxValue(healthRegenSlider);
+        SetMinMaxValue(healthLostSlider);
+    }
     // Clamp value in slider
     private void SetMinMaxValue(Slider slider)
     {

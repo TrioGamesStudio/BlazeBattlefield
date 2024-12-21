@@ -33,6 +33,10 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         PlayScene = 2,
     }
 
+    
+    [SerializeField] int skinSelectedNumber = 0;
+    public int SkinSelectedNumber{get => skinSelectedNumber; set => skinSelectedNumber = value;}
+
     private void Awake()
     {
         if (FindObjectsOfType<MatchmakingTeam>().Length > 1)
@@ -88,8 +92,11 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (result.Ok)
         {
+            LoadingScene.Instance.ShowLoadingScreen(networkRunner);
             UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
-            UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);          
+            UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
+            //StartCoroutine(HideMainLobbyUI());
+            ;
         }
         else
         {
@@ -97,13 +104,18 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         }
     }
 
+    private void InitializeSkinSelectedNumber(NetworkRunner runner, NetworkObject obj)
+    {
+        obj.GetComponent<CharacterOutfitsGenerator>().SetSkinSelectedNumber(this.skinSelectedNumber);
+    }
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+
         roomID = PlayerPrefs.GetString("RoomID");
         
         if (player == runner.LocalPlayer)
         {
-            PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player);
+            PlayerRoomController playerObject = runner.Spawn(playerControllerPrefab, new Vector3(0, 0, 0), Quaternion.identity, player, InitializeSkinSelectedNumber);
             runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);  
             players[player] = playerObject.GetComponent<PlayerRoomController>();
             players[player].SetRoomID(roomID);
@@ -179,17 +191,19 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         }
 
         int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
-        string text = "Waiting other player: " + remainPlayer + " remain";   
-        FindObjectOfType<UIController>().SetText(text);
+        FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
+        //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+
     }
 
     public void StartBattle()
     {
         networkRunner.SessionInfo.IsOpen = false;
         isDone = true;
-        FindObjectOfType<UIController>().StartCountdown();
-        StartCoroutine(ReleasePlayer());
-        StartCoroutine(InitializeTeams());
+        StartGameHandler.OnStartGameAction?.Invoke();
+        //FindObjectOfType<UIController>().StartCountdown();
+        //StartCoroutine(ReleasePlayer());
+        //StartCoroutine(InitializeTeams());
     }
 
     private IEnumerator ReleasePlayer()
@@ -299,8 +313,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         if (!isDone)
         {
             int remainPlayer = MAX_PLAYER - runner.ActivePlayers.Count();
-            string text = "Waiting other player: " + remainPlayer + " remain";
-            FindObjectOfType<UIController>().SetText(text);
+            FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
         }
 
         if (player == runner.LocalPlayer)
@@ -311,6 +324,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
         if (runner.ActivePlayers.Count() > 1)
             FindObjectOfType<GameHandler>().CheckWin();
         players.Remove(player);
+
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count);
     }
 
     public void OnConnectedToServer(NetworkRunner runner)

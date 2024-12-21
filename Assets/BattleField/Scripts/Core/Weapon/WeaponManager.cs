@@ -18,6 +18,10 @@ public class WeaponManager : MonoBehaviour
     public event Action<WeaponSlotHandler> OnEquipAction;
     public event Action OnDropAction;
 
+    public AudioClip reloadSound;
+    public AudioClip reload_empty_Sound;
+    public AudioClip holsterSound;
+    public AudioClip un_holsterSound;
 
 
     // Need UI to bind with
@@ -32,8 +36,15 @@ public class WeaponManager : MonoBehaviour
         weaponSlotHandlers[2] = new WeaponSlotHandler();
         weaponSlotHandlers[3] = new WeaponSlotHandler();
         RegisterEvent();
+        SetupSound();
     }
-
+    private void SetupSound()
+    {
+        reloadSound = SoundManager.SoundAsset.GetSound("reload_15");
+        reload_empty_Sound = SoundManager.SoundAsset.GetSound("reload_empty_0");
+        holsterSound = SoundManager.SoundAsset.GetSound("holster_0");
+        un_holsterSound = SoundManager.SoundAsset.GetSound("un_holster_0");
+    }
 
     private void RegisterEvent()
     {
@@ -65,7 +76,14 @@ public class WeaponManager : MonoBehaviour
     public void Reload()
     {
         if (currentWeaponIndex == -1) return;
-        weaponSlotHandlers[currentWeaponIndex].TryToReload();
+        if (weaponSlotHandlers[currentWeaponIndex].TryToReload())
+        {
+            NetworkPlayer.Local.GetComponent<AudioSource>().CustomPlaySound(reloadSound);
+        }
+        else
+        {
+            NetworkPlayer.Local.GetComponent<AudioSource>().CustomPlaySound(reload_empty_Sound);
+        }
     }
 
     public void AddNewGun(GunItemConfig newConfig)
@@ -105,7 +123,7 @@ public class WeaponManager : MonoBehaviour
     public void OnActiveWeapon(int activeIndexButton)
     {
         TimerActionHandler.instance.Cancel();
-
+        Debug.Log("activeIndexButton la: " + activeIndexButton);
         if (currentWeaponIndex == -1) // T
         {
             // khong cam gi
@@ -139,6 +157,7 @@ public class WeaponManager : MonoBehaviour
             }
 
         }
+
     }
 
 
@@ -155,12 +174,17 @@ public class WeaponManager : MonoBehaviour
         if(newIndex == -1)
         {
             Debug.Log("Player cat sung");
+            NetworkPlayer.Local.GetComponent<AudioSource>().CustomPlaySound(holsterSound);
+
         }
         else
         {
             Debug.Log("Player cam sung");
+            NetworkPlayer.Local.GetComponent<AudioSource>().CustomPlaySound(un_holsterSound);
             weaponHandler.SetConfig(weaponSlotHandlers[currentWeaponIndex].Config);
         }
+
+
     }
 
 
@@ -168,7 +192,7 @@ public class WeaponManager : MonoBehaviour
     {
         if (currentWeaponIndex < 0 || currentWeaponIndex > 4) return false;
         var currentSlot = weaponSlotHandlers[currentWeaponIndex];
-        return currentSlot.IsEmpty == false && currentSlot.IsShowInHand && currentSlot.HasAmmo;
+        return currentSlot.IsEmpty == false && currentSlot.IsShowInHand;
     }
 
     public void Shoot()
@@ -177,5 +201,13 @@ public class WeaponManager : MonoBehaviour
         weaponSlotHandlers[currentWeaponIndex].Shoot();
     }
 
+    public bool HasAmmo()
+    {
+        return weaponSlotHandlers[currentWeaponIndex].HasAmmo;
+    }
 
+    public void PlayReloadEmptySound()
+    {
+        NetworkPlayer.Local.GetComponent<AudioSource>().CustomPlaySound(reload_empty_Sound);
+    }
 }

@@ -17,18 +17,19 @@ MonoBehaviour:
   SubItemType: 500
   maxStack: 1
   ItemType: 0
-  isSingleMode: 1
-  cooldownTime: 0.5
-  maxRounds: 30
+  IconActualGun: {fileID: 21300000, guid: f0144203a1e5daa428920e0f484504bd, type: 3}
   ammoUsingType: {fileID: 11400000, guid: efe0a45e38273ed4293075d538c5e17e, type: 2}
   slotWeaponIndex: 2
-  IconActualGun: {fileID: 21300000, guid: f0144203a1e5daa428920e0f484504bd, type: 3}
+  isSingleMode: 1
+  isContainScope: 0
+  cooldownTime: 0.225
+  damagePerHit: 20
+  maxRounds: 15
   shootingSound: {fileID: 8300000, guid: bb9c2d45c19c01d48821b1ead96f981b, type: 3}
   reloadSound: {fileID: 0}
-  damagePerHit: 2
   recoil:
-    currentRecoilX: -2
-    currentRecoilY: 2
+    currentRecoilX: -7
+    currentRecoilY: 1
     currentRecoilZ: 0.35
     currentReturnSpeed: 2
     currentSnappiness: 6

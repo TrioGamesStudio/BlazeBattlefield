@@ -37,7 +37,7 @@ public partial class ActiveWeapon : NetworkBehaviour, INetworkInitialize
     {
         var position = isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position;
         var networkObject = ItemDatabase.instance.SpawnItem(prefab, position, _tag);
-        networkObject.GetComponent<Outline>().enabled = false;
+        networkObject.GetComponent<IRunTimeItem>().DisableOutline();
         Debug.Log("Start set parent", gameObject);
         RPC_SetParentWeapon(networkObject, isLocal, index);
         return networkObject;

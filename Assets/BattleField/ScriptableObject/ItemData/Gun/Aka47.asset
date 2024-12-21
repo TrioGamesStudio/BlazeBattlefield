@@ -22,14 +22,14 @@ MonoBehaviour:
   slotWeaponIndex: 0
   isSingleMode: 0
   isContainScope: 0
-  cooldownTime: 0.1
-  damagePerHit: 1
+  cooldownTime: 0.05
+  damagePerHit: 15
   maxRounds: 30
-  shootingSound: {fileID: 0}
+  shootingSound: {fileID: 8300000, guid: 88837867717b25946b0196121cd6b357, type: 3}
   reloadSound: {fileID: 0}
   recoil:
-    currentRecoilX: -2
-    currentRecoilY: 2
-    currentRecoilZ: 0.35
-    currentReturnSpeed: 2
+    currentRecoilX: -2.5
+    currentRecoilY: 1.5
+    currentRecoilZ: 0.2
+    currentReturnSpeed: 1.5
     currentSnappiness: 6

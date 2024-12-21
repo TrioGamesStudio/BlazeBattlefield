@@ -5,7 +5,7 @@ using UnityEngine;
 public class InventoryUI : MonoBehaviour
 {
     // For testing
-    
+    public static InventoryUI instance;
     public WeaponBackpackUI WeaponEquipUI;
     public GameObject view;
     [Header("View UI")]
@@ -22,6 +22,7 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         isOpen = false;
         InputReader.Instance.Enable();
         ShowInventoryElement(false);
@@ -41,6 +42,7 @@ public class InventoryUI : MonoBehaviour
 
 
     private bool isOpen = false;
+    public bool IsOpen { get => isOpen; }
     private void ShowInventory()
     {
         isOpen = !isOpen;

@@ -16,6 +16,7 @@ public class WorldUI : MonoBehaviour
     public TextMeshProUGUI informationText;
     public TextMeshProUGUI topText;
     public TextMeshProUGUI topTextTeam;
+    public StatsDisplay statsDisplay;
 
     // buttons
     [SerializeField] Button returnLobby;
@@ -28,14 +29,14 @@ public class WorldUI : MonoBehaviour
         lobbyButtonWin.onClick.AddListener(BackToLobby);
 
         returnLobby.onClick.AddListener(BackToLobby);
+        InputPlayerMovement.ExitAction += ToggleCursor;
     }
 
-    private void Update() {
-        if(Input.GetKeyDown(KeyCode.Escape)) {
-            ToggleCursor();
-        }
-    }
-    
+    private void OnDestroy()
+    {
+        InputPlayerMovement.ExitAction -= ToggleCursor;
+
+    }   
 
     public void ShowHideUI(int alivePlayer)
     {
@@ -85,8 +86,8 @@ public class WorldUI : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (countdownValue > 0)
         {
-            yield return new WaitForSeconds(1f);             // Wait for 1 second
             informationText.text = countdownValue.ToString();  // Update the countdown text
+            yield return new WaitForSeconds(1f);             // Wait for 1 second
             //countdownText.gameObject.SetActive(true);        // Show the countdown UI        
             countdownValue--;
         }
@@ -104,13 +105,11 @@ public class WorldUI : MonoBehaviour
 
     private void BackToLobby()
     {
-        Debug.Log("BACK TO LOBBY NE");
         FindObjectOfType<Matchmaking>().BackToLobbyAll();
     }
 
     public void BackToLobbyTeam()
     {
-        Debug.Log("TEAM MEMBER BACK TO LOBBY NE");
         FindObjectOfType<MatchmakingTeam>().BackToLobby();
     }
 
@@ -129,6 +128,12 @@ public class WorldUI : MonoBehaviour
     void HideCursor() {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void ShowPlayerStats()
+    {
+        statsDisplay.gameObject.SetActive(true);
+        statsDisplay.DisplayStats(PlayerStats.Instance);
     }
 }
 

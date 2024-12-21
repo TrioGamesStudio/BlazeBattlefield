@@ -9,7 +9,7 @@ public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovemen
     public static Action JumpAction;
     public static Action SwitchCamAction;
     public static Action SprintAction;
-
+    public static Action ExitAction;
 
 
     //private void OnEnable()
@@ -58,6 +58,10 @@ public class InputPlayerMovement : InputReader, PlayerInputAction.IPlayerMovemen
         SprintAction?.Invoke();
     }
 
+    public void OnExit(InputAction.CallbackContext context)
+    {
+        ExitAction?.Invoke();
+    }
 }
 
 public abstract class InputReader : ScriptableObject
