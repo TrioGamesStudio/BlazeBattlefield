@@ -8,9 +8,10 @@ public class TabSwtichButton : MonoBehaviour
     public byte tabIndex;
     public Action<byte> OnShowTabUI;
     
-    public Image normalIcon;
-    public Image focusIcon;
-    public Image focusPanel;
+    [SerializeField] private Image normalIcon;
+    [SerializeField] private Image focusIcon;
+    [SerializeField] private Image focusPanel;
+
     private void Awake()
     {
         btn = GetComponent<Button>();
@@ -21,18 +22,27 @@ public class TabSwtichButton : MonoBehaviour
     {
         btn.onClick.RemoveListener(OnClick);
     }
+
+    public void SetIcon(Sprite newIcon)
+    {
+        normalIcon.sprite = newIcon;
+        focusIcon.sprite = newIcon;
+    }
+
     private void OnClick()
     {
         OnShowTabUI?.Invoke(tabIndex);
     }
 
-    public void Focus()
+    public void Interactable()
     {
-
+        btn.interactable = true;
+        focusPanel.gameObject.SetActive(false);
     }
 
-    public void UnFocus()
+    public void UnInteractable()
     {
-
+        btn.interactable = false;
+        focusPanel.gameObject.SetActive(true);
     }
 }

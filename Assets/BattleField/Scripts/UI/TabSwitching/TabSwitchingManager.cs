@@ -8,7 +8,9 @@ public class TabSwitchingManager : MonoBehaviour
     [SerializeField] private GameObject tabButtonContainer;
     [SerializeField] private TabSwtichButton tabButtonSwapPrefab;
     [SerializeField] private List<TabSwtichButton> buttonLists = new();
+
     public byte defaultTabIndex = 0;
+    
     private void Awake()
     {
         tabSwitchingUIs = GetComponentsInChildren<TabSwitchingUI>();
@@ -19,7 +21,7 @@ public class TabSwitchingManager : MonoBehaviour
 
             var tabBtn = Instantiate(tabButtonSwapPrefab, tabButtonContainer.transform);
 
-            tabBtn.normalIcon.sprite = item.TabIcon;
+            tabBtn.SetIcon(item.TabIcon);
             tabBtn.OnShowTabUI = ShowTabUIByIndex;
             tabBtn.tabIndex = item.index;
 
@@ -33,6 +35,7 @@ public class TabSwitchingManager : MonoBehaviour
     {
         ShowTabUIByIndex(defaultTabIndex);
     }
+
     public void ShowTabUIByIndex(byte index)
     {
         foreach(var tab in tabSwitchingUIs)
@@ -41,10 +44,10 @@ public class TabSwitchingManager : MonoBehaviour
         }
         foreach(var tabBtn in buttonLists)
         {
-            tabBtn.btn.interactable = true;
+            tabBtn.Interactable();
         }
 
-        buttonLists[index].btn.interactable = false;
+        buttonLists[index].UnInteractable();
         tabSwitchingUIs[index].Show();
     }
 
