@@ -24,6 +24,7 @@ public class InputName : MonoBehaviour
         GameManager.playerNickName = nameInputField.text;
         DataSaver.Instance.dataToSave.userName = nameInputField.text;
         yield return new WaitForSeconds(time);
-        SceneManager.LoadSceneAsync(MAINLOBBY);
+        //SceneManager.LoadSceneAsync(MAINLOBBY);
+        LoadingScene.Instance.LoadScene(MAINLOBBY);
     }
 }
