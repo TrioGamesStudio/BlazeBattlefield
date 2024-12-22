@@ -19,6 +19,13 @@ public class ShowPlayerInfo : MonoBehaviour
     [SerializeField] Image rankIcon; // For player rank icon
     [SerializeField] Sprite[] rankIcons; // Array of rank icons based on rank index
 
+    // show player stats
+    [SerializeField] TextMeshProUGUI userNameStat;
+    [SerializeField] TextMeshProUGUI rankNameStat;
+    [SerializeField] TextMeshProUGUI totalPlayStat;
+    [SerializeField] TextMeshProUGUI winSoloStat;
+    [SerializeField] TextMeshProUGUI winTeamStat;
+
     // buttons
     [Header("       Buttons")]
     [SerializeField] Button saveButton;
@@ -130,6 +137,14 @@ public class ShowPlayerInfo : MonoBehaviour
         winSolo.text = "Win: " + DataSaver.Instance.dataToSave.winSolo.ToString();
         winTeam.text = "Win Team: " + DataSaver.Instance.dataToSave.winTeam.ToString();
         coin.text = "Coin: " + DataSaver.Instance.dataToSave.coins.ToString();
+    }
+
+    public void ShowInfoStat()
+    {
+        userNameStat.text = DataSaver.Instance.dataToSave.userName;
+        rankNameStat.text = RankSystem.GetRankName(DataSaver.Instance.dataToSave.rank);
+        winSoloStat.text = DataSaver.Instance.dataToSave.winSolo.ToString();
+        winTeamStat.text = DataSaver.Instance.dataToSave.winTeam.ToString();      
     }
 
     public void ShowPlayerName()
