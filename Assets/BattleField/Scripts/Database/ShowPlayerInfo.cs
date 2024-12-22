@@ -61,38 +61,38 @@ public class ShowPlayerInfo : MonoBehaviour
     {
         if (scene.name == "MainLobby")
         {
-            //ebug.Log("MainLobby scene loaded. Restarting coroutine.");
-           
-            StartCoroutine(ShowPlayerDataCo(0.5f));
+            Debug.Log("xxx MainLobby scene loaded. Restarting coroutine show player info.");     
+            StartCoroutine(ShowPlayerDataCo(0.3f));
         }
     }
 
     private void Start()
     {
-        //saveButton?.onClick.AddListener(SaveManualTest);
-        //loadButton?.onClick.AddListener(LoadMaunalTest);
-        //gotoLobby?.onClick.AddListener(GoToLobby);
-        //quickPlay?.onClick.AddListener(GoToQickBattle);
-        //ShowPlayerName();
-        //Debug.Log("xxx Update player info");
-        //StartCoroutine(ShowPlayerDataCo(0.5f));
-        StartCoroutine(LoadPlayerDataCo(0.3f));
+        Debug.Log("xxx MainLobby scene loaded. Restarting coroutine load player info.");
+        StartCoroutine(LoadPlayerDataCo(0.1f));
     }
 
-    IEnumerator LoadPlayerDataCo(float time)
+    public IEnumerator LoadPlayerDataCo(float time)
     {
         yield return new WaitForSeconds(time);
         currentRank = DataSaver.Instance.dataToSave.rank;
         Debug.Log("xxx " + currentRank);
     }
 
-    IEnumerator ShowPlayerDataCo(float time)
+    public IEnumerator ShowPlayerDataCo(float time)
     {
         yield return new WaitForSeconds(time);
-        //Debug.Log("xxx Update exp" );
+        Debug.Log("xxx Reset Player info UI" );
         UpdateExperienceUI();
         ShowPlayerName();
         UpdateRankUI();     
+    }
+
+    public void ShowPlayerData()
+    {
+        UpdateExperienceUI();
+        ShowPlayerName();
+        UpdateRankUI();
     }
 
     void SaveManualTest()
@@ -108,7 +108,7 @@ public class ShowPlayerInfo : MonoBehaviour
 
     private void GoToLobby()
     {
-        StartCoroutine(LoadToMainLobby(0.5f));
+        StartCoroutine(LoadToMainLobby(0.1f));
     }
 
     IEnumerator LoadToMainLobby(float time)
@@ -130,9 +130,6 @@ public class ShowPlayerInfo : MonoBehaviour
 
     public void ShowInfo()
     {
-        // Debug.Log($"_____show player info");
-        //userName.text = "User name: " + DataSaver.Instance.dataToSave.userName;
-        //currentLevel.text = "Current Level: " + DataSaver.Instance.dataToSave.currLevel.ToString();
         rankName.text = "Rank: " + RankSystem.GetRankName(DataSaver.Instance.dataToSave.rank);
         winSolo.text = "Win: " + DataSaver.Instance.dataToSave.winSolo.ToString();
         winTeam.text = "Win Team: " + DataSaver.Instance.dataToSave.winTeam.ToString();

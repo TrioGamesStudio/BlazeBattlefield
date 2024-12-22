@@ -375,8 +375,7 @@ public class LoginManager : MonoBehaviour
                     FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
                 }; */
                 //StartCoroutine(LoadMainMenuLobby());
-                LoadingScene.Instance.LoadScene("MainLobby");
-                //UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
+                LoadingScene.Instance.LoadScene("MainLobby");           
                 loginCanvas.SetActive(false);
                 FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
             }
