@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SettingPanel : MonoBehaviour
 {
     [SerializeField] private Slider bgmSlider; // Reference to UI Slider
     [SerializeField] private AudioSource backgroundMusic; // Reference to Audio Source
+    [SerializeField] private string backgroundMusicTag = "BackgroundMusic";
     private const string BGM_VOLUME_KEY = "BGMVolume"; // PlayerPrefs key to save volume
 
     private void Start()
@@ -14,6 +16,9 @@ public class SettingPanel : MonoBehaviour
         // Load saved volume or set default
         float savedVolume = PlayerPrefs.GetFloat(BGM_VOLUME_KEY, 1f);
         bgmSlider.value = savedVolume;
+
+        // Set up initial audio source reference
+        FindAndSetupAudioSource();
 
         // Initialize background music volume
         if (backgroundMusic != null)
@@ -23,6 +28,27 @@ public class SettingPanel : MonoBehaviour
 
         // Add listener for slider value change
         bgmSlider.onValueChanged.AddListener(OnBGMVolumeChanged);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Re-find and setup audio source when a new scene is loaded
+        FindAndSetupAudioSource();
+    }
+
+    private void FindAndSetupAudioSource()
+    {
+        // Find the audio source by tag
+        GameObject musicObject = GameObject.FindWithTag(backgroundMusicTag);
+        if (musicObject != null)
+        {
+            backgroundMusic = musicObject.GetComponent<AudioSource>();
+            if (backgroundMusic != null)
+            {
+                backgroundMusic.volume = bgmSlider.value;
+            }
+        }
     }
 
     private void OnBGMVolumeChanged(float volume)
@@ -43,5 +69,15 @@ public class SettingPanel : MonoBehaviour
         LoginManager.Instance.SignOut();
         Matchmaking.Instance.LeaveRoom();
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
+    }
+
+    private void OnDestroy()
+    {
+        // Remove all listeners
+        if (bgmSlider != null)
+        {
+            bgmSlider.onValueChanged.RemoveListener(OnBGMVolumeChanged);
+        }
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
