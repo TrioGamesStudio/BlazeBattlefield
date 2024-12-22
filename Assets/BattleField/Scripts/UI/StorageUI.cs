@@ -10,6 +10,8 @@ public class StorageUI : MonoBehaviour
 
     public Button openStorageBtn;
     public Button openMainLobby;
+
+    public FixedPopupSender FixedPopupSender;
     private void Awake()
     {
         ShowMainLobby();
@@ -26,7 +28,13 @@ public class StorageUI : MonoBehaviour
     public void ShowStorage()
     {
         bool cannotOpen = Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo;
-        if (cannotOpen) return;
+        
+        if (cannotOpen)
+        {
+            FixedPopupSender.SendMessage();
+            return;
+        }
+        
         ShowCanvasGroup(mainLobbyCanvasGroup, false);
         ShowCanvasGroup(storageCanvasGroup, true);
     }

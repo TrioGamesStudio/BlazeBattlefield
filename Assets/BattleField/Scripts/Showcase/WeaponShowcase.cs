@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class WeaponShowcase : MonoBehaviour
 {
-    public List<GameObject> itemShowcase = new();
-    public int index;
-    private GameObject currentItem;
-    public WeaponShowcaseUI weaponShowcaseUI;
-    public float rotationSpeed = 5;
+    [SerializeField] private GameObject currentItem;
     [SerializeField] private Transform SpawnTransform;
+    [SerializeField] private WeaponShowcaseUI weaponShowcaseUI;
+    [SerializeField] private float rotationSpeed = 5;
+    [SerializeField] private int index;
+
+    [SerializeField] private List<GameObject> itemShowcase = new();
     private void Awake()
     {
         GoNextGun();
