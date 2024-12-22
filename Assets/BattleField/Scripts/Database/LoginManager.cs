@@ -376,6 +376,7 @@ public class LoginManager : MonoBehaviour
                 }; */
                 //StartCoroutine(LoadMainMenuLobby());
                 LoadingScene.Instance.LoadScene("MainLobby");
+                //UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
                 loginCanvas.SetActive(false);
                 FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
             }

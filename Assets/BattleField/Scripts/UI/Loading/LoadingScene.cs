@@ -96,6 +96,9 @@ public class LoadingScene : MonoBehaviour
 
         // Hide the loading screen
         loadingCanvas.gameObject.SetActive(false);
+
+        //UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
+        UIController.Instance.ShowHidePanel(UIController.Instance.mainLobbyPanel);
         isLoading = false;
     }
 
