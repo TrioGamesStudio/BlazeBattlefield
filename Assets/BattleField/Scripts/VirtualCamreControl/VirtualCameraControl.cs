@@ -1,4 +1,3 @@
-using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +15,7 @@ public class VirtualCameraControl : MonoBehaviour
 
     public void SetCameraOrderToFirst(string cameraName)
     {
+        cameraName = cameraName.ToLower();
         if (virtualsCamera == null)
         {
             Debug.Log("Have no camera register in this scene", gameObject);
@@ -26,13 +26,13 @@ public class VirtualCameraControl : MonoBehaviour
         {
             Debug.Log($"Finded camera register in this scene: {camera.cameraName}", gameObject);
 
-            camera.cinemachine.Priority = hightOrder;
 
             foreach (var item in virtualsCamera)
             {
                 if (item.Key == camera.cameraName) continue;
                 item.Value.cinemachine.Priority = lowOrder;
             }
+            camera.cinemachine.Priority = hightOrder;
         }
         else
         {
@@ -44,23 +44,26 @@ public class VirtualCameraControl : MonoBehaviour
     public void Add(VirtualCamera VirtualCamera)
     {
 
-        string key = VirtualCamera.cameraName;
-        if (string.IsNullOrEmpty(key) == false) return;
-        if (!virtualsCamera.ContainsKey(VirtualCamera.cameraName))
+        string key = VirtualCamera.cameraName.ToLower();
+     
+        if (!virtualsCamera.ContainsKey(key))
         {
+            Debug.Log($"Add new camera {key} ", VirtualCamera.gameObject);
             virtualsCamera.Add(key, VirtualCamera);
         }
     }
 
     public void Remove(VirtualCamera VirtualCamera)
     {
-        string key = VirtualCamera.cameraName;
-        if (string.IsNullOrEmpty(key) == false) return;
-        if (virtualsCamera.ContainsKey(VirtualCamera.cameraName))
+        string key = VirtualCamera.cameraName.ToLower();
+    
+        if (virtualsCamera.ContainsKey(key))
         {
             virtualsCamera.Remove(key);
         }
     }
+
+ 
 
     private static VirtualCameraControl TryCreateInstance()
     {
@@ -72,21 +75,6 @@ public class VirtualCameraControl : MonoBehaviour
         }
 
         return instance;
-    }
-}
-public class VirtualCamera : MonoBehaviour
-{
-    public string cameraName;
-    public CinemachineVirtualCamera cinemachine;
-    private void Awake()
-    {
-        cinemachine = GetComponent<CinemachineVirtualCamera>();
-        VirtualCameraControl.Instance.Add(this);
-    }
-
-    private void OnDestroy()
-    {
-        VirtualCameraControl.Instance.Remove(this);
     }
 }
 
