@@ -456,10 +456,11 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     public void RequestUpdateKillCount()
     {
         killCount += 1;
-        //if (HasStateAuthority)
+        if (HasStateAuthority)
         {
             AliveKillUI.UpdateKillCount?.Invoke(killCount);
             //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+            PlayerStats.Instance.AddTotalKill(1);
         }
     }
 }
