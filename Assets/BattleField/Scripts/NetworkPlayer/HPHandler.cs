@@ -168,7 +168,6 @@ public class HPHandler : NetworkBehaviour
 
     IEnumerator ServerRespawnCountine() {
         yield return new WaitForSeconds(2f);
-        // xet bien isRespawnRequested = true de fixUpdatedNetwork() call Respawn()
         Debug.Log("xet respawn sau 2s");
         characterMovementHandler.RequestRespawn();
     }
