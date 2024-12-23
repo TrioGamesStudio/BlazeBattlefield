@@ -286,7 +286,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         /* var spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network; */
 
         //? neu la AI thi diem ban se la camera anrcho
-        /* if(!networkPlayer.isBot) 
+        /* if(!networkPlayer.isBot)
             spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network;
         else spawnPointRaycastCam = aiCameraAnchor.position; */
         bool isHit = false;
@@ -425,6 +425,8 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
         CroshairManager.instance.SetGunSound(weaponSoundCurr);
 
+        RPC_SetSound(config.SubItemType);
+
         if (config.slotWeaponIndex == SlotWeaponIndex.Slot_1)
         {
             //crossHair.SetActive(false);
@@ -436,6 +438,12 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
             //crossHair.SetActive(true);
         }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.Proxies)]
+    private void RPC_SetSound(GunType gunType)
+    {
+        weaponSoundCurr = ItemDatabase.instance.ItemConfigDatabase.FindGunItem(gunType).shootingSound;
     }
 
 
