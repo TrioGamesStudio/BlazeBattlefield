@@ -359,7 +359,6 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
         }
 
-        CroshairManager.OnHitTarget(NetworkPlayer.Local.transform.position, isHit);
         lastTimeFired = Time.time;
 
         // lam cho ai ban theo tan suat random khoang time
@@ -386,7 +385,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         else
             fireParticleSystemLocal.Play();
 
-
+        audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
 
         yield return new WaitForSeconds(0.09f);
         isFiring = false;
@@ -423,7 +422,6 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         recoil = config.recoil;
         isScopeMode = config.isContainScope;
 
-        CroshairManager.instance.SetGunSound(weaponSoundCurr);
 
         RPC_SetSound(config.SubItemType);
 
