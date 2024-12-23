@@ -22,9 +22,12 @@ public class ShowPlayerInfo : MonoBehaviour
     // show player stats
     [SerializeField] TextMeshProUGUI userNameStat;
     [SerializeField] TextMeshProUGUI rankNameStat;
-    [SerializeField] TextMeshProUGUI totalPlayStat;
     [SerializeField] TextMeshProUGUI winSoloStat;
     [SerializeField] TextMeshProUGUI winTeamStat;
+    [SerializeField] TextMeshProUGUI totalPlaySoloStat;
+    [SerializeField] TextMeshProUGUI totalPlayTeamStat;
+    [SerializeField] TextMeshProUGUI winRateSoloStat;
+    [SerializeField] TextMeshProUGUI winRateTeamStat;
 
     // buttons
     [Header("       Buttons")]
@@ -141,7 +144,11 @@ public class ShowPlayerInfo : MonoBehaviour
         userNameStat.text = DataSaver.Instance.dataToSave.userName;
         rankNameStat.text = RankSystem.GetRankName(DataSaver.Instance.dataToSave.rank);
         winSoloStat.text = DataSaver.Instance.dataToSave.winSolo.ToString();
-        winTeamStat.text = DataSaver.Instance.dataToSave.winTeam.ToString();      
+        winTeamStat.text = DataSaver.Instance.dataToSave.winTeam.ToString();
+        totalPlaySoloStat.text = DataSaver.Instance.dataToSave.totalPlaySolo.ToString();
+        totalPlayTeamStat.text = DataSaver.Instance.dataToSave.totalPlayTeam.ToString();
+        winRateSoloStat.text = ((float)DataSaver.Instance.dataToSave.winSolo / DataSaver.Instance.dataToSave.totalPlaySolo * 100f).ToString("F1") + " %";
+        winRateTeamStat.text = ((float)DataSaver.Instance.dataToSave.winTeam / DataSaver.Instance.dataToSave.totalPlayTeam * 100f).ToString("F1") + " %";
     }
 
     public void ShowPlayerName()

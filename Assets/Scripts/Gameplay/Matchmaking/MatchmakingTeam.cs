@@ -96,6 +96,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
             UIController.Instance.ShowHideUI(UIController.Instance.loadingPanel);
             //StartCoroutine(HideMainLobbyUI());
+            DataSaver.Instance.dataToSave.totalPlayTeam += 1;
+            DataSaver.Instance.SaveData();
             ;
         }
         else

@@ -13,16 +13,20 @@ public class DataToSave {
     public int coins;
     public int experience = 0; // Tracks total XP
     public int rank = 0;       // Tracks current rank
+    public int totalPlaySolo;
+    public int totalPlayTeam;
 
     public DataToSave() {
         
     }
-    public DataToSave(string userName, int currLevel, int winSolo, int winTeam, int coins) {
+    public DataToSave(string userName, int currLevel, int winSolo, int winTeam, int coins, int totalPlaySolo, int totalPlayTeam) {
         this.userName = userName;
         this.currLevel = currLevel;
         this.winSolo = winSolo;
         this.winTeam = winTeam;
         this.coins = coins;
+        this.totalPlaySolo = totalPlaySolo;
+        this.totalPlayTeam = totalPlayTeam;
     }
 }
 
@@ -58,12 +62,12 @@ public class DataSaver : MonoBehaviour
         
     }
 
-    public DataToSave ReturnDataToSave(string username, int currLevel, int winSolo,int winTeam, int coins) {
-        return new DataToSave(username, currLevel, winSolo, winTeam, coins);
+    public DataToSave ReturnDataToSave(string username, int currLevel, int winSolo,int winTeam, int coins, int totalPlaySolo, int totalPlayTeam) {
+        return new DataToSave(username, currLevel, winSolo, winTeam, coins, totalPlaySolo, totalPlayTeam);
     }
 
     public void SaveToSignup(string userName, string userId) {
-        DataToSave saveDataToSignup = ReturnDataToSave(userName, 1, 0, 0, 0);
+        DataToSave saveDataToSignup = ReturnDataToSave(userName, 1, 0, 0, 0, 0, 0);
         // chuyen dataToSave -> json
         string json = JsonUtility.ToJson(saveDataToSignup);
 
@@ -114,6 +118,8 @@ public class DataSaver : MonoBehaviour
         dataToSave.coins = 0;
         dataToSave.experience = 0;
         dataToSave.rank = 0;
+        dataToSave.totalPlaySolo = 0;
+        dataToSave.totalPlayTeam = 0;
 
         // Optionally save the reset data to Firebase
         //SaveData();
