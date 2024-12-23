@@ -109,10 +109,6 @@ public class HPHandler : NetworkBehaviour
             isShowResultTable = true;
             if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
             {
-                //PlayerRef player = GetComponent<PlayerRoomController>().ThisPlayerRef;
-                //Debug.Log("====Player ref " + player);
-                //RPC_ShowResult(Matchmaking.Instance.alivePlayer);    
-                //Matchmaking.Instance.CheckWin(player);
                 PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
                 RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
                 RPC_HideLocalPlayerUI();
@@ -121,7 +117,6 @@ public class HPHandler : NetworkBehaviour
             else
             {
                 PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
-                //FindObjectOfType<GameHandler>().Eliminate(playerRoomController.RoomID.ToString(), playerRoomController);
                 RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
                 RPC_HideLocalPlayerUI();
                 RPC_ShowResultDuo();
@@ -133,7 +128,7 @@ public class HPHandler : NetworkBehaviour
     //? server call | coll 55 WeaponHandler.cs | khi hitInfo.HitBox tren player
     public void OnTakeDamage(string damageCausedByPlayerNickName, byte damageAmount, WeaponHandler weaponHandler) {
         Debug.LogWarning("Before damge:" + Networked_HP);
-        if(Networked_IsDead) return;
+        if(Networked_IsDead || Networked_HP <= 0) return;
 
         //gioi han gia tri damageAmount
         if(damageAmount > Networked_HP) damageAmount = Networked_HP;
@@ -150,33 +145,8 @@ public class HPHandler : NetworkBehaviour
             Debug.Log($"{Time.time} {transform.name} is dead by {damageCausedByPlayerNickName}");
             /* RPC_SetNetworkedKiller(damageCausedByPlayerNickName); */ // can use
             isPublicDeathMessageSent = false;
-            //StartCoroutine(ServerRespawnCountine()); //Phuc comment: not allow player respawn
-            /* RPC_SetNetworkedIsDead(true); */ // can use
-            //if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
-            //{
-            //    //PlayerRef player = GetComponent<PlayerRoomController>().ThisPlayerRef;
-            //    //Debug.Log("====Player ref " + player);
-            //    //RPC_ShowResult(Matchmaking.Instance.alivePlayer);    
-            //    //Matchmaking.Instance.CheckWin(player);
-            //    PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
-            //    RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
-            //    RPC_HideLocalPlayerUI();
-            //    RPC_ShowResultDuo();
-            //}
-            //else
-            //{
-            //    PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
-            //    //FindObjectOfType<GameHandler>().Eliminate(playerRoomController.RoomID.ToString(), playerRoomController);
-            //    RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
-            //    RPC_HideLocalPlayerUI();
-            //    RPC_ShowResultDuo();
-            //}
-
-            //deadCount ++;
-            //PlayerMessageManager.instance.SendKillLog("some one","anybody");
             weaponHandler.RequestUpdateKillCount();
             //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
-            PlayerStats.Instance.AddTotalKill(1);
         }
     }
 
