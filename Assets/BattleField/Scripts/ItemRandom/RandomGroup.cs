@@ -37,10 +37,9 @@ public class RandomGroup : NetworkBehaviour
             return;
         }
         spawnCount = _spawnCount;
-        if (validSpawnPoints.Count == 0)
-        {
-            SelectValidSpawnPoints();
-        }
+
+        SelectValidSpawnPoints();
+
         SpawnDropBoxes();
     }
 
@@ -106,7 +105,7 @@ public class RandomGroup : NetworkBehaviour
 
         if (drawAllChildLocation)
         {
-            
+
             foreach (var child in spawnPoints)
             {
                 if (child == null)
