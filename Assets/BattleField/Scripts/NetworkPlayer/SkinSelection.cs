@@ -14,18 +14,22 @@ public class SkinSelection : MonoBehaviour
     // buttons
     [SerializeField] Button selectButton;
 
-    
 
-    private void Awake() {
 
-        if(Instance != null && Instance != this) {
+    private void Awake()
+    {
+
+        if (Instance != null && Instance != this)
+        {
             Destroy(this.gameObject);
             return;
-        } else {
+        }
+        else
+        {
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
-        
+
         matchmaking = FindObjectOfType<Matchmaking>();
         matchmakingTeam = FindObjectOfType<MatchmakingTeam>();
         skinMaxNumber = skinsParent.childCount;
@@ -34,8 +38,10 @@ public class SkinSelection : MonoBehaviour
 
     }
 
-    private void Start() {
-        if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo) {
+    private void Start()
+    {
+        if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
+        {
             SkinsSlectionSoloUpdate(skinsNextNumber);
 
             matchmaking.SkinSelectedNumber = skinsNextNumber;
@@ -43,13 +49,17 @@ public class SkinSelection : MonoBehaviour
         }
     }
 
-    void SkinSelectNext() {
+    void SkinSelectNext()
+    {
 
-        if(skinsNextNumber == skinMaxNumber - 1) {
+        if (skinsNextNumber == skinMaxNumber - 1)
+        {
             skinsNextNumber = 0;
-            
-        } else {
-            skinsNextNumber ++;
+
+        }
+        else
+        {
+            skinsNextNumber++;
         }
 
         SkinsSlectionSoloUpdate(skinsNextNumber);
@@ -58,15 +68,18 @@ public class SkinSelection : MonoBehaviour
         matchmakingTeam.SkinSelectedNumber = skinsNextNumber;
     }
 
-    void SkinsSlectionSoloUpdate(int skinNumber) {
-        foreach (Transform item in skinsParent) {
+    void SkinsSlectionSoloUpdate(int skinNumber)
+    {
+        foreach (Transform item in skinsParent)
+        {
             item.gameObject.SetActive(false);
         }
 
         skinsParent.GetChild(skinNumber).gameObject.SetActive(true);
     }
 
-    public void ToggleSelectSkinButton(bool isActive) {
+    public void ToggleSelectSkinButton(bool isActive)
+    {
         selectButton.gameObject.SetActive(isActive);
     }
 

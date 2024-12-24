@@ -6,6 +6,7 @@ using Firebase.Auth;
 using Firebase;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class LoginManager : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class LoginManager : MonoBehaviour
     public TMP_InputField loginEmail;
     public TMP_InputField loginPassword;
     [SerializeField] Button loginButton;
+
+    public TMP_InputField emailRequest;
+    [SerializeField] Button sendRequestPass;
 
     [Header("Sign up")]
     public TMP_InputField signupEmail;
@@ -61,6 +65,7 @@ public class LoginManager : MonoBehaviour
         DontDestroyOnLoad(this);
         loginButton.onClick.AddListener(Login);
         signUpButton.onClick.AddListener(SignUp);
+        sendRequestPass.onClick.AddListener(SendResetPass);
 
         //PlayerInfoUI.SetActive(false);
 
@@ -325,6 +330,36 @@ public class LoginManager : MonoBehaviour
     #endregion
 
     #region Login
+    public void SendResetPass() {
+        if(string.IsNullOrEmpty(emailRequest.text)) {
+            ShowLogMsg("Email is not accepted, Please input again");
+            return;
+        }
+
+        SendResetPass(emailRequest.text);
+    }
+    public void SendResetPass(string emailRequest) {
+        FirebaseAuth auth = FirebaseAuth.DefaultInstance;
+        auth.SendPasswordResetEmailAsync(emailRequest).ContinueWithOnMainThread(task => {
+            if(task.IsCanceled) {
+                Debug.Log($"SendPassWordResetEmailAsync was canceled");
+            }
+            if(task.IsFaulted) {
+                foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
+                {
+                    Firebase.FirebaseException firebaseEx = exception as FirebaseException;
+                    if(firebaseEx != null) {
+                        var errorCode = (AuthError)firebaseEx.ErrorCode;
+                        // thong bao
+                        ShowLogMsg("Can not send reset mail");
+                    }
+                }
+            }
+
+            ShowLogMsg("succesully send mail to reset pass, Please check mail");
+        });
+    }
+
     public void Login() {
         loadingScreen.SetActive(true);
 
@@ -375,7 +410,7 @@ public class LoginManager : MonoBehaviour
                     FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
                 }; */
                 //StartCoroutine(LoadMainMenuLobby());
-                LoadingScene.Instance.LoadScene("MainLobby");
+                LoadingScene.Instance.LoadScene("MainLobby");           
                 loginCanvas.SetActive(false);
                 FindObjectOfType<ShowPlayerInfo>().currentRank = DataSaver.Instance.dataToSave.rank;
             }

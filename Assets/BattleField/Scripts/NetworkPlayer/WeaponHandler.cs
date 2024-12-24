@@ -286,7 +286,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         /* var spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network; */
 
         //? neu la AI thi diem ban se la camera anrcho
-        /* if(!networkPlayer.isBot) 
+        /* if(!networkPlayer.isBot)
             spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network;
         else spawnPointRaycastCam = aiCameraAnchor.position; */
         bool isHit = false;
@@ -359,7 +359,6 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
         }
 
-        CroshairManager.OnHitTarget(NetworkPlayer.Local.transform.position, isHit);
         lastTimeFired = Time.time;
 
         // lam cho ai ban theo tan suat random khoang time
@@ -386,7 +385,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         else
             fireParticleSystemLocal.Play();
 
-
+        audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
 
         yield return new WaitForSeconds(0.09f);
         isFiring = false;
@@ -423,7 +422,8 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         recoil = config.recoil;
         isScopeMode = config.isContainScope;
 
-        CroshairManager.instance.SetGunSound(weaponSoundCurr);
+
+        RPC_SetSound(config.SubItemType);
 
         if (config.slotWeaponIndex == SlotWeaponIndex.Slot_1)
         {
@@ -438,6 +438,12 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         }
     }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.Proxies)]
+    private void RPC_SetSound(GunType gunType)
+    {
+        weaponSoundCurr = ItemDatabase.instance.ItemConfigDatabase.FindGunItem(gunType).shootingSound;
+    }
+
 
     public void Initialize()
     {
@@ -448,10 +454,11 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     public void RequestUpdateKillCount()
     {
         killCount += 1;
-        //if (HasStateAuthority)
+        if (HasStateAuthority)
         {
             AliveKillUI.UpdateKillCount?.Invoke(killCount);
             //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+            PlayerStats.Instance.AddTotalKill(1);
         }
     }
 }
