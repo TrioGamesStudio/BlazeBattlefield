@@ -16,4 +16,3 @@ public class VirtualCamera : MonoBehaviour
         VirtualCameraControl.Instance.Remove(this);
     }
 }
-

@@ -10,20 +10,20 @@ public class TabSwitchingManager : MonoBehaviour
     [SerializeField] private List<TabSwtichButton> buttonLists = new();
 
     public byte defaultTabIndex = 0;
-    
+
     private void Awake()
     {
         tabSwitchingUIs = GetComponentsInChildren<TabSwitchingUI>();
         byte index = 0;
-        foreach(var item in tabSwitchingUIs)
+        foreach (var item in tabSwitchingUIs)
         {
-            item.index = index;
+            item.Index = index;
 
             var tabBtn = Instantiate(tabButtonSwapPrefab, tabButtonContainer.transform);
 
             tabBtn.SetIcon(item.TabIcon);
             tabBtn.OnShowTabUI = ShowTabUIByIndex;
-            tabBtn.tabIndex = item.index;
+            tabBtn.tabIndex = item.Index;
 
             index++;
 
@@ -31,6 +31,7 @@ public class TabSwitchingManager : MonoBehaviour
             // setup button
         }
     }
+
     private void OnEnable()
     {
         ShowTabUIByIndex(defaultTabIndex);
@@ -38,11 +39,11 @@ public class TabSwitchingManager : MonoBehaviour
 
     public void ShowTabUIByIndex(byte index)
     {
-        foreach(var tab in tabSwitchingUIs)
+        foreach (var tab in tabSwitchingUIs)
         {
             tab.Hide();
         }
-        foreach(var tabBtn in buttonLists)
+        foreach (var tabBtn in buttonLists)
         {
             tabBtn.Interactable();
         }

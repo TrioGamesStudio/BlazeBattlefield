@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class StorageUI : MonoBehaviour
@@ -11,7 +12,8 @@ public class StorageUI : MonoBehaviour
     public Button openStorageBtn;
     public Button openMainLobby;
 
-    public FixedPopupSender FixedPopupSender;
+
+    public UnityEvent onBlockShowStorageEvent;
     private void Awake()
     {
         ShowMainLobby();
@@ -28,13 +30,13 @@ public class StorageUI : MonoBehaviour
     public void ShowStorage()
     {
         bool cannotOpen = Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo;
-        
+
         if (cannotOpen)
         {
-            FixedPopupSender.SendMessage();
+            onBlockShowStorageEvent?.Invoke();
             return;
         }
-        
+
         ShowCanvasGroup(mainLobbyCanvasGroup, false);
         ShowCanvasGroup(storageCanvasGroup, true);
     }
@@ -45,7 +47,7 @@ public class StorageUI : MonoBehaviour
         ShowCanvasGroup(storageCanvasGroup, false);
     }
 
-    private void ShowCanvasGroup(CanvasGroup canvasGroup,bool enable)
+    private void ShowCanvasGroup(CanvasGroup canvasGroup, bool enable)
     {
         float time = enable ? .4f : 0;
         float fade = enable ? 1 : 0;

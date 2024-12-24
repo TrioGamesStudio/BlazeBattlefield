@@ -8,10 +8,26 @@ public class VirtualCameraControl : MonoBehaviour
     private static VirtualCameraControl instance;
     public static VirtualCameraControl Instance
     {
-        get => TryCreateInstance();
+        get
+        {
+            return instance;
+        }
     }
     private int hightOrder = 5;
     private int lowOrder = 0;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public void SetCameraOrderToFirst(string cameraName)
     {
@@ -26,7 +42,6 @@ public class VirtualCameraControl : MonoBehaviour
         {
             Debug.Log($"Finded camera register in this scene: {camera.cameraName}", gameObject);
 
-
             foreach (var item in virtualsCamera)
             {
                 if (item.Key == camera.cameraName) continue;
@@ -38,14 +53,12 @@ public class VirtualCameraControl : MonoBehaviour
         {
             Debug.LogError($"Your camera name {cameraName} does not exit !!!", gameObject);
         }
-
     }
 
     public void Add(VirtualCamera VirtualCamera)
     {
-
         string key = VirtualCamera.cameraName.ToLower();
-     
+
         if (!virtualsCamera.ContainsKey(key))
         {
             Debug.Log($"Add new camera {key} ", VirtualCamera.gameObject);
@@ -56,25 +69,10 @@ public class VirtualCameraControl : MonoBehaviour
     public void Remove(VirtualCamera VirtualCamera)
     {
         string key = VirtualCamera.cameraName.ToLower();
-    
+
         if (virtualsCamera.ContainsKey(key))
         {
             virtualsCamera.Remove(key);
         }
     }
-
- 
-
-    private static VirtualCameraControl TryCreateInstance()
-    {
-        if (instance == null)
-        {
-            var go = new GameObject();
-            go.name = "Virtual Camera Control";
-            instance = go.AddComponent<VirtualCameraControl>();
-        }
-
-        return instance;
-    }
 }
-
