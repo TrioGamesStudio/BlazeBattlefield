@@ -147,8 +147,11 @@ public class ShowPlayerInfo : MonoBehaviour
         winTeamStat.text = DataSaver.Instance.dataToSave.winTeam.ToString();
         totalPlaySoloStat.text = DataSaver.Instance.dataToSave.totalPlaySolo.ToString();
         totalPlayTeamStat.text = DataSaver.Instance.dataToSave.totalPlayTeam.ToString();
-        winRateSoloStat.text = ((float)DataSaver.Instance.dataToSave.winSolo / DataSaver.Instance.dataToSave.totalPlaySolo * 100f).ToString("F1") + " %";
-        winRateTeamStat.text = ((float)DataSaver.Instance.dataToSave.winTeam / DataSaver.Instance.dataToSave.totalPlayTeam * 100f).ToString("F1") + " %";
+        if (DataSaver.Instance.dataToSave.winSolo != 0 && DataSaver.Instance.dataToSave.totalPlaySolo != 0)
+        {
+            winRateSoloStat.text = ((float)DataSaver.Instance.dataToSave.winSolo / DataSaver.Instance.dataToSave.totalPlaySolo * 100f).ToString("F1") + " %";
+            winRateTeamStat.text = ((float)DataSaver.Instance.dataToSave.winTeam / DataSaver.Instance.dataToSave.totalPlayTeam * 100f).ToString("F1") + " %";
+        }   
     }
 
     public void ShowPlayerName()
