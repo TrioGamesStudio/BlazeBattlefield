@@ -193,11 +193,13 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (result.Ok)
         {
+            LoadingScene.Instance.ShowLoadingScreen(networkRunner);
             UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
             localPlayer.gameObject.SetActive(false);
             // all good
             Debug.Log("Match room name: " + networkRunner.SessionInfo.Name);
-
+            DataSaver.Instance.dataToSave.totalPlaySolo += 1;
+            DataSaver.Instance.SaveData();
         }
         else
         {

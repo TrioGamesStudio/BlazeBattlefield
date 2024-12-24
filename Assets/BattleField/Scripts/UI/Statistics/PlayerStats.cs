@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -29,7 +30,7 @@ public class PlayerStats : MonoBehaviour
 
     private void Update()
     {
-        if (isAlive)
+        if (isAlive && SceneManager.GetActiveScene().name != "MainLobby")
         {
             SurvivalTime += Time.deltaTime;
         }
@@ -63,6 +64,7 @@ public class PlayerStats : MonoBehaviour
 
     public void ResetStats()
     {
+        TotalKill = 0;
         DamageDealt = 0;
         DamageReceived = 0;
         HealthHealed = 0;
