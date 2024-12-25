@@ -155,7 +155,7 @@ public class HPHandler : NetworkBehaviour
             /* RPC_SetNetworkedKiller(damageCausedByPlayerNickName); */ // can use
             isPublicDeathMessageSent = false;
             weaponHandler.RequestUpdateKillCount();
-            PlayerStats.Instance.MarkPlayerDead();
+            PlayerStats.Instance.MarkEndGame();
             //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
         }
     }
