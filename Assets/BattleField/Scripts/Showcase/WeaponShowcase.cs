@@ -20,11 +20,11 @@ public class WeaponShowcase : MonoBehaviour
     public void GoNextGun()
     {
         index++;
-        if(index >= itemShowcase.Count)
+        if (index >= itemShowcase.Count)
         {
             index = 0;
         }
-        if(currentItem != null)
+        if (currentItem != null)
             Destroy(currentItem.gameObject);
         currentItem = Instantiate(itemShowcase[index], SpawnTransform.position, Quaternion.identity);
         currentItem.transform.localScale = Vector3.one * 1.5f;
@@ -32,6 +32,7 @@ public class WeaponShowcase : MonoBehaviour
     public float rotateSpeed = 2;
     private void Update()
     {
+        if (weaponShowcaseUI == null) return;
         if (currentItem == null) return;
 
         //float rotationX = weaponShowcaseUI.rotateInput.y * rotationSpeed;
@@ -39,7 +40,7 @@ public class WeaponShowcase : MonoBehaviour
 
         //currentItem.transform.Rotate(Vector3.up, rotationY, Space.World);
         //currentItem.transform.Rotate(Vector3.right, rotationX, Space.Self);
-        currentItem.transform.rotation = Quaternion.Lerp(currentItem.transform.rotation, 
+        currentItem.transform.rotation = Quaternion.Lerp(currentItem.transform.rotation,
             Quaternion.Euler(new Vector3(0, -weaponShowcaseUI.rotateInput.x, weaponShowcaseUI.rotateInput.y)), rotateSpeed * Time.deltaTime);
     }
 }
