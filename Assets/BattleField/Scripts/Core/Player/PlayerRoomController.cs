@@ -209,6 +209,7 @@ public class PlayerRoomController : NetworkBehaviour
         // save to firebase datatosave
         DataSaver.Instance.SaveData();
         GetComponent<NetworkPlayer>().localUI.SetActive(false);
+        PlayerStats.Instance.MarkEndGame();
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
