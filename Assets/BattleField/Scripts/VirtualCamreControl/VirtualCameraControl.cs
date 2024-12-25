@@ -5,6 +5,7 @@ using UnityEngine;
 public class VirtualCameraControl : MonoBehaviour
 {
     private Dictionary<string, VirtualCamera> virtualsCamera = new();
+    [SerializeField] private List<VirtualCamera> rawCameraList = new();
     private static VirtualCameraControl instance;
     public static VirtualCameraControl Instance
     {
@@ -26,6 +27,16 @@ public class VirtualCameraControl : MonoBehaviour
         else if (instance != this)
         {
             Destroy(gameObject);
+        }
+
+        Initialize();
+    }
+
+    private void Initialize()
+    {
+        foreach (var camera in rawCameraList)
+        {
+            Add(camera);
         }
     }
 

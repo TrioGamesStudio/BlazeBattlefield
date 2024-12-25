@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TabSwitchingUI : MonoBehaviour
 {
@@ -8,6 +9,9 @@ public class TabSwitchingUI : MonoBehaviour
     public byte Order = 0;
     public byte Index;
     public Sprite TabIcon;
+
+    public UnityEvent OnShowUIEvent;
+
     [Tooltip("You can use these button to hide current UI cover diffents UI exits")]
     [SerializeField] private List<GameObject> viewsObject = new();
     [Button("Show (Can use to show object quickly of this UI)")]
@@ -17,6 +21,7 @@ public class TabSwitchingUI : MonoBehaviour
         {
             view.SetActive(true);
         }
+        OnShowUIEvent?.Invoke();
     }
 
     [Button("Hide (Can use to hide object quickly of this UI)")]

@@ -14,6 +14,9 @@ public class StorageUI : MonoBehaviour
 
 
     public UnityEvent onBlockShowStorageEvent;
+    public UnityEvent onShowMainLobbyEvent;
+    public UnityEvent onShowStorageEvent;
+
     private void Awake()
     {
         ShowMainLobby();
@@ -39,12 +42,14 @@ public class StorageUI : MonoBehaviour
 
         ShowCanvasGroup(mainLobbyCanvasGroup, false);
         ShowCanvasGroup(storageCanvasGroup, true);
+        onShowStorageEvent?.Invoke();
     }
 
     public void ShowMainLobby()
     {
         ShowCanvasGroup(mainLobbyCanvasGroup, true);
         ShowCanvasGroup(storageCanvasGroup, false);
+        onShowMainLobbyEvent?.Invoke();
     }
 
     private void ShowCanvasGroup(CanvasGroup canvasGroup, bool enable)

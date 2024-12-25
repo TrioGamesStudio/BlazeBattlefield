@@ -32,7 +32,7 @@ public class TabSwitchingManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    public void ShowDefaultTabIndex()
     {
         ShowTabUIByIndex(defaultTabIndex);
     }
