@@ -83,4 +83,12 @@ public class SkinSelection : MonoBehaviour
         selectButton.gameObject.SetActive(isActive);
     }
 
+    public void SetSkinByIndex(int newIndex)
+    {
+        skinsNextNumber = newIndex;
+        SkinsSlectionSoloUpdate(skinsNextNumber);
+
+        matchmaking.SkinSelectedNumber = skinsNextNumber;
+        matchmakingTeam.SkinSelectedNumber = skinsNextNumber;
+    }
 }
