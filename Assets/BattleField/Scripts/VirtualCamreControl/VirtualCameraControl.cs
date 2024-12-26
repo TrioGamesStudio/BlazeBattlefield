@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using NaughtyAttributes;
 using UnityEngine;
-
+[DefaultExecutionOrder(-99)]
 public class VirtualCameraControl : MonoBehaviour
 {
     private Dictionary<string, VirtualCamera> virtualsCamera = new();
@@ -11,6 +13,10 @@ public class VirtualCameraControl : MonoBehaviour
     {
         get
         {
+            if (instance == null)
+            {
+                instance = FindFirstObjectByType<VirtualCameraControl>();
+            }
             return instance;
         }
     }

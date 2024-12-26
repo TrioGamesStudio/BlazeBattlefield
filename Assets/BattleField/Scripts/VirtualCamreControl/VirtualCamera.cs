@@ -7,7 +7,6 @@ public class VirtualCamera : MonoBehaviour
     public CinemachineVirtualCamera cinemachine;
     private void Awake()
     {
-        cinemachine = GetComponent<CinemachineVirtualCamera>();
         VirtualCameraControl.Instance.Add(this);
     }
 

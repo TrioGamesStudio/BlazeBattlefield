@@ -1,17 +1,28 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using NaughtyAttributes;
+using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Progress;
+[Serializable]
+public struct OffsetInformation
+{
+    public Vector3 offsetPosition;
+    public Vector3 offsetRotation;
+}
+public class WeaponShowcaseSettings : ScriptableObject
+{
 
+}
 public class ItemAvatarManagerUI : MonoBehaviour
 {
-    public ItemAvatarUI prefab;
-    public GameObject cointaner;
-    public List<ScriptableObject> itemConfigs = new();
-    public List<ICustomInformation> customInformations = new();
 
+    [SerializeField] private ItemAvatarUI prefab;
+    [SerializeField] private GameObject cointaner;
+    [SerializeField] private List<ScriptableObject> itemConfigs = new();
+    [SerializeField] private List<OffsetInformation> itemOffsetConfigs = new();
+    [SerializeField] private List<GameObject> ItemPrefabs;
+    [SerializeField] private List<ICustomInformation> customInformations = new();
+    [SerializeField] private WeaponShowcase weaponShowcase;
     private void Awake()
     {
         InitCustomInformation();
@@ -30,25 +41,41 @@ public class ItemAvatarManagerUI : MonoBehaviour
 
     private void InitItemUI()
     {
+        int index = 0;
         foreach (var item in itemConfigs)
         {
             var itemAvatar = Instantiate(prefab, cointaner.transform);
             TryModify(item, itemAvatar);
+
+            itemAvatar.ItemIndex = index;
+            itemAvatar.OnClickUI += OnClickUI;
+            index++;
         }
+    }
+
+    private void OnClickUI(int index)
+    {
+        Debug.Log("On set prefab and create item in table: " + index);
+        weaponShowcase.SetItemPrefab(ItemPrefabs[index]);
+        weaponShowcase.SetOffset(itemOffsetConfigs[index].offsetPosition, itemOffsetConfigs[index].offsetRotation);
+        weaponShowcase.CreateItem();
     }
 
     private void TryModify(ScriptableObject item, ItemAvatarUI itemAvatar)
     {
         bool canModify = false;
+        GameObject prefab = null;
         foreach (var customInformation in customInformations)
         {
-            if (customInformation.Modify(itemAvatar, item))
+            if (customInformation.Modify(itemAvatar, item, ref prefab))
             {
                 canModify = true;
+
+                ItemPrefabs.Add(prefab);
                 break;
             }
         }
-        if(canModify == false)
+        if (canModify == false)
         {
             itemAvatar.information.text = "None";
         }
@@ -56,14 +83,16 @@ public class ItemAvatarManagerUI : MonoBehaviour
 
     public interface ICustomInformation
     {
-        bool Modify(ItemAvatarUI itemAvatarUI, ScriptableObject scriptableObject);
+        bool Modify(ItemAvatarUI itemAvatarUI, ScriptableObject scriptableObject, ref GameObject prefab);
     }
     public class GunInformation : ICustomInformation
     {
-        public bool Modify(ItemAvatarUI itemAvatarUI, ScriptableObject scriptableObject)
+        public bool Modify(ItemAvatarUI itemAvatarUI, ScriptableObject scriptableObject, ref GameObject prefab)
         {
             if (scriptableObject is GunItemConfig gunConfig)
             {
+                prefab = ItemDatabase.instance.GetItemPrefab(gunConfig.ItemType, gunConfig.SubItemType);
+
                 itemAvatarUI.displayName.text = gunConfig.displayName;
                 itemAvatarUI.icon.sprite = gunConfig.Icon;
                 float recoilValue = 1 / gunConfig.cooldownTime;
@@ -78,10 +107,13 @@ public class ItemAvatarManagerUI : MonoBehaviour
     }
     public class HealthInformation : ICustomInformation
     {
-        public bool Modify(ItemAvatarUI itemAvatarUI, ScriptableObject scriptableObject)
+        public bool Modify(ItemAvatarUI itemAvatarUI, ScriptableObject scriptableObject, ref GameObject prefab)
         {
             if (scriptableObject is HealthItemConfig healthConfig)
             {
+                prefab = ItemDatabase.instance.GetItemPrefab(healthConfig.ItemType, healthConfig.SubItemType);
+
+
                 itemAvatarUI.displayName.text = healthConfig.displayName;
                 itemAvatarUI.icon.sprite = healthConfig.Icon;
                 itemAvatarUI.information.text = $"<b>Healing Amount<b>: {healthConfig.healthAmount}" +
@@ -93,10 +125,12 @@ public class ItemAvatarManagerUI : MonoBehaviour
     }
     public class AmmoInformation : ICustomInformation
     {
-        public bool Modify(ItemAvatarUI itemAvatarUI, ScriptableObject scriptableObject)
+        public bool Modify(ItemAvatarUI itemAvatarUI, ScriptableObject scriptableObject, ref GameObject prefab)
         {
             if (scriptableObject is AmmoItemConfig ammoConfig)
             {
+                prefab = ItemDatabase.instance.GetItemPrefab(ammoConfig.ItemType, ammoConfig.SubItemType);
+
                 itemAvatarUI.displayName.text = ammoConfig.displayName;
                 itemAvatarUI.icon.sprite = ammoConfig.Icon;
                 itemAvatarUI.information.text = "<b>None<b>";
