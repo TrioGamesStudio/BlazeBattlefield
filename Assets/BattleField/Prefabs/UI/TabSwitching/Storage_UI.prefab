@@ -768,6 +768,7 @@ GameObject:
   - component: {fileID: 7480561294511834833}
   - component: {fileID: 6505683296054584600}
   - component: {fileID: 6874047977451609988}
+  - component: {fileID: 4245328799512074614}
   m_Layer: 5
   m_Name: Storage_UI
   m_TagString: Untagged
@@ -826,7 +827,7 @@ MonoBehaviour:
   storageCanvasGroup: {fileID: 7480561294511834833}
   mainLobbyCanvasGroup: {fileID: 0}
   openStorageBtn: {fileID: 0}
-  openMainLobby: {fileID: 0}
+  openMainLobby: {fileID: 4102646838593309764}
   onBlockShowStorageEvent:
     m_PersistentCalls:
       m_Calls:
@@ -840,6 +841,36 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: You cannot open Storage when in team mode !!!
+          m_BoolArgument: 0
+        m_CallState: 2
+  onShowMainLobbyEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4245328799512074614}
+        m_TargetAssemblyTypeName: CameraChangeWhenEnable, Assembly-CSharp
+        m_MethodName: ChangeCamera
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onShowStorageEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6874047977451609988}
+        m_TargetAssemblyTypeName: TabSwitchingManager, Assembly-CSharp
+        m_MethodName: ShowDefaultTabIndex
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &6874047977451609988
@@ -859,7 +890,20 @@ MonoBehaviour:
   tabButtonSwapPrefab: {fileID: 1151243317805580459, guid: bcffe8996dedeb5468efdb0034565fe5,
     type: 3}
   buttonLists: []
-  defaultTabIndex: 0
+  defaultTabIndex: 1
+--- !u!114 &4245328799512074614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2827422090646911596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4387c3e7893f08649a0ecaa516697dd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraName: mainLobby
 --- !u!1 &2893842725314957664
 GameObject:
   m_ObjectHideFlags: 0
@@ -1258,6 +1302,7 @@ GameObject:
   - component: {fileID: 3151489728137549098}
   - component: {fileID: 1590003816847644118}
   - component: {fileID: 6878383988975580170}
+  - component: {fileID: 1455790768510541864}
   m_Layer: 5
   m_Name: Skin Selection UI
   m_TagString: Untagged
@@ -1336,9 +1381,37 @@ MonoBehaviour:
   Order: 0
   Index: 0
   TabIcon: {fileID: 21300000, guid: 0f4aa88d2f8a64c74bdb7e7f981a06b4, type: 3}
+  OnShowUIEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1455790768510541864}
+        m_TargetAssemblyTypeName: CameraChangeWhenEnable, Assembly-CSharp
+        m_MethodName: ChangeCamera
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   viewsObject:
   - {fileID: 7151644472478990805}
   - {fileID: 1883585693216815802}
+--- !u!114 &1455790768510541864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5481044398709400547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4387c3e7893f08649a0ecaa516697dd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraName: SkinSelection
 --- !u!1 &5714297051064145393
 GameObject:
   m_ObjectHideFlags: 0
@@ -1528,7 +1601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &9019377962692815209
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2378,6 +2451,7 @@ GameObject:
   - component: {fileID: 7433756176936867834}
   - component: {fileID: 6132248112538135662}
   - component: {fileID: 2411347338141933491}
+  - component: {fileID: 4710289392561001163}
   m_Layer: 5
   m_Name: Item Selection UI
   m_TagString: Untagged
@@ -2432,6 +2506,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 697a7c39d66f1f54494016f8cccc99c1, type: 2}
   - {fileID: 11400000, guid: b0c60467bf7f4a240a1e6dc96817fdc3, type: 2}
   - {fileID: 11400000, guid: c02f9d21817e30d4c845b71afd39a289, type: 2}
+  itemOffsetConfigs: []
+  ItemPrefabs: []
+  weaponShowcase: {fileID: 0}
 --- !u!114 &2411347338141933491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2448,8 +2525,36 @@ MonoBehaviour:
   Order: 0
   Index: 0
   TabIcon: {fileID: 21300000, guid: 0f4aa88d2f8a64c74bdb7e7f981a06b4, type: 3}
+  OnShowUIEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4710289392561001163}
+        m_TargetAssemblyTypeName: CameraChangeWhenEnable, Assembly-CSharp
+        m_MethodName: ChangeCamera
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   viewsObject:
   - {fileID: 6155894979812618561}
+--- !u!114 &4710289392561001163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7748989615563021795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4387c3e7893f08649a0ecaa516697dd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraName: WeaponTable
 --- !u!1 &8241805149066414947
 GameObject:
   m_ObjectHideFlags: 0

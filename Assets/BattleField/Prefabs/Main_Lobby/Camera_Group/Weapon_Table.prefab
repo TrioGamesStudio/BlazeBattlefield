@@ -1354,6 +1354,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3382630052622698866}
+  - component: {fileID: 288653461196225846}
   m_Layer: 0
   m_Name: Weapon_Table
   m_TagString: Untagged
@@ -1379,6 +1380,29 @@ Transform:
   - {fileID: 3878717534116641468}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &288653461196225846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2367728198176259766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b3535eec97268a479cef18dc9e3545e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentItem: {fileID: 0}
+  currentItemPrefab: {fileID: 0}
+  SpawnTransform: {fileID: 7026525832235841170}
+  weaponShowcaseUI: {fileID: 0}
+  weaponQuaternion: {x: 0, y: 0, z: 0, w: 0}
+  rotateSpeed: 2
+  defaultRotateInput: {x: 0, y: 0}
+  defaultPosition: {x: 0, y: 0, z: 0}
+  defaultRotation: {x: 0, y: 0, z: 0}
+  offsetPosition: {x: 0, y: 0, z: 0}
+  offsetRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &2504941968367914367
 GameObject:
   m_ObjectHideFlags: 0
@@ -3146,7 +3170,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7026525832235841170}
-  - component: {fileID: 4696375822636804784}
   m_Layer: 0
   m_Name: Weapon Showcase Table
   m_TagString: Untagged
@@ -3169,30 +3192,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3878717534116641468}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4696375822636804784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7422398790276130791}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b3535eec97268a479cef18dc9e3545e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentItem: {fileID: 0}
-  SpawnTransform: {fileID: 7026525832235841170}
-  weaponShowcaseUI: {fileID: 0}
-  rotationSpeed: 5
-  index: 0
-  itemShowcase:
-  - {fileID: 3095412899378702561, guid: 79e87da6a8455b641948eb17f8a140fb, type: 3}
-  - {fileID: 7602666179640871406, guid: d83765aa953afd142bd276ff65efbf71, type: 3}
-  - {fileID: 4507369596139947449, guid: b2247bd795f713a429fab1e834a514d4, type: 3}
-  - {fileID: 3567718259430728174, guid: a59e3fa320610374b83024a2741df93b, type: 3}
-  - {fileID: 238096563220405653, guid: f01bc4eac36f85d4693bcb6ca0002722, type: 3}
-  rotateSpeed: 2
 --- !u!1 &7450227393464229199
 GameObject:
   m_ObjectHideFlags: 0
