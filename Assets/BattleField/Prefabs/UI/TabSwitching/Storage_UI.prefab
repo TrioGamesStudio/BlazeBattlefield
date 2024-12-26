@@ -1614,7 +1614,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1342843543368231256}
   - {fileID: 7885521074119115284}
   - {fileID: 2586263959503213652}
   - {fileID: 904863455190248794}
@@ -2090,12 +2089,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 9019377962692815209}
+  m_Father: {fileID: 7433756176936867834}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 312.24524, y: 24.241062}
-  m_SizeDelta: {x: 105.89984, y: -48.48242}
+  m_AnchoredPosition: {x: 57.965042, y: -15.158936}
+  m_SizeDelta: {x: -568.7188, y: -240.54211}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6316502173087587920
 CanvasRenderer:
@@ -2471,6 +2470,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1342843543368231256}
   - {fileID: 9019377962692815209}
   m_Father: {fileID: 8040138569299858680}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2506,9 +2506,34 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 697a7c39d66f1f54494016f8cccc99c1, type: 2}
   - {fileID: 11400000, guid: b0c60467bf7f4a240a1e6dc96817fdc3, type: 2}
   - {fileID: 11400000, guid: c02f9d21817e30d4c845b71afd39a289, type: 2}
-  itemOffsetConfigs: []
+  itemOffsetConfigs:
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 0, y: 0, z: 0}
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 0, y: 0, z: 0}
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 0, y: 0, z: 0}
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 0, y: 0, z: 0}
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 0, y: 0, z: 0}
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 0, y: 0, z: 0}
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 0, y: 0, z: 0}
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 0, y: 0, z: 0}
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 0, y: 0, z: 0}
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 90, y: 90, z: 0}
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 90, y: 90, z: 0}
+  - offsetPosition: {x: 0, y: 0, z: 0}
+    offsetRotation: {x: 90, y: 90, z: 0}
   ItemPrefabs: []
   weaponShowcase: {fileID: 0}
+  currentIndex: 0
 --- !u!114 &2411347338141933491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4198,7 +4223,7 @@ PrefabInstance:
     - target: {fileID: 6955390773701491963, guid: 9fc3b2a8c68a1a7439627483d98ff161,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6955390773701491963, guid: 9fc3b2a8c68a1a7439627483d98ff161,
         type: 3}
@@ -4208,17 +4233,17 @@ PrefabInstance:
     - target: {fileID: 6955390773701491963, guid: 9fc3b2a8c68a1a7439627483d98ff161,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6955390773701491963, guid: 9fc3b2a8c68a1a7439627483d98ff161,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 237.3
       objectReference: {fileID: 0}
     - target: {fileID: 6955390773701491963, guid: 9fc3b2a8c68a1a7439627483d98ff161,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 110
       objectReference: {fileID: 0}
     - target: {fileID: 6955390773701491963, guid: 9fc3b2a8c68a1a7439627483d98ff161,
         type: 3}
@@ -4258,12 +4283,12 @@ PrefabInstance:
     - target: {fileID: 6955390773701491963, guid: 9fc3b2a8c68a1a7439627483d98ff161,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 118.65
       objectReference: {fileID: 0}
     - target: {fileID: 6955390773701491963, guid: 9fc3b2a8c68a1a7439627483d98ff161,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -55
       objectReference: {fileID: 0}
     - target: {fileID: 6955390773701491963, guid: 9fc3b2a8c68a1a7439627483d98ff161,
         type: 3}

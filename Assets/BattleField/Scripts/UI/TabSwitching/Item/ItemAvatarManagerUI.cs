@@ -23,6 +23,8 @@ public class ItemAvatarManagerUI : MonoBehaviour
     [SerializeField] private List<GameObject> ItemPrefabs;
     [SerializeField] private List<ICustomInformation> customInformations = new();
     [SerializeField] private WeaponShowcase weaponShowcase;
+    [SerializeField] private int currentIndex;
+
     private void Awake()
     {
         InitCustomInformation();
@@ -52,6 +54,13 @@ public class ItemAvatarManagerUI : MonoBehaviour
             index++;
         }
     }
+    [Button]
+    private void RefreshOffsetConfig()
+    {
+        weaponShowcase.SetOffset(
+        itemOffsetConfigs[currentIndex].offsetPosition,
+        itemOffsetConfigs[currentIndex].offsetRotation);
+    }
 
     private void OnClickUI(int index)
     {
@@ -59,6 +68,7 @@ public class ItemAvatarManagerUI : MonoBehaviour
         weaponShowcase.SetItemPrefab(ItemPrefabs[index]);
         weaponShowcase.SetOffset(itemOffsetConfigs[index].offsetPosition, itemOffsetConfigs[index].offsetRotation);
         weaponShowcase.CreateItem();
+        currentIndex = index;
     }
 
     private void TryModify(ScriptableObject item, ItemAvatarUI itemAvatar)

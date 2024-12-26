@@ -15,7 +15,7 @@ public class WeaponShowcase : MonoBehaviour
     public Vector2 defaultRotateInput;
     private void Awake()
     {
-
+        GetDefaultValue();
     }
     public void SetItemPrefab(GameObject newItemPrefab)
     {
@@ -37,6 +37,10 @@ public class WeaponShowcase : MonoBehaviour
 
         var newPosition = defaultPosition + offsetPosition;
         var newRotation = defaultRotation + offsetRotation;
+
+        SpawnTransform.transform.position = newPosition;
+        SpawnTransform.rotation = Quaternion.Euler(newRotation);
+
         currentItem.transform.localRotation = Quaternion.Lerp(currentItem.transform.localRotation,
             Quaternion.Euler(new Vector3(0, -weaponShowcaseUI.rotateInput.x, weaponShowcaseUI.rotateInput.y)), rotateSpeed * Time.deltaTime);
     }
@@ -56,6 +60,8 @@ public class WeaponShowcase : MonoBehaviour
 
     public void SetOffset(Vector3 _offsetPosition, Vector3 _offsetRotation)
     {
+        Debug.Log("Offset position: " + _offsetPosition);
+        Debug.Log("Offset rotation: " + _offsetRotation);
         offsetPosition = _offsetPosition;
         offsetRotation = _offsetRotation;
     }

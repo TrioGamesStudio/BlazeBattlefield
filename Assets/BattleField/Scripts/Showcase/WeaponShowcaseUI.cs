@@ -8,6 +8,7 @@ public class WeaponShowcaseUI : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     public bool canRotate;
     public Vector2 rotateInput;
     public float rotateSpeed = 2;
+    public float rotateBackSpeed = 2;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +20,7 @@ public class WeaponShowcaseUI : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     {
         if (canRotate == false)
         {
-            rotateInput = Vector2.Lerp(rotateInput, Vector2.zero, Time.deltaTime);
+            rotateInput = Vector2.Lerp(rotateInput, Vector2.zero, Time.deltaTime * rotateBackSpeed);
         }
     }
     public void OnPointerDown(PointerEventData eventData)
