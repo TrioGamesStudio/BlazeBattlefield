@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+[DefaultExecutionOrder(-98)]
 public class ItemDatabase : NetworkBehaviour
 {
     public static ItemDatabase instance;
@@ -78,6 +79,6 @@ public class ItemDatabase : NetworkBehaviour
     {
         return ItemPrefabDatabase.GetRandomItemPrefabByRarity();
     }
- 
-    
+
+
 }

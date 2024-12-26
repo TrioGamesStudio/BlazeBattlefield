@@ -1,15 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using NaughtyAttributes;
 using UnityEngine;
-
+[DefaultExecutionOrder(-99)]
 public class VirtualCameraControl : MonoBehaviour
 {
     private Dictionary<string, VirtualCamera> virtualsCamera = new();
+    [SerializeField] private List<VirtualCamera> rawCameraList = new();
     private static VirtualCameraControl instance;
     public static VirtualCameraControl Instance
     {
         get
         {
+            if (instance == null)
+            {
+                instance = FindFirstObjectByType<VirtualCameraControl>();
+            }
             return instance;
         }
     }
@@ -26,6 +33,16 @@ public class VirtualCameraControl : MonoBehaviour
         else if (instance != this)
         {
             Destroy(gameObject);
+        }
+
+        Initialize();
+    }
+
+    private void Initialize()
+    {
+        foreach (var camera in rawCameraList)
+        {
+            Add(camera);
         }
     }
 

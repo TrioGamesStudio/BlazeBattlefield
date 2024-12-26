@@ -1,4 +1,5 @@
 using NaughtyAttributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,41 +7,63 @@ using UnityEngine;
 public class WeaponShowcase : MonoBehaviour
 {
     [SerializeField] private GameObject currentItem;
+    [SerializeField] private GameObject currentItemPrefab;
     [SerializeField] private Transform SpawnTransform;
     [SerializeField] private WeaponShowcaseUI weaponShowcaseUI;
-    [SerializeField] private float rotationSpeed = 5;
-    [SerializeField] private int index;
-
-    [SerializeField] private List<GameObject> itemShowcase = new();
+    public Quaternion weaponQuaternion;
+    public float rotateSpeed = 2;
+    public Vector2 defaultRotateInput;
     private void Awake()
     {
-        GoNextGun();
+        GetDefaultValue();
     }
-    [Button]
-    public void GoNextGun()
+    public void SetItemPrefab(GameObject newItemPrefab)
     {
-        index++;
-        if (index >= itemShowcase.Count)
-        {
-            index = 0;
-        }
+        currentItemPrefab = newItemPrefab;
+    }
+
+    public void CreateItem()
+    {
         if (currentItem != null)
             Destroy(currentItem.gameObject);
-        currentItem = Instantiate(itemShowcase[index], SpawnTransform.position, Quaternion.identity);
+        currentItem = Instantiate(currentItemPrefab, SpawnTransform.position, weaponQuaternion, SpawnTransform);
         currentItem.transform.localScale = Vector3.one * 1.5f;
     }
-    public float rotateSpeed = 2;
+
     private void Update()
     {
         if (weaponShowcaseUI == null) return;
         if (currentItem == null) return;
 
-        //float rotationX = weaponShowcaseUI.rotateInput.y * rotationSpeed;
-        //float rotationY = -weaponShowcaseUI.rotateInput.x * rotationSpeed;
+        var newPosition = defaultPosition + offsetPosition;
+        var newRotation = defaultRotation + offsetRotation;
 
-        //currentItem.transform.Rotate(Vector3.up, rotationY, Space.World);
-        //currentItem.transform.Rotate(Vector3.right, rotationX, Space.Self);
-        currentItem.transform.rotation = Quaternion.Lerp(currentItem.transform.rotation,
+        SpawnTransform.transform.position = newPosition;
+        SpawnTransform.rotation = Quaternion.Euler(newRotation);
+
+        currentItem.transform.localRotation = Quaternion.Lerp(currentItem.transform.localRotation,
             Quaternion.Euler(new Vector3(0, -weaponShowcaseUI.rotateInput.x, weaponShowcaseUI.rotateInput.y)), rotateSpeed * Time.deltaTime);
     }
+    [SerializeField] private Vector3 defaultPosition;
+    [SerializeField] private Vector3 defaultRotation;
+    [SerializeField] private Vector3 offsetPosition;
+    [SerializeField] private Vector3 offsetRotation;
+
+    private void GetDefaultValue()
+    {
+        defaultPosition = SpawnTransform.position;
+        float x = SpawnTransform.rotation.x;
+        float y = SpawnTransform.rotation.y;
+        float z = SpawnTransform.rotation.z;
+        defaultRotation = new Vector3(x, y, z);
+    }
+
+    public void SetOffset(Vector3 _offsetPosition, Vector3 _offsetRotation)
+    {
+        Debug.Log("Offset position: " + _offsetPosition);
+        Debug.Log("Offset rotation: " + _offsetRotation);
+        offsetPosition = _offsetPosition;
+        offsetRotation = _offsetRotation;
+    }
+
 }

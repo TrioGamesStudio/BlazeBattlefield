@@ -131,6 +131,7 @@ public class LoginManager : MonoBehaviour
             StartCoroutine(TextFadeOut_SignUp(2f));
             // save after having email and password
             DataSaver.Instance.SaveToSignup(useName, result.User.UserId);
+            DataSaver.Instance.SaveInvetoryToSignup(result.User.UserId);
         });
     }
     IEnumerator ResetLoadingScreenCo() {
