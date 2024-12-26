@@ -49,7 +49,7 @@ public class GameHandler : MonoBehaviour
                 NetworkPlayer networkPlayer = player.GetComponent<NetworkPlayer>();
                 networkPlayer.SetNicknameUIColor(Color.blue); //Set teamate name plate UI color to blue
                 if (!player.isLocalPlayer)
-                    FindObjectOfType<TeammateInfo>().CreateTeammemberInfo(networkPlayer.nickName_Network.ToString(), 5, player.GetComponent<HPHandler>());
+                    FindObjectOfType<TeammateInfo>().CreateTeammemberInfo(networkPlayer.nickName_Network.ToString(), 100, player.GetComponent<HPHandler>());
             }
             else
             {
@@ -68,6 +68,7 @@ public class GameHandler : MonoBehaviour
             }
         }
         Debug.Log("===Team count: " + teams.Count);
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count());
         if (teams.Count == 1)
             CheckWin();
     }
@@ -100,6 +101,7 @@ public class GameHandler : MonoBehaviour
             }
             Debug.Log("===Remain team after remove " + teams.Count);
         }
+        AlivePlayerControl.UpdateAliveCount(1);
     }
 
     public IEnumerator CheckLose(string teamID)

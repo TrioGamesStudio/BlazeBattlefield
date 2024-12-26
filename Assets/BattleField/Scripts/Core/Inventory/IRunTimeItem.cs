@@ -11,4 +11,5 @@ public interface IRunTimeItem
     int Quantity();
     void Collect();
     void DestroyItem();
+    void DisableOutline();
 }

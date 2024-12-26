@@ -3,6 +3,8 @@ using UnityEngine;
 using System;
 using Firebase.Database;
 using UnityEngine.SceneManagement;
+using NaughtyAttributes;
+using System.Collections.Generic;
 
 [Serializable]
 public class DataToSave {
@@ -13,17 +15,35 @@ public class DataToSave {
     public int coins;
     public int experience = 0; // Tracks total XP
     public int rank = 0;       // Tracks current rank
+    public int totalPlaySolo;
+    public int totalPlayTeam;
 
     public DataToSave() {
         
     }
-    public DataToSave(string userName, int currLevel, int winSolo, int winTeam, int coins) {
+    public DataToSave(string userName, int currLevel, int winSolo, int winTeam, int coins, int totalPlaySolo, int totalPlayTeam) {
         this.userName = userName;
         this.currLevel = currLevel;
         this.winSolo = winSolo;
         this.winTeam = winTeam;
         this.coins = coins;
+        this.totalPlaySolo = totalPlaySolo;
+        this.totalPlayTeam = totalPlayTeam;
     }
+}
+
+[Serializable]
+public class InventoryDataToSave {
+    public string inventoryName;
+    public string[] skinsArr = new string[5];
+    public List<string> skinsLists = new List<string>();
+    public InventoryDataToSave() {}
+    public InventoryDataToSave(string inventoryName, string[] skinsNames, List<string> lists) {
+        this.inventoryName = inventoryName;
+        this.skinsArr = skinsNames;
+        this.skinsLists = lists;
+    }
+
 }
 
 public class DataSaver : MonoBehaviour
@@ -32,13 +52,10 @@ public class DataSaver : MonoBehaviour
 
     public string userId;
     public DataToSave dataToSave;
+    public InventoryDataToSave inventoryDataToSave;
 
     //others
     DatabaseReference dbRef;
-
-    // buttons
-    /* [SerializeField] Button saveButton;
-    [SerializeField] Button loadButton; */
 
     private void Awake() {
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
@@ -51,19 +68,16 @@ public class DataSaver : MonoBehaviour
     }
 
     private void Start() {
-        /* saveButton.onClick.AddListener(SaveData);
-        loadButton.onClick.AddListener(LoadData); */
-
         DontDestroyOnLoad(this);
         
     }
 
-    public DataToSave ReturnDataToSave(string username, int currLevel, int winSolo,int winTeam, int coins) {
-        return new DataToSave(username, currLevel, winSolo, winTeam, coins);
+    public DataToSave ReturnDataToSave(string username, int currLevel, int winSolo,int winTeam, int coins, int totalPlaySolo, int totalPlayTeam) {
+        return new DataToSave(username, currLevel, winSolo, winTeam, coins, totalPlaySolo, totalPlayTeam);
     }
 
     public void SaveToSignup(string userName, string userId) {
-        DataToSave saveDataToSignup = ReturnDataToSave(userName, 1, 0, 0, 0);
+        DataToSave saveDataToSignup = ReturnDataToSave(userName, 1, 0, 0, 0, 0, 0);
         // chuyen dataToSave -> json
         string json = JsonUtility.ToJson(saveDataToSignup);
 
@@ -71,10 +85,35 @@ public class DataSaver : MonoBehaviour
         dbRef.Child("Users").Child(userId).SetRawJsonValueAsync(json);
     }
 
+    public InventoryDataToSave ReturnInvDataToSave(string inventoryName, string[] skinsArr, List<string> lists) {
+        return new InventoryDataToSave(inventoryName, skinsArr, lists);
+    }
+
+    public void SaveInvetoryToSignup(string userId) {
+        string[] skinNames = new string[] { "skin01", "skin02","skin03"};
+        List<string> lists = new List<string>(){
+            "skin01",
+            "skin02",
+            "skin03",
+        };
+        InventoryDataToSave inv = new InventoryDataToSave() {
+            inventoryName = "inventory",
+            skinsArr = skinNames,
+            skinsLists = lists,
+
+        };
+        string json = JsonUtility.ToJson(inv);
+        dbRef.Child("Inventory").Child(userId).SetRawJsonValueAsync(json);
+    }
+
+
     #region  SAVE LOAD FIREBASE
+
+    //? Save progress data
     public void SaveData() {
         // chuyen dataToSave -> json
         string json = JsonUtility.ToJson(dataToSave);
+        
 
         // tao folder trong database realtime
         dbRef.Child("Users").Child(userId).SetRawJsonValueAsync(json);
@@ -83,6 +122,7 @@ public class DataSaver : MonoBehaviour
     public void LoadData() {
         StartCoroutine(LoadDataCO());
 
+        LoadInventoryData();
         if(SceneManager.GetActiveScene().name == "Login") return;
     }
 
@@ -104,6 +144,36 @@ public class DataSaver : MonoBehaviour
         }
     }
 
+    //? Save iventory data
+    [Button]
+    public void SaveInventoryData() {
+        string json = JsonUtility.ToJson(inventoryDataToSave);
+        dbRef.Child("Inventory").Child(userId).SetRawJsonValueAsync(json);
+
+    }
+
+    [Button]
+    public void LoadInventoryData() {
+        Debug.Log($"_____co load inventory");
+        StartCoroutine(LoadInventoryDataCO());
+
+        if(SceneManager.GetActiveScene().name == "Login") return;
+    }
+
+    IEnumerator LoadInventoryDataCO() {
+        var serverData = dbRef.Child("Inventory").Child(userId).GetValueAsync();
+        yield return new WaitUntil(() => serverData.IsCompleted);
+        DataSnapshot snapshot = serverData.Result;
+        string jsonData = snapshot.GetRawJsonValue();
+        if(jsonData != null) {
+            Debug.Log($"found jsonData");
+            inventoryDataToSave = JsonUtility.FromJson<InventoryDataToSave>(jsonData);
+        }
+        else {
+            Debug.Log("jsonData not found");
+        }
+    }
+
     public void ResetData()
     {
         // Reset all data fields to default values
@@ -114,6 +184,8 @@ public class DataSaver : MonoBehaviour
         dataToSave.coins = 0;
         dataToSave.experience = 0;
         dataToSave.rank = 0;
+        dataToSave.totalPlaySolo = 0;
+        dataToSave.totalPlayTeam = 0;
 
         // Optionally save the reset data to Firebase
         //SaveData();

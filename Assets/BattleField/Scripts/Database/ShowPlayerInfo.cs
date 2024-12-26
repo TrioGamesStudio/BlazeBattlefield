@@ -19,6 +19,16 @@ public class ShowPlayerInfo : MonoBehaviour
     [SerializeField] Image rankIcon; // For player rank icon
     [SerializeField] Sprite[] rankIcons; // Array of rank icons based on rank index
 
+    // show player stats
+    [SerializeField] TextMeshProUGUI userNameStat;
+    [SerializeField] TextMeshProUGUI rankNameStat;
+    [SerializeField] TextMeshProUGUI winSoloStat;
+    [SerializeField] TextMeshProUGUI winTeamStat;
+    [SerializeField] TextMeshProUGUI totalPlaySoloStat;
+    [SerializeField] TextMeshProUGUI totalPlayTeamStat;
+    [SerializeField] TextMeshProUGUI winRateSoloStat;
+    [SerializeField] TextMeshProUGUI winRateTeamStat;
+
     // buttons
     [Header("       Buttons")]
     [SerializeField] Button saveButton;
@@ -54,60 +64,40 @@ public class ShowPlayerInfo : MonoBehaviour
     {
         if (scene.name == "MainLobby")
         {
-            //ebug.Log("MainLobby scene loaded. Restarting coroutine.");
-           
-            StartCoroutine(ShowPlayerDataCo(0.5f));
+            Debug.Log("xxx MainLobby scene loaded. Restarting coroutine show player info.");     
+            StartCoroutine(ShowPlayerDataCo(0.3f));
         }
     }
 
     private void Start()
     {
-        //saveButton?.onClick.AddListener(SaveManualTest);
-        //loadButton?.onClick.AddListener(LoadMaunalTest);
-        //gotoLobby?.onClick.AddListener(GoToLobby);
-        //quickPlay?.onClick.AddListener(GoToQickBattle);
-        //ShowPlayerName();
-        //Debug.Log("xxx Update player info");
-        //StartCoroutine(ShowPlayerDataCo(0.5f));
-        StartCoroutine(LoadPlayerDataCo(0.3f));
+        Debug.Log("xxx MainLobby scene loaded. Restarting coroutine load player info.");
+        StartCoroutine(LoadPlayerDataCo(0.1f));
     }
 
-    IEnumerator LoadPlayerDataCo(float time)
+    public IEnumerator LoadPlayerDataCo(float time)
     {
         yield return new WaitForSeconds(time);
         currentRank = DataSaver.Instance.dataToSave.rank;
         Debug.Log("xxx " + currentRank);
     }
 
-    IEnumerator ShowPlayerDataCo(float time)
+    public IEnumerator ShowPlayerDataCo(float time)
     {
         yield return new WaitForSeconds(time);
-        //Debug.Log("xxx Update exp" );
+        Debug.Log("xxx Reset Player info UI" );
         UpdateExperienceUI();
         ShowPlayerName();
-        UpdateRankUI();     
+        UpdateRankUI();
+        ShowCoin();
     }
 
-    void SaveManualTest()
+    public void ShowPlayerData()
     {
-        _dataSaver.SaveData();
-    }
-
-    void LoadMaunalTest()
-    {
-        _dataSaver.LoadData();
-        StartCoroutine(ShowPlayerDataCo(0.5f));
-    }
-
-    private void GoToLobby()
-    {
-        StartCoroutine(LoadToMainLobby(0.5f));
-    }
-
-    IEnumerator LoadToMainLobby(float time)
-    {
-        yield return new WaitForSeconds(time);
-        SceneManager.LoadSceneAsync(MAINLOBBY);
+        UpdateExperienceUI();
+        ShowPlayerName();
+        UpdateRankUI();
+        ShowCoin();
     }
 
     public void GoToQickBattle()
@@ -123,18 +113,32 @@ public class ShowPlayerInfo : MonoBehaviour
 
     public void ShowInfo()
     {
-        // Debug.Log($"_____show player info");
-        //userName.text = "User name: " + DataSaver.Instance.dataToSave.userName;
-        //currentLevel.text = "Current Level: " + DataSaver.Instance.dataToSave.currLevel.ToString();
         rankName.text = "Rank: " + RankSystem.GetRankName(DataSaver.Instance.dataToSave.rank);
         winSolo.text = "Win: " + DataSaver.Instance.dataToSave.winSolo.ToString();
         winTeam.text = "Win Team: " + DataSaver.Instance.dataToSave.winTeam.ToString();
         coin.text = "Coin: " + DataSaver.Instance.dataToSave.coins.ToString();
     }
 
+    public void ShowInfoStat()
+    {
+        userNameStat.text = DataSaver.Instance.dataToSave.userName;
+        rankNameStat.text = RankSystem.GetRankName(DataSaver.Instance.dataToSave.rank);
+        winSoloStat.text = DataSaver.Instance.dataToSave.winSolo.ToString();
+        winTeamStat.text = DataSaver.Instance.dataToSave.winTeam.ToString();
+        totalPlaySoloStat.text = DataSaver.Instance.dataToSave.totalPlaySolo.ToString();
+        totalPlayTeamStat.text = DataSaver.Instance.dataToSave.totalPlayTeam.ToString();
+        winRateSoloStat.text = ((float)DataSaver.Instance.dataToSave.winSolo / DataSaver.Instance.dataToSave.totalPlaySolo * 100f).ToString("F1") + " %";
+        winRateTeamStat.text = ((float)DataSaver.Instance.dataToSave.winTeam / DataSaver.Instance.dataToSave.totalPlayTeam * 100f).ToString("F1") + " %";
+    }
+
     public void ShowPlayerName()
     {
         userName.text = DataSaver.Instance.dataToSave.userName;
+    }
+
+    public void ShowCoin()
+    {
+        coin.text = DataSaver.Instance.dataToSave.coins.ToString();
     }
 
     void UpdateRankUI()
@@ -189,5 +193,20 @@ public class ShowPlayerInfo : MonoBehaviour
     public void SetLevelUp()
     {
         isLeveUp = true;
+    }
+
+    public void ChangeCoin(int coin)
+    {
+        // Update coin
+        //int coinAdded = 10;
+        var playerData = DataSaver.Instance.dataToSave;
+
+        // Update coin
+        playerData.coins += coin;
+
+        // save to firebase datatosave
+        DataSaver.Instance.SaveData();
+
+        ShowCoin();
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using Fusion;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,7 +46,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     [SerializeField] byte weaponDamageCurr = 1;
     Vector3 spawnPointRaycastCam = Vector3.zero;
 
-    [Networked] public int killCount { get; set; }
+    public int killCount = 0;
 
     bool isFired = false;
     bool isFiredPressed = false;
@@ -287,7 +286,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         /* var spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network; */
 
         //? neu la AI thi diem ban se la camera anrcho
-        /* if(!networkPlayer.isBot) 
+        /* if(!networkPlayer.isBot)
             spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network;
         else spawnPointRaycastCam = aiCameraAnchor.position; */
         bool isHit = false;
@@ -321,6 +320,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                     isHit = true;
                     part.hPHandler.OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
                 }
+                PlayerStats.Instance.AddDamageDealt(localWeaponDamageCurr);
             }
             else localWeaponDamageCurr = this.weaponDamageCurr;
 
@@ -343,7 +343,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                     hit.collider.GetComponent<HitboxRoot>().GetComponent<HPHandler>().
                                 OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
                 }
-
+                PlayerStats.Instance.AddDamageDealt(localWeaponDamageCurr);
                 isHitOtherRemotePlayers = true;
             }
             else if (hit.collider != null)
@@ -359,7 +359,6 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
         }
 
-        CroshairManager.OnHitTarget(NetworkPlayer.Local.transform.position, isHit);
         lastTimeFired = Time.time;
 
         // lam cho ai ban theo tan suat random khoang time
@@ -386,7 +385,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         else
             fireParticleSystemLocal.Play();
 
-
+        audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
 
         yield return new WaitForSeconds(0.09f);
         isFiring = false;
@@ -409,8 +408,6 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                 audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
             }
         }
-
-
     }
 
     public void SetConfig(GunItemConfig config)
@@ -425,7 +422,8 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         recoil = config.recoil;
         isScopeMode = config.isContainScope;
 
-        CroshairManager.instance.SetGunSound(weaponSoundCurr);
+
+        RPC_SetSound(config.SubItemType);
 
         if (config.slotWeaponIndex == SlotWeaponIndex.Slot_1)
         {
@@ -438,6 +436,12 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
 
             //crossHair.SetActive(true);
         }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.Proxies)]
+    private void RPC_SetSound(GunType gunType)
+    {
+        weaponSoundCurr = ItemDatabase.instance.ItemConfigDatabase.FindGunItem(gunType).shootingSound;
     }
 
 
@@ -453,6 +457,8 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         if (HasStateAuthority)
         {
             AliveKillUI.UpdateKillCount?.Invoke(killCount);
+            //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+            PlayerStats.Instance.AddTotalKill(1);
         }
     }
 }
