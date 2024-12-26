@@ -195,14 +195,14 @@ public class ShowPlayerInfo : MonoBehaviour
         isLeveUp = true;
     }
 
-    public void AddTestCoin()
+    public void ChangeCoin(int coin)
     {
         // Update coin
-        int coinAdded = 10;
+        //int coinAdded = 10;
         var playerData = DataSaver.Instance.dataToSave;
 
         // Update coin
-        playerData.coins += coinAdded;
+        playerData.coins += coin;
 
         // save to firebase datatosave
         DataSaver.Instance.SaveData();
