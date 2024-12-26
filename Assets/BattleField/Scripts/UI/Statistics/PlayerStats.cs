@@ -14,7 +14,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] public int DamageReceived;//{ get; private set; }
     [SerializeField] public int HealthHealed;//{ get; private set; }
     [SerializeField] public float SurvivalTime;//{ get; private set; }
-    [SerializeField] private bool isAlive = true;
+    [SerializeField] private bool isEnd = false;
 
     private void Awake()
     {
@@ -30,7 +30,7 @@ public class PlayerStats : MonoBehaviour
 
     private void Update()
     {
-        if (isAlive && SceneManager.GetActiveScene().name != "MainLobby")
+        if (!isEnd && SceneManager.GetActiveScene().name != "MainLobby")
         {
             SurvivalTime += Time.deltaTime;
         }
@@ -57,9 +57,9 @@ public class PlayerStats : MonoBehaviour
         HealthHealed += amount;
     }
 
-    public void MarkPlayerDead()
+    public void MarkEndGame()
     {
-        isAlive = false;
+        isEnd = true;
     }
 
     public void ResetStats()
@@ -69,6 +69,6 @@ public class PlayerStats : MonoBehaviour
         DamageReceived = 0;
         HealthHealed = 0;
         SurvivalTime = 0f;
-        isAlive = true;
+        isEnd = false;
     }
 }

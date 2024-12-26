@@ -88,7 +88,8 @@ public class ShowPlayerInfo : MonoBehaviour
         Debug.Log("xxx Reset Player info UI" );
         UpdateExperienceUI();
         ShowPlayerName();
-        UpdateRankUI();     
+        UpdateRankUI();
+        ShowCoin();
     }
 
     public void ShowPlayerData()
@@ -96,28 +97,7 @@ public class ShowPlayerInfo : MonoBehaviour
         UpdateExperienceUI();
         ShowPlayerName();
         UpdateRankUI();
-    }
-
-    void SaveManualTest()
-    {
-        _dataSaver.SaveData();
-    }
-
-    void LoadMaunalTest()
-    {
-        _dataSaver.LoadData();
-        StartCoroutine(ShowPlayerDataCo(0.5f));
-    }
-
-    private void GoToLobby()
-    {
-        StartCoroutine(LoadToMainLobby(0.1f));
-    }
-
-    IEnumerator LoadToMainLobby(float time)
-    {
-        yield return new WaitForSeconds(time);
-        SceneManager.LoadSceneAsync(MAINLOBBY);
+        ShowCoin();
     }
 
     public void GoToQickBattle()
@@ -154,6 +134,11 @@ public class ShowPlayerInfo : MonoBehaviour
     public void ShowPlayerName()
     {
         userName.text = DataSaver.Instance.dataToSave.userName;
+    }
+
+    public void ShowCoin()
+    {
+        coin.text = DataSaver.Instance.dataToSave.coins.ToString();
     }
 
     void UpdateRankUI()
@@ -208,5 +193,20 @@ public class ShowPlayerInfo : MonoBehaviour
     public void SetLevelUp()
     {
         isLeveUp = true;
+    }
+
+    public void ChangeCoin(int coin)
+    {
+        // Update coin
+        //int coinAdded = 10;
+        var playerData = DataSaver.Instance.dataToSave;
+
+        // Update coin
+        playerData.coins += coin;
+
+        // save to firebase datatosave
+        DataSaver.Instance.SaveData();
+
+        ShowCoin();
     }
 }
