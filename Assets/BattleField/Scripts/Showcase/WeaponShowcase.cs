@@ -32,6 +32,7 @@ public class WeaponShowcase : MonoBehaviour
 
     private void Update()
     {
+        if (weaponShowcaseUI == null) return;
         if (currentItem == null) return;
 
         var newPosition = defaultPosition + offsetPosition;

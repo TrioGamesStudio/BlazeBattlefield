@@ -12,6 +12,5 @@ public class VirtualCamera : MonoBehaviour
 
     private void OnDestroy()
     {
-        VirtualCameraControl.Instance.Remove(this);
     }
 }

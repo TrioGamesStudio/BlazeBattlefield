@@ -175,7 +175,8 @@ public class PlayerRoomController : NetworkBehaviour
     {
         ShowCursor();
         Debug.Log("===WIN ROIIIIII");
-        int xpGained = 0;
+        int xpGained;
+        int coinAdded = 10;
         if (matchmaking.currentMode == Matchmaking.Mode.Duo)
         {
             FindObjectOfType<WorldUI>().ShowHideWinUITeam();
@@ -206,9 +207,13 @@ public class PlayerRoomController : NetworkBehaviour
             nextThreshold = RankSystem.GetNextThreshold(playerData.rank);
         }
 
+        // Update coin
+        playerData.coins += coinAdded;
+
         // save to firebase datatosave
         DataSaver.Instance.SaveData();
         GetComponent<NetworkPlayer>().localUI.SetActive(false);
+        PlayerStats.Instance.MarkEndGame();
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -224,7 +229,17 @@ public class PlayerRoomController : NetworkBehaviour
         else
         {        
             FindObjectOfType<WorldUI>().ShowHideUI(rank);
-        }          
+        }
+
+        // Update coin
+        int coinAdded = 10;
+        var playerData = DataSaver.Instance.dataToSave;
+
+        // Update coin
+        playerData.coins += coinAdded;
+
+        // save to firebase datatosave
+        DataSaver.Instance.SaveData();
     }
 
     // on off cursor
