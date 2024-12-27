@@ -80,7 +80,7 @@ public class SkinSelection : MonoBehaviour
 
     public void ToggleSelectSkinButton(bool isActive)
     {
-        selectButton.gameObject.SetActive(isActive);
+        //selectButton.gameObject.SetActive(isActive);
     }
 
     public void SetSkinByIndex(int newIndex)
