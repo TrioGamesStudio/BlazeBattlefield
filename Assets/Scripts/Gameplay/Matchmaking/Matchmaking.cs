@@ -590,7 +590,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             Debug.Log("No additional players joined. Spawning an AI bot...");
 
             // Spawn the AI bot
-            PlayerRoomController aiBot = runner.Spawn(aiControllerPrefab, new Vector3(0, 30, 0), Quaternion.identity);
+            PlayerRoomController aiBot = runner.Spawn(aiControllerPrefab, new Vector3(0, 10, 0), Quaternion.identity);
             aiBot.SetTeamID("AI"); // Assign an AI-specific team ID
             players[aiBot.Object.InputAuthority] = aiBot;
 
@@ -623,6 +623,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         yield return new WaitForSeconds(6f);
         FindObjectOfType<GameHandler>().InitializeTeams();
+        FindObjectOfType<GameHandler>().AssignRoute();
     }
 
     private IEnumerator WaitForPlayerObject(NetworkRunner runner, PlayerRef player)

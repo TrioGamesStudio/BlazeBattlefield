@@ -9,6 +9,7 @@ public class GameHandler : MonoBehaviour
     public Dictionary<string, List<PlayerRoomController>> teamsOriginal = new();
     public Dictionary<string, List<PlayerRoomController>> teams = new();
     private string teamID;
+    [SerializeField] private Transform[] routePoints;
 
     public void InitializeTeams()
     {
@@ -142,4 +143,48 @@ public class GameHandler : MonoBehaviour
             }
         }
     }
+
+    public void AssignRoute()
+    {
+        BotAI[] botAIs = FindObjectsOfType<BotAI>();
+        foreach(var botAI in botAIs)
+        {
+            botAI.SetRoutePoints(routePoints);
+        }   
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Draw route
+        if (routePoints != null && routePoints.Length > 0)
+        {
+            Gizmos.color = Color.blue;
+            for (int i = 0; i < routePoints.Length; i++)
+            {
+                if (routePoints[i] != null)
+                {
+                    // Draw point
+                    Gizmos.DrawSphere(routePoints[i].position, 0.5f);
+
+                    // Draw line to next point
+                    if (i + 1 < routePoints.Length && routePoints[i + 1] != null)
+                    {
+                        Gizmos.DrawLine(routePoints[i].position, routePoints[i + 1].position);
+                    }
+                    else if (i == routePoints.Length - 1 && routePoints[0] != null)
+                    {
+                        Gizmos.DrawLine(routePoints[i].position, routePoints[0].position);
+                    }
+                }
+            }
+        }
+
+        // Draw detection and collection ranges
+        Gizmos.color = Color.yellow;
+        //Gizmos.DrawWireSphere(transform.position, dropBoxDetectionRadius);
+
+        Gizmos.color = Color.green;
+        //Gizmos.DrawWireSphere(transform.position, collectDistance);
+    }
+
 }
