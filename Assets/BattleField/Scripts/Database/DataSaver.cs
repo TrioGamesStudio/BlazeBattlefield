@@ -88,7 +88,7 @@ public class DataSaver : MonoBehaviour
 
     public void SaveToSignup(string userName, string userId)
     {
-        DataToSave saveDataToSignup = ReturnDataToSave(userName, 1, 0, 0, 0, 0, 0);
+        DataToSave saveDataToSignup = ReturnDataToSave(userName, 1, 0, 0, 200, 0, 0);
         // chuyen dataToSave -> json
         string json = JsonUtility.ToJson(saveDataToSignup);
 

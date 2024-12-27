@@ -20,11 +20,14 @@ public class PlayerRoomController : NetworkBehaviour
     public bool isLocalPlayer = false;
 
     public GameObject miniMapTeamMateImage;
+
+    private const int POINT_PER_KILL = 10;
+
     //bool isCursorShowed = false;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -176,14 +179,14 @@ public class PlayerRoomController : NetworkBehaviour
         ShowCursor();
         Debug.Log("===WIN ROIIIIII");
         int xpGained;
-        int coinAdded = 10;
+        int coinAdded = GetCoint(1, PlayerStats.Instance.TotalKill);
         if (matchmaking.currentMode == Matchmaking.Mode.Duo)
         {
             FindObjectOfType<WorldUI>().ShowHideWinUITeam();
             // set winteam variable
             DataSaver.Instance.dataToSave.winTeam += 1;
             xpGained = 50; // XP for duo win
-        }       
+        }
         else
         {
             FindObjectOfType<WorldUI>().ShowHideWinUI();
@@ -225,31 +228,51 @@ public class PlayerRoomController : NetworkBehaviour
         {
             FindObjectOfType<WorldUI>().HideEliminateUI();
             FindObjectOfType<WorldUI>().ShowHideUIDefeatTeam(rank);
-        }          
+        }
         else
-        {        
+        {
             FindObjectOfType<WorldUI>().ShowHideUI(rank);
         }
 
         // Update coin
-        int coinAdded = 10;
+
+
+
         var playerData = DataSaver.Instance.dataToSave;
 
         // Update coin
-        playerData.coins += coinAdded;
+        playerData.coins += GetCoint(rank, PlayerStats.Instance.TotalKill);
 
         // save to firebase datatosave
         DataSaver.Instance.SaveData();
     }
-
+    public int GetCoint(int rank, int kill)
+    {
+        int coinAdded = 10;
+        if (rank == 1)
+        {
+            coinAdded = 50;
+        }
+        else if (rank == 2)
+        {
+            coinAdded = 30;
+        }
+        else if (rank == 3)
+        {
+            coinAdded = 20;
+        }
+        coinAdded += kill * POINT_PER_KILL;
+        return coinAdded;
+    }
     // on off cursor
     /* void ToggleCursor() {
         isCursorShowed = !isCursorShowed;
         if(isCursorShowed) ShowCursor();
         else HideCursor();
     } */
-        
-    void ShowCursor() {
+
+    void ShowCursor()
+    {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
