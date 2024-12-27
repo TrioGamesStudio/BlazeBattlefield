@@ -23,6 +23,7 @@ public class BotAI : MonoBehaviour
     [SerializeField] private float dropBoxDetectionRadius;
     [SerializeField] private float playerDetectionRadius;
     [SerializeField] private float collectDistance;
+    [SerializeField] private float itemCollectRadius;
     [SerializeField] private LayerMask dropBoxLayer;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private LayerMask itemLayer;
@@ -283,7 +284,7 @@ public class BotAI : MonoBehaviour
 
     private Collider[] CheckForItems()
     {
-        Collider[] items = Physics.OverlapSphere(transform.position, collectDistance, itemLayer);
+        Collider[] items = Physics.OverlapSphere(transform.position, itemCollectRadius, itemLayer);
         return items;
     }
 
@@ -331,15 +332,17 @@ public class BotAI : MonoBehaviour
 
     private void FaceTarget(Transform target)
     {
-        //Vector3 direction = (target.position - transform.position).normalized;
-        //direction.y = 0; // Keep the bot level on the ground
-        //Quaternion lookRotation = Quaternion.LookRotation(direction);
-        //transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f); // Smoothly rotate towards the target
         transform.LookAt(target);
     }
 
     private void FireGunAtPlayer(Transform target)
     {
+        //Look at player
+        //agent.SetDestination(Vector3.forward);
+
+        //Chase player
+        agent.SetDestination(target.position);
+
         // Check if the bot is ready to fire
         if (fireCooldownTimer <= 0f)
         {

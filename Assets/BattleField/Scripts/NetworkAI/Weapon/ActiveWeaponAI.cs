@@ -65,22 +65,21 @@ public class ActiveWeaponAI : NetworkBehaviour
     public void Fire(Transform target)
     {
         Vector3 dir = target.position - aimPoint_grandeRocket_3rd.position;
-        //if (bulletFireDelay.ExpiredOrNotRunning(Runner))
-        //{
-
-        //    Runner.Spawn(bulletVFXPF, aimPoint_grandeRocket_3rd.transform.position, Quaternion.LookRotation(dir), Object.InputAuthority,
-        //    (runner, spawnBullet) =>
-        //    {
-        //        spawnBullet.GetComponent<BulletHandler>().FireBullet(Object.InputAuthority, networkObject, "bot");
-        //    });
-        //    bulletFireDelay = TickTimer.CreateFromSeconds(Runner, 0.15f); // sau 3 s se exp or notRunning
-        //}
-
         if (bulletFireDelay.ExpiredOrNotRunning(Runner))
         {
-            Runner.Spawn(bulletVFXPF, aimPoint_grandeRocket_3rd.transform.position, Quaternion.LookRotation(dir));
-            bulletFireDelay = TickTimer.CreateFromSeconds(Runner, 0.15f); // sau 3 s se exp or notRunning
+
+            Runner.Spawn(bulletVFXPF, aimPoint_grandeRocket_3rd.transform.position, Quaternion.LookRotation(dir), Object.InputAuthority,
+            (runner, spawnBullet) =>
+            {
+                spawnBullet.GetComponent<BulletHandler>().FireBullet(Object.InputAuthority, networkObject, "bot");
+            });
+            bulletFireDelay = TickTimer.CreateFromSeconds(Runner, 0.15f); // sau 3s se exp or notRunning
         }
-       
+
+        //if (bulletFireDelay.ExpiredOrNotRunning(Runner))
+        //{
+        //    Runner.Spawn(bulletVFXPF, aimPoint_grandeRocket_3rd.transform.position, Quaternion.LookRotation(dir));
+        //    bulletFireDelay = TickTimer.CreateFromSeconds(Runner, 0.15f); // sau 3 s se exp or notRunning
+        //}
     }
 }
