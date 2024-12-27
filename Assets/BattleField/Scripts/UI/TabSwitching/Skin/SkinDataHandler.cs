@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using NaughtyAttributes;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Skin Data Handler", menuName = "Skin Data Handler")]
@@ -75,6 +78,10 @@ public class SkinDataHandler : ScriptableObject
             }
             skin.price = price;
             count++;
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(skin);
+#endif
         }
+       
     }
 }
