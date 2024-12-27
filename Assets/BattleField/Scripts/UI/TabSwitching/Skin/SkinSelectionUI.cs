@@ -1,7 +1,6 @@
 using DG.Tweening;
 using NaughtyAttributes;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -13,9 +12,8 @@ public class SkinSelectionUI : MonoBehaviour
     public GameObject skinSelectUIPrefab;
     public GameObject container;
 
-    public List<SkinData> skinSpriteIcons = new();
     public List<SkinAvatarUI> avatarUIList = new();
-
+    [SerializeField] private SkinDataHandler SkinDataHandler;
     public SkinSelection skinSelection;
 
     public TextMeshProUGUI skinDescription;
@@ -24,7 +22,7 @@ public class SkinSelectionUI : MonoBehaviour
         avatarUIList = GetComponentsInChildren<SkinAvatarUI>().ToList();
         foreach (var avatarUI in avatarUIList)
         {
-            avatarUI.OnClickUI = OnClickUI;
+            avatarUI.OnSkinSelection = OnClickUI;
             Debug.Log("On Assign Event", gameObject);
         }
     }
@@ -41,18 +39,34 @@ public class SkinSelectionUI : MonoBehaviour
         skinSelection.SetSkinByIndex(index);
         avatarUIList[index].button.interactable = false;
         avatarUIList[index].Select();
-        skinDescription.text = skinSpriteIcons[index].skinDescription;
+        skinDescription.text = SkinDataHandler.skinSpriteIcons[index].skinDescription;
     }
 
     [Button]
     private void PreCreatingUIAvatar()
     {
-        // use for editor
-        foreach (var skinData in skinSpriteIcons)
+        // use for editor'
+        int index = 0;
+        foreach (var skinData in SkinDataHandler.skinSpriteIcons)
         {
             var icon = (GameObject)PrefabUtility.InstantiatePrefab(skinSelectUIPrefab, container.transform);
-            icon.GetComponent<SkinAvatarUI>().avatarImg.sprite = skinData.avatarIcon;
+            var skinAvatar = icon.GetComponent<SkinAvatarUI>();
+            skinAvatar.avatarImg.sprite = skinData.avatarIcon;
+            skinAvatar.skinIndex = index;
+            index++;
             //icon.transform.GetChild(1).GetComponent<Image>().sprite = skinData.avatarIcon;
+        }
+    }
+
+    private void RefreshUIByData()
+    {
+        for (int i = 0; i < avatarUIList.Count; i++)
+        {
+            var skinData = SkinDataHandler.skinSpriteIcons[i];
+            var avatarUI = avatarUIList[i];
+
+            avatarUI.SetPrice(skinData.price);
+            avatarUI.ToggleLocker(skinData.isUnlock);
         }
     }
 }
