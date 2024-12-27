@@ -14390,7 +14390,7 @@ GameObject:
   - component: {fileID: -6321174919782958087}
   - component: {fileID: 7632598644926283546}
   - component: {fileID: -8422475685057307926}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: NetworkAI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14550,17 +14550,18 @@ MonoBehaviour:
   routePoints: []
   pointReachDistance: 2
   dropBoxDetectionRadius: 5
-  playerDetectionRadius: 30
-  collectDistance: 3
+  playerDetectionRadius: 10
+  collectDistance: 0.3
   dropBoxLayer:
     serializedVersion: 2
     m_Bits: 16384
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 32768
   itemLayer:
     serializedVersion: 2
     m_Bits: 1024
+  fireRate: 0.5
 --- !u!114 &7632598644926283546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14591,11 +14592,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00bef71e6e574e6aa4c6e3056183881, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletVFXPF: {fileID: 6216534217294888657, guid: ab5a5d742d99a9c4199c23bce5427e47,
+    type: 3}
+  aimPoint_grandeRocket_3rd: {fileID: 980366272779043220}
   weaponHoldersRemote:
   - {fileID: 1375562210468276060}
   currentWeaponRemote: {fileID: 0}
-  weaponPrefab: {fileID: 3567718259430728174, guid: a59e3fa320610374b83024a2741df93b,
-    type: 3}
+  weapon: {fileID: 0}
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0

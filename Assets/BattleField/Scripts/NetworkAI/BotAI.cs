@@ -11,6 +11,7 @@ public class BotAI : MonoBehaviour
         MovingToDropBox,
         CollectingDropBox,
         ReturningToRoute,
+        FacingAndFiring,
         Idle
     }
 
@@ -19,14 +20,14 @@ public class BotAI : MonoBehaviour
     [SerializeField] private float pointReachDistance = 2f;
 
     [Header("Detection Settings")]
-    [SerializeField] private float dropBoxDetectionRadius = 5f;
-    [SerializeField] private float playerDetectionRadius = 30f;
-    [SerializeField] private float collectDistance = 0.2f;
+    [SerializeField] private float dropBoxDetectionRadius;
+    [SerializeField] private float playerDetectionRadius;
+    [SerializeField] private float collectDistance;
     [SerializeField] private LayerMask dropBoxLayer;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private LayerMask itemLayer;
     private float moveToDropBoxStartTime;
-    private float maxMoveToDropBoxDuration = 3f; // Time limit in seconds
+    private float maxMoveToDropBoxDuration = 5f; // Time limit in seconds
 
 
     private NavMeshAgent agent;
@@ -36,6 +37,11 @@ public class BotAI : MonoBehaviour
     Animator anim;
     private int currentPointIndex;
     private bool hasGun = false;
+    // Cooldown timer for firing
+    private float fireCooldownTimer = 0f;
+
+    // Firing rate in seconds (e.g., 0.5 seconds means 2 shots per second)
+    [SerializeField] private float fireRate = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +50,15 @@ public class BotAI : MonoBehaviour
         SetState(BotState.Idle);
         StartCoroutine(StateBehaviorRoutine());
         anim = GetComponentInChildren<Animator>();
+    }
+
+    private void Update()
+    {
+        // Reduce the cooldown timer over time
+        if (fireCooldownTimer > 0f)
+        {
+            fireCooldownTimer -= Time.deltaTime;
+        }
     }
 
     // Public method to assign route points
@@ -72,6 +87,7 @@ public class BotAI : MonoBehaviour
                     break;
 
                 case BotState.FollowingRoute:
+                    //agent.isStopped = false;
                     ExecuteFollowingRouteState();
                     break;
 
@@ -87,6 +103,11 @@ public class BotAI : MonoBehaviour
                     HandleCollectingDropBox();
                     break;
 
+                case BotState.FacingAndFiring:
+                    //agent.isStopped = true; // Stop moving while firing
+                    //anim.SetFloat("walkSpeed", 0);
+                    ExecuteFacingAndFiringState();
+                    break;
                     //case BotState.PatrollingPath:
                     //    HandlePatrollingPath();
                     //    break;
@@ -123,6 +144,7 @@ public class BotAI : MonoBehaviour
     private void ExecuteFollowingRouteState()
     {
         //agent.enabled = true;
+        //agent.isStopped = false;
         if (routePoints == null || routePoints.Length == 0) return;
         // Check if reached current route point
         if (!agent.pathPending && agent.remainingDistance <= pointReachDistance)
@@ -131,8 +153,15 @@ public class BotAI : MonoBehaviour
         }
 
         // Look for drop boxes while following route
-        if(!hasGun)
+        if (!hasGun)
+        {
             CheckForDropBox();
+        }       
+        else
+        {
+            // Detect players and handle shooting behavior
+            CheckForPlayerAndFire();
+        }
     }
 
     private void MoveToNextRoutePoint()
@@ -145,8 +174,6 @@ public class BotAI : MonoBehaviour
 
     private void CheckForDropBox()
     {
-        if (currentState != BotState.FollowingRoute) return;
-
         Collider[] dropBoxes = Physics.OverlapSphere(transform.position, dropBoxDetectionRadius, dropBoxLayer);
 
         if (dropBoxes.Length > 0)
@@ -169,8 +196,8 @@ public class BotAI : MonoBehaviour
             if (closestDropBox != null)
             {
                 currentDropBox = closestDropBox;
-                SetState(BotState.MovingToDropBox);
                 moveToDropBoxStartTime = Time.time; // Reset timer when starting to move
+                SetState(BotState.MovingToDropBox);            
             }
         }
 
@@ -258,6 +285,76 @@ public class BotAI : MonoBehaviour
     {
         Collider[] items = Physics.OverlapSphere(transform.position, collectDistance, itemLayer);
         return items;
+    }
+
+    private void CheckForPlayerAndFire()
+    {
+        // Detect players within the detection radius
+        Collider[] playersInRange = Physics.OverlapSphere(transform.position, playerDetectionRadius, playerLayer);
+
+        if (playersInRange.Length > 0)
+        {
+            // Transition to the FacingAndFiring state
+            SetState(BotState.FacingAndFiring);
+            currentTarget = playersInRange[0].transform; // Save the player as the target
+        }
+    }
+
+    private void ExecuteFacingAndFiringState()
+    {
+        if (currentTarget == null)
+        {
+            // If the target player is lost, return to the route
+            SetState(BotState.FollowingRoute);
+            return;
+        }
+
+        // Check if the player is still in detection range
+        float distanceToPlayer = Vector3.Distance(transform.position, currentTarget.position);
+        if (distanceToPlayer > playerDetectionRadius)
+        {
+            // If the player is out of range, return to the route
+            SetState(BotState.FollowingRoute);
+            currentTarget = null;
+            return;
+        }
+
+        //agent.isStopped = true;
+        // Face the player
+        FaceTarget(currentTarget);
+
+        // Check if the bot is ready to fire
+     
+        FireGunAtPlayer(currentTarget);
+
+    }
+
+    private void FaceTarget(Transform target)
+    {
+        //Vector3 direction = (target.position - transform.position).normalized;
+        //direction.y = 0; // Keep the bot level on the ground
+        //Quaternion lookRotation = Quaternion.LookRotation(direction);
+        //transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f); // Smoothly rotate towards the target
+        transform.LookAt(target);
+    }
+
+    private void FireGunAtPlayer(Transform target)
+    {
+        // Check if the bot is ready to fire
+        if (fireCooldownTimer <= 0f)
+        {
+            Debug.Log("Firing gun at player: " + target.name);
+
+            // Your gun firing logic
+            ActiveWeaponAI weapon = GetComponent<ActiveWeaponAI>();
+            if (weapon != null)
+            {
+                weapon.Fire(target); // Replace with your firing logic
+            }
+
+            // Reset the cooldown timer
+            fireCooldownTimer = fireRate;
+        }
     }
 
     private void OnDrawGizmosSelected()
