@@ -1,4 +1,5 @@
 ﻿using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,9 @@ public class SkinAvatarUI : MonoBehaviour
     [Header("Locker")]
     [SerializeField] private GameObject lockUI;
     [SerializeField] private TextMeshProUGUI priceText;
+    [SerializeField] private Sprite lockSprite;
+    [SerializeField] private Sprite unlockSprite;
+    [SerializeField] private Image lockerIcon;
     public int skinIndex;
     public bool isUnlock;
     private void Awake()
@@ -58,16 +62,29 @@ public class SkinAvatarUI : MonoBehaviour
     public void Lock() => lockUI.gameObject.SetActive(true);
     public void Unlock() => lockUI.gameObject.SetActive(false);
 
-    public void TryToUnlock()
+    public void TryToUnlock(bool isTryToUnlock)
     {
-
+        if (isTryToUnlock)
+        {
+            lockerIcon.DOKill();
+            lockerIcon.sprite = unlockSprite;
+        }
+        else
+        {
+            lockerIcon.sprite = lockSprite;
+        }
     }
 
     public void ToggleLocker(bool isUnlock)
     {
+        this.isUnlock = isUnlock;
         if (isUnlock)
+        {
             Unlock();
+        }
         else
+        {
             Lock();
+        }
     }
 }

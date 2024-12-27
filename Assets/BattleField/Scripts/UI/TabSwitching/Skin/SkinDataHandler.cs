@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Skin Data Handler", menuName = "Skin Data Handler")]
@@ -18,7 +19,16 @@ public class SkinDataHandler : ScriptableObject
             return defaultSkins;
         }
     }
-
+    public List<string> GetAllUnlockSkin()
+    {
+        List<string> unlockSkin = new List<string>();
+        foreach (var skin in skinSpriteIcons)
+        {
+            if (skin.isUnlock)
+                unlockSkin.Add(skin.skinName);
+        }
+        return unlockSkin;
+    }
     public void UnlockPlayerOwnSkin(List<string> skinOwns)
     {
         foreach (var skinIngame in skinSpriteIcons)
@@ -34,11 +44,37 @@ public class SkinDataHandler : ScriptableObject
         }
     }
 
+    [Button]
+    public void UnlockAll()
+    {
+        SkinLocker(true);
+    }
+    [Button]
+    public void LockAll()
+    {
+        SkinLocker(false);
+    }
     private void SkinLocker(bool isUnlock)
     {
         foreach (var skin in skinSpriteIcons)
         {
             skin.isUnlock = isUnlock;
+        }
+    }
+    [Button]
+    private void CreatePriceForSkin()
+    {
+        int count = 0;
+        int price = 100;
+        foreach (var skin in skinSpriteIcons)
+        {
+            if (count == 3)
+            {
+                price += 100;
+                count = 0;
+            }
+            skin.price = price;
+            count++;
         }
     }
 }
