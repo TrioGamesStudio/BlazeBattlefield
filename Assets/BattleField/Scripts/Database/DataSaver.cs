@@ -54,7 +54,7 @@ public class InventoryDataToSave
 public class DataSaver : MonoBehaviour
 {
     public static DataSaver Instance;
-
+    public int defaultMoneyWhenSigup = 600;
     public string userId;
     public DataToSave dataToSave;
     public InventoryDataToSave inventoryDataToSave;
@@ -88,7 +88,7 @@ public class DataSaver : MonoBehaviour
 
     public void SaveToSignup(string userName, string userId)
     {
-        DataToSave saveDataToSignup = ReturnDataToSave(userName, 1, 0, 0, 200, 0, 0);
+        DataToSave saveDataToSignup = ReturnDataToSave(userName, 1, 0, 0, defaultMoneyWhenSigup, 0, 0);
         // chuyen dataToSave -> json
         string json = JsonUtility.ToJson(saveDataToSignup);
 
