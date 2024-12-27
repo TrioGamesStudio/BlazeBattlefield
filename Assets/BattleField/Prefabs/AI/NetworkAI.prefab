@@ -14547,15 +14547,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   routePoints: []
   pointReachDistance: 2
-  dropBoxDetectionRadius: 50
+  dropBoxDetectionRadius: 5
   playerDetectionRadius: 30
-  collectDistance: 2
+  collectDistance: 3
   dropBoxLayer:
     serializedVersion: 2
     m_Bits: 16384
   playerLayer:
     serializedVersion: 2
     m_Bits: 0
+  itemLayer:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &7632598644926283546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26215,6 +26218,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CollectBox
       objectReference: {fileID: 0}
+    - target: {fileID: 5118858910141303949, guid: b567bd548e41e214aae8b1b45dedeb79,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5359046980623043594, guid: b567bd548e41e214aae8b1b45dedeb79,
         type: 3}
       propertyPath: Flags
@@ -26228,7 +26236,7 @@ PrefabInstance:
     - target: {fileID: 6452352528162196287, guid: b567bd548e41e214aae8b1b45dedeb79,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8791259767813851350, guid: b567bd548e41e214aae8b1b45dedeb79,
         type: 3}

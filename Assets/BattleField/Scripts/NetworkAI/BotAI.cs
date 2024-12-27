@@ -19,15 +19,20 @@ public class BotAI : MonoBehaviour
     [SerializeField] private float pointReachDistance = 2f;
 
     [Header("Detection Settings")]
-    [SerializeField] private float dropBoxDetectionRadius = 50f;
+    [SerializeField] private float dropBoxDetectionRadius = 5f;
     [SerializeField] private float playerDetectionRadius = 30f;
-    [SerializeField] private float collectDistance = 2f;
+    [SerializeField] private float collectDistance = 0.2f;
     [SerializeField] private LayerMask dropBoxLayer;
     [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private LayerMask itemLayer;
+    private float moveToDropBoxStartTime;
+    private float maxMoveToDropBoxDuration = 3f; // Time limit in seconds
+
 
     private NavMeshAgent agent;
     private BotState currentState;
     private Transform currentTarget;
+    private Transform currentDropBox;
     Animator anim;
     private int currentPointIndex;
 
@@ -52,7 +57,7 @@ public class BotAI : MonoBehaviour
         routePoints = points;
         currentPointIndex = Random.Range(0, routePoints.Length);
         SetState(BotState.FollowingRoute);
-        
+
     }
 
     private IEnumerator StateBehaviorRoutine()
@@ -69,21 +74,25 @@ public class BotAI : MonoBehaviour
                     ExecuteFollowingRouteState();
                     break;
 
-                //case BotState.MovingToDropBox:
-                //    HandleMovingToDropBox();
-                //    break;
+                case BotState.MovingToDropBox:
+                    ExecuteMovingToDropBoxState();
+                    break;
 
-                //case BotState.CollectingDropBox:
-                //    HandleCollectingDropBox();
-                //    break;
+                case BotState.ReturningToRoute:
+                    ExecuteReturningToRouteState();
+                    break;
 
-                //case BotState.PatrollingPath:
-                //    HandlePatrollingPath();
-                //    break;
+                case BotState.CollectingDropBox:
+                    HandleCollectingDropBox();
+                    break;
 
-                //case BotState.ChasingPlayer:
-                //    HandleChasingPlayer();
-                //    break;
+                    //case BotState.PatrollingPath:
+                    //    HandlePatrollingPath();
+                    //    break;
+
+                    //case BotState.ChasingPlayer:
+                    //    HandleChasingPlayer();
+                    //    break;
 
             }
 
@@ -97,26 +106,10 @@ public class BotAI : MonoBehaviour
         }
     }
 
+
     private void SetState(BotState newState)
     {
-        //// Exit current state logic
-        //switch (currentState)
-        //{
-        //    case BotState.PatrollingPath:
-        //        isWaitingAtPoint = false;
-        //        StopAllCoroutines();
-        //        break;
-        //}
-
         currentState = newState;
-
-        //// Enter new state logic
-        //switch (newState)
-        //{
-        //    case BotState.PatrollingPath:
-        //        StartCoroutine(StateBehaviorRoutine());
-        //        break;
-        //}
 
         Debug.Log($"Bot state changed to: {newState}");
     }
@@ -137,7 +130,7 @@ public class BotAI : MonoBehaviour
         }
 
         // Look for drop boxes while following route
-        //CheckForDropBox();
+        CheckForDropBox();
     }
 
     private void MoveToNextRoutePoint()
@@ -148,56 +141,171 @@ public class BotAI : MonoBehaviour
         anim.SetFloat("walkSpeed", agent.speed);
     }
 
-    //private void HandleSearchingDropBox()
-    //{
-    //    Collider[] dropBoxes = Physics.OverlapSphere(transform.position, dropBoxDetectionRadius, dropBoxLayer);
+    private void CheckForDropBox()
+    {
+        if (currentState != BotState.FollowingRoute) return;
 
-    //    if (dropBoxes.Length > 0)
-    //    {
-    //        // Find closest drop box
-    //        Transform closestDropBox = null;
-    //        float closestDistance = float.MaxValue;
+        Collider[] dropBoxes = Physics.OverlapSphere(transform.position, dropBoxDetectionRadius, dropBoxLayer);
 
-    //        foreach (Collider dropBox in dropBoxes)
-    //        {
-    //            float distance = Vector3.Distance(transform.position, dropBox.transform.position);
-    //            if (distance < closestDistance)
-    //            {
-    //                closestDistance = distance;
-    //                closestDropBox = dropBox.transform;
-    //            }
-    //        }
+        if (dropBoxes.Length > 0)
+        {
+            // Find closest drop box
+            float closestDistance = float.MaxValue;
+            Transform closestDropBox = null;
 
-    //        if (closestDropBox != null)
-    //        {
-    //            currentTarget = closestDropBox;
-    //            SetState(BotState.MovingToDropBox);
-    //        }
-    //    }
-    //    else
-    //    {
-    //        // No drop boxes found, start patrolling
-    //        SetState(BotState.PatrollingPath);
-    //    }
-    //}
+            foreach (Collider dropBox in dropBoxes)
+            {
+                float distance = Vector3.Distance(transform.position, dropBox.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestDropBox = dropBox.transform;
 
-    //private void HandleMovingToDropBox()
-    //{
-    //    if (currentTarget == null)
-    //    {
-    //        SetState(BotState.SearchingDropBox);
-    //        return;
-    //    }
+                }
+            }
 
-    //    agent.SetDestination(currentTarget.position);
-    //    float distance = Vector3.Distance(transform.position, currentTarget.position);
-    //    anim.SetFloat("walkSpeed", agent.speed);
+            if (closestDropBox != null)
+            {
+                currentDropBox = closestDropBox;
+                SetState(BotState.MovingToDropBox);
+                moveToDropBoxStartTime = Time.time; // Reset timer when starting to move
+            }
+        }
 
-    //    if (distance <= collectDistance)
-    //    {
-    //        SetState(BotState.CollectingDropBox);
-    //    }
-    //}
+    }
 
-    
+    private void ExecuteMovingToDropBoxState()
+    {
+        if (currentDropBox == null)
+        {
+            SetState(BotState.ReturningToRoute);
+            return;
+        }
+
+        agent.SetDestination(currentDropBox.position);
+
+        // Check if we've exceeded the time limit
+        if (Time.time - moveToDropBoxStartTime > maxMoveToDropBoxDuration)
+        {
+            Debug.Log("Timeout reaching dropbox - returning to route");
+            currentDropBox = null;
+            SetState(BotState.ReturningToRoute);
+            return;
+        }
+
+        float distanceToDropBox = Vector3.Distance(transform.position, currentDropBox.position);
+        if (distanceToDropBox <= collectDistance)
+        {
+            SetState(BotState.CollectingDropBox);
+            //StartCoroutine(CollectingRoutine());
+        }
+    }
+
+
+    private void HandleCollectingDropBox()
+    {
+        StartCoroutine(CollectItemsWithDelay());
+    }
+
+    private IEnumerator CollectItemsWithDelay()
+    {
+        Debug.Log("...AI collect box");
+        anim.SetFloat("walkSpeed", 0);
+
+        // Get items in range and store their game objects
+        List<GameObject> itemsToCollect = new();
+        Collider[] items = CheckForItems();
+
+        foreach (var item in items)
+        {
+            // Ensure the item is valid and not destroyed before adding
+            if (item != null && item.gameObject != null)
+            {
+                itemsToCollect.Add(item.gameObject);
+            }
+        }
+
+        foreach (var item in itemsToCollect)
+        {
+            if (item != null && item.TryGetComponent(out IRunTimeItem itemCollect))
+            {
+                itemCollect.CollectAI(); // Collect the item
+            }
+
+            // Wait for 1 second before collecting the next item
+            yield return new WaitForSeconds(1f);
+        }
+
+        // After collecting all items, return to the route
+        SetState(BotState.ReturningToRoute);
+    }
+
+    private void ExecuteReturningToRouteState()
+    {
+        if (!agent.pathPending && agent.remainingDistance <= pointReachDistance)
+        {
+            SetState(BotState.FollowingRoute);
+        }
+    }
+
+    private Collider[] CheckForItems()
+    {
+        Collider[] items = Physics.OverlapSphere(transform.position, collectDistance, itemLayer);
+        return items;
+        //if (items.Length > 0)
+        //{
+        //    float closestDistance = float.MaxValue;
+        //    Transform closestItem = null;
+
+        //    foreach (Collider item in items)
+        //    {
+        //        float distance = Vector3.Distance(transform.position, item.transform.position);
+        //        if (distance < closestDistance)
+        //        {
+        //            closestDistance = distance;
+        //            closestItem = item.transform;
+        //        }
+        //    }
+
+        //    if (closestItem != null)
+        //    {
+        //        currentItem = closestItem;
+        //        SetState(BotState.CollectingItem);
+        //    }
+        //}
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Draw route
+        if (routePoints != null && routePoints.Length > 0)
+        {
+            Gizmos.color = Color.blue;
+            for (int i = 0; i < routePoints.Length; i++)
+            {
+                if (routePoints[i] != null)
+                {
+                    // Draw point
+                    Gizmos.DrawSphere(routePoints[i].position, 0.5f);
+
+                    // Draw line to next point
+                    if (i + 1 < routePoints.Length && routePoints[i + 1] != null)
+                    {
+                        Gizmos.DrawLine(routePoints[i].position, routePoints[i + 1].position);
+                    }
+                    else if (i == routePoints.Length - 1 && routePoints[0] != null)
+                    {
+                        Gizmos.DrawLine(routePoints[i].position, routePoints[0].position);
+                    }
+                }
+            }
+        }
+
+        // Draw detection and collection ranges
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, dropBoxDetectionRadius);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, collectDistance);
+    }
 }

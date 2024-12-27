@@ -578,7 +578,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     private IEnumerator WaitForRealPlayerOrSpawnBot(NetworkRunner runner)
     {
-        yield return new WaitForSeconds(15);
+        yield return new WaitForSeconds(3);
         Debug.Log("Waiting for real players...");
 
         // Calculate the number of bots needed to fill the remaining slots

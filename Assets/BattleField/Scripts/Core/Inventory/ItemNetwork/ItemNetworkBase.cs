@@ -84,6 +84,12 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         DestroyItem();
     }
 
+    public void CollectAI()
+    {
+        Debug.Log("...AI collect " + gameObject.name);
+        DestroyItem();
+    }
+
     protected virtual void AddToStorage()
     {
         InventoryItem inventoryItem = new();
