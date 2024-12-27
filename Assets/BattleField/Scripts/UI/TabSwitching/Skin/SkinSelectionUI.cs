@@ -114,7 +114,7 @@ public class SkinSelectionUI : MonoBehaviour
         skinDescription.text = SkinDataHandler.skinSpriteIcons[index].skinDescription;
         BuyPanel.gameObject.SetActive(false);
     }
-
+#if UNITY_EDITOR
     [Button]
     private void PreCreatingUIAvatar()
     {
@@ -130,7 +130,7 @@ public class SkinSelectionUI : MonoBehaviour
             //icon.transform.GetChild(1).GetComponent<Image>().sprite = skinData.avatarIcon;
         }
     }
-
+#endif
     public void RefreshUIByData()
     {
         SkinDataHandler.UnlockPlayerOwnSkin(DataSaver.Instance.inventoryDataToSave.skinsLists);
