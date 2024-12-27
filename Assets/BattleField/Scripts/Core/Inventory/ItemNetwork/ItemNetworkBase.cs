@@ -84,12 +84,11 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         DestroyItem();
     }
 
-    public void CollectAI()
+    public virtual void CollectAI(ActiveWeaponAI activeWeaponAI)
     {
-        Debug.Log("...AI collect " + gameObject.name);
         DestroyItem();
     }
-
+  
     protected virtual void AddToStorage()
     {
         InventoryItem inventoryItem = new();
@@ -197,5 +196,10 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     private void rpc_disableOutline()
     {
         GetComponent<Outline>().enabled = false;
+    }
+
+    public void CollectAI()
+    {
+        throw new NotImplementedException();
     }
 }

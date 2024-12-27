@@ -14389,6 +14389,7 @@ GameObject:
   - component: {fileID: 1328566672751546694}
   - component: {fileID: -6321174919782958087}
   - component: {fileID: 7632598644926283546}
+  - component: {fileID: -8422475685057307926}
   m_Layer: 0
   m_Name: NetworkAI
   m_TagString: Untagged
@@ -14438,6 +14439,7 @@ MonoBehaviour:
   - {fileID: 7476855833417628319}
   - {fileID: 4043879867669260240}
   - {fileID: 7632598644926283546}
+  - {fileID: -8422475685057307926}
 --- !u!114 &7476855833417628319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14577,6 +14579,23 @@ MonoBehaviour:
   SyncSettings: 79
   StateHashes: 0000000053e4403c6057650bd0a29f6e930cac6d94d26fc981af0163abaa54e9a5537b2045088e02f328d8e6
   TriggerHashes: 00000000af859528
+--- !u!114 &-8422475685057307926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6593664972719329374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e00bef71e6e574e6aa4c6e3056183881, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponHoldersRemote:
+  - {fileID: 1375562210468276060}
+  currentWeaponRemote: {fileID: 0}
+  weaponPrefab: {fileID: 3567718259430728174, guid: a59e3fa320610374b83024a2741df93b,
+    type: 3}
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0

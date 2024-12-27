@@ -35,6 +35,7 @@ public class BotAI : MonoBehaviour
     private Transform currentDropBox;
     Animator anim;
     private int currentPointIndex;
+    private bool hasGun = false;
 
     // Start is called before the first frame update
     void Start()
@@ -130,7 +131,8 @@ public class BotAI : MonoBehaviour
         }
 
         // Look for drop boxes while following route
-        CheckForDropBox();
+        if(!hasGun)
+            CheckForDropBox();
     }
 
     private void MoveToNextRoutePoint()
@@ -227,9 +229,13 @@ public class BotAI : MonoBehaviour
 
         foreach (var item in itemsToCollect)
         {
-            if (item != null && item.TryGetComponent(out IRunTimeItem itemCollect))
+            if (item != null && item.TryGetComponent(out GunItem itemCollect) && !hasGun)
             {
-                itemCollect.CollectAI(); // Collect the item
+                itemCollect.CollectAI(GetComponent<ActiveWeaponAI>()); // Collect the item
+                Debug.Log("... collect" + item.name);
+                hasGun = true;
+                SetState(BotState.ReturningToRoute);
+                break;
             }
 
             // Wait for 1 second before collecting the next item
@@ -252,27 +258,6 @@ public class BotAI : MonoBehaviour
     {
         Collider[] items = Physics.OverlapSphere(transform.position, collectDistance, itemLayer);
         return items;
-        //if (items.Length > 0)
-        //{
-        //    float closestDistance = float.MaxValue;
-        //    Transform closestItem = null;
-
-        //    foreach (Collider item in items)
-        //    {
-        //        float distance = Vector3.Distance(transform.position, item.transform.position);
-        //        if (distance < closestDistance)
-        //        {
-        //            closestDistance = distance;
-        //            closestItem = item.transform;
-        //        }
-        //    }
-
-        //    if (closestItem != null)
-        //    {
-        //        currentItem = closestItem;
-        //        SetState(BotState.CollectingItem);
-        //    }
-        //}
     }
 
     private void OnDrawGizmosSelected()
