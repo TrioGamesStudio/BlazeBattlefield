@@ -135,6 +135,7 @@ public class GameHandler : MonoBehaviour
         {
             string teamID = teams.Keys.First();
             Debug.Log("===Victory team: " + teamID);
+            if (teamID == "AI") return;
 
             foreach(var playerRoomControl in teamsOriginal[teamID])
             {

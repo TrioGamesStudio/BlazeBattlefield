@@ -14559,10 +14559,12 @@ MonoBehaviour:
     m_Bits: 16384
   playerLayer:
     serializedVersion: 2
-    m_Bits: 32768
+    m_Bits: 64
   itemLayer:
     serializedVersion: 2
     m_Bits: 1024
+  _HasGun:
+    _value: 0
   fireRate: 0.5
 --- !u!114 &7632598644926283546
 MonoBehaviour:
@@ -14603,7 +14605,8 @@ MonoBehaviour:
   weapon: {fileID: 0}
   opponentLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 32961
+  weaponDamageCurr: 10
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0

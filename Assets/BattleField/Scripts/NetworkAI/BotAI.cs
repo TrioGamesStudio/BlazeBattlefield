@@ -162,6 +162,34 @@ public class BotAI : NetworkBehaviour
         if (!HasGun)
         {
             CheckForDropBox();
+            //HandleCollectingDropBox();
+            Debug.Log("...AI collect box after check box");
+            //anim.SetFloat("walkSpeed", 0);
+
+            // Get items in range and store their game objects
+            List<GameObject> itemsToCollect = new();
+            Collider[] items = CheckForItems();
+
+            foreach (var item in items)
+            {
+                // Ensure the item is valid and not destroyed before adding
+                if (item != null && item.gameObject != null)
+                {
+                    itemsToCollect.Add(item.gameObject);
+                }
+            }
+
+            foreach (var item in itemsToCollect)
+            {
+                if (item != null && item.TryGetComponent(out GunItem itemCollect) && !HasGun)
+                {
+                    itemCollect.CollectAI(GetComponent<ActiveWeaponAI>()); // Collect the item
+                    Debug.Log("... collect" + item.name);
+                    HasGun = true;
+                    SetState(BotState.ReturningToRoute);
+                    break;
+                }
+            }
         }       
         else
         {
@@ -245,11 +273,17 @@ public class BotAI : NetworkBehaviour
     private IEnumerator CollectItemsWithDelay()
     {
         Debug.Log("...AI collect box");
-        anim.SetFloat("walkSpeed", 0);
+        //anim.SetFloat("walkSpeed", 0);
 
         // Get items in range and store their game objects
         List<GameObject> itemsToCollect = new();
         Collider[] items = CheckForItems();
+
+        //if (items.Length == 0)
+        //{
+        //    SetState(BotState.ReturningToRoute);
+        //    yield return null;
+        //}
 
         foreach (var item in items)
         {
@@ -344,6 +378,14 @@ public class BotAI : NetworkBehaviour
     {
         //Look at player
         //agent.SetDestination(Vector3.forward);
+
+        if (target.TryGetComponent<CheckBodyParts>(out var targetHP))
+        {
+            if (targetHP.hPHandler.Networked_HP <= 0)
+            {
+                SetState(BotState.ReturningToRoute);
+            }
+        }
 
         //Chase player
         agent.SetDestination(target.position);
