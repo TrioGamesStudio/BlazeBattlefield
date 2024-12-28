@@ -44,11 +44,14 @@ public class ActiveWeaponAI : NetworkBehaviour
     private NetworkObject SpawnItem(GameObject prefab, int index)
     {
         var position = weaponHoldersRemote[index].position;
-        //NetworkObject networkObject = Runner.Spawn(prefab, position, Quaternion.identity);
-        //NetworkObject networkObject = Runner.Spawn(prefab, position);
-        GameObject weapon = Instantiate(prefab, position, Quaternion.identity);
-        RPC_SetParentWeapon(weapon.GetComponent<NetworkObject>(), index);
-        return weapon.GetComponent<NetworkObject>();
+
+        //GameObject weapon = Instantiate(prefab, position, Quaternion.identity);
+        //RPC_SetParentWeapon(weapon.GetComponent<NetworkObject>(), index);
+        //return weapon.GetComponent<NetworkObject>();
+
+        NetworkObject networkObject = Runner.Spawn(prefab, position, Quaternion.identity);
+        RPC_SetParentWeapon(networkObject, index);
+        return networkObject;
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

@@ -46,6 +46,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private Button playButton;
     [SerializeField] private int MAX_PLAYER;
     [SerializeField] private bool spawnAI;
+    [SerializeField] private float timeForSpawnBot;
 
     private NetworkRunner networkRunner;   
     private PlayerRoomController localPlayerRoomController;
@@ -578,7 +579,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     private IEnumerator WaitForRealPlayerOrSpawnBot(NetworkRunner runner)
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(timeForSpawnBot);
         Debug.Log("Waiting for real players...");
 
         // Calculate the number of bots needed to fill the remaining slots

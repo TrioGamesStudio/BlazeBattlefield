@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Fusion;
 
-public class BotAI : MonoBehaviour
+public class BotAI : NetworkBehaviour
 {
     public enum BotState
     {
@@ -30,19 +31,23 @@ public class BotAI : MonoBehaviour
     private float moveToDropBoxStartTime;
     private float maxMoveToDropBoxDuration = 5f; // Time limit in seconds
 
-
+    [Networked] public NetworkBool HasGun { get; set; }
     private NavMeshAgent agent;
     private BotState currentState;
     private Transform currentTarget;
     private Transform currentDropBox;
     Animator anim;
-    private int currentPointIndex;
-    private bool hasGun = false;
+    private int currentPointIndex;  
     // Cooldown timer for firing
     private float fireCooldownTimer = 0f;
 
     // Firing rate in seconds (e.g., 0.5 seconds means 2 shots per second)
     [SerializeField] private float fireRate = 0.5f;
+
+    public override void Spawned()
+    {
+        HasGun = false;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -154,7 +159,7 @@ public class BotAI : MonoBehaviour
         }
 
         // Look for drop boxes while following route
-        if (!hasGun)
+        if (!HasGun)
         {
             CheckForDropBox();
         }       
@@ -257,21 +262,21 @@ public class BotAI : MonoBehaviour
 
         foreach (var item in itemsToCollect)
         {
-            if (item != null && item.TryGetComponent(out GunItem itemCollect) && !hasGun)
+            if (item != null && item.TryGetComponent(out GunItem itemCollect) && !HasGun)
             {
                 itemCollect.CollectAI(GetComponent<ActiveWeaponAI>()); // Collect the item
                 Debug.Log("... collect" + item.name);
-                hasGun = true;
+                HasGun = true;
                 SetState(BotState.ReturningToRoute);
                 break;
             }
-
             // Wait for 1 second before collecting the next item
-            yield return new WaitForSeconds(1f);
+            //yield return new WaitForSeconds(1f); 
         }
 
         // After collecting all items, return to the route
         SetState(BotState.ReturningToRoute);
+        yield return null;
     }
 
     private void ExecuteReturningToRouteState()
