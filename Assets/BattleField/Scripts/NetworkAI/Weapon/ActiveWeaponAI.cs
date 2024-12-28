@@ -18,6 +18,7 @@ public class ActiveWeaponAI : NetworkBehaviour
     NetworkObject networkObject;
 
     TickTimer bulletFireDelay = TickTimer.None;
+    [SerializeField] private LayerMask opponentLayer;
 
     private void Awake()
     {
@@ -73,6 +74,7 @@ public class ActiveWeaponAI : NetworkBehaviour
             {
                 spawnBullet.GetComponent<BulletHandler>().FireBullet(Object.InputAuthority, networkObject, "bot");
             });
+           
             bulletFireDelay = TickTimer.CreateFromSeconds(Runner, 0.15f); // sau 3s se exp or notRunning
         }
 
@@ -81,5 +83,79 @@ public class ActiveWeaponAI : NetworkBehaviour
         //    Runner.Spawn(bulletVFXPF, aimPoint_grandeRocket_3rd.transform.position, Quaternion.LookRotation(dir));
         //    bulletFireDelay = TickTimer.CreateFromSeconds(Runner, 0.15f); // sau 3 s se exp or notRunning
         //}
+        FireRaycast(dir, aimPoint_grandeRocket_3rd);
+    }
+
+
+    void FireRaycast(Vector3 aimForwardVector, Transform aimPoint)
+    {
+        //spawnPointRaycastCam = localCameraHandler.raycastSpawnPointCam_Network;
+
+        if (Physics.Raycast(aimPoint.position, aimForwardVector, out var hit, 100, opponentLayer))
+        {
+            Debug.Log(",,, Hit " + hit.transform.name);
+           //byte localWeaponDamageCurr = 0;
+            if (hit.transform.GetComponent<ActiveWeaponAI>() == this) return;
+
+            float hitDis = 100f;
+            bool isHitOtherRemotePlayers = false;
+
+            if (hit.distance > 0) hitDis = hit.distance;
+
+            // check body part
+            if (hit.collider.transform.TryGetComponent<CheckBodyParts>(out var part))
+            {
+                string bodyName = hit.collider.transform.name;
+                Debug.Log($"_____bodyName = {bodyName}");
+                //    if (bodyName == HEAD) localWeaponDamageCurr = hPHandler.Networked_HP;
+                //    else if (bodyName == ARML || bodyName == ARMR) localWeaponDamageCurr = this.weaponDamageCurr;
+
+                //    if (Object.HasStateAuthority)
+                //    {
+                //        /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
+                //        isHit = true;
+                //        part.hPHandler.OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
+                //    }
+                //    PlayerStats.Instance.AddDamageDealt(localWeaponDamageCurr);
+                //}
+                //else localWeaponDamageCurr = this.weaponDamageCurr;
+
+                // get damage ohters
+                if (hit.transform.TryGetComponent<HPHandler>(out var health))
+                {
+                    //Debug.Log($"{Time.time} {transform.name} hit HitBox {hit.transform.root.name}");
+
+                    //// ban trung dau get full hp
+                    //string bodyName = hit.collider.transform.name;
+                    //Debug.Log($"_____bodyName = {bodyName}");
+                    //if (bodyName == HEAD) localWeaponDamageCurr = hPHandler.Networked_HP;
+                    //else if (bodyName == ARML || bodyName == ARMR) localWeaponDamageCurr = this.weaponDamageCurr;
+
+                    //if (Object.HasStateAuthority)
+                    //{
+                    //    isHit = true;
+                    //    Debug.LogWarning($"Damgage !!!!!{localWeaponDamageCurr} {weaponDamageCurr}");
+                    //    /* hit.collider.GetComponent<HPHandler>().OnTakeDamage(networkPlayer.nickName_Network.ToString(), 1, this); */
+                    //    hit.collider.GetComponent<HitboxRoot>().GetComponent<HPHandler>().
+                    //                OnTakeDamage(networkPlayer.nickName_Network.ToString(), localWeaponDamageCurr, this);
+                    //}
+                    //PlayerStats.Instance.AddDamageDealt(localWeaponDamageCurr);
+                    isHitOtherRemotePlayers = true;
+                }
+                //else if (hit.collider != null)
+                //{
+                //    Debug.Log($"{Time.time} {transform.name} hit PhysiX Collier {hit.transform.root.name}");
+                //}
+                //Debug.LogWarning($"Damgage !!!!!{localWeaponDamageCurr} {weaponDamageCurr}");
+                ////? ve ra tia neu ban trung remotePlayers
+                if (isHitOtherRemotePlayers)
+                    Debug.DrawRay(aimPoint.position, aimForwardVector * hitDis, Color.red, 1f);
+                else
+                    Debug.DrawRay(aimPoint.position, aimForwardVector * hitDis, Color.green, 1f);
+            }
+
+            //lastTimeFired = Time.time;
+        }
+
     }
 }
