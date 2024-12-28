@@ -28,23 +28,7 @@ public class ItemPreviewController : MonoBehaviour
         itemContainer.localEulerAngles = Vector3.zero;
     }
 
-    void Update()
-    {
-        // Xoay ngang (trái/phải)
-        float horizontalInput = Input.GetAxis("Horizontal");
-        itemContainer.Rotate(Vector3.up, horizontalInput * rotationSpeed * Time.deltaTime);
-
-        // Xoay dọc (lên/xuống) với giới hạn góc
-        float verticalInput = Input.GetAxis("Vertical");
-        currentVerticalRotation += -verticalInput * rotationSpeed * Time.deltaTime;
-        currentVerticalRotation = Mathf.Clamp(currentVerticalRotation, verticalRotationLimits.x, verticalRotationLimits.y);
-
-        // Áp dụng rotation cho model
-        if (itemModel != null)
-        {
-            itemModel.localEulerAngles = initialModelRotation + new Vector3(currentVerticalRotation, 0f, 0f);
-        }
-    }
+    
 
     public void SetNewItem(GameObject newItem)
     {
