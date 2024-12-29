@@ -147,11 +147,16 @@ public class GameHandler : MonoBehaviour
 
     public void AssignRoute()
     {
-        BotAI[] botAIs = FindObjectsOfType<BotAI>();
-        foreach(var botAI in botAIs)
+        //BotAI[] botAIs = FindObjectsOfType<BotAI>();
+        //foreach(var botAI in botAIs)
+        //{
+        //    botAI.SetRoutePoints(routePoints);
+        //}
+        BotAINetwork[] botAIs = FindObjectsOfType<BotAINetwork>();
+        foreach (var botAI in botAIs)
         {
             botAI.SetRoutePoints(routePoints);
-        }   
+        }
     }
 
     private void OnDrawGizmosSelected()

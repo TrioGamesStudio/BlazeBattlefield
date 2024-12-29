@@ -31,7 +31,7 @@ public class BotAI : NetworkBehaviour
     private float moveToDropBoxStartTime;
     private float maxMoveToDropBoxDuration = 5f; // Time limit in seconds
 
-    [Networked] public NetworkBool HasGun { get; set; }
+    public bool HasGun;
     private NavMeshAgent agent;
     private BotState currentState;
     private Transform currentTarget;

@@ -684,6 +684,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
+        Debug.Log($"///Player left " + player.PlayerId);
         if (currentMode == Mode.Solo && !isDone)
         {
             int remainPlayer = MAX_PLAYER - networkRunner.ActivePlayers.Count();
@@ -693,8 +694,25 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (currentMode == Mode.Solo && isDone)
         {
+            //if (spawnAI)
+            //{
+            //    BotAINetwork[] botAINetworks = FindObjectsOfType<BotAINetwork>();
+            //    Debug.Log("/// bot qty " + botAINetworks.Length);
+            //    // Check all bots in the scene
+            //    foreach (var botAINetwork in botAINetworks)
+            //    {
+            //        if (botAINetwork.Object.StateAuthority == player)
+            //        {
+            //            Debug.Log($"///Bot {botAINetwork.name} lost its authority because Player {player} left.");
+
+            //            // Assign authority to a new player
+            //            AssignAuthorityToNextPlayer(runner, botAINetwork.Object);
+            //        }
+            //    }
+            //}
             FindObjectOfType<GameHandler>().Eliminate(matchSolo[player], players[player]);
             FindObjectOfType<GameHandler>().CheckWin();
+            
         }
 
         players.Remove(player);
@@ -718,6 +736,23 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count());
     }
 
+    //private void AssignAuthorityToNextPlayer(NetworkRunner runner, NetworkObject bot)
+    //{
+    //    // Find a new player to assign authority
+    //    foreach (var player in runner.ActivePlayers)
+    //    {
+    //        if (player != runner.LocalPlayer) // Skip self or other conditions as needed
+    //        {
+    //            Debug.Log($"///Assigning state authority of bot {bot.name} to Player {player}.");
+
+    //            // Request authority for the next player
+    //            bot.RequestStateAuthority();
+    //            return;
+    //        }
+    //    }
+
+    //    Debug.LogWarning($"No suitable player found to take authority of bot {bot.name}.");
+    //}
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
@@ -743,6 +778,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         // You can add validation here if needed
         currentSceneIndex = sceneIndex;
+    }
+
+    public bool HasBot()
+    {
+        return spawnAI;
     }
 
     public void OnConnectedToServer(NetworkRunner runner)

@@ -1667,7 +1667,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 1757594579
+  SortKey: 3409667912
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -14386,11 +14386,11 @@ GameObject:
   - component: {fileID: 7476855833417628319}
   - component: {fileID: 4043879867669260240}
   - component: {fileID: 1328566672751546694}
-  - component: {fileID: -6321174919782958087}
   - component: {fileID: 7632598644926283546}
   - component: {fileID: -8422475685057307926}
+  - component: {fileID: -3910730345314091655}
   m_Layer: 16
-  m_Name: NetworkAI
+  m_Name: BotAI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14428,7 +14428,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 2643930881
+  SortKey: 1036918
   ObjectInterest: 1
   Flags: 524289
   NestedObjects:
@@ -14437,9 +14437,9 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 7476855833417628319}
   - {fileID: 4043879867669260240}
-  - {fileID: -6321174919782958087}
   - {fileID: 7632598644926283546}
   - {fileID: -8422475685057307926}
+  - {fileID: -3910730345314091655}
 --- !u!114 &7476855833417628319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14509,35 +14509,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &-6321174919782958087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6593664972719329374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 006d465548d474b368073bba8a30476a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  routePoints: []
-  pointReachDistance: 2
-  dropBoxDetectionRadius: 5
-  playerDetectionRadius: 20
-  collectDistance: 1
-  itemCollectRadius: 3
-  dropBoxLayer:
-    serializedVersion: 2
-    m_Bits: 16384
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  itemLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  HasGun: 0
-  fireRate: 0.5
 --- !u!114 &7632598644926283546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14579,6 +14550,35 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 32961
   weaponDamageCurr: 10
+--- !u!114 &-3910730345314091655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6593664972719329374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc992a1b0ea94b51acc7841757718ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  routePoints: []
+  pointReachDistance: 2
+  dropBoxDetectionRadius: 0
+  playerDetectionRadius: 0
+  collectDistance: 0
+  itemCollectRadius: 0
+  dropBoxLayer:
+    serializedVersion: 2
+    m_Bits: 16384
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  itemLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  fireRate: 0.5
+  HasGun: 0
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0
@@ -26233,7 +26233,7 @@ PrefabInstance:
     - target: {fileID: 5359046980623043594, guid: b567bd548e41e214aae8b1b45dedeb79,
         type: 3}
       propertyPath: SortKey
-      value: 1197575062
+      value: 2849648395
       objectReference: {fileID: 0}
     - target: {fileID: 6452352528162196287, guid: b567bd548e41e214aae8b1b45dedeb79,
         type: 3}

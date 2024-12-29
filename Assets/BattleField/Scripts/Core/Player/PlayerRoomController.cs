@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using System;
+using System.Linq;
 
 public class PlayerRoomController : NetworkBehaviour
 {
@@ -273,6 +274,30 @@ public class PlayerRoomController : NetworkBehaviour
         //if (Object.HasStateAuthority)
         {
             matchmaking.UpdateMapProperty(map);
+        }
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        base.Despawned(runner, hasState);
+        Debug.Log("/// despawn " + runner.name);
+        //if (Object != null && !Object.HasStateAuthority) return;
+        if (matchmaking.HasBot())
+        {
+            Debug.Log("/// Co bot chuyen state authority ne");
+            Debug.Log("/// Player ref hien tai " + Runner.LocalPlayer);
+            BotAINetwork botAINetwork = FindObjectOfType<BotAINetwork>();
+            Debug.Log("/// bot state auth " + botAINetwork.Object.StateAuthority);
+            Debug.Log("/// co player in active playeer " + runner.ActivePlayers.Count());
+            foreach (var player in runner.ActivePlayers)
+            {
+                Debug.Log("/// runner name " + player.PlayerId);
+                if (player != Runner.LocalPlayer)
+                {
+                    Debug.Log("///Chuyen state auth sang " + player);
+                    botAINetwork.RequestAuthority();
+                }
+            }
         }
     }
 }
