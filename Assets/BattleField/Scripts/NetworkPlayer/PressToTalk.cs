@@ -1,21 +1,30 @@
+using System;
+using Fusion;
+using Photon.Voice.Fusion;
 using Photon.Voice.Unity;
 using UnityEngine;
 
 public class PressToTalk : MonoBehaviour
 {
     Recorder recorder;
+    Speaker speaker;
+    int teamID = -1;
 
     private void Awake() {
-        if(recorder == null)
+        if(recorder == null) {
             recorder = GetComponent<Recorder>();
+        }
+            
+        recorder.TransmitEnabled = false;
     }
 
     private void Update() {
+        if(teamID <= 0) return;
 
-        if(Input.GetKey(KeyCode.T)) {
+        if(Input.GetKey(KeyCode.V)) {
             EnableTalking();
         }
-        else if(Input.GetKeyUp(KeyCode.T)) {
+        else if(Input.GetKeyUp(KeyCode.V)) {
             DisableTalking();
         }
 
@@ -26,6 +35,12 @@ public class PressToTalk : MonoBehaviour
 
     void DisableTalking() {
         recorder.TransmitEnabled = false;
+    }
+
+    public void SetId(string id) {
+        this.teamID = Convert.ToInt32(id) - 100;
+        recorder.InterestGroup = (byte)teamID;
+        
     }
 
 }

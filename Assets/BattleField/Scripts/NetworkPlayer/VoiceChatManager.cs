@@ -2,99 +2,113 @@ using Fusion;
 using Photon.Voice.Unity;
 using Photon.Voice.Fusion;
 using UnityEngine;
+using System;
 
 public class VoiceChatManager : NetworkBehaviour
 {
-    // Reference to the Photon Voice Network component
-    [SerializeField] private VoiceConnection voiceConnection;
-    
-    // Reference to the recorder that captures microphone input
+    /* private VoiceConnection voiceConnection; */
     [SerializeField] private Recorder recorder;
-    
-    // Reference to the speaker that plays received audio
-    [SerializeField] private Speaker speaker;
+    /* private Speaker speaker; */
+
+    [Networked]
+    private int TeamID { get; set; }
 
     private void Awake()
     {
-        // Get or add required components
-        voiceConnection = GetComponent<VoiceConnection>();
+        // Find the VoiceConnection in the scene
+        /* voiceConnection = FindObjectOfType<VoiceConnection>();
         if (voiceConnection == null)
         {
-            //voiceConnection = gameObject.AddComponent<VoiceConnection>();
-        }
+            Debug.LogError("VoiceConnection not found! Make sure you have a VoiceConnection component in your scene.");
+            return;
+        } */
+        /* if(recorder == null)
+            recorder = GetComponent<Recorder>(); */
 
-        recorder = GetComponent<Recorder>();
+        SetupVoiceComponents();
+    }
+
+    private void SetupVoiceComponents()
+    {
+        // Add and configure recorder
+        /* recorder = gameObject.GetComponent<Recorder>();
         if (recorder == null)
         {
-            //recorder = gameObject.AddComponent<Recorder>();
-        }
+            recorder = gameObject.AddComponent<Recorder>();
+        } */
 
-        speaker = GetComponent<Speaker>();
+        // Important: Set the recorder as the primary recorder for the voice connection
+        /* voiceConnection.PrimaryRecorder = recorder; */
+
+        // Configure recorder settings
+        recorder.VoiceDetection = true;
+        recorder.VoiceDetectionThreshold = 0.01f;
+        recorder.TransmitEnabled = false;
+
+        // Add and configure speaker
+        /* speaker = gameObject.GetComponent<Speaker>();
         if (speaker == null)
         {
-            //speaker = gameObject.AddComponent<Speaker>();
-        }
+            speaker = gameObject.AddComponent<Speaker>();
+        } */
 
-        // Configure voice connection settings
-        voiceConnection.PrimaryRecorder = recorder;
+        Debug.Log("Voice components setup completed");
     }
 
     public override void Spawned()
     {
-        // Only setup voice chat for the local player
         if (Object.HasInputAuthority)
         {
-            SetupVoiceChat();
+            EnableVoice();
         }
     }
 
-    private void SetupVoiceChat()
+    private void EnableVoice()
     {
-        // Configure recorder settings
-        recorder.TransmitEnabled = true;
-        recorder.VoiceDetection = true;
-        recorder.VoiceDetectionThreshold = 0.01f;
-        recorder.InterestGroup = 0; // Use different groups for team-specific chat
-
-        // Configure speaker settings
-        speaker.PlayDelay = 200; // Adjust based on your needs
+        if (recorder != null)
+        {
+            recorder.TransmitEnabled = true;
+            Debug.Log("Voice transmission enabled for local player");
+        }
     }
 
-    public void SetTeamChannel(int teamId)
+    public void SetTeamID(string teamID) {
+        int id = Convert.ToInt32(teamID);
+        RPC_SetTeamChannel(id);
+    }
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    void RPC_SetTeamChannel(int teamId)
     {
-        // Set the interest group based on team ID
-        if (Object.HasInputAuthority)
+        if (Object.HasInputAuthority && recorder != null)
         {
+            TeamID = teamId;
             recorder.InterestGroup = (byte)teamId;
-            //speaker.InterestGroup = (byte)teamId;
+            Debug.Log($"Set voice chat to team channel: {teamId}");
         }
     }
 
-    // Toggle voice chat on/off
-    public void ToggleVoiceChat(bool enabled)
-    {
-        if (Object.HasInputAuthority)
-        {
-            recorder.TransmitEnabled = enabled;
-        }
-    }
-
-    // Toggle push-to-talk
     private void Update()
     {
-        if (Object.HasInputAuthority)
+        /* if (Object.HasInputAuthority && recorder != null)
         {
-            if (Input.GetKeyDown(KeyCode.V)) // Change key as needed
+        } */
+            // Push-to-talk with V key
+            if (Input.GetKeyDown(KeyCode.V))
             {
                 recorder.TransmitEnabled = true;
-                Debug.Log($"_____co nhan V");
+                Debug.Log("Voice transmission active");
             }
             if (Input.GetKeyUp(KeyCode.V))
             {
                 recorder.TransmitEnabled = false;
+                Debug.Log("Voice transmission stopped");
             }
-            //ToggleVoiceChat(recorder.TransmitEnabled );
-        }
-    }
 
+            // Toggle mute with M key
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                recorder.TransmitEnabled = !recorder.TransmitEnabled;
+                Debug.Log($"Voice {(recorder.TransmitEnabled ? "unmuted" : "muted")}");
+            }
+    }
 }

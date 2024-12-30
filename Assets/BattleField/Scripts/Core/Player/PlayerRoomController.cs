@@ -148,6 +148,8 @@ public class PlayerRoomController : NetworkBehaviour
         //if (Object.HasStateAuthority)
         {
             RPC_SetTeamID(teamID);
+
+            FindObjectOfType<PressToTalk>().SetId(teamID);
         }
     }
 

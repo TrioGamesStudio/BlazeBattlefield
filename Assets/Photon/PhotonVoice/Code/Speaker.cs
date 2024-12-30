@@ -367,7 +367,9 @@ namespace Photon.Voice.Unity
             }
         }
 
-#endregion
+        public object Source { get; set; }
+
+        #endregion
     }
 }
 
