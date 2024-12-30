@@ -87,7 +87,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     public override void FixedUpdateNetwork()
     {
         //if (!Object.HasStateAuthority) return;
-        Debug.Log("/// Bot running");
+        //Debug.Log("/// Bot running");
         // Update networked state
         IsMoving = agent != null && agent.velocity.magnitude > 0.1f;
         HasGunNetworked = HasGun;
@@ -114,10 +114,28 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         }
     }
 
+    // Logic to request authority
+    public void RequestAuthority()
+    {
+        //if (!Object.HasStateAuthority)
+        {
+            Object.RequestStateAuthority();
+            Debug.Log($"///Requesting state authority for bot {gameObject.name}.");
+        }
+    }
+
+    // Logic to release authority (optional)
+    public void ReleaseAuthority()
+    {
+        if (Object.HasStateAuthority)
+        {
+            Object.ReleaseStateAuthority();
+            Debug.Log($"///Bot {gameObject.name} released state authority.");
+        }
+    }
+
     public void SetRoutePoints(Transform[] points)
     {
-        //if (!Object.HasStateAuthority) return;
-
         if (points == null || points.Length == 0)
         {
             Debug.LogError("///Invalid route points provided!");
@@ -151,7 +169,6 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     private void SetState(BotState newState)
     {
         //if (!Object.HasStateAuthority) return;
-
         currentState = newState;
         CurrentNetworkedState = newState;
         Debug.Log($"///Bot state changed to: {newState}");
@@ -172,14 +189,6 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     {
         while (true)
         {
-            //if (Object != null && !Object.HasStateAuthority)
-            //{
-            //    Debug.Log($"/// Not have state authority");
-            //    Debug.Log($"/// Current state autthority of bot is " + Object.StateAuthority);
-            //    yield return new WaitForSeconds(0.1f);
-            //    continue;
-            //}
-
             switch (currentState)
             {
                 case BotState.Idle:
@@ -188,18 +197,18 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
                 case BotState.FollowingRoute:
                     ExecuteFollowingRouteState();
                     break;
-                //case BotState.MovingToDropBox:
-                //    ExecuteMovingToDropBoxState();
-                //    break;
-                //case BotState.ReturningToRoute:
-                //    ExecuteReturningToRouteState();
-                //    break;
-                //case BotState.CollectingDropBox:
-                //    HandleCollectingDropBox();
-                //    break;
-                //case BotState.FacingAndFiring:
-                //    ExecuteFacingAndFiringState();
-                //    break;
+                case BotState.MovingToDropBox:
+                    ExecuteMovingToDropBoxState();
+                    break;
+                case BotState.ReturningToRoute:
+                    ExecuteReturningToRouteState();
+                    break;
+                case BotState.CollectingDropBox:
+                    HandleCollectingDropBox();
+                    break;
+                    //case BotState.FacingAndFiring:
+                    //    ExecuteFacingAndFiringState();
+                    //    break;
             }
 
             yield return new WaitForSeconds(0.1f);
@@ -227,32 +236,32 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             MoveToNextRoutePoint();
         }
 
-        //if (!HasGun)
-        //{
-        //    CheckForDropBox();
-        //    List<GameObject> itemsToCollect = new();
-        //    Collider[] items = CheckForItems();
+        if (!HasGun)
+        {
+            CheckForDropBox();
+            //List<GameObject> itemsToCollect = new();
+            //Collider[] items = CheckForItems();
 
-        //    foreach (var item in items)
-        //    {
-        //        if (item != null && item.gameObject != null)
-        //        {
-        //            itemsToCollect.Add(item.gameObject);
-        //        }
-        //    }
+            //foreach (var item in items)
+            //{
+            //    if (item != null && item.gameObject != null)
+            //    {
+            //        itemsToCollect.Add(item.gameObject);
+            //    }
+            //}
 
-        //    foreach (var item in itemsToCollect)
-        //    {
-        //        if (item != null && item.TryGetComponent(out GunItem itemCollect) && !HasGun)
-        //        {
-        //            itemCollect.CollectAI(GetComponent<ActiveWeaponAI>());
-        //            HasGun = true;
-        //            HasGunNetworked = true;
-        //            SetState(BotState.ReturningToRoute);
-        //            break;
-        //        }
-        //    }
-        //}
+            //foreach (var item in itemsToCollect)
+            //{
+            //    if (item != null && item.TryGetComponent(out GunItem itemCollect) && !HasGun)
+            //    {
+            //        itemCollect.CollectAI(GetComponent<ActiveWeaponAI>());
+            //        HasGun = true;
+            //        HasGunNetworked = true;
+            //        SetState(BotState.ReturningToRoute);
+            //        break;
+            //    }
+            //}
+        }
         //else
         //{
         //    CheckForPlayerAndFire();
@@ -267,29 +276,103 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         anim.SetFloat("walkSpeed", agent.speed);
     }
 
-    // Logic to release authority (optional)
-    public void ReleaseAuthority()
+    private void CheckForDropBox()
     {
-        if (Object.HasStateAuthority)
+        Collider[] dropBoxes = Physics.OverlapSphere(transform.position, dropBoxDetectionRadius, dropBoxLayer);
+
+        if (dropBoxes.Length > 0)
         {
-            Object.ReleaseStateAuthority();
-            Debug.Log($"///Bot {gameObject.name} released state authority.");
+            // Find closest drop box
+            float closestDistance = float.MaxValue;
+            Transform closestDropBox = null;
+
+            foreach (Collider dropBox in dropBoxes)
+            {
+                if (!IsPositionOnNavMesh(dropBox.transform.position, 1f)) continue;
+                float distance = Vector3.Distance(transform.position, dropBox.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestDropBox = dropBox.transform;
+
+                }
+            }
+
+            if (closestDropBox != null)
+            {
+                currentDropBox = closestDropBox;
+                moveToDropBoxStartTime = Time.time; // Reset timer when starting to move
+                SetState(BotState.MovingToDropBox);
+            }
         }
     }
 
-    // Logic to request authority
-    public void RequestAuthority()
+    private void ExecuteMovingToDropBoxState()
     {
-        //if (!Object.HasStateAuthority)
+        if (currentDropBox == null)
         {
-            Object.RequestStateAuthority();
-            Debug.Log($"///Requesting state authority for bot {gameObject.name}.");
+            SetState(BotState.ReturningToRoute);
+            return;
+        }
+
+        agent.SetDestination(currentDropBox.position);
+
+        float distanceToDropBox = Vector3.Distance(transform.position, currentDropBox.position);
+        if (distanceToDropBox <= collectDistance)
+        {
+            SetState(BotState.CollectingDropBox);
+            //StartCoroutine(CollectingRoutine());
         }
     }
 
-    //// Triggered when state authority changes
-    //public void OnStateAuthorityChanged(PlayerRef oldAuthority, PlayerRef newAuthority)
-    //{
-    //    Debug.Log($"Bot {gameObject.name} state authority changed from {oldAuthority} to {newAuthority}.");
-    //}
+    private void ExecuteReturningToRouteState()
+    {
+        if (!agent.pathPending && agent.remainingDistance <= pointReachDistance)
+        {
+            SetState(BotState.FollowingRoute);
+        }
+    }
+
+    private void HandleCollectingDropBox()
+    {
+        Debug.Log("...AI collect box");
+        // Get items in range and store their game objects
+        List<GameObject> itemsToCollect = new();
+        Collider[] items = Physics.OverlapSphere(transform.position, itemCollectRadius, itemLayer);
+
+        foreach (var item in items)
+        {
+            // Ensure the item is valid and not destroyed before adding
+            if (item != null && item.gameObject != null)
+            {
+                itemsToCollect.Add(item.gameObject);
+            }
+        }
+
+        foreach (var item in itemsToCollect)
+        {
+            if (item != null && item.TryGetComponent(out GunItem itemCollect) && !HasGun)
+            {
+                itemCollect.CollectAI(GetComponent<ActiveWeaponAI>()); // Collect the item
+                Debug.Log("... collect" + item.name);
+                HasGun = true;
+                SetState(BotState.ReturningToRoute);
+                break;
+            }
+            // Wait for 1 second before collecting the next item
+            //yield return new WaitForSeconds(1f); 
+        }
+
+        // After collecting all items, return to the route
+        SetState(BotState.ReturningToRoute);
+    }
+
+    private bool IsPositionOnNavMesh(Vector3 position, float radius)
+    {
+        NavMeshHit hit;
+        // Check if the position is on the NavMesh within the given radius
+        bool isOnNavMesh = NavMesh.SamplePosition(position, out hit, radius, NavMesh.AllAreas);
+
+        return isOnNavMesh;
+    }
 }
