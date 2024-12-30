@@ -9,12 +9,12 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 {
     public enum BotState
     {
+        Idle,
         FollowingRoute,
         MovingToDropBox,
         CollectingDropBox,
         ReturningToRoute,
         FacingAndFiring,
-        Idle
     }
 
     [Networked]
@@ -33,9 +33,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     private bool IsFiring { get; set; }
 
     [Networked]
-    private BotState CurrentNetworkedState { get; set; }
-
-    
+    private BotState CurrentNetworkedState { get; set; } 
 
     [Header("Route Settings")]
     [SerializeField] private Transform[] routePoints;
@@ -51,8 +49,6 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     [SerializeField] private LayerMask itemLayer;
     [SerializeField] private float fireRate = 0.5f;
 
-    private float moveToDropBoxStartTime;
-    private float maxMoveToDropBoxDuration = 5f;
     private float fireCooldownTimer = 0f;
     private bool isInitialized = false;
     private NetworkRunner runner;
@@ -65,6 +61,8 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     private Animator anim;
     private int currentPointIndex;
 
+
+    #region SETUP BOT
 
     public override void Spawned()
     {
@@ -81,14 +79,55 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         {
             InitializeBot();
         }
+        SetState(BotState.Idle);
+    }
+
+    private void InitializeBot()
+    {
+        if (isInitialized) return;
+
+        agent = GetComponent<NavMeshAgent>();
+        anim = GetComponentInChildren<Animator>();
+        SetState(BotState.FollowingRoute);
+        StartCoroutine(StateBehaviorRoutine());
+
+        isInitialized = true;
+        Debug.Log($"///Bot initialized by authority: {runner.LocalPlayer}");
+    }
+
+    public void SetRoutePoints(Transform[] points)
+    {
+        if (points == null || points.Length == 0)
+        {
+            Debug.LogError("///Invalid route points provided!");
+            return;
+        }
+
+        routePoints = points;
+        CurrentPointIndex = UnityEngine.Random.Range(0, routePoints.Length);
+
+        if (routePoints[CurrentPointIndex] != null)
+        {
+            TargetPosition = routePoints[CurrentPointIndex].position;
+        }
+
+        SetState(BotState.FollowingRoute);
+    }
+
+    private void RestoreBotState()
+    {
+        currentState = CurrentNetworkedState;
+        HasGun = HasGunNetworked;
+
+        if (agent != null && TargetPosition != default)
+        {
+            agent.SetDestination(TargetPosition);
+        }
     }
 
     // Update method to sync position
     public override void FixedUpdateNetwork()
     {
-        //if (!Object.HasStateAuthority) return;
-        //Debug.Log("/// Bot running");
-        // Update networked state
         IsMoving = agent != null && agent.velocity.magnitude > 0.1f;
         HasGunNetworked = HasGun;
 
@@ -97,6 +136,19 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             TargetPosition = agent.destination;
         }
     }
+
+    private void Update()
+    {
+        // Reduce the cooldown timer over time
+        if (fireCooldownTimer > 0f)
+        {
+            fireCooldownTimer -= Time.deltaTime;
+        }
+    }
+
+    #endregion
+
+    #region REQUEST AND CHANGE STATE AUTHORITY
 
     public void StateAuthorityChanged()
     {
@@ -124,65 +176,15 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         }
     }
 
-    // Logic to release authority (optional)
-    public void ReleaseAuthority()
-    {
-        if (Object.HasStateAuthority)
-        {
-            Object.ReleaseStateAuthority();
-            Debug.Log($"///Bot {gameObject.name} released state authority.");
-        }
-    }
+    #endregion
 
-    public void SetRoutePoints(Transform[] points)
-    {
-        if (points == null || points.Length == 0)
-        {
-            Debug.LogError("///Invalid route points provided!");
-            return;
-        }
-
-        routePoints = points;
-        CurrentPointIndex = UnityEngine.Random.Range(0, routePoints.Length);
-
-        if (routePoints[CurrentPointIndex] != null)
-        {
-            TargetPosition = routePoints[CurrentPointIndex].position;
-        }
-
-        SetState(BotState.FollowingRoute);
-    }
-
-    private void InitializeBot()
-    {
-        if (isInitialized) return;
-
-        agent = GetComponent<NavMeshAgent>();
-        anim = GetComponentInChildren<Animator>();
-        SetState(BotState.FollowingRoute);
-        StartCoroutine(StateBehaviorRoutine());
-
-        isInitialized = true;
-        Debug.Log($"///Bot initialized by authority: {runner.LocalPlayer}");
-    }
+    #region BOT FINITE STATE MACHINE
 
     private void SetState(BotState newState)
     {
-        //if (!Object.HasStateAuthority) return;
         currentState = newState;
         CurrentNetworkedState = newState;
         Debug.Log($"///Bot state changed to: {newState}");
-    }
-
-    private void RestoreBotState()
-    {
-        currentState = CurrentNetworkedState;
-        HasGun = HasGunNetworked;
-
-        if (agent != null && TargetPosition != default)
-        {
-            agent.SetDestination(TargetPosition);
-        }
     }
 
     private IEnumerator StateBehaviorRoutine()
@@ -204,21 +206,29 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
                     ExecuteReturningToRouteState();
                     break;
                 case BotState.CollectingDropBox:
-                    HandleCollectingDropBox();
+                    ExecuteCollectingDropBox();
                     break;
-                    //case BotState.FacingAndFiring:
-                    //    ExecuteFacingAndFiringState();
-                    //    break;
+                case BotState.FacingAndFiring:
+                    ExecuteFacingAndFiringState();
+                    break;
             }
 
             yield return new WaitForSeconds(0.1f);
         }
     }
 
+    #endregion
+
+    #region BOT IDLE STATE
+
     void Idle()
     {
         // Bot is idle
     }
+
+    #endregion
+
+    #region BOT MOVING STATE
 
     private void ExecuteFollowingRouteState()
     {
@@ -239,33 +249,11 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         if (!HasGun)
         {
             CheckForDropBox();
-            //List<GameObject> itemsToCollect = new();
-            //Collider[] items = CheckForItems();
-
-            //foreach (var item in items)
-            //{
-            //    if (item != null && item.gameObject != null)
-            //    {
-            //        itemsToCollect.Add(item.gameObject);
-            //    }
-            //}
-
-            //foreach (var item in itemsToCollect)
-            //{
-            //    if (item != null && item.TryGetComponent(out GunItem itemCollect) && !HasGun)
-            //    {
-            //        itemCollect.CollectAI(GetComponent<ActiveWeaponAI>());
-            //        HasGun = true;
-            //        HasGunNetworked = true;
-            //        SetState(BotState.ReturningToRoute);
-            //        break;
-            //    }
-            //}
         }
-        //else
-        //{
-        //    CheckForPlayerAndFire();
-        //}
+        else
+        {
+            CheckForPlayer();
+        }
     }
 
     private void MoveToNextRoutePoint()
@@ -275,6 +263,18 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         TargetPosition = routePoints[CurrentPointIndex].position;
         anim.SetFloat("walkSpeed", agent.speed);
     }
+
+    private void ExecuteReturningToRouteState()
+    {
+        if (!agent.pathPending && agent.remainingDistance <= pointReachDistance)
+        {
+            SetState(BotState.FollowingRoute);
+        }
+    }
+
+    #endregion
+
+    #region BOT COLLECTING STATE
 
     private void CheckForDropBox()
     {
@@ -294,14 +294,12 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
                 {
                     closestDistance = distance;
                     closestDropBox = dropBox.transform;
-
                 }
             }
 
             if (closestDropBox != null)
             {
                 currentDropBox = closestDropBox;
-                moveToDropBoxStartTime = Time.time; // Reset timer when starting to move
                 SetState(BotState.MovingToDropBox);
             }
         }
@@ -325,17 +323,9 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         }
     }
 
-    private void ExecuteReturningToRouteState()
+    private void ExecuteCollectingDropBox()
     {
-        if (!agent.pathPending && agent.remainingDistance <= pointReachDistance)
-        {
-            SetState(BotState.FollowingRoute);
-        }
-    }
-
-    private void HandleCollectingDropBox()
-    {
-        Debug.Log("...AI collect box");
+        Debug.Log("///Bot collect box");
         // Get items in range and store their game objects
         List<GameObject> itemsToCollect = new();
         Collider[] items = Physics.OverlapSphere(transform.position, itemCollectRadius, itemLayer);
@@ -353,17 +343,15 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         {
             if (item != null && item.TryGetComponent(out GunItem itemCollect) && !HasGun)
             {
-                itemCollect.CollectAI(GetComponent<ActiveWeaponAI>()); // Collect the item
-                Debug.Log("... collect" + item.name);
+                itemCollect.CollectAI(GetComponent<ActiveWeaponAI>()); // Collect and equip gun
+                Debug.Log("/// Collected" + item.name);
                 HasGun = true;
                 SetState(BotState.ReturningToRoute);
-                break;
+                break; // Found gun, exit
             }
-            // Wait for 1 second before collecting the next item
-            //yield return new WaitForSeconds(1f); 
         }
 
-        // After collecting all items, return to the route
+        // After check all items, return to the route
         SetState(BotState.ReturningToRoute);
     }
 
@@ -375,4 +363,88 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
         return isOnNavMesh;
     }
+
+    #endregion
+
+    #region BOT FIRING STATE
+
+    private void CheckForPlayer()
+    {
+        // Detect players within the detection radius
+        Collider[] playersInRange = Physics.OverlapSphere(transform.position, playerDetectionRadius, playerLayer);
+
+        if (playersInRange.Length > 0)
+        {
+            // Transition to the FacingAndFiring state
+            SetState(BotState.FacingAndFiring);
+            currentTarget = playersInRange[0].transform; // Save the player as the target
+        }
+    }
+
+    private void ExecuteFacingAndFiringState()
+    {
+        // If the target player is lost, return to the route
+        if (currentTarget == null)
+        {         
+            SetState(BotState.FollowingRoute);
+            return;
+        }
+
+        // Check if the player is still in detection range
+        float distanceToPlayer = Vector3.Distance(transform.position, currentTarget.position);
+        if (distanceToPlayer > playerDetectionRadius)
+        {
+            // If the player is out of range, return to the route
+            SetState(BotState.FollowingRoute);
+            currentTarget = null;
+            return;
+        }
+
+        //Target die, return to route
+        if (currentTarget.TryGetComponent<CheckBodyParts>(out var targetHP))
+        {
+            if (targetHP.hPHandler.Networked_IsDead)
+            {
+                SetState(BotState.ReturningToRoute);
+                return;
+            }
+        }
+
+        //Chase player
+        agent.SetDestination(currentTarget.position);
+
+        FaceTarget(currentTarget);
+
+        FireGunAtPlayer(currentTarget);
+
+    }
+
+    private void FaceTarget(Transform target)
+    {
+        transform.LookAt(target);
+    }
+
+    private void FireGunAtPlayer(Transform target)
+    {
+        //Look at player
+        //agent.SetDestination(Vector3.forward);
+
+        // Check if the bot is ready to fire
+        if (fireCooldownTimer <= 0f)
+        {
+            Debug.Log("Firing gun at player: " + target.name);
+
+            // Your gun firing logic
+            ActiveWeaponAI weapon = GetComponent<ActiveWeaponAI>();
+            if (weapon != null)
+            {
+                weapon.Fire(target);
+            }
+
+            // Reset the cooldown timer
+            fireCooldownTimer = fireRate;
+        }
+    }
+
+    #endregion
 }
