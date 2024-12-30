@@ -370,8 +370,10 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     public async void BackToLobby()
     {
         await networkRunner.Shutdown();
-        SceneManager.LoadScene("MainLobby");
+        //SceneManager.LoadScene("MainLobby");
+        LoadingScene.Instance.LoadScene("MainLobby");
         isDone = false;
+        battleStarted = false;
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
         localPlayer.gameObject.SetActive(true);
         await JoinLobby();
@@ -531,20 +533,12 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 // Handle remote player
                 StartCoroutine(WaitForPlayerObjectSolo(runner, player));
             }
-            //<<<<<<< HEAD
-            //            remainPlayer = MAX_PLAYER - players.Count();
-            //            string text = "Waiting other player: " + remainPlayer + " remain";
-            //            FindObjectOfType<UIController>().SetText(text);
-            //        }
-            //    }
-            //=======
+ 
             int remainPlayer = MAX_PLAYER - networkRunner.ActivePlayers.Count();
             //string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
         }
     }
-        //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
-//>>>>>>> develop_3_UI_Improvement
 
     private void Update()
     {
@@ -596,9 +590,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             players[aiBot.Object.InputAuthority] = aiBot;
 
             // Update remaining players count
-            //int remainPlayer = MAX_PLAYER - players.Count;
+            int remainPlayer = MAX_PLAYER - players.Count;
             //string text = "Waiting for other players: " + remainPlayer + " remaining";
-            //FindObjectOfType<UIController>().SetText(text);
+            FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
 
             // Break out if we've reached the max player count
             if (players.Count == MAX_PLAYER)
@@ -694,25 +688,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (currentMode == Mode.Solo && isDone)
         {
-            //if (spawnAI)
-            //{
-            //    BotAINetwork[] botAINetworks = FindObjectsOfType<BotAINetwork>();
-            //    Debug.Log("/// bot qty " + botAINetworks.Length);
-            //    // Check all bots in the scene
-            //    foreach (var botAINetwork in botAINetworks)
-            //    {
-            //        if (botAINetwork.Object.StateAuthority == player)
-            //        {
-            //            Debug.Log($"///Bot {botAINetwork.name} lost its authority because Player {player} left.");
-
-            //            // Assign authority to a new player
-            //            AssignAuthorityToNextPlayer(runner, botAINetwork.Object);
-            //        }
-            //    }
-            //}
             FindObjectOfType<GameHandler>().Eliminate(matchSolo[player], players[player]);
             FindObjectOfType<GameHandler>().CheckWin();
-            
+            battleStarted = false;
         }
 
         players.Remove(player);
@@ -736,23 +714,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count());
     }
 
-    //private void AssignAuthorityToNextPlayer(NetworkRunner runner, NetworkObject bot)
-    //{
-    //    // Find a new player to assign authority
-    //    foreach (var player in runner.ActivePlayers)
-    //    {
-    //        if (player != runner.LocalPlayer) // Skip self or other conditions as needed
-    //        {
-    //            Debug.Log($"///Assigning state authority of bot {bot.name} to Player {player}.");
-
-    //            // Request authority for the next player
-    //            bot.RequestStateAuthority();
-    //            return;
-    //        }
-    //    }
-
-    //    Debug.LogWarning($"No suitable player found to take authority of bot {bot.name}.");
-    //}
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {

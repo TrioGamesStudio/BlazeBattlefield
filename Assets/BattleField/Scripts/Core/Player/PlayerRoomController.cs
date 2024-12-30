@@ -287,7 +287,7 @@ public class PlayerRoomController : NetworkBehaviour
             Debug.Log("/// Co bot chuyen state authority ne");
             Debug.Log("/// Player ref hien tai " + Runner.LocalPlayer);
             BotAINetwork botAINetwork = FindObjectOfType<BotAINetwork>();
-            Debug.Log("/// bot state auth " + botAINetwork.Object.StateAuthority);
+            //Debug.Log("/// bot state auth " + botAINetwork.Object.StateAuthority);
             Debug.Log("/// co player in active playeer " + runner.ActivePlayers.Count());
             foreach (var player in runner.ActivePlayers)
             {
@@ -296,6 +296,7 @@ public class PlayerRoomController : NetworkBehaviour
                 {
                     Debug.Log("///Chuyen state auth sang " + player);
                     botAINetwork.RequestAuthority();
+                    break;
                 }
             }
         }

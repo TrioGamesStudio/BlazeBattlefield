@@ -72,6 +72,7 @@ public class WorldUI : MonoBehaviour
 
     public void SetText(string text)
     {
+        informationText.text = "";
         informationText.text = text;
     }
 
