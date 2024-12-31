@@ -11,7 +11,7 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
     [SerializeField] Recorder recorder;
     [SerializeField] Speaker speaker;
 
-    private Dictionary<PlayerRef, int> playerTeams = new Dictionary<PlayerRef, int>();
+    public Dictionary<PlayerRef, int> playerTeams = new Dictionary<PlayerRef, int>();
     
     [Networked] public int TeamID{get; set;}
     [Networked] public NetworkBool IsTalking { get; set; }
@@ -42,6 +42,7 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
             // DisableTalking();
             StopTeamVoice();
         }
+        Debug.Log($"_____ list ID" + playerTeams.Count);
         
     }
     void EnableTalking() {
