@@ -411,7 +411,10 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         }
 
         //Bot die, not cotinue to fire
-        if (GetComponent<HPHandler>().Networked_IsDead) return;
+        if (GetComponent<HPHandler>().Networked_HP <= 0)
+        {
+            SetState(BotState.Idle);
+        }
 
         //Chase player
         agent.SetDestination(currentTarget.position);

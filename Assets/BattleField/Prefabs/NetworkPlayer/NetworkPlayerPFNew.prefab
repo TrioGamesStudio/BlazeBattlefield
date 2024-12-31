@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 2765225612460693475}
   - component: {fileID: 2707697326631669358}
   - component: {fileID: 1234054443527731465}
+  - component: {fileID: 5122742927170769442}
   m_Layer: 0
   m_Name: HitBox
   m_TagString: Untagged
@@ -141,6 +142,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hPHandler: {fileID: 0}
+--- !u!65 &5122742927170769442
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72851290656616069}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.4742759, y: 1.4578888, z: 0.5369834}
+  m_Center: {x: 0.008479446, y: 0.805545, z: -0.0243693}
 --- !u!1 &87972234719739997
 GameObject:
   m_ObjectHideFlags: 0
