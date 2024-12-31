@@ -29,7 +29,7 @@ public class PressToTalk : MonoBehaviour
     }
 
     private void Update() {
-        if(teamID <= 0) return;
+        //if(teamID <= 0) return;
 
         if(Input.GetKey(KeyCode.V)) {
             EnableTalking();
