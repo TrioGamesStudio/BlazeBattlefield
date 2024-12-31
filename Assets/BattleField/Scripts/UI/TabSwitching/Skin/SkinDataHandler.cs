@@ -82,6 +82,6 @@ public class SkinDataHandler : ScriptableObject
             EditorUtility.SetDirty(skin);
 #endif
         }
-       
+
     }
 }

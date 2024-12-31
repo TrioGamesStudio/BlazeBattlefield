@@ -15,7 +15,6 @@ public class SkinSelectionUI : MonoBehaviour
 
     [SerializeField] private List<SkinAvatarUI> avatarUIList = new();
     [SerializeField] private SkinDataHandler SkinDataHandler;
-    [SerializeField] private SkinSelection skinSelection;
 
     [SerializeField] private TextMeshProUGUI skinDescription;
     [Header("Buy Panel")]
@@ -26,6 +25,8 @@ public class SkinSelectionUI : MonoBehaviour
     [SerializeField] private ShowPlayerInfo showPlayerInfo;
     [SerializeField] private Color priceColor;
     [SerializeField] private Image buyPanelSkinIcon;
+    public event Action<int> OnChangedSkinAction;
+    private int buyIndex;
 
     private void Awake()
     {
@@ -46,7 +47,6 @@ public class SkinSelectionUI : MonoBehaviour
             Debug.Log("On Assign Event", gameObject);
         }
     }
-    private int buyIndex;
     private void TryToBuySkin(int skinIndex)
     {
         int price = SkinDataHandler.skinSpriteIcons[skinIndex].price;
@@ -108,7 +108,7 @@ public class SkinSelectionUI : MonoBehaviour
             avatar.button.interactable = true;
             avatar.DeSelect();
         }
-        skinSelection.SetSkinByIndex(index);
+        OnChangedSkinAction?.Invoke(index);
         avatarUIList[index].button.interactable = false;
         avatarUIList[index].Select();
         skinDescription.text = SkinDataHandler.skinSpriteIcons[index].skinDescription;

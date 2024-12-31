@@ -13,7 +13,7 @@ public class SkinSelection : MonoBehaviour
     int skinMaxNumber;
     // buttons
     [SerializeField] Button selectButton;
-
+    [SerializeField] private SkinSelectionUI skinSelectionUI;
 
 
     private void Awake()
@@ -35,6 +35,12 @@ public class SkinSelection : MonoBehaviour
         skinMaxNumber = skinsParent.childCount;
 
         selectButton.onClick.AddListener(SkinSelectNext);
+        skinSelectionUI.OnChangedSkinAction += SetSkinByIndex;
+    }
+
+    private void OnDestroy()
+    {
+        skinSelectionUI.OnChangedSkinAction -= SetSkinByIndex;
 
     }
 
