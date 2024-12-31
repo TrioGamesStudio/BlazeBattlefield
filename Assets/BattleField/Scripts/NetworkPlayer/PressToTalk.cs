@@ -1,41 +1,45 @@
 using System;
+using System.Collections.Generic;
 using Fusion;
 using Photon.Voice.Fusion;
 using Photon.Voice.Unity;
 using UnityEngine;
 
-public class PressToTalk : MonoBehaviour
+public class PressToTalk : NetworkBehaviour, IPlayerJoined
 {
-    Recorder recorder;
-    Speaker speaker;
     [SerializeField] VoiceConnection voiceConnection;
-    int teamID = -1;
+    [SerializeField] Recorder recorder;
+    [SerializeField] Speaker speaker;
+
+    private Dictionary<PlayerRef, int> playerTeams = new Dictionary<PlayerRef, int>();
+    [Networked] public int TeamID{get; set;}
+    [Networked] public NetworkBool IsTalking { get; set; }
 
     private void Awake() {
-        if(recorder == null) {
-            recorder = GetComponent<Recorder>();
-        }
-            
+        recorder = FindObjectOfType<Recorder>();
+        voiceConnection = FindObjectOfType<VoiceConnection>();
+        speaker = GetComponentInChildren<Speaker>();
         recorder.TransmitEnabled = false;
 
-        /* byte[] groupsToSubscribe = { 1 };  // Example group ID to subscribe to
-        byte[] groupsToUnsubscribe = null;
-
-        if (voiceConnection != null)
-        {
-            voiceConnection.Client.OpChangeGroups(groupsToSubscribe, groupsToUnsubscribe);
-            Debug.Log("Subscribed to group 1");
-        } */
     }
+    public override void Spawned()
+    {
+        base.Spawned();
+        // playerTeams[Object.InputAuthority] = TeamID;
+        // Debug.Log($"_____" + playerTeams.Count);
+    }
+
 
     private void Update() {
         //if(teamID <= 0) return;
 
         if(Input.GetKey(KeyCode.V)) {
-            EnableTalking();
+            // EnableTalking();
+            StartTeamVoice();
         }
         else if(Input.GetKeyUp(KeyCode.V)) {
-            DisableTalking();
+            // DisableTalking();
+            StopTeamVoice();
         }
         
     }
@@ -47,11 +51,55 @@ public class PressToTalk : MonoBehaviour
         recorder.TransmitEnabled = false;
     }
 
-    public void SetId(string id) {
-        /* this.teamID = Convert.ToInt32(id) - 100;
-        recorder.InterestGroup = (byte)teamID; */
-
-        
+    public void SetTeamID(string id) {
+        if(Object.HasStateAuthority) {
+            RPC_RequestTeamID(id);
+        }
     }
 
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_RequestTeamID(string id) {
+        this.TeamID = Convert.ToInt32(id) - 100;
+        /* recorder.InterestGroup = (byte)TeamID; */
+    }
+
+    private void StartTeamVoice()
+    {
+        if (!Object.HasInputAuthority) return;
+
+        recorder.TransmitEnabled = true;
+        IsTalking = true;
+
+        // Only transmit to players on the same team
+        foreach (var player in playerTeams)
+        {
+            if (player.Value == TeamID)
+            {
+                // Enable voice transmission to this player
+                voiceConnection.Client.OpChangeGroups(
+                    new byte[] { (byte)TeamID }, // Interest groups to subscribe to
+                    null  // Interest groups to unsubscribe from
+                );
+            }
+        }
+    }
+    private void StopTeamVoice()
+    {
+        if (!Object.HasInputAuthority) return;
+
+        recorder.TransmitEnabled = false;
+        IsTalking = false;
+
+        // Reset voice transmission settings
+        voiceConnection.Client.OpChangeGroups(
+            null,
+            new byte[] { (byte)TeamID }
+        );
+    }
+
+    public void PlayerJoined(PlayerRef player)
+    {
+        playerTeams[player] = TeamID;
+        Debug.Log($"_____list active players" + playerTeams.Count);
+    }
 }

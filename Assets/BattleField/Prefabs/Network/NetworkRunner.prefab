@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2247260595863225077}
   - component: {fileID: 6593731947250733563}
-  - component: {fileID: 5768798481080231800}
   m_Layer: 0
   m_Name: Recoder
   m_TagString: Untagged
@@ -51,7 +50,7 @@ MonoBehaviour:
   interestGroup: 0
   useTargetPlayers: 0
   targetPlayers: 
-  debugEchoMode: 1
+  debugEchoMode: 0
   reliableMode: 0
   encrypt: 0
   transmitEnabled: 1
@@ -76,19 +75,6 @@ MonoBehaviour:
   useOnAudioFilterRead: 0
   useMicrophoneTypeFallback: 1
   recordWhenJoined: 1
---- !u!114 &5768798481080231800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5714710003368628606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af2a249ff5e2b3e4da30ab1481b7fff2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  voiceConnection: {fileID: 5576861124135481867}
 --- !u!1 &8834985364341254837
 GameObject:
   m_ObjectHideFlags: 0
@@ -100,7 +86,7 @@ GameObject:
   - component: {fileID: 6306157100803114334}
   - component: {fileID: 6397792623434391440}
   - component: {fileID: 3630931119467994170}
-  - component: {fileID: 5576861124135481867}
+  - component: {fileID: 287276781508993140}
   m_Layer: 0
   m_Name: NetworkRunner
   m_TagString: Untagged
@@ -205,7 +191,7 @@ MonoBehaviour:
   OnObjectExitAOI:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5576861124135481867
+--- !u!114 &287276781508993140
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

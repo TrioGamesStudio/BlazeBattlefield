@@ -33039,6 +33039,7 @@ GameObject:
   - component: {fileID: 218787821313359930}
   - component: {fileID: 6840208099668153488}
   - component: {fileID: 3413141360464280320}
+  - component: {fileID: 1736016217703315802}
   m_Layer: 0
   m_Name: NetworkPlayerPFNew
   m_TagString: Player
@@ -33105,6 +33106,7 @@ MonoBehaviour:
   - {fileID: 6443099134368130598}
   - {fileID: 218787821313359930}
   - {fileID: 3413141360464280320}
+  - {fileID: 1736016217703315802}
 --- !u!114 &4878325697303761598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33587,11 +33589,27 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6593664972719329374}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6376dd7fc23b3764483a7349b58502e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1736016217703315802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6593664972719329374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af2a249ff5e2b3e4da30ab1481b7fff2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  voiceConnection: {fileID: 0}
+  recorder: {fileID: 0}
+  speaker: {fileID: 0}
+  teamID: -1
 --- !u!1 &6632881143145136687
 GameObject:
   m_ObjectHideFlags: 0

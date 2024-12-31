@@ -95,6 +95,8 @@ public class PlayerRoomController : NetworkBehaviour
             localRoomId = roomID;
             Debug.Log("SET ROOM ID");
             PlayerPrefs.SetString("RoomID", roomID); // Save player room
+
+            FindObjectOfType<PressToTalk>().RPC_RequestTeamID(roomID);
         }
     }
 
@@ -149,7 +151,6 @@ public class PlayerRoomController : NetworkBehaviour
         {
             RPC_SetTeamID(teamID);
 
-            FindObjectOfType<PressToTalk>().SetId(teamID);
         }
     }
 
@@ -157,6 +158,7 @@ public class PlayerRoomController : NetworkBehaviour
     private void RPC_SetTeamID(string teamID)
     {
         TeamID = teamID;
+        
     }
 
     public void SetTeamMateTag()
