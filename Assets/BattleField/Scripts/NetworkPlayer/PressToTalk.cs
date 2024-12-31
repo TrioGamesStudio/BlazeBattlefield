@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Fusion;
+using NaughtyAttributes;
 using Photon.Voice.Fusion;
 using Photon.Voice.Unity;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
     
     [Networked] public int TeamID{get; set;}
     [Networked] public NetworkBool IsTalking { get; set; }
+    bool isGetActivePlayers = false;
 
     private void Awake() {
         recorder = FindObjectOfType<Recorder>();
@@ -42,9 +44,14 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
             // DisableTalking();
             StopTeamVoice();
         }
-        Debug.Log($"_____ list ID" + playerTeams.Count);
-        
+
+        // lay danh sach khi bat dau tran
+        if(!isGetActivePlayers && MatchmakingTeam.Instance.IsDone) {
+            isGetActivePlayers = true;
+            GetActivePlayers();
+        }
     }
+
     void EnableTalking() {
         recorder.TransmitEnabled = true;
     }
@@ -102,7 +109,23 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
 
     public void PlayerJoined(PlayerRef player)
     {
-        playerTeams[player] = TeamID;
+        /* playerTeams[player] = TeamID;
+        Debug.Log($"_____list active players" + playerTeams.Count); */
+    }
+
+    [EditorButton]
+    public void GetActivePlayers() {
+        GameObject[] gameObjectsToTransfer = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var item in gameObjectsToTransfer)
+        {
+            playerTeams[item.GetComponent<NetworkObject>().InputAuthority] = item.GetComponent<PressToTalk>().TeamID;
+            
+        }
         Debug.Log($"_____list active players" + playerTeams.Count);
+        
+        foreach (var item in playerTeams)
+        {
+            Console.WriteLine($"____{item.Key} ----- {item.Value}");
+        }
     }
 }
