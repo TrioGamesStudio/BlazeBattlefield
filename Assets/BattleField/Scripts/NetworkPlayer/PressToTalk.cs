@@ -61,12 +61,7 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_RequestTeamID(string id) {
 
-        int a = Convert.ToInt32(id);
-        if(a > byte.MaxValue) {
-            a -= 100;
-        }
-        
-        this.TeamID = a;
+        this.TeamID = Convert.ToInt32(id);
         /* recorder.InterestGroup = (byte)TeamID; */
     }
 
