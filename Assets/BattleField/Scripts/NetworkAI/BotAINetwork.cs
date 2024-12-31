@@ -33,7 +33,9 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     private bool IsFiring { get; set; }
 
     [Networked]
-    private BotState CurrentNetworkedState { get; set; } 
+    private BotState CurrentNetworkedState { get; set; }
+
+    [SerializeField] Transform playerModel;
 
     [Header("Route Settings")]
     [SerializeField] private Transform[] routePoints;
@@ -55,6 +57,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
     public bool HasGun;
     private NavMeshAgent agent;
+    private HPHandler hpHandler;
     private BotState currentState;
     private Transform currentTarget;
     private Transform currentDropBox;
@@ -88,6 +91,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
+        hpHandler = GetComponent<HPHandler>();
         SetState(BotState.FollowingRoute);
         StartCoroutine(StateBehaviorRoutine());
 
@@ -139,6 +143,11 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
     private void Update()
     {
+        if (hpHandler.Networked_HP <= 0)
+        {
+            StopAllCoroutines();
+            return;
+        }
         // Reduce the cooldown timer over time
         if (fireCooldownTimer > 0f)
         {
@@ -149,6 +158,16 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     #endregion
 
     #region REQUEST AND CHANGE STATE AUTHORITY
+
+    // Logic to request authority
+    public void RequestAuthority()
+    {
+        //if (!Object.HasStateAuthority)
+        {
+            Object.RequestStateAuthority();
+            Debug.Log($"///Requesting state authority for bot {gameObject.name}.");
+        }
+    }
 
     public void StateAuthorityChanged()
     {
@@ -163,16 +182,6 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             Debug.Log($"///Lost authority over bot: {Object.Id}");
             StopAllCoroutines();
             isInitialized = false;
-        }
-    }
-
-    // Logic to request authority
-    public void RequestAuthority()
-    {
-        //if (!Object.HasStateAuthority)
-        {
-            Object.RequestStateAuthority();
-            Debug.Log($"///Requesting state authority for bot {gameObject.name}.");
         }
     }
 
@@ -223,7 +232,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
     void Idle()
     {
-        // Bot is idle
+        Debug.Log("/// Bot idle");
     }
 
     #endregion
@@ -233,6 +242,8 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     private void ExecuteFollowingRouteState()
     {
         //if (Object != null && !Object.HasStateAuthority) return;
+        //if (hpHandler.Networked_HP <= 0)
+        //    SetState(BotState.Idle);
 
         if (routePoints == null || routePoints.Length == 0)
         {
@@ -328,19 +339,20 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         Debug.Log("///Bot collect box");
         // Get items in range and store their game objects
         List<GameObject> itemsToCollect = new();
-        Collider[] items = Physics.OverlapSphere(transform.position, itemCollectRadius, itemLayer);
+        Collider[] items = Physics.OverlapSphere(playerModel.position, itemCollectRadius, itemLayer);
+        Debug.Log("///Found item qty: " + items.Length);
+        //foreach (var item in items)
+        //{
+        //    // Ensure the item is valid and not destroyed before adding
+        //    if (item != null && item.gameObject != null)
+        //    {
+        //        itemsToCollect.Add(item.gameObject);
+        //    }
+        //}
 
         foreach (var item in items)
         {
-            // Ensure the item is valid and not destroyed before adding
-            if (item != null && item.gameObject != null)
-            {
-                itemsToCollect.Add(item.gameObject);
-            }
-        }
-
-        foreach (var item in itemsToCollect)
-        {
+            Debug.Log("/// Item" + item.name);
             if (item != null && item.TryGetComponent(out GunItem itemCollect) && !HasGun)
             {
                 itemCollect.CollectAI(GetComponent<ActiveWeaponAI>()); // Collect and equip gun
@@ -410,11 +422,11 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             }
         }
 
-        //Bot die, not cotinue to fire
-        if (GetComponent<HPHandler>().Networked_HP <= 0)
-        {
-            SetState(BotState.Idle);
-        }
+        ////Bot die, not cotinue to fire
+        //if (hpHandler.Networked_HP <= 0)
+        //{
+        //    SetState(BotState.Idle);
+        //}
 
         //Chase player
         agent.SetDestination(currentTarget.position);

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2707697326631669358}
   - component: {fileID: 700227183299052995}
   - component: {fileID: 3777036346897958767}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: HitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6998,7 +6998,7 @@ GameObject:
   - component: {fileID: 7158942776069064102}
   - component: {fileID: 5915509717054056724}
   - component: {fileID: 3371490704099939315}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14426,7 +14426,7 @@ GameObject:
   - component: {fileID: -8422475685057307926}
   - component: {fileID: -4708531423129684952}
   - component: {fileID: 4043879867669260240}
-  m_Layer: 16
+  m_Layer: 0
   m_Name: BotAI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14546,22 +14546,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bc992a1b0ea94b51acc7841757718ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerModel: {fileID: 6861560686829112150}
   routePoints: []
-  pointReachDistance: 0.3
+  pointReachDistance: 0.2
   dropBoxDetectionRadius: 5
   playerDetectionRadius: 15
-  collectDistance: 0.5
-  itemCollectRadius: 3
+  collectDistance: 1
+  itemCollectRadius: 5
   dropBoxLayer:
     serializedVersion: 2
-    m_Bits: 17408
+    m_Bits: 16384
   playerLayer:
     serializedVersion: 2
-    m_Bits: 193
+    m_Bits: 32768
   itemLayer:
     serializedVersion: 2
     m_Bits: 1024
-  fireRate: 0.5
+  fireRate: 2
   HasGun: 0
 --- !u!114 &-8422475685057307926
 MonoBehaviour:
@@ -14584,7 +14585,7 @@ MonoBehaviour:
   weapon: {fileID: 0}
   opponentLayer:
     serializedVersion: 2
-    m_Bits: 32961
+    m_Bits: 32768
   weaponDamageCurr: 1
 --- !u!114 &-4708531423129684952
 MonoBehaviour:

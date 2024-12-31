@@ -297,7 +297,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         {
             // neu hitInfo do this.gameObject ban ra thi return
             byte localWeaponDamageCurr = 0;
-            if (hit.transform.GetComponent<WeaponHandler>() == this) return;
+            if (hit.transform.GetComponentInParent<WeaponHandler>() == this) return;
             // neu hitInfo la dong doi thi khong tru mau
             //if (hit.transform.CompareTag("TeamMate")) return;
             if (IsTeammate(hit)) return;

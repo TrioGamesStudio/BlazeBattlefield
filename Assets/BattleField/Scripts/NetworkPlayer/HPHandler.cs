@@ -406,6 +406,7 @@ public class HPHandler : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     void RPC_HideLocalPlayerUI()
     {
-        networkPlayer.localUI.SetActive(false);
+        if (!isBot)
+            networkPlayer.localUI.SetActive(false);
     }
 }
