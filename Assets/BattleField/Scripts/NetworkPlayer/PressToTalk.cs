@@ -59,7 +59,12 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_RequestTeamID(string id) {
-        this.TeamID = Convert.ToInt32(id) - 100;
+
+        int a = Convert.ToInt32(id);
+        if(a > byte.MaxValue) {
+            a = UnityEngine.Random.Range(0, 100);
+        }
+        this.TeamID = a;
         /* recorder.InterestGroup = (byte)TeamID; */
     }
 
