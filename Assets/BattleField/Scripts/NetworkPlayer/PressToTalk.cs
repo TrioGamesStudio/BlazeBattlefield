@@ -8,6 +8,7 @@ public class PressToTalk : MonoBehaviour
 {
     Recorder recorder;
     Speaker speaker;
+    [SerializeField] VoiceConnection voiceConnection;
     int teamID = -1;
 
     private void Awake() {
@@ -16,6 +17,15 @@ public class PressToTalk : MonoBehaviour
         }
             
         recorder.TransmitEnabled = false;
+
+        /* byte[] groupsToSubscribe = { 1 };  // Example group ID to subscribe to
+        byte[] groupsToUnsubscribe = null;
+
+        if (voiceConnection != null)
+        {
+            voiceConnection.Client.OpChangeGroups(groupsToSubscribe, groupsToUnsubscribe);
+            Debug.Log("Subscribed to group 1");
+        } */
     }
 
     private void Update() {
@@ -27,7 +37,7 @@ public class PressToTalk : MonoBehaviour
         else if(Input.GetKeyUp(KeyCode.V)) {
             DisableTalking();
         }
-
+        
     }
     void EnableTalking() {
         recorder.TransmitEnabled = true;
@@ -38,8 +48,9 @@ public class PressToTalk : MonoBehaviour
     }
 
     public void SetId(string id) {
-        this.teamID = Convert.ToInt32(id) - 100;
-        recorder.InterestGroup = (byte)teamID;
+        /* this.teamID = Convert.ToInt32(id) - 100;
+        recorder.InterestGroup = (byte)teamID; */
+
         
     }
 
