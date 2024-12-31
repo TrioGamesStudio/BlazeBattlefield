@@ -45,6 +45,8 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
             StopTeamVoice();
         }
 
+        PrintList();
+
         // lay danh sach khi bat dau tran
         if(!isGetActivePlayers && MatchmakingTeam.Instance.IsDone) {
             isGetActivePlayers = true;
@@ -123,6 +125,10 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
         }
         Debug.Log($"_____list active players" + playerTeams.Count);
 
+        
+    }
+
+    void PrintList() {
         foreach (var item in playerTeams)
         {
             Console.WriteLine($"____{item.Key} ----- {item.Value}");
