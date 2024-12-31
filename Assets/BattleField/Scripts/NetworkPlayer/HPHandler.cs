@@ -114,20 +114,21 @@ public class HPHandler : NetworkBehaviour
         if (!isShowResultTable && Networked_HP <= 0)
         {
             isShowResultTable = true;
-            if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
+            //if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
             {
                 PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
                 RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
+                if (isBot) return;
                 RPC_HideLocalPlayerUI();
                 RPC_ShowResultDuo();
             }
-            else
-            {
-                PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
-                RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
-                RPC_HideLocalPlayerUI();
-                RPC_ShowResultDuo();
-            }
+            //else
+            //{
+            //    PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
+            //    RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
+            //    RPC_HideLocalPlayerUI();
+            //    RPC_ShowResultDuo();
+            //}
         }
 
     }

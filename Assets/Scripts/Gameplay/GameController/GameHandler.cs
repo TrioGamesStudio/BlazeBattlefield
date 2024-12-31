@@ -102,6 +102,7 @@ public class GameHandler : MonoBehaviour
             }
             Debug.Log("===Remain team after remove " + teams.Count);
         }
+        if (teams.Count == 1) CheckWin();
         AlivePlayerControl.UpdateAliveCount(1);
     }
 
@@ -124,7 +125,8 @@ public class GameHandler : MonoBehaviour
         {
             Debug.Log("===Team " + teamID + " remain " + teams[teamID].Count + " player");
             Debug.Log("===Remain teammate alive -> Watch or leave");
-            FindObjectOfType<WorldUI>().ShowEliminateUI();
+            if (teamID != "AI") 
+                FindObjectOfType<WorldUI>().ShowEliminateUI();
         }
         CheckWin();
     }

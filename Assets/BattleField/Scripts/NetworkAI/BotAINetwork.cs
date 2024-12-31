@@ -143,6 +143,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
     private void Update()
     {
+        if (!Object.HasStateAuthority) return;
         if (hpHandler.Networked_HP <= 0)
         {
             StopAllCoroutines();
