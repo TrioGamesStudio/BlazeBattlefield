@@ -12,6 +12,7 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
     [SerializeField] Speaker speaker;
 
     private Dictionary<PlayerRef, int> playerTeams = new Dictionary<PlayerRef, int>();
+    
     [Networked] public int TeamID{get; set;}
     [Networked] public NetworkBool IsTalking { get; set; }
 
@@ -62,8 +63,9 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
 
         int a = Convert.ToInt32(id);
         if(a > byte.MaxValue) {
-            a = UnityEngine.Random.Range(0, 100);
+            a -= 100;
         }
+        
         this.TeamID = a;
         /* recorder.InterestGroup = (byte)TeamID; */
     }
