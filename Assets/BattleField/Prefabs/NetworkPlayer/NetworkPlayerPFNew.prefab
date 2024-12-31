@@ -85,7 +85,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2765225612460693475}
   - component: {fileID: 2707697326631669358}
-  m_Layer: 7
+  - component: {fileID: 1234054443527731465}
+  m_Layer: 0
   m_Name: HitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +127,20 @@ MonoBehaviour:
   CapsuleExtents: 0
   Offset: {x: 0, y: 0.9, z: 0}
   Root: {fileID: 4209804027836753055}
-  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 0.19607843}
+  GizmosColor: {r: 0.37522885, g: 1, b: 0.033018887, a: 0.9490196}
+--- !u!114 &1234054443527731465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72851290656616069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83062908b6a93a499ac626302ec8ef2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hPHandler: {fileID: 0}
 --- !u!1 &87972234719739997
 GameObject:
   m_ObjectHideFlags: 0
@@ -33207,6 +33221,7 @@ MonoBehaviour:
   OnTakeDamageEvent:
     m_PersistentCalls:
       m_Calls: []
+  isBot: 0
 --- !u!114 &4043879867669260240
 MonoBehaviour:
   m_ObjectHideFlags: 0

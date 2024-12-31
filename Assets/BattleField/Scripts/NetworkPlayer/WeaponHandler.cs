@@ -312,7 +312,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                 string bodyName = hit.collider.transform.name;
                 Debug.Log($"_____bodyName = {bodyName}");
                 if (bodyName == HEAD) localWeaponDamageCurr = hPHandler.Networked_HP;
-                else if (bodyName == ARML || bodyName == ARMR) localWeaponDamageCurr = this.weaponDamageCurr;
+                else if (bodyName == ARML || bodyName == ARMR || bodyName == "HitBox") localWeaponDamageCurr = this.weaponDamageCurr;
 
                 if (Object.HasStateAuthority)
                 {

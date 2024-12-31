@@ -49,9 +49,10 @@ public class HPHandler : NetworkBehaviour
     public UnityEvent<float> OnTakeDamageEvent = new UnityEvent<float>();
 
     LocalCameraHandler localCameraHandler;
-
+    [SerializeField] bool isBot;
     private void Awake()
     {
+        if (isBot) return;
         characterMovementHandler = GetComponent<CharacterMovementHandler>();
         hitboxRoot = GetComponent<HitboxRoot>();
         networkInGameMessages = GetComponent<NetworkInGameMessages>();
@@ -72,9 +73,9 @@ public class HPHandler : NetworkBehaviour
 
     //? ham duoc goi khi Object was spawned
     public override void Spawned()
-    {
+    {     
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
-
+        if (isBot) return;
         // kiem tra co dang spawn tai ready scene hay khong
         bool isReadyScene = SceneManager.GetActiveScene().name == "MainLobby";
         if (isReadyScene) return;
@@ -108,7 +109,8 @@ public class HPHandler : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        CheckPlayerDeath(Networked_HP);
+        if (!isBot)
+            CheckPlayerDeath(Networked_HP);
         if (!isShowResultTable && Networked_HP <= 0)
         {
             isShowResultTable = true;
@@ -139,13 +141,15 @@ public class HPHandler : NetworkBehaviour
         //gioi han gia tri damageAmount
         if (damageAmount > Networked_HP) damageAmount = Networked_HP;
         Networked_HP -= damageAmount;
+        RPC_SetNetworkedHP(Networked_HP, damageCausedByPlayerNickName);
+
+        if (isBot) return;
 
         CroshairManager.OnHitTarget(NetworkPlayer.Local.transform.position);
 
         //Debug.LogWarning("After damge:" + Networked_HP);
         RPC_UpdateTeammateHP(damageAmount);
-        killerName = damageCausedByPlayerNickName;
-        RPC_SetNetworkedHP(Networked_HP, damageCausedByPlayerNickName);
+        killerName = damageCausedByPlayerNickName;       
         RPC_UpdateStats(damageAmount);
         Debug.Log($"{Time.time} {transform.name} took damage {Networked_HP} left");
 
@@ -224,6 +228,7 @@ public class HPHandler : NetworkBehaviour
             this.Networked_IsDead = false;
             this.Networked_Killer = null;
         }
+        if (isBot) return;
         HealthBarUI.OnHealthChangeAction?.Invoke(hp);
     }
 
@@ -255,25 +260,31 @@ public class HPHandler : NetworkBehaviour
         // if HP decreased
         if (current < previous) OnHPReduced();
 
+        if (isBot) return;
         // khi hp thay doi show hp on screen
         inGamePlayerStatusUIHandler.OnGamePlayerHpRecieved(Networked_HP);
     }
     void OnHPReduced()
     {
+        //if (isBot) return;
         if (!isInitialized) return;
         if (Object.HasStateAuthority)
         {
-            uiOnHitImage.color = uiOnHitColor;
-            BloodLens.OnSlashEffect?.Invoke();
-
-            // shaking camera
-            if (localCameraHandler != null)
+            if (!isBot)
             {
-                localCameraHandler.SetRecoil_GetDamage(-7, 1, 0.35f, 2, 6);
+                uiOnHitImage.color = uiOnHitColor;
+                BloodLens.OnSlashEffect?.Invoke();
+
+                // shaking camera
+                if (localCameraHandler != null)
+                {
+                    localCameraHandler.SetRecoil_GetDamage(-7, 1, 0.35f, 2, 6);
+                }
             }
         }
         StartCoroutine(OnHitCountine());
     }
+
     IEnumerator OnHitCountine()
     {
         // this.Object Run this.cs (do dang bi ban trung)
@@ -295,7 +306,7 @@ public class HPHandler : NetworkBehaviour
         }
 
         // render cho man hinh cua this.Object run this.cs - KO HIEN THI O REMOTE
-        if (Object.HasStateAuthority && !Networked_IsDead)
+        if (Object.HasStateAuthority && !Networked_IsDead && uiOnHitImage != null)
         {
             uiOnHitImage.color = new Color(0, 0, 0, 0);
         }
@@ -338,11 +349,12 @@ public class HPHandler : NetworkBehaviour
     {
         Debug.Log($"{Time.time} onDeath");
         playerModel.gameObject.SetActive(false);
+        Instantiate(deathParticlePf, transform.position + Vector3.up * 1, Quaternion.identity);
+        if (isBot) return;
         if (localGunHolder)
             localGunHolder.gameObject.SetActive(false);   // khi death tat luon local gun
         hitboxRoot.HitboxRootActive = false; // ko de nhan them damage
-        characterMovementHandler.CharacterControllerEnable(false);
-        Instantiate(deathParticlePf, transform.position + Vector3.up * 1, Quaternion.identity);
+        characterMovementHandler.CharacterControllerEnable(false);     
     }
 
     void OnRelive()
