@@ -23,7 +23,7 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
         voiceConnection = FindObjectOfType<VoiceConnection>();
         speaker = GetComponentInChildren<Speaker>();
         recorder.TransmitEnabled = false;
-
+        isGetActivePlayers = false;
     }
     public override void Spawned()
     {
@@ -122,7 +122,7 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
             
         }
         Debug.Log($"_____list active players" + playerTeams.Count);
-        
+
         foreach (var item in playerTeams)
         {
             Console.WriteLine($"____{item.Key} ----- {item.Value}");
