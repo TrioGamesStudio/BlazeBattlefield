@@ -5,7 +5,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Skin Data Handler", menuName = "Skin Data Handler")]
+[CreateAssetMenu(fileName = "Skin Data Handler", menuName = "Skin Data Handler/ Skin data")]
 public class SkinDataHandler : ScriptableObject
 {
     public List<SkinData> skinSpriteIcons = new();
