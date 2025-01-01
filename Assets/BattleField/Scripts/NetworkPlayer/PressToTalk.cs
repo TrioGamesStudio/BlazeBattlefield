@@ -1,10 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using NaughtyAttributes;
 using Photon.Voice.Fusion;
 using Photon.Voice.Unity;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PressToTalk : NetworkBehaviour, IPlayerJoined
 {
@@ -16,50 +19,62 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
     
     [Networked] public int TeamID{get; set;}
     [Networked] public NetworkBool IsTalking { get; set; }
-    bool isGetActivePlayers = false;
+    [SerializeField] bool isTalking = false;
+    [SerializeField] bool isGetActivePlayers = false;
+    [SerializeField] bool isActiveChatVoice = false;
+    [SerializeField] int playersInRoom = 0;
+
+    CharacterInputHandler characterInputHandler;
+
+    bool isPressChatVoiceButton = false;
 
     private void Awake() {
+        characterInputHandler = GetComponent<CharacterInputHandler>();
         recorder = FindObjectOfType<Recorder>();
         voiceConnection = FindObjectOfType<VoiceConnection>();
         speaker = GetComponentInChildren<Speaker>();
         recorder.TransmitEnabled = false;
         isGetActivePlayers = false;
+        isActiveChatVoice = false;
+        isTalking = false;
+        isPressChatVoiceButton = false;
     }
-    public override void Spawned()
-    {
-        base.Spawned();
-        // playerTeams[Object.InputAuthority] = TeamID;
-        // Debug.Log($"_____" + playerTeams.Count);
-    }
-
 
     private void Update() {
-        //if(teamID <= 0) return;
 
-        if(Input.GetKey(KeyCode.V)) {
-            // EnableTalking();
-            StartTeamVoice();
-        }
-        else if(Input.GetKeyUp(KeyCode.V)) {
-            // DisableTalking();
-            StopTeamVoice();
-        }
+        if(Object.HasStateAuthority == false) return;
 
-        PrintList();
-
-        // lay danh sach khi bat dau tran
+        // lay danh sach khi bat dau tran Dou
         if(!isGetActivePlayers && MatchmakingTeam.Instance.IsDone) {
             isGetActivePlayers = true;
             GetActivePlayers();
         }
-    }
 
-    void EnableTalking() {
-        recorder.TransmitEnabled = true;
-    }
+        // lay danh sach trong main lobby Dou
+        if(SceneManager.GetActiveScene().name == "MainLobby") {
+            if(!isGetActivePlayers && playersInRoom >= 2) {
+                isGetActivePlayers = true;
+                GetActivePlayers();
+            }
+        }
 
-    void DisableTalking() {
-        recorder.TransmitEnabled = false;
+        if(Object.HasStateAuthority) {
+            if(recorder.InterestGroup == 0) return; // solo mode ko chat voice
+
+            if(characterInputHandler.IsChatVoice && !isPressChatVoiceButton) {
+                isPressChatVoiceButton = true;
+                if(!isActiveChatVoice) {
+                    StartCoroutine(ActiveChatVoiceCO());
+                    isActiveChatVoice = true;
+                    return;
+                }
+                StartTeamVoice();
+            } else if(!characterInputHandler.IsChatVoice && isPressChatVoiceButton){
+                isPressChatVoiceButton = false;
+                StopTeamVoice();
+            }
+        }
+        PrintList();
     }
 
     public void SetTeamID(string id) {
@@ -70,18 +85,17 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_RequestTeamID(string id) {
-
         this.TeamID = Convert.ToInt32(id);
-        /* recorder.InterestGroup = (byte)TeamID; */
+        recorder.InterestGroup = (byte)TeamID;
     }
 
     private void StartTeamVoice()
     {
-        if (!Object.HasInputAuthority) return;
+        //if (!Object.HasInputAuthority) return;
 
         recorder.TransmitEnabled = true;
         IsTalking = true;
-
+        isTalking = true;
         // Only transmit to players on the same team
         foreach (var player in playerTeams)
         {
@@ -97,22 +111,16 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
     }
     private void StopTeamVoice()
     {
-        if (!Object.HasInputAuthority) return;
+        //if (!Object.HasInputAuthority) return;
 
         recorder.TransmitEnabled = false;
         IsTalking = false;
-
+        isTalking = false;
         // Reset voice transmission settings
         voiceConnection.Client.OpChangeGroups(
             null,
             new byte[] { (byte)TeamID }
         );
-    }
-
-    public void PlayerJoined(PlayerRef player)
-    {
-        /* playerTeams[player] = TeamID;
-        Debug.Log($"_____list active players" + playerTeams.Count); */
     }
 
     [EditorButton]
@@ -124,14 +132,24 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
             
         }
         Debug.Log($"_____list active players" + playerTeams.Count);
-
-        
+        PrintList();
     }
 
     void PrintList() {
         foreach (var item in playerTeams)
         {
-            Console.WriteLine($"____{item.Key} ----- {item.Value}");
+            Debug.Log($"____{item.Key} ----- {item.Value}");
         }
+    }
+
+    IEnumerator ActiveChatVoiceCO() {
+        StartTeamVoice();
+        yield return new WaitForSeconds(0.2f);
+        StopTeamVoice();
+    }
+
+    public void PlayerJoined(PlayerRef player)
+    {
+        playersInRoom += 1;
     }
 }
