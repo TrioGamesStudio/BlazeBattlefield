@@ -13,7 +13,8 @@ public class ShowPlayerInfo : MonoBehaviour
     [SerializeField] TextMeshProUGUI currentLevel;
     [SerializeField] TextMeshProUGUI winSolo;
     [SerializeField] TextMeshProUGUI winTeam;
-    [SerializeField] TextMeshProUGUI coin;
+    [SerializeField] TextMeshProUGUI coinInMainLobby;
+    [SerializeField] TextMeshProUGUI coin2;
     [SerializeField] TextMeshProUGUI experienceText;
     [SerializeField] Slider experienceSlider;
     [SerializeField] Image rankIcon; // For player rank icon
@@ -64,7 +65,7 @@ public class ShowPlayerInfo : MonoBehaviour
     {
         if (scene.name == "MainLobby")
         {
-            Debug.Log("xxx MainLobby scene loaded. Restarting coroutine show player info.");     
+            Debug.Log("xxx MainLobby scene loaded. Restarting coroutine show player info.");
             StartCoroutine(ShowPlayerDataCo(0.3f));
         }
     }
@@ -85,7 +86,7 @@ public class ShowPlayerInfo : MonoBehaviour
     public IEnumerator ShowPlayerDataCo(float time)
     {
         yield return new WaitForSeconds(time);
-        Debug.Log("xxx Reset Player info UI" );
+        Debug.Log("xxx Reset Player info UI");
         UpdateExperienceUI();
         ShowPlayerName();
         UpdateRankUI();
@@ -116,7 +117,8 @@ public class ShowPlayerInfo : MonoBehaviour
         rankName.text = "Rank: " + RankSystem.GetRankName(DataSaver.Instance.dataToSave.rank);
         winSolo.text = "Win: " + DataSaver.Instance.dataToSave.winSolo.ToString();
         winTeam.text = "Win Team: " + DataSaver.Instance.dataToSave.winTeam.ToString();
-        coin.text = "Coin: " + DataSaver.Instance.dataToSave.coins.ToString();
+        coinInMainLobby.text = "Coin: " + DataSaver.Instance.dataToSave.coins.ToString();
+        coin2.text = "Coin: " + DataSaver.Instance.dataToSave.coins.ToString();
     }
 
     public void ShowInfoStat()
@@ -138,7 +140,8 @@ public class ShowPlayerInfo : MonoBehaviour
 
     public void ShowCoin()
     {
-        coin.text = DataSaver.Instance.dataToSave.coins.ToString();
+        coinInMainLobby.text = DataSaver.Instance.dataToSave.coins.ToString();
+        coin2.text = DataSaver.Instance.dataToSave.coins.ToString();
     }
 
     void UpdateRankUI()
@@ -181,7 +184,7 @@ public class ShowPlayerInfo : MonoBehaviour
         // Update experience slider
         if (experienceSlider != null)
         {
-            experienceSlider.value = currentXP/nextThreshold;
+            experienceSlider.value = currentXP / nextThreshold;
         }
     }
 

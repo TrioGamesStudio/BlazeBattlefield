@@ -8,7 +8,7 @@ public class SkinSelection : MonoBehaviour
     [SerializeField] Matchmaking matchmaking;
     [SerializeField] MatchmakingTeam matchmakingTeam;
 
-    [SerializeField] int skinsNextNumber = 12;
+    [SerializeField] int skinsNextNumber = 0;
     [SerializeField] Transform skinsParent;
     int skinMaxNumber;
     // buttons
@@ -80,7 +80,7 @@ public class SkinSelection : MonoBehaviour
 
     public void ToggleSelectSkinButton(bool isActive)
     {
-        selectButton.gameObject.SetActive(isActive);
+        //selectButton.gameObject.SetActive(isActive);
     }
 
     public void SetSkinByIndex(int newIndex)

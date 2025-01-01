@@ -43,6 +43,9 @@ public class StorageUI : MonoBehaviour
         ShowCanvasGroup(mainLobbyCanvasGroup, false);
         ShowCanvasGroup(storageCanvasGroup, true);
         onShowStorageEvent?.Invoke();
+
+        DataSaver.Instance.LoadData();
+
     }
 
     public void ShowMainLobby()
