@@ -20,6 +20,20 @@ public class ActiveWeaponAI : NetworkBehaviour
     TickTimer bulletFireDelay = TickTimer.None;
     [SerializeField] private LayerMask opponentLayer;
     [SerializeField] byte weaponDamageCurr = 1;
+
+    [Header("Sound")]
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip weaponSoundCurr;
+
+    [Networked] // bien updated through the server on all the clients
+    public bool isFiring { get; set; }
+    ChangeDetector changeDetector;
+
+    public override void Spawned()
+    {
+        changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+    }
+
     private void Awake()
     {
         //networkPlayer = GetComponent<NetworkPlayer>();
@@ -32,11 +46,26 @@ public class ActiveWeaponAI : NetworkBehaviour
         //Equip();
     }
 
+    public override void Render()
+    {
+        if (changeDetector == null) return;
+        foreach (var change in changeDetector.DetectChanges(this, out var previousBuffer, out var currentBuffer))
+        {
+            switch (change)
+            {
+                case nameof(isFiring):
+                    var boolReader = GetPropertyReader<bool>(nameof(isFiring));
+                    var (previousBool, currentBool) = boolReader.Read(previousBuffer, currentBuffer);
+                    OnFireChanged(previousBool, currentBool);
+                    break;
+            }
+        }
+    }
+
     public void Equip(GameObject weaponPrefab)
     {
         anim.SetBool("isEquiped", true);
         weapon = weaponPrefab;
-        Quaternion quaternion = Quaternion.Euler(0, 0, 0);
         currentWeaponRemote = SpawnItem(weapon, 0);
     }
 
@@ -84,6 +113,7 @@ public class ActiveWeaponAI : NetworkBehaviour
 
     void FireRaycast(Vector3 aimForwardVector, Transform aimPoint)
     {
+        StartCoroutine(FireEffect());
         //Debug.Log("--- Fire raycast ne");
         if (Physics.Raycast(aimPoint.position, aimForwardVector, out var hit, 20, opponentLayer))
         {
@@ -127,5 +157,40 @@ public class ActiveWeaponAI : NetworkBehaviour
             }
         }
 
+    }
+
+    // fire particle on aimPoint
+    IEnumerator FireEffect()
+    {
+        isFiring = true;
+
+        ////? show cho localPlayer thay hieu ung ban ra
+        //if (characterInputHandler.IsThirdCam)
+        //    fireParticleSystemRemote.Play();
+        //else
+        //    fireParticleSystemLocal.Play();
+
+        audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
+
+        yield return new WaitForSeconds(0.09f);
+        isFiring = false;
+    }
+
+    void OnFireChanged(bool previous, bool current)
+    {
+        if (current && !previous)
+            OnFireRemote();
+    }
+
+    void OnFireRemote()
+    {
+        if (!Object.HasStateAuthority)
+        {
+            //fireParticleSystemRemote.Play();
+            if (audioSource)
+            {
+                audioSource.PlayOneShot(weaponSoundCurr, 0.5f);
+            }
+        }
     }
 }
