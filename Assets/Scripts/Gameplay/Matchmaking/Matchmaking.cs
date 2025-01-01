@@ -585,7 +585,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             Debug.Log("No additional players joined. Spawning an AI bot...");
 
             // Spawn the AI bot
-            PlayerRoomController aiBot = runner.Spawn(aiControllerPrefab, new Vector3(0, 10, 0), Quaternion.identity);
+            PlayerRoomController aiBot = runner.Spawn(aiControllerPrefab, new Vector3(-2, 10, 0), Quaternion.identity);
             aiBot.SetTeamID("AI"); // Assign an AI-specific team ID
             players[aiBot.Object.InputAuthority] = aiBot;
 
