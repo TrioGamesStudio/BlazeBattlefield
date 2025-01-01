@@ -23,13 +23,15 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
     [SerializeField] bool isGetActivePlayers = false;
     [SerializeField] bool isActiveChatVoice = false;
     [SerializeField] int playersInRoom = 0;
-
+    public int PlayersInRoom{get { return playersInRoom;}}
     CharacterInputHandler characterInputHandler;
 
     bool isPressChatVoiceButton = false;
-
+    ChatVoiceState chatVoiceState;
+    PlayerRoomController playerRoomController;
     private void Awake() {
         characterInputHandler = GetComponent<CharacterInputHandler>();
+        chatVoiceState = FindObjectOfType<ChatVoiceState>();
         recorder = FindObjectOfType<Recorder>();
         voiceConnection = FindObjectOfType<VoiceConnection>();
         speaker = GetComponentInChildren<Speaker>();
@@ -143,6 +145,7 @@ public class PressToTalk : NetworkBehaviour, IPlayerJoined
     }
 
     IEnumerator ActiveChatVoiceCO() {
+        chatVoiceState.AvtiveChatVoiceButton();
         StartTeamVoice();
         yield return new WaitForSeconds(0.2f);
         StopTeamVoice();
