@@ -353,11 +353,11 @@ public class HPHandler : NetworkBehaviour
     void OnDeath()
     {
         Debug.Log($"{Time.time} onDeath");
-        playerModel.gameObject.SetActive(false);
+        playerModel.SetActive(false);
         Instantiate(deathParticlePf, transform.position + Vector3.up * 1, Quaternion.identity);
         if (isBot) return;
         if (localGunHolder)
-            localGunHolder.gameObject.SetActive(false);   // khi death tat luon local gun
+            localGunHolder.SetActive(false);   // khi death tat luon local gun
         hitboxRoot.HitboxRootActive = false; // ko de nhan them damage
         characterMovementHandler.CharacterControllerEnable(false);     
     }
@@ -370,7 +370,7 @@ public class HPHandler : NetworkBehaviour
         {
             uiOnHitImage.color = new Color(0, 0, 0, 0);
         }
-        playerModel.gameObject.SetActive(true);
+        playerModel.SetActive(true);
         if (localGunHolder)
             localGunHolder.SetActive(true);
         hitboxRoot.HitboxRootActive = true;
