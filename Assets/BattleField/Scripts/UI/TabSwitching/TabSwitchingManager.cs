@@ -14,6 +14,7 @@ public class TabSwitchingManager : MonoBehaviour
     private void Awake()
     {
         tabSwitchingUIs = GetComponentsInChildren<TabSwitchingUI>();
+        CreateTabButtonSwtiching();
     }
 
     private void CreateTabButtonSwtiching()
@@ -52,7 +53,7 @@ public class TabSwitchingManager : MonoBehaviour
             tabBtn.Interactable();
         }
 
-        //buttonLists[index].UnInteractable();
+        buttonLists[index].UnInteractable();
         tabSwitchingUIs[index].Show();
     }
 

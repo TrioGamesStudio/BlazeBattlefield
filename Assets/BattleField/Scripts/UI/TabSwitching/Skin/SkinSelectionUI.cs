@@ -150,4 +150,10 @@ public class SkinSelectionUI : MonoBehaviour
         DataSaver.Instance.inventoryDataToSave.skinsLists = SkinDataHandler.GetAllUnlockSkin();
         DataSaver.Instance.SaveInventoryData();
     }
+
+    public void SaveDefaultSkin()
+    {
+        DataSaver.Instance.inventoryDataToSave.skinsLists = SkinDataHandler.GetDefautlSkinData();
+        DataSaver.Instance.SaveInventoryData();
+    }
 }
