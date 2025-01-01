@@ -79,6 +79,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             3 => "Desert",
             _ => "Harbour",
         };
+        customProps["voice"] = true;
+        
         var sceneInfo = new NetworkSceneInfo();
         sceneInfo.AddSceneRef(SceneRef.FromIndex(currentSceneIndex));
         var result = await networkRunner.StartGame(new StartGameArgs()
@@ -88,7 +90,10 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             SessionProperties = customProps,
             PlayerCount = MAX_PLAYER,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
+
+            
         });
+        
 
         if (result.Ok)
         {

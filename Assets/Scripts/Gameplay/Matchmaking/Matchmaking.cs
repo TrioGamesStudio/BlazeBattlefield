@@ -256,7 +256,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         if (currentMode == Mode.Duo) return;
         players.Clear();    
-        string teamcode = UnityEngine.Random.Range(100, 999).ToString();
+        string teamcode = UnityEngine.Random.Range(10, 100).ToString();
         if (networkRunner == null)
         {
             networkRunner = Instantiate(networkRunnerPrefab);
