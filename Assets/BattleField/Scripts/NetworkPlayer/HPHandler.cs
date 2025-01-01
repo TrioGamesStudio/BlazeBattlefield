@@ -29,6 +29,7 @@ public class HPHandler : NetworkBehaviour
     List<FlashMeshRender> flashMeshRenders = new List<FlashMeshRender>();
 
     [SerializeField] GameObject playerModel;
+    [SerializeField] GameObject hitBox;
     [SerializeField] GameObject localGunHolder;
     [SerializeField] GameObject deathParticlePf;
     HitboxRoot hitboxRoot;
@@ -354,6 +355,7 @@ public class HPHandler : NetworkBehaviour
     {
         Debug.Log($"{Time.time} onDeath");
         playerModel.SetActive(false);
+        hitBox.SetActive(false);
         Instantiate(deathParticlePf, transform.position + Vector3.up * 1, Quaternion.identity);
         if (isBot) return;
         if (localGunHolder)

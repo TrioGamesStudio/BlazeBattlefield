@@ -70,8 +70,8 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     private Transform currentTarget;
     private Transform currentDropBox;
     private Animator anim;
-    private int currentPointIndex;
-
+    //private int currentPointIndex;
+    //private Transform targetPosition;
 
     #region SETUP BOT
 
@@ -260,7 +260,6 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             return;
         }
 
-
         if (!agent.pathPending && agent.remainingDistance <= pointReachDistance)
         {
             MoveToNextRoutePoint();
@@ -286,8 +285,9 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
     private void ExecuteReturningToRouteState()
     {
-        if (!agent.pathPending && agent.remainingDistance <= pointReachDistance)
+        //if (!agent.pathPending && agent.remainingDistance <= pointReachDistance)
         {
+            MoveToNextRoutePoint();
             SetState(BotState.FollowingRoute);
         }
     }
@@ -382,22 +382,9 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     {
         // Detect players within the detection radius
         Collider[] playersInRange = Physics.OverlapSphere(transform.position, playerDetectionRadius, playerLayer);
-
         if (playersInRange.Length > 0)
         {
             currentTarget = playersInRange[0].transform; // Save the player as the target
-
-
-            //Target die, return to route
-            if (currentTarget.TryGetComponent<CheckBodyParts>(out var targetHP))
-            {
-                if (targetHP.hPHandler.Networked_IsDead)
-                {
-                    currentTarget = null;
-                    SetState(BotState.FollowingRoute);
-                    return;
-                }
-            }
 
             // Transition to the FacingAndFiring state
             SetState(BotState.Firing);
@@ -409,7 +396,8 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     {
         // If the target player is lost, return to the route
         if (currentTarget == null)
-        {         
+        {
+            agent.isStopped = false;
             SetState(BotState.FollowingRoute);
             return;
         }
@@ -419,8 +407,9 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         {
             if (targetHP.hPHandler.Networked_IsDead)
             {
+                agent.isStopped = false;
                 currentTarget = null;
-                SetState(BotState.FollowingRoute);
+                SetState(BotState.ReturningToRoute);
                 return;
             }
         }
