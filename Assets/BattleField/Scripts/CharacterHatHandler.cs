@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
-public class CharacterHatHandler : MonoBehaviour
+public class CharacterHatHandler : NetworkBehaviour
 {
-    public static CharacterHatHandler instance;
-    [SerializeField] private HatDataHandler hatDataHandler;
-    private void Awake()
+    [Networked, SerializeField] private int hatIndex { get; set; }
+    [SerializeField] private HatDataHandler HatDataHandler;
+    [SerializeField] private Transform hatTransform;
+    public override void Spawned()
     {
-        if (instance != null)
+        base.Spawned();
+    }
+    [EditorButton]
+    private void CreateHat()
+    {
+        var prefab = HatDataHandler.GetHatPrefabByIndex(hatIndex);
+
+        if (prefab == null)
         {
-            Destroy(gameObject);
+            Debug.Log("Hat prefab is null", gameObject);
             return;
         }
-        instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
 
-    public GameObject GetHatPrefabByIndex(int hatIndex)
-    {
-        return hatDataHandler.hatsList[hatIndex];
+        Instantiate(prefab, Vector2.zero, Quaternion.identity, hatTransform);
     }
 }

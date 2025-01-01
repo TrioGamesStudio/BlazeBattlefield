@@ -6,6 +6,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Hat Data Handler", menuName = "Skin Data Handler/Hat Variant")]
 public class HatDataHandler : SkinDataHandler
 {
-    public List<GameObject> hatsList = new();
-
+    [SerializeField] private List<GameObject> hatsList = new();
+    public GameObject GetHatPrefabByIndex(int newIndex)
+    {
+        return hatsList[newIndex];
+    }
 }
