@@ -174,7 +174,7 @@ public class PlayerRoomController : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_ShowWin()
     {
-        if (!Object.HasStateAuthority) return;
+        if (TeamID == "AI") return;
         ShowCursor();
         Debug.Log("===WIN ROIIIIII");
         int xpGained;
@@ -221,7 +221,7 @@ public class PlayerRoomController : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_ShowLose(int rank)
     {
-        if (!Object.HasStateAuthority) return;
+        if (TeamID == "AI") return;
         ShowCursor();
         Debug.Log("===No teammate remain -> Defeat " + "Top " + rank);
         if (matchmaking.currentMode == Matchmaking.Mode.Duo)

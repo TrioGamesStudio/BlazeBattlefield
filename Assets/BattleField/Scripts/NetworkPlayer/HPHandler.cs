@@ -118,7 +118,11 @@ public class HPHandler : NetworkBehaviour
             {
                 PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
                 RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
-                if (isBot) return;
+                if (isBot)
+                {
+                    FindObjectOfType<GameHandler>().CheckWin(); //check win for remaining real player
+                    return;
+                }
                 RPC_HideLocalPlayerUI();
                 RPC_ShowResultDuo();
             }

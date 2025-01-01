@@ -14551,19 +14551,24 @@ MonoBehaviour:
   routePoints: []
   pointReachDistance: 0.2
   dropBoxDetectionRadius: 5
-  playerDetectionRadius: 15
   collectDistance: 0.5
   itemCollectRadius: 3
+  playerDetectionRadius: 15
+  fireDistance: 8
   dropBoxLayer:
     serializedVersion: 2
     m_Bits: 16384
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 32768
   itemLayer:
     serializedVersion: 2
     m_Bits: 1024
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 32768
   fireRate: 2
+  evadeDistance: 0.8
+  evadeInterval: 0.5
+  jumpHeight: 0.8
+  evadeSpeed: 1.6
   HasGun: 0
 --- !u!114 &-8422475685057307926
 MonoBehaviour:

@@ -39,17 +39,25 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
     [Header("Route Settings")]
     [SerializeField] private Transform[] routePoints;
-    [SerializeField] private float pointReachDistance = 2f;
+    [SerializeField] private float pointReachDistance;
 
     [Header("Detection Settings")]
-    [SerializeField] private float dropBoxDetectionRadius;
-    [SerializeField] private float playerDetectionRadius;
+    [SerializeField] private float dropBoxDetectionRadius;    
     [SerializeField] private float collectDistance;
     [SerializeField] private float itemCollectRadius;
-    [SerializeField] private LayerMask dropBoxLayer;
-    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private float playerDetectionRadius;
+    [SerializeField] private float fireDistance;
+    [SerializeField] private LayerMask dropBoxLayer;   
     [SerializeField] private LayerMask itemLayer;
-    [SerializeField] private float fireRate = 0.5f;
+    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private float fireRate;
+
+    [Header("Evasion Settings")]
+    [SerializeField] private float evadeDistance = 2f; // Distance for evasion moves
+    [SerializeField] private float evadeInterval = 1f; // Time between evasion actions
+    [SerializeField] private float jumpHeight = 2f; // Height for jumps
+    [SerializeField] private float evadeSpeed = 3f; // Speed for evasion
+    private float lastEvadeTime = 0f; // Timer to track evasion intervals
 
     private float fireCooldownTimer = 0f;
     private bool isInitialized = false;
@@ -337,18 +345,8 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     private void ExecuteCollectingDropBox()
     {
         Debug.Log("///Bot collect box");
-        // Get items in range and store their game objects
-        List<GameObject> itemsToCollect = new();
         Collider[] items = Physics.OverlapSphere(playerModel.position, itemCollectRadius, itemLayer);
         Debug.Log("///Found item qty: " + items.Length);
-        //foreach (var item in items)
-        //{
-        //    // Ensure the item is valid and not destroyed before adding
-        //    if (item != null && item.gameObject != null)
-        //    {
-        //        itemsToCollect.Add(item.gameObject);
-        //    }
-        //}
 
         foreach (var item in items)
         {
@@ -428,13 +426,28 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         //    SetState(BotState.Idle);
         //}
 
-        //Chase player
-        agent.SetDestination(currentTarget.position);
+        if (distanceToPlayer > fireDistance)
+        {
+            
 
-        FaceTarget(currentTarget);
+            agent.isStopped = false;
+            //Chase player
+            agent.SetDestination(currentTarget.position);
+        }
+        else
+        {
+            //agent.SetDestination(playerModel.forward);
+            agent.isStopped = true;
 
-        FireGunAtPlayer(currentTarget);
+            FaceTarget(currentTarget);
 
+            // Perform evasion behavior
+            HandleEvasion();
+
+            FireGunAtPlayer(currentTarget);
+        }    
+      
+        
     }
 
     private void FaceTarget(Transform target)
@@ -464,5 +477,75 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         }
     }
 
+    private void HandleEvasion()
+    {
+        if (Time.time - lastEvadeTime < evadeInterval) return; // Limit evasion frequency
+
+        lastEvadeTime = Time.time;
+
+        // Choose a random evasion action
+        int action = UnityEngine.Random.Range(0, 5);
+
+        switch (action)
+        {
+            case 0: // Step backward
+                Vector3 backward = transform.position - transform.forward * evadeDistance;
+                StartCoroutine(MoveToPosition(backward));
+                break;
+            case 1: // Step forward
+                Vector3 forward = transform.position + transform.forward * evadeDistance;
+                StartCoroutine(MoveToPosition(forward));
+                break;
+            case 2: // Strafe left
+                Vector3 left = transform.position - transform.right * evadeDistance;
+                StartCoroutine(MoveToPosition(left));
+                break;
+            case 3: // Strafe right
+                Vector3 right = transform.position + transform.right * evadeDistance;
+                StartCoroutine(MoveToPosition(right));
+                break;
+            case 4: // Jump
+                StartCoroutine(Jump());
+                break;
+        }
+    }
+
+    private IEnumerator MoveToPosition(Vector3 targetPosition)
+    {
+        float elapsedTime = 0f;
+        float duration = evadeDistance / evadeSpeed;
+
+        Vector3 startPosition = transform.position;
+
+        while (elapsedTime < duration)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+    }
+
+    private IEnumerator Jump()
+    {
+        float jumpTime = 0.5f; // Duration of the jump
+        float elapsedTime = 0f;
+
+        Vector3 startPos = transform.position;
+
+        while (elapsedTime < jumpTime)
+        {
+            float jumpProgress = elapsedTime / jumpTime;
+            float jumpOffset = Mathf.Sin(jumpProgress * Mathf.PI) * jumpHeight; // Sin curve for smooth jump
+            transform.position = new Vector3(startPos.x, startPos.y + jumpOffset, startPos.z);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Return to the ground
+        transform.position = startPos;
+    }
     #endregion
 }
