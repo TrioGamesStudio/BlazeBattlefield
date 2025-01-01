@@ -518,7 +518,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
                 localSoloPlayer = playerObject.GetComponent<PlayerRoomController>();
                 playerObject.GetComponent<PlayerRoomController>().SetPlayerRef(player);
-                playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
+                //playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
+                playerObject.GetComponent<PlayerRoomController>().SetTeamID("SoloPlayer" + UnityEngine.Random.Range(100, 1000).ToString());
                 playerObject.GetComponent<PlayerRoomController>().SetLocalPlayer();
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
                 if (runner.IsSharedModeMasterClient && spawnAI)

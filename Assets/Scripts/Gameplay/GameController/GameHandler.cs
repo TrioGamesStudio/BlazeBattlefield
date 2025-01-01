@@ -109,7 +109,7 @@ public class GameHandler : MonoBehaviour
     public IEnumerator CheckLose(string teamID)
     {
         //await Task.Delay(500);
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1f);
         if (!teams.ContainsKey(teamID)) //All teammate eliminated
         //if (teams[teamID].Count == 0) 
         {

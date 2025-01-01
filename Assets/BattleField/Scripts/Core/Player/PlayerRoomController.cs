@@ -298,4 +298,32 @@ public class PlayerRoomController : NetworkBehaviour
             matchmaking.UpdateMapProperty(map);
         }
     }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        base.Despawned(runner, hasState);
+        Debug.Log("/// Despawn called for runner: " + runner.name);
+
+        // Ensure that authority changes only if a bot is present
+        if (matchmaking.HasBot())
+        {
+            Debug.Log("/// Bot detected, checking for authority transfer...");
+            BotAINetwork[] botAIsNetwork = FindObjectsOfType<BotAINetwork>();
+
+            // Select the next player to take authority
+            foreach (var player in runner.ActivePlayers)
+            {
+                if (player != Runner.LocalPlayer) // Exclude the current local player
+                {
+                    Debug.Log("/// Transferring StateAuthority to player: " + player.PlayerId);
+                    foreach (var botAI in botAIsNetwork)
+                    {
+                        botAI.RequestAuthority();
+                    }
+                    break; // Ensure only one player is selected
+                }
+            }
+           
+        }
+    }
 }
