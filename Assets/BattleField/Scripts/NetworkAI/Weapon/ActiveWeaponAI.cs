@@ -94,7 +94,8 @@ public class ActiveWeaponAI : NetworkBehaviour
     // fire bullet laser VFX => chi tao ra virtual o nong sung + bullet trails + impact
     public void Fire(Transform target)
     {
-        Vector3 dir = target.position - aimPoint_grandeRocket_3rd.position;
+        Vector3 offsetFiringPos = new(0, 1, 0);
+        Vector3 dir = (target.position + offsetFiringPos) - aimPoint_grandeRocket_3rd.position;
         FireRaycast(dir, aimPoint_grandeRocket_3rd);
 
         //if (bulletFireDelay.ExpiredOrNotRunning(Runner))

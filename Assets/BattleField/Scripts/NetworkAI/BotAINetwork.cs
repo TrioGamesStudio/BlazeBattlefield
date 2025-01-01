@@ -14,7 +14,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         MovingToDropBox,
         CollectingDropBox,
         ReturningToRoute,
-        FacingAndFiring,
+        Firing,
     }
 
     [Networked]
@@ -220,14 +220,14 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
                 case BotState.MovingToDropBox:
                     ExecuteMovingToDropBoxState();
                     break;
-                case BotState.ReturningToRoute:
-                    ExecuteReturningToRouteState();
-                    break;
                 case BotState.CollectingDropBox:
                     ExecuteCollectingDropBox();
                     break;
-                case BotState.FacingAndFiring:
-                    ExecuteFacingAndFiringState();
+                case BotState.ReturningToRoute:
+                    ExecuteReturningToRouteState();
+                    break;
+                case BotState.Firing:
+                    ExecuteFiringState();
                     break;
             }
 
@@ -385,19 +385,44 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
         if (playersInRange.Length > 0)
         {
-            // Transition to the FacingAndFiring state
-            SetState(BotState.FacingAndFiring);
             currentTarget = playersInRange[0].transform; // Save the player as the target
+
+
+            //Target die, return to route
+            if (currentTarget.TryGetComponent<CheckBodyParts>(out var targetHP))
+            {
+                if (targetHP.hPHandler.Networked_IsDead)
+                {
+                    currentTarget = null;
+                    SetState(BotState.FollowingRoute);
+                    return;
+                }
+            }
+
+            // Transition to the FacingAndFiring state
+            SetState(BotState.Firing);
+          
         }
     }
 
-    private void ExecuteFacingAndFiringState()
+    private void ExecuteFiringState()
     {
         // If the target player is lost, return to the route
         if (currentTarget == null)
         {         
             SetState(BotState.FollowingRoute);
             return;
+        }
+
+        //Target die, return to route
+        if (currentTarget.TryGetComponent<CheckBodyParts>(out var targetHP))
+        {
+            if (targetHP.hPHandler.Networked_IsDead)
+            {
+                currentTarget = null;
+                SetState(BotState.FollowingRoute);
+                return;
+            }
         }
 
         // Check if the player is still in detection range
@@ -410,26 +435,8 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             return;
         }
 
-        //Target die, return to route
-        if (currentTarget.TryGetComponent<CheckBodyParts>(out var targetHP))
-        {
-            if (targetHP.hPHandler.Networked_IsDead)
-            {
-                SetState(BotState.ReturningToRoute);
-                return;
-            }
-        }
-
-        ////Bot die, not cotinue to fire
-        //if (hpHandler.Networked_HP <= 0)
-        //{
-        //    SetState(BotState.Idle);
-        //}
-
         if (distanceToPlayer > fireDistance)
         {
-            
-
             agent.isStopped = false;
             //Chase player
             agent.SetDestination(currentTarget.position);
@@ -439,27 +446,25 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             //agent.SetDestination(playerModel.forward);
             agent.isStopped = true;
 
-            FaceTarget(currentTarget);
+            FaceAtTarget(currentTarget);
 
             // Perform evasion behavior
             HandleEvasion();
 
-            FireGunAtPlayer(currentTarget);
-        }    
-      
-        
+            FireAtTarget(currentTarget);
+        }         
     }
 
-    private void FaceTarget(Transform target)
+    private void FaceAtTarget(Transform target)
     {
         transform.LookAt(target);
     }
 
-    private void FireGunAtPlayer(Transform target)
+    private void FireAtTarget(Transform target)
     {
         //Look at player
         //agent.SetDestination(Vector3.forward);
-
+        //Transform offsetFiringPos = new Vector3(0, 1, 0);
         // Check if the bot is ready to fire
         if (fireCooldownTimer <= 0f)
         {

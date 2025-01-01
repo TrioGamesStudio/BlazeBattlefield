@@ -277,7 +277,7 @@ public class HPHandler : NetworkBehaviour
         {
             if (!isBot)
             {
-                uiOnHitImage.color = uiOnHitColor;
+                //uiOnHitImage.color = uiOnHitColor;
                 BloodLens.OnSlashEffect?.Invoke();
 
                 // shaking camera
