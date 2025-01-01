@@ -300,7 +300,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
             foreach (Collider dropBox in dropBoxes)
             {
-                if (!IsPositionOnNavMesh(dropBox.transform.position, 1f)) continue;
+                if (!IsPositionOnNavMesh(dropBox.transform.position, 1f)) continue; //Drop box not inside navmesh area
                 float distance = Vector3.Distance(transform.position, dropBox.transform.position);
                 if (distance < closestDistance)
                 {
@@ -331,7 +331,6 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         if (distanceToDropBox <= collectDistance)
         {
             SetState(BotState.CollectingDropBox);
-            //StartCoroutine(CollectingRoutine());
         }
     }
 

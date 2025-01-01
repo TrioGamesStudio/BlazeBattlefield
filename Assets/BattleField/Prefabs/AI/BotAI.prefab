@@ -14551,8 +14551,8 @@ MonoBehaviour:
   pointReachDistance: 0.2
   dropBoxDetectionRadius: 5
   playerDetectionRadius: 15
-  collectDistance: 1
-  itemCollectRadius: 5
+  collectDistance: 0.5
+  itemCollectRadius: 3
   dropBoxLayer:
     serializedVersion: 2
     m_Bits: 16384
@@ -14586,7 +14586,7 @@ MonoBehaviour:
   opponentLayer:
     serializedVersion: 2
     m_Bits: 32768
-  weaponDamageCurr: 1
+  weaponDamageCurr: 2
 --- !u!114 &-4708531423129684952
 MonoBehaviour:
   m_ObjectHideFlags: 0
