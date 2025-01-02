@@ -8,7 +8,7 @@ public class CroshairManager : MonoBehaviour
 {
     public static CroshairManager instance;
 
-    public static Action<Vector3> OnHitTarget;
+    public static Action OnHitTarget;
 
     [SerializeField] private Image normalCroshair;
     [SerializeField] private Image hitCroshair;
@@ -36,7 +36,7 @@ public class CroshairManager : MonoBehaviour
     }
 
     [Button]
-    public void HitTarget(Vector3 spawnPosition)
+    public void HitTarget()
     {
         //if (croshairContainer.gameObject.activeSelf == false) return;
 

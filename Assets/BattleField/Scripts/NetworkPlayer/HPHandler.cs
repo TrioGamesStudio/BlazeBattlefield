@@ -153,7 +153,7 @@ public class HPHandler : NetworkBehaviour
 
         if (weaponHandler == null) return;
 
-        CroshairManager.OnHitTarget(NetworkPlayer.Local.transform.position);
+        CroshairManager.OnHitTarget();
 
         //Debug.LogWarning("After damge:" + Networked_HP);
         RPC_UpdateTeammateHP(damageAmount);
