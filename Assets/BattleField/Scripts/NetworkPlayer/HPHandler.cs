@@ -314,7 +314,7 @@ public class HPHandler : NetworkBehaviour
         }
 
         // render cho man hinh cua this.Object run this.cs - KO HIEN THI O REMOTE
-        if (Object.HasStateAuthority && !Networked_IsDead && uiOnHitImage != null)
+        if (Object != null && Object.HasStateAuthority && !Networked_IsDead && uiOnHitImage != null)
         {
             uiOnHitImage.color = new Color(0, 0, 0, 0);
         }

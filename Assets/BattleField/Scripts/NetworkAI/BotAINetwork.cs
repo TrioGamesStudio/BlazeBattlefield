@@ -178,7 +178,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         }
         else
         {
-            Debug.Log("///Object has been destroy");
+            Debug.Log("///Object has been destroy or already has state authority");
         }
     }
 
@@ -189,6 +189,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             Debug.Log($"///Gained authority over bot by ${Object.StateAuthority}");
             InitializeBot();
             RestoreBotState();
+            AlivePlayerControl.UpdateAliveCount(-1);
         }
         else
         {
