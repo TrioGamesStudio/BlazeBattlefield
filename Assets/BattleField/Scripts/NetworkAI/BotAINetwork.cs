@@ -542,4 +542,11 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         transform.position = startPos;
     }
     #endregion
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        base.Despawned(runner, hasState);
+        Debug.Log("/// Despawn Bot AI called for runner: " + runner.name);
+        StopAllCoroutines();
+    }
 }
