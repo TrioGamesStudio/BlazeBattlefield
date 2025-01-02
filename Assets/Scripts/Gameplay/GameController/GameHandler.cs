@@ -125,7 +125,7 @@ public class GameHandler : MonoBehaviour
         {
             Debug.Log("===Team " + teamID + " remain " + teams[teamID].Count + " player");
             Debug.Log("===Remain teammate alive -> Watch or leave");
-            if (teamID != "AI") 
+            if (!teamID.Contains("AI")) 
                 FindObjectOfType<WorldUI>().ShowEliminateUI();
         }
         CheckWin();
@@ -137,7 +137,7 @@ public class GameHandler : MonoBehaviour
         {
             string teamID = teams.Keys.First();
             Debug.Log("===Victory team: " + teamID);
-            if (teamID == "AI") return;
+            if (teamID.Contains("AI")) return;
 
             foreach(var playerRoomControl in teamsOriginal[teamID])
             {
