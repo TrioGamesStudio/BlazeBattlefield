@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using Photon.Chat;
 
 public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 {
@@ -45,6 +46,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private Button playButton;
     [SerializeField] private int MAX_PLAYER = 2;
 
+    
     private NetworkRunner networkRunner;   
     private PlayerRoomController localPlayerRoomController;
     private Vector3 spawnPosition;  
@@ -355,6 +357,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             Debug.LogWarning("Network runner is not initialized or you are not in a session.");
         }
+
+        // de active chatvoice button
+        FindObjectOfType<ChatVoiceState>().DeAvtiveChatVoiceButton();
     }
 
     public async void BackToLobby()
