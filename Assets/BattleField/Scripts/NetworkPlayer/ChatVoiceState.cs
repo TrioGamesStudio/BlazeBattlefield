@@ -1,15 +1,23 @@
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ChatVoiceState : MonoBehaviour
 {
     [SerializeField] GameObject lockChatVoiceImage;
     [SerializeField] GameObject unLockChatVoiceImage;
-
+    [SerializeField] Matchmaking matchmaking;
     private void Awake() {
         lockChatVoiceImage.SetActive(true);
         unLockChatVoiceImage.SetActive(false);
+
+    }
+
+    private void Update() {
+        if(SceneManager.GetActiveScene().name == "MainLobby") {
+        
+        }
     }
 
     public void AvtiveChatVoiceButton() {
