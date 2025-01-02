@@ -10,6 +10,7 @@ using TMPro;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+using Photon.Chat;
 
 public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 {
@@ -49,6 +50,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private bool spawnAI;
     [SerializeField] private float timeForSpawnBot;
 
+    
     private NetworkRunner networkRunner;   
     private PlayerRoomController localPlayerRoomController;
     private Vector3 spawnPosition;  
@@ -263,7 +265,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         if (currentMode == Mode.Duo) return;
         players.Clear();    
-        string teamcode = UnityEngine.Random.Range(100, 999).ToString();
+        string teamcode = UnityEngine.Random.Range(10, 100).ToString();
         if (networkRunner == null)
         {
             networkRunner = Instantiate(networkRunnerPrefab);
@@ -366,6 +368,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             Debug.LogWarning("Network runner is not initialized or you are not in a session.");
         }
+
+        // de active chatvoice button
+        FindObjectOfType<ChatVoiceState>().DeAvtiveChatVoiceButton();
     }
 
     public async void BackToLobby()
