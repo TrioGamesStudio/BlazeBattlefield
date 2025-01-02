@@ -317,7 +317,7 @@ public class PlayerRoomController : NetworkBehaviour
             // Select the next player to take authority
             foreach (var player in runner.ActivePlayers)
             {
-                if (player != Runner.LocalPlayer) // Exclude the current local player
+                if (player == Runner.LocalPlayer) // Exclude the current local player
                 {
                     Debug.Log("/// Transferring StateAuthority to player: " + player.PlayerId);
                     foreach (var botAI in botAIsNetwork)

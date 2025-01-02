@@ -644,6 +644,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 networkPlayer.SetNicknameUIColor(Color.blue); //Set teammate name plate UI color to blue
                 UpdatePlayButtonInteractability();
                 players[player].SetRoomID(runner.SessionInfo.Name);
+                matchSolo[player] = players[player].TeamID.ToString();
                 yield break;
             }
             elapsedTime += Time.deltaTime;

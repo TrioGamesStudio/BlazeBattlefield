@@ -8,7 +8,7 @@ public class GameHandler : MonoBehaviour
 {
     public Dictionary<string, List<PlayerRoomController>> teamsOriginal = new();
     public Dictionary<string, List<PlayerRoomController>> teams = new();
-    private string teamID;
+    private string localTeamID;
     [SerializeField] private Transform[] routePoints;
 
     public void InitializeTeams()
@@ -30,7 +30,7 @@ public class GameHandler : MonoBehaviour
                 teams[player.TeamID.ToString()] = listPlayers;
             }
             if (player.isLocalPlayer)
-                teamID = player.TeamID.ToString();
+                localTeamID = player.TeamID.ToString();
         }
 
         foreach (var player in players) 
@@ -45,7 +45,7 @@ public class GameHandler : MonoBehaviour
                 listPlayers.Add(player);
                 teamsOriginal[player.TeamID.ToString()] = listPlayers;
             }
-            if (player.TeamID == teamID)
+            if (player.TeamID == localTeamID)
             {
                 NetworkPlayer networkPlayer = player.GetComponent<NetworkPlayer>();
                 networkPlayer.SetNicknameUIColor(Color.blue); //Set teamate name plate UI color to blue
@@ -76,7 +76,7 @@ public class GameHandler : MonoBehaviour
 
     public void Eliminate(string teamID, PlayerRoomController player)
     {
-        //Debug.Log("===Eliminate player" + player.TeamID + " in local");
+        Debug.Log("===Eliminate player" + player.TeamID + " in local");
         if (!teams.ContainsKey(teamID)) return;
         teams[teamID].Remove(player);
         if (teams[teamID].Count == 0)
@@ -87,7 +87,7 @@ public class GameHandler : MonoBehaviour
                 Debug.Log("===Key: " + key);
                 foreach (var playerRoom in teams[key])
                 {
-                    //Debug.Log("====Player team id: " + playerRoom.TeamID);
+                    Debug.Log("====Player team id: " + playerRoom.TeamID);
                 }
             }
             teams.Remove(teamID);
@@ -97,7 +97,7 @@ public class GameHandler : MonoBehaviour
                 Debug.Log("===Key: " + key);
                 foreach (var playerRoom in teams[key])
                 {
-                    //Debug.Log("====Player team id: " + playerRoom.TeamID);
+                    Debug.Log("====Player team id: " + playerRoom.TeamID);
                 }
             }
             Debug.Log("===Remain team after remove " + teams.Count);
@@ -109,9 +109,8 @@ public class GameHandler : MonoBehaviour
     public IEnumerator CheckLose(string teamID)
     {
         //await Task.Delay(500);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2);
         if (!teams.ContainsKey(teamID)) //All teammate eliminated
-        //if (teams[teamID].Count == 0) 
         {
             int ranking = teams.Count + 1;
             //Debug.Log("===No teammate remain -> Defeat " + "Top " + ranking);
@@ -123,10 +122,21 @@ public class GameHandler : MonoBehaviour
         }
         else
         {
-            Debug.Log("===Team " + teamID + " remain " + teams[teamID].Count + " player");
-            Debug.Log("===Remain teammate alive -> Watch or leave");
-            if (!teamID.Contains("AI")) 
+            //Debug.Log("===Team " + teamID + " remain " + teams[teamID].Count + " player");
+            //Debug.Log("===Remain teammate alive -> Watch or leave");
+            if (!teamID.Contains("AI") && Matchmaking.Instance.currentMode != Matchmaking.Mode.Solo) 
                 FindObjectOfType<WorldUI>().ShowEliminateUI();
+            else if (!teamID.Contains("AI"))
+            {
+                int ranking = teams.Count + 1;
+                //Debug.Log("===No teammate remain -> Defeat " + "Top " + ranking);
+                //foreach (var playerRoomControl in teamsOriginal[teamID])
+                //{
+                //    if (playerRoomControl != null)
+                //        playerRoomControl.RPC_ShowLose(ranking);
+                //}
+                teamsOriginal[teamID].First().RPC_ShowLose(ranking);
+            }
         }
         CheckWin();
     }
