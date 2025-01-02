@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterInputHandler : MonoBehaviour
@@ -23,6 +24,9 @@ public class CharacterInputHandler : MonoBehaviour
     public bool IsThirdCam{get => isThirdCam;}
 
     public bool IsZoomed = false;
+
+    bool isChatVoice = false;
+    public bool IsChatVoice {get => isChatVoice;}
     
     private void Awake() {
         weaponHandler = GetComponent<WeaponHandler>();
@@ -48,6 +52,10 @@ public class CharacterInputHandler : MonoBehaviour
         InputPlayerMovement.LookAction += ChangeLookVector;
 
         playerInputActions.PlayerMovement.Sprint.started += _ => UpdateIsPrinted();
+
+        playerInputActions.Combat.ChatVoice.started += _ => isChatVoice = true;
+        playerInputActions.Combat.ChatVoice.canceled += _ => isChatVoice = false;
+
     }
 
     private void Start() {
@@ -81,6 +89,8 @@ public class CharacterInputHandler : MonoBehaviour
         playerInputActions.PlayerMovement.Jumping.Enable();
         playerInputActions.Combat.Attack.Enable();
         playerInputActions.Combat.Scope.Enable();
+        playerInputActions.Combat.ChatVoice.Enable();
+
 
 
 
@@ -95,6 +105,8 @@ public class CharacterInputHandler : MonoBehaviour
         playerInputActions.PlayerMovement.Jumping.Disable();
         playerInputActions.Combat.Attack.Disable();
         playerInputActions.Combat.Scope.Disable();
+        playerInputActions.Combat.ChatVoice.Disable();
+
 
 
         playerInputActions.PlayerMovement.Look.Disable();

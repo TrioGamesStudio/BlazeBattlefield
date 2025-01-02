@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,6 +19,8 @@ public class InputCombatControl : InputReader , PlayerInputAction.ICombatActions
     public static Action ChangeFireMode;
     public static Action ShowInventory;
     public static Action Reload;
+    public static Action ChatVoice;
+
   
     public override void SetCallbacks()
     {
@@ -131,4 +134,10 @@ public class InputCombatControl : InputReader , PlayerInputAction.ICombatActions
         }
     }
 
+    public void OnChatVoice(InputAction.CallbackContext context)
+    {
+        if (context.performed) {
+            ChatVoice?.Invoke();
+        } 
+    }
 }

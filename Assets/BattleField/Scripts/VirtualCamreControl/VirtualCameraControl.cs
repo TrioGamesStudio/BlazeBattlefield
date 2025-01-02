@@ -68,7 +68,7 @@ public class VirtualCameraControl : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Your camera name {cameraName} does not exit !!!", gameObject);
+            //Debug.LogError($"Your camera name {cameraName} does not exit !!!", gameObject);
         }
     }
 
