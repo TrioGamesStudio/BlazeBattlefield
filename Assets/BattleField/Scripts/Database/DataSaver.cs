@@ -5,6 +5,7 @@ using Firebase.Database;
 using UnityEngine.SceneManagement;
 using NaughtyAttributes;
 using System.Collections.Generic;
+using static UnityEditor.Progress;
 
 [Serializable]
 public class DataToSave
@@ -38,17 +39,59 @@ public class DataToSave
 [Serializable]
 public class InventoryDataToSave
 {
+    public class CustomData
+    {
+        public string collectionsName;
+        public List<string> collectionsList;
+    }
     public string inventoryName;
-    public string[] skinsArr = new string[5];
-    public List<string> skinsLists = new List<string>();
-    public InventoryDataToSave() { }
-    public InventoryDataToSave(string inventoryName, string[] skinsNames, List<string> lists)
+    //public string[] skinsArr = new string[5];
+    //public List<string> skinsLists = new List<string>();
+    [HideInInspector] public List<string> skinCollections = new();
+    [HideInInspector] public List<string> hatCollections = new();
+    public Dictionary<string, List<string>> playerCollections = new();
+    public InventoryDataToSave(string inventoryName, SkinDataHandler skinData, SkinDataHandler hatData)
     {
         this.inventoryName = inventoryName;
-        this.skinsArr = skinsNames;
-        this.skinsLists = lists;
+        //this.skinsArr = skinsNames;
+        //this.skinsLists = lists;
+        skinCollections = new List<string>(skinData.GetDefautlSkinData());
+        hatCollections = new List<string>(hatData.GetDefautlSkinData());
+        Debug.Log(skinCollections.Count);
+        Debug.Log(hatCollections.Count);
+        Debug.Log("Add Skin Collection name: " + skinData.CollectionsName);
+        Debug.Log("Add Skin Collection name: " + hatData.CollectionsName);
+
+        InitWhenLoad(skinData, hatData);
     }
 
+    public void SaveSkinData(string collectionsName, List<string> collections)
+    {
+        if (playerCollections.TryGetValue(collectionsName, out var list))
+        {
+            list.Clear();
+            list.AddRange(collections);
+        }
+    }
+
+    public List<string> GetCollections(string collectionsName)
+    {
+        Debug.Log("Get Skin Collections name: " + collectionsName);
+        Debug.Log("Collections count: " + playerCollections.Count);
+     
+        if (playerCollections.TryGetValue(collectionsName, out var list))
+        {
+            return list;
+        }
+        return new();
+    }
+
+    public void InitWhenLoad(SkinDataHandler skinData, SkinDataHandler hatData)
+    {
+        playerCollections = new();
+        playerCollections.Add(skinData.CollectionsName, skinCollections);
+        playerCollections.Add(hatData.CollectionsName, hatCollections);
+    }
 }
 
 public class DataSaver : MonoBehaviour
@@ -59,6 +102,7 @@ public class DataSaver : MonoBehaviour
     public DataToSave dataToSave;
     public InventoryDataToSave inventoryDataToSave;
     public SkinDataHandler skinDataHandler;
+    public HatDataHandler hatDataHandler;
     //others
     DatabaseReference dbRef;
 
@@ -98,20 +142,17 @@ public class DataSaver : MonoBehaviour
 
     public InventoryDataToSave ReturnInvDataToSave(string inventoryName, string[] skinsArr, List<string> lists)
     {
-        return new InventoryDataToSave(inventoryName, skinsArr, lists);
+        return new InventoryDataToSave(inventoryName, skinDataHandler, hatDataHandler);
     }
+
 
     public void SaveInvetoryToSignup(string userId)
     {
-        string[] skinNames = skinDataHandler.GetDefautlSkinData().ToArray();
-        List<string> lists = skinDataHandler.GetDefautlSkinData();
-        InventoryDataToSave inv = new InventoryDataToSave()
-        {
-            inventoryName = "inventory",
-            skinsArr = skinNames,
-            skinsLists = lists,
 
-        };
+        InventoryDataToSave inv = new InventoryDataToSave("inventory", skinDataHandler, hatDataHandler);
+
+        //inv.SaveSkinData(skinDataHandler.CollectionsName, skinDataHandler.GetDefautlSkinData());
+        //inv.SaveSkinData(hatDataHandler.CollectionsName, skinDataHandler.GetDefautlSkinData());
         string json = JsonUtility.ToJson(inv);
         dbRef.Child("Inventory").Child(userId).SetRawJsonValueAsync(json);
     }
@@ -187,6 +228,7 @@ public class DataSaver : MonoBehaviour
         {
             Debug.Log($"found jsonData");
             inventoryDataToSave = JsonUtility.FromJson<InventoryDataToSave>(jsonData);
+            inventoryDataToSave.InitWhenLoad(skinDataHandler, hatDataHandler);
         }
         else
         {

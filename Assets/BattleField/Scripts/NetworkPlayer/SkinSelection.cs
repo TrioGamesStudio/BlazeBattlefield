@@ -36,6 +36,7 @@ public class SkinSelection : MonoBehaviour
 
         selectButton.onClick.AddListener(SkinSelectNext);
         skinSelectionUI.OnChangedSkinAction += SetSkinByIndex;
+        skinSelectionUI.SetDeaultSkin(skinsNextNumber);
     }
 
     private void OnDestroy()

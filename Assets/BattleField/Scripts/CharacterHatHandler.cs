@@ -9,29 +9,44 @@ public class CharacterHatHandler : NetworkBehaviour
     [SerializeField] private HatDataHandler HatDataHandler;
     [SerializeField] private Transform hatTransform;
     [SerializeField] private Transform currentHat;
+
     public override void Spawned()
     {
         base.Spawned();
         if (HasStateAuthority)
         {
             playerHatIndex = HatDataHandler.currentHatIndex;
-            CreateHat();
+            CreateHatRemote();
         }
     }
+
     [EditorButton]
-    private void CreateHat()
+    public void CreateHatRemote()
     {
-        var prefab = HatDataHandler.GetHatPrefabByIndex(playerHatIndex);
+        CreateHatByIndex(playerHatIndex);
+    }
+    [EditorButton]
+    public void CreateHatLocal()
+    {
+        CreateHatByIndex(HatDataHandler.currentHatIndex);
+    }
+
+    private void CreateHatByIndex(int hatIndex)
+    {
+        var prefab = HatDataHandler.GetHatPrefabByIndex(hatIndex);
 
         if (prefab == null)
         {
             Debug.Log("Hat prefab is null", gameObject);
             return;
         }
-        if(currentHat != null)
+        if (currentHat != null)
         {
             Destroy(currentHat.gameObject);
         }
-        currentHat = Instantiate(prefab, Vector2.zero, Quaternion.identity, hatTransform).transform;
+        currentHat = Instantiate(prefab, Vector3.zero, Quaternion.identity, hatTransform).transform;
+        currentHat.transform.localPosition = Vector3.zero;
+        currentHat.transform.localEulerAngles = Vector3.zero;
+        Debug.Log(currentHat.transform.position);
     }
 }

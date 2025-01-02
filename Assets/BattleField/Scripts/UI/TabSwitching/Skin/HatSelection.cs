@@ -5,8 +5,9 @@ using UnityEngine;
 public class HatSelection : MonoBehaviour
 {
     public static HatSelection Instance;
-    public SkinSelectionUI SkinSelectionUI;
-    public HatDataHandler HatDataHandler;
+    [SerializeField] private SkinSelectionUI SkinSelectionUI;
+    [SerializeField] private HatDataHandler HatDataHandler;
+    [SerializeField] private CharacterHatHandler characterHatHandler;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -29,5 +30,6 @@ public class HatSelection : MonoBehaviour
     private void SkinSelectionUI_OnChangedSkinAction(int newHatIndex)
     {
         HatDataHandler.currentHatIndex = newHatIndex;
+        characterHatHandler.CreateHatLocal();
     }
 }

@@ -41,12 +41,10 @@ public class SkinSelectionUI : MonoBehaviour
     private void Start()
     {
         BuyPanel.gameObject.SetActive(false);
-        avatarUIList = GetComponentsInChildren<SkinAvatarUI>().ToList();
         foreach (var avatarUI in avatarUIList)
         {
             avatarUI.OnSkinSelection = OnChangeSkinByIndex;
             avatarUI.OnUnlockSkin = TryToBuySkin;
-            Debug.Log("On Assign Event", gameObject);
         }
     }
 
@@ -137,9 +135,10 @@ public class SkinSelectionUI : MonoBehaviour
         }
     }
 #endif
+    [Button]
     public void RefreshUIByData()
     {
-        SkinDataHandler.UnlockPlayerOwnSkin(DataSaver.Instance.inventoryDataToSave.skinsLists);
+        SkinDataHandler.UnlockPlayerOwnSkin(DataSaver.Instance.inventoryDataToSave.GetCollections(SkinDataHandler.CollectionsName));
 
         for (int i = 0; i < avatarUIList.Count; i++)
         {
@@ -154,13 +153,18 @@ public class SkinSelectionUI : MonoBehaviour
     [Button]
     public void SaveSkin()
     {
-        DataSaver.Instance.inventoryDataToSave.skinsLists = SkinDataHandler.GetAllUnlockSkin();
+        DataSaver.Instance.inventoryDataToSave.SaveSkinData(SkinDataHandler.CollectionsName,SkinDataHandler.GetAllUnlockSkin());
+        DataSaver.Instance.SaveInventoryData();
+    }
+    [Button]
+    public void SaveDefaultSkin()
+    {
+        DataSaver.Instance.inventoryDataToSave.SaveSkinData(SkinDataHandler.CollectionsName,SkinDataHandler.GetDefautlSkinData());
         DataSaver.Instance.SaveInventoryData();
     }
 
-    public void SaveDefaultSkin()
+    public void SetDeaultSkin(int defaultIndex)
     {
-        DataSaver.Instance.inventoryDataToSave.skinsLists = SkinDataHandler.GetDefautlSkinData();
-        DataSaver.Instance.SaveInventoryData();
+        OnChangeSkinByIndex(defaultIndex);
     }
 }

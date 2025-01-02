@@ -9,6 +9,18 @@ using UnityEngine;
 public class SkinDataHandler : ScriptableObject
 {
     public List<SkinData> skinSpriteIcons = new();
+    public string CollectionsName
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(collectionsName))
+            {
+                return this.name;
+            }
+            return collectionsName;
+        }
+    }
+    [SerializeField] private string collectionsName;
     public List<string> GetDefautlSkinData()
     {
         {
@@ -30,10 +42,17 @@ public class SkinDataHandler : ScriptableObject
             if (skin.isUnlock)
                 unlockSkin.Add(skin.skinName);
         }
+        Debug.Log("Total skin: " + unlockSkin.Count);
         return unlockSkin;
     }
     public void UnlockPlayerOwnSkin(List<string> skinOwns)
     {
+        if(skinOwns == null || skinOwns.Count == 0)
+        {
+            Debug.Log(skinOwns);
+            Debug.LogError("Skin Count is zero, please check it out");
+            return;
+        }
         foreach (var skinIngame in skinSpriteIcons)
         {
             if (skinOwns.Contains(skinIngame.skinName))
