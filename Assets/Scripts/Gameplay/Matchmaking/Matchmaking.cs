@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 {
@@ -586,8 +587,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             Debug.Log("No additional players joined. Spawning an AI bot...");
 
             // Spawn the AI bot
-            PlayerRoomController aiBot = runner.Spawn(aiControllerPrefab, new Vector3(-2, 10, UnityEngine.Random.Range(-20, 6)), Quaternion.identity);
-            aiBot.SetTeamID("AI"); // Assign an AI-specific team ID
+            PlayerRoomController aiBot = runner.Spawn(aiControllerPrefab, new Vector3(-2, 10, Random.Range(-20, 6)), Quaternion.identity);
+            aiBot.SetTeamID("AI" + Random.Range(100,1000).ToString()); // Assign an AI-specific team ID
             players[aiBot.Object.InputAuthority] = aiBot;
 
             // Update remaining players count

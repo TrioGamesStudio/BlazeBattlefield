@@ -202,7 +202,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     {
         currentState = newState;
         CurrentNetworkedState = newState;
-        Debug.Log($"///Bot state changed to: {newState}");
+        //Debug.Log($"///Bot state changed to: {newState}");
     }
 
     private IEnumerator StateBehaviorRoutine()
