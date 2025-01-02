@@ -32,10 +32,12 @@ public class SkinSelectionUI : MonoBehaviour
     {
         buyBtn.onClick.AddListener(Buy);
     }
+
     private void OnDestroy()
     {
         buyBtn.onClick.RemoveListener(Buy);
     }
+
     private void Start()
     {
         BuyPanel.gameObject.SetActive(false);
@@ -47,6 +49,7 @@ public class SkinSelectionUI : MonoBehaviour
             Debug.Log("On Assign Event", gameObject);
         }
     }
+
     private void TryToBuySkin(int skinIndex)
     {
         int price = SkinDataHandler.skinSpriteIcons[skinIndex].price;
@@ -87,11 +90,13 @@ public class SkinSelectionUI : MonoBehaviour
             StartCoroutine(HideBuyPanel());
         }
     }
+
     private IEnumerator HideBuyPanel()
     {
         yield return new WaitForSeconds(hideBuyPanelTime);
         BuyPanel.gameObject.SetActive(false);
     }
+
     private bool CanBuySkin()
     {
         int currentCoint = DataSaver.Instance.dataToSave.coins;
@@ -114,6 +119,7 @@ public class SkinSelectionUI : MonoBehaviour
         skinDescription.text = SkinDataHandler.skinSpriteIcons[index].skinDescription;
         BuyPanel.gameObject.SetActive(false);
     }
+
 #if UNITY_EDITOR
     [Button]
     private void PreCreatingUIAvatar()
@@ -144,6 +150,7 @@ public class SkinSelectionUI : MonoBehaviour
             avatarUI.ToggleLocker(skinData.isUnlock);
         }
     }
+
     [Button]
     public void SaveSkin()
     {
