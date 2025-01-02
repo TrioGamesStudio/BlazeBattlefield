@@ -326,8 +326,7 @@ public class PlayerRoomController : NetworkBehaviour
                     }
                     break; // Ensure only one player is selected
                 }
-            }
-           
+            }          
         }
     }
 }

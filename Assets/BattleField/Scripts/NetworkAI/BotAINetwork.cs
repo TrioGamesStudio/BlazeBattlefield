@@ -171,10 +171,14 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     // Logic to request authority
     public void RequestAuthority()
     {
-        //if (!Object.HasStateAuthority)
+        if (Object != null && !Object.HasStateAuthority)
         {
             Object.RequestStateAuthority();
             Debug.Log($"///Requesting state authority for bot {gameObject.name}.");
+        }
+        else
+        {
+            Debug.Log("///Object has been destroy");
         }
     }
 
