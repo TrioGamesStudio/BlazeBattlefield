@@ -149,7 +149,9 @@ public class HPHandler : NetworkBehaviour
         Networked_HP -= damageAmount;
         RPC_SetNetworkedHP(Networked_HP, damageCausedByPlayerNickName);
 
-        if (isBot) return;
+        //if (isBot) return;
+
+        if (weaponHandler == null) return;
 
         CroshairManager.OnHitTarget(NetworkPlayer.Local.transform.position);
 
