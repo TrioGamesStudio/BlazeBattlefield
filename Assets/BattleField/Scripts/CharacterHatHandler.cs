@@ -16,8 +16,8 @@ public class CharacterHatHandler : NetworkBehaviour
         if (HasStateAuthority)
         {
             playerHatIndex = HatDataHandler.currentHatIndex;
-            CreateHatRemote();
         }
+        CreateHatRemote();
     }
 
     [EditorButton]
