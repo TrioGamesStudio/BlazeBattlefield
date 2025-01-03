@@ -39,58 +39,70 @@ public class DataToSave
 [Serializable]
 public class InventoryDataToSave
 {
+    [Serializable] 
     public class CustomData
     {
+        public CustomData(string _collectionsName, List<string> _collectionsList)
+        {
+            collectionsName = _collectionsName;
+            collectionsList = _collectionsList;
+        }
         public string collectionsName;
         public List<string> collectionsList;
     }
     public string inventoryName;
     //public string[] skinsArr = new string[5];
     //public List<string> skinsLists = new List<string>();
-    [HideInInspector] public List<string> skinCollections = new();
-    [HideInInspector] public List<string> hatCollections = new();
-    public Dictionary<string, List<string>> playerCollections = new();
+    public List<CustomData> CustomDatas = new();
     public InventoryDataToSave(string inventoryName, SkinDataHandler skinData, SkinDataHandler hatData)
     {
         this.inventoryName = inventoryName;
         //this.skinsArr = skinsNames;
         //this.skinsLists = lists;
-        skinCollections = new List<string>(skinData.GetDefautlSkinData());
-        hatCollections = new List<string>(hatData.GetDefautlSkinData());
-        Debug.Log(skinCollections.Count);
-        Debug.Log(hatCollections.Count);
         Debug.Log("Add Skin Collection name: " + skinData.CollectionsName);
         Debug.Log("Add Skin Collection name: " + hatData.CollectionsName);
 
         InitWhenLoad(skinData, hatData);
+
+        
     }
 
     public void SaveSkinData(string collectionsName, List<string> collections)
     {
-        if (playerCollections.TryGetValue(collectionsName, out var list))
+        foreach(var item in CustomDatas)
         {
-            list.Clear();
-            list.AddRange(collections);
+            if(item.collectionsName == collectionsName)
+            {
+                item.collectionsList = collections;
+            }
         }
     }
 
     public List<string> GetCollections(string collectionsName)
     {
         Debug.Log("Get Skin Collections name: " + collectionsName);
-        Debug.Log("Collections count: " + playerCollections.Count);
      
-        if (playerCollections.TryGetValue(collectionsName, out var list))
+        foreach(var item in CustomDatas)
         {
-            return list;
+            if(item.collectionsName == collectionsName)
+            {
+                return item.collectionsList;
+            }
         }
         return new();
     }
 
     public void InitWhenLoad(SkinDataHandler skinData, SkinDataHandler hatData)
     {
-        playerCollections = new();
-        playerCollections.Add(skinData.CollectionsName, skinCollections);
-        playerCollections.Add(hatData.CollectionsName, hatCollections);
+        List<SkinDataHandler> skinDataHandlers = new()
+        {
+            skinData, hatData
+        };
+
+        foreach (var item in skinDataHandlers)
+        {
+            CustomDatas.Add(new CustomData(item.CollectionsName, item.GetDefautlSkinData()));
+        }
     }
 }
 

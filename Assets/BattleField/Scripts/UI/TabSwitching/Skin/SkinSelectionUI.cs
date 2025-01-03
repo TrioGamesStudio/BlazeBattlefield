@@ -25,6 +25,8 @@ public class SkinSelectionUI : MonoBehaviour
     [SerializeField] private ShowPlayerInfo showPlayerInfo;
     [SerializeField] private Color priceColor;
     [SerializeField] private Image buyPanelSkinIcon;
+
+    [SerializeField] private AudioSource selectAudio;
     public event Action<int> OnChangedSkinAction;
     private int buyIndex;
 
@@ -106,16 +108,47 @@ public class SkinSelectionUI : MonoBehaviour
     {
         Debug.Log("On Click UI:" + index, gameObject);
 
+        ResetAvatarButtonState();
+
+        OnChangedSkinAction?.Invoke(index);
+       
+        SetSelectButton(index);
+
+        skinDescription.text = SkinDataHandler.skinSpriteIcons[index].skinDescription;
+
+        BuyPanel.gameObject.SetActive(false);
+
+        selectAudio.Play();
+    }
+
+    public void SetDeaultSkin(int defaultIndex)
+    {
+        // duplicate code !!!!
+        ResetAvatarButtonState();
+
+        OnChangedSkinAction?.Invoke(defaultIndex);
+
+        SetSelectButton(defaultIndex);
+
+        skinDescription.text = SkinDataHandler.skinSpriteIcons[defaultIndex].skinDescription;
+
+        BuyPanel.gameObject.SetActive(false);
+
+    }
+
+    private void SetSelectButton(int index)
+    {
+        avatarUIList[index].button.interactable = false;
+        avatarUIList[index].Select();
+    }
+
+    private void ResetAvatarButtonState()
+    {
         foreach (var avatar in avatarUIList)
         {
             avatar.button.interactable = true;
             avatar.DeSelect();
         }
-        OnChangedSkinAction?.Invoke(index);
-        avatarUIList[index].button.interactable = false;
-        avatarUIList[index].Select();
-        skinDescription.text = SkinDataHandler.skinSpriteIcons[index].skinDescription;
-        BuyPanel.gameObject.SetActive(false);
     }
 
 #if UNITY_EDITOR
@@ -163,8 +196,6 @@ public class SkinSelectionUI : MonoBehaviour
         DataSaver.Instance.SaveInventoryData();
     }
 
-    public void SetDeaultSkin(int defaultIndex)
-    {
-        OnChangeSkinByIndex(defaultIndex);
-    }
+
+    
 }

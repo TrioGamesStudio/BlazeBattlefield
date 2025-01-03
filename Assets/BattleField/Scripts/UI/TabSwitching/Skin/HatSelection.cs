@@ -22,6 +22,7 @@ public class HatSelection : MonoBehaviour
         }
 
         SkinSelectionUI.OnChangedSkinAction += SkinSelectionUI_OnChangedSkinAction;
+        SkinSelectionUI.SetDeaultSkin(HatDataHandler.currentHatIndex);
     }
     private void OnDestroy()
     {
