@@ -149,7 +149,7 @@ public class HPHandler : NetworkBehaviour
         Networked_HP -= damageAmount;
         RPC_SetNetworkedHP(Networked_HP, damageCausedByPlayerNickName);
 
-        //if (isBot) return;
+        if (!isBot) RPC_UpdateStats(damageAmount);
 
         if (weaponHandler == null) return;
 
@@ -158,7 +158,6 @@ public class HPHandler : NetworkBehaviour
         //Debug.LogWarning("After damge:" + Networked_HP);
         RPC_UpdateTeammateHP(damageAmount);
         killerName = damageCausedByPlayerNickName;       
-        RPC_UpdateStats(damageAmount);
         Debug.Log($"{Time.time} {transform.name} took damage {Networked_HP} left");
 
         if (Networked_HP <= 0)
