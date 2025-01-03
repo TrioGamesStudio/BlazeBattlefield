@@ -211,7 +211,7 @@ public class UIController : MonoBehaviour
 
     public void SetWaitingTime(string time)
     {
-        FindObjectOfType<WorldUI>().SetWaitingTime(time);
+        FindObjectOfType<WorldUI>()?.SetWaitingTime(time);
     }
 
     public void TurnOffWaitingTime()
