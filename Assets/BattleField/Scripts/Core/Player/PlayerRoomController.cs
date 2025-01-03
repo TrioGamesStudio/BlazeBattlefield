@@ -20,11 +20,14 @@ public class PlayerRoomController : NetworkBehaviour
     public bool isLocalPlayer = false;
 
     public GameObject miniMapTeamMateImage;
+
+    private const int POINT_PER_KILL = 10;
+
     //bool isCursorShowed = false;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -92,6 +95,8 @@ public class PlayerRoomController : NetworkBehaviour
             localRoomId = roomID;
             Debug.Log("SET ROOM ID");
             PlayerPrefs.SetString("RoomID", roomID); // Save player room
+
+            FindObjectOfType<PressToTalk>().RPC_RequestTeamID(roomID);
         }
     }
 
@@ -145,6 +150,7 @@ public class PlayerRoomController : NetworkBehaviour
         //if (Object.HasStateAuthority)
         {
             RPC_SetTeamID(teamID);
+
         }
     }
 
@@ -152,6 +158,7 @@ public class PlayerRoomController : NetworkBehaviour
     private void RPC_SetTeamID(string teamID)
     {
         TeamID = teamID;
+        
     }
 
     public void SetTeamMateTag()
@@ -175,14 +182,15 @@ public class PlayerRoomController : NetworkBehaviour
     {
         ShowCursor();
         Debug.Log("===WIN ROIIIIII");
-        int xpGained = 0;
+        int xpGained;
+        int coinAdded = GetCoint(1, PlayerStats.Instance.TotalKill);
         if (matchmaking.currentMode == Matchmaking.Mode.Duo)
         {
             FindObjectOfType<WorldUI>().ShowHideWinUITeam();
             // set winteam variable
             DataSaver.Instance.dataToSave.winTeam += 1;
             xpGained = 50; // XP for duo win
-        }       
+        }
         else
         {
             FindObjectOfType<WorldUI>().ShowHideWinUI();
@@ -206,9 +214,13 @@ public class PlayerRoomController : NetworkBehaviour
             nextThreshold = RankSystem.GetNextThreshold(playerData.rank);
         }
 
+        // Update coin
+        playerData.coins += coinAdded;
+
         // save to firebase datatosave
         DataSaver.Instance.SaveData();
         GetComponent<NetworkPlayer>().localUI.SetActive(false);
+        PlayerStats.Instance.MarkEndGame();
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -220,21 +232,51 @@ public class PlayerRoomController : NetworkBehaviour
         {
             FindObjectOfType<WorldUI>().HideEliminateUI();
             FindObjectOfType<WorldUI>().ShowHideUIDefeatTeam(rank);
-        }          
+        }
         else
-        {        
+        {
             FindObjectOfType<WorldUI>().ShowHideUI(rank);
-        }          
-    }
+        }
 
+        // Update coin
+
+
+
+        var playerData = DataSaver.Instance.dataToSave;
+
+        // Update coin
+        playerData.coins += GetCoint(rank, PlayerStats.Instance.TotalKill);
+
+        // save to firebase datatosave
+        DataSaver.Instance.SaveData();
+    }
+    public int GetCoint(int rank, int kill)
+    {
+        int coinAdded = 10;
+        if (rank == 1)
+        {
+            coinAdded = 50;
+        }
+        else if (rank == 2)
+        {
+            coinAdded = 30;
+        }
+        else if (rank == 3)
+        {
+            coinAdded = 20;
+        }
+        coinAdded += kill * POINT_PER_KILL;
+        return coinAdded;
+    }
     // on off cursor
     /* void ToggleCursor() {
         isCursorShowed = !isCursorShowed;
         if(isCursorShowed) ShowCursor();
         else HideCursor();
     } */
-        
-    void ShowCursor() {
+
+    void ShowCursor()
+    {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
@@ -258,6 +300,44 @@ public class PlayerRoomController : NetworkBehaviour
         //if (Object.HasStateAuthority)
         {
             matchmaking.UpdateMapProperty(map);
+        }
+    }
+
+    // Broadcast the remaining time to all clients
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_BroadcastTimer(float remainingTime)
+    {
+        // Update the UI for clients
+        FindObjectOfType<UIController>().SetWaitingTime(remainingTime.ToString("F0"));
+
+        if (remainingTime <= 0)
+            FindObjectOfType<UIController>().TurnOffWaitingTime();
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        base.Despawned(runner, hasState);
+        Debug.Log("/// Despawn called for runner: " + runner.name);
+
+        // Ensure that authority changes only if a bot is present
+        if (matchmaking.HasBot())
+        {
+            Debug.Log("/// Bot detected, checking for authority transfer...");
+            BotAINetwork[] botAIsNetwork = FindObjectsOfType<BotAINetwork>();
+
+            // Select the next player to take authority
+            foreach (var player in runner.ActivePlayers)
+            {
+                if (player == Runner.LocalPlayer) // Exclude the current local player
+                {
+                    Debug.Log("/// Transferring StateAuthority to player: " + player.PlayerId);
+                    foreach (var botAI in botAIsNetwork)
+                    {
+                        botAI.RequestAuthority();
+                    }
+                    break; // Ensure only one player is selected
+                }
+            }          
         }
     }
 }

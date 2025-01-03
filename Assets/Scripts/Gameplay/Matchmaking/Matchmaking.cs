@@ -9,6 +9,8 @@ using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
+using Photon.Chat;
 
 public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 {
@@ -40,10 +42,15 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     [SerializeField] private NetworkRunner networkRunnerPrefab;
     [SerializeField] private PlayerRoomController playerControllerPrefab;
+    [SerializeField] private PlayerRoomController aiControllerPrefab;
     [SerializeField] private List<Transform> memberPos = new();
     [SerializeField] private Button readyButton;
     [SerializeField] private Button playButton;
-    [SerializeField] private int MAX_PLAYER = 2;
+    [SerializeField] private int MAX_PLAYER;
+    [SerializeField] private bool spawnAI;
+    [SerializeField] private float timeForSpawnBot;
+    private float estimateTimeRemaining;
+    private bool timerStarted = false;
 
     private NetworkRunner networkRunner;   
     private PlayerRoomController localPlayerRoomController;
@@ -55,6 +62,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         PlayScene = 2,
     }
+    private int remainPlayer;
+    private bool battleStarted = false; // Track whether the battle has started
 
     [SerializeField] int skinSelectedNumber = 0;
     public int SkinSelectedNumber{get => skinSelectedNumber; set => skinSelectedNumber = value;}
@@ -75,6 +84,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        //spawnAI = false;
     }
 
     void Start()
@@ -256,7 +266,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         if (currentMode == Mode.Duo) return;
         players.Clear();    
-        string teamcode = UnityEngine.Random.Range(100, 999).ToString();
+        string teamcode = UnityEngine.Random.Range(10, 100).ToString();
         if (networkRunner == null)
         {
             networkRunner = Instantiate(networkRunnerPrefab);
@@ -355,22 +365,27 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         {
             Debug.LogWarning("Network runner is not initialized or you are not in a session.");
         }
+
+        // de active chatvoice button
+        FindObjectOfType<ChatVoiceState>().DeAvtiveChatVoiceButton();
     }
 
     public async void BackToLobby()
     {
         await networkRunner.Shutdown();
-        SceneManager.LoadScene("MainLobby");
+        //SceneManager.LoadScene("MainLobby");
+        LoadingScene.Instance.LoadScene("MainLobby");
         isDone = false;
+        battleStarted = false;
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
         localPlayer.gameObject.SetActive(true);
         await JoinLobby();
 
-        if(currentMode == Mode.Duo) {
-            SkinSelection.Instance.ToggleSelectSkinButton(false);
-        } else {
-            SkinSelection.Instance.ToggleSelectSkinButton(true);
-        }
+        //if(currentMode == Mode.Duo) {
+        //    SkinSelection.Instance.ToggleSelectSkinButton(false);
+        //} else {
+        //    SkinSelection.Instance.ToggleSelectSkinButton(true);
+        //}
         PlayerStats.Instance.ResetStats();
     }
 
@@ -506,14 +521,14 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject.Object);
                 localSoloPlayer = playerObject.GetComponent<PlayerRoomController>();
                 playerObject.GetComponent<PlayerRoomController>().SetPlayerRef(player);
-                playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
+                //playerObject.GetComponent<PlayerRoomController>().SetTeamID(runner.UserId);
+                playerObject.GetComponent<PlayerRoomController>().SetTeamID("SoloPlayer" + UnityEngine.Random.Range(100, 1000).ToString());
                 playerObject.GetComponent<PlayerRoomController>().SetLocalPlayer();
                 players[player] = playerObject.GetComponent<PlayerRoomController>();
-                if (players.Count == MAX_PLAYER)
+                if (runner.IsSharedModeMasterClient && spawnAI)
                 {
-                    Debug.Log("=== Start battle.......");
-                    
-                    StartBattle();
+                    // Start a coroutine to wait for 10 seconds and spawn an AI bot if necessary
+                    StartCoroutine(WaitForRealPlayerOrSpawnBot(runner));
                 }
                 matchSolo[player] = players[player].TeamID.ToString();
             }
@@ -522,24 +537,107 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 // Handle remote player
                 StartCoroutine(WaitForPlayerObjectSolo(runner, player));
             }
+ 
             int remainPlayer = MAX_PLAYER - networkRunner.ActivePlayers.Count();
             //string text = "Waiting other player: " + remainPlayer + " remain";
             FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
         }
-        //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+    }
 
+    private void Update()
+    {
+        // If the battle has already started, exit the method
+        if (battleStarted)
+            return;
+
+        // Check the current player count
+        int allPlayers = FindObjectsOfType<PlayerRoomController>().Length;
+
+        // If enough players are present, start the battle
+        if (allPlayers == MAX_PLAYER)
+        {
+            Debug.Log("=== Start battle.......");
+            StartBattle();
+
+            // Mark the battle as started to stop further checks
+            battleStarted = true;
+        }
     }
 
     public void StartBattle()
     {
-        Debug.Log("Start battle");
+        //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
         networkRunner.SessionInfo.IsOpen = false;
         isDone = true;
-        StartGameHandler.OnStartGameAction?.Invoke();
-        //FindObjectOfType<UIController>().StartCountdown();
-        //StartCoroutine(ReleasePlayer());
-        //StartCoroutine(InitializeTeams());
+        FindObjectOfType<UIController>().StartCountdown();
+        StartCoroutine(ReleasePlayer());
+        StartCoroutine(InitializeTeams());
 
+    }
+
+    private IEnumerator WaitForRealPlayerOrSpawnBot(NetworkRunner runner)
+    {
+        //yield return new WaitForSeconds(timeForSpawnBot);
+        //Debug.Log("Waiting for real players...");
+
+        if (!timerStarted)
+        {
+            timerStarted = true;
+            estimateTimeRemaining = timeForSpawnBot;
+        }
+
+        while (estimateTimeRemaining > -1)
+        {
+            // Dynamically get the updated list of players in each iteration
+            var currentPlayers = new Dictionary<PlayerRef, PlayerRoomController>(players);
+
+            foreach (var playerRoomController in currentPlayers.Values)
+            {
+                // Broadcast the remaining time to all clients
+                playerRoomController.RPC_BroadcastTimer(estimateTimeRemaining);
+            }   
+
+            // Update the UI locally for the master client
+            FindObjectOfType<UIController>().SetWaitingTime(estimateTimeRemaining.ToString("F0"));
+            yield return new WaitForSeconds(1);
+            estimateTimeRemaining--;
+            if (estimateTimeRemaining <= -1)
+                FindObjectOfType<UIController>().TurnOffWaitingTime();
+            //estimateTimeRemaining -= Time.deltaTime;
+            yield return null;
+        }
+
+        timerStarted = false;
+        Debug.Log("Waiting time elapsed. Spawning bots if necessary...");
+
+        // Calculate the number of bots needed to fill the remaining slots
+        //int botsToSpawn = MAX_PLAYER - players.Count;
+        int botsToSpawn = MAX_PLAYER - runner.ActivePlayers.Count();
+
+        for (int i = 0; i < botsToSpawn; i++)
+        {
+            Debug.Log("No additional players joined. Spawning an AI bot...");
+
+            // Spawn the AI bot
+            PlayerRoomController aiBot = runner.Spawn(aiControllerPrefab, new Vector3(-2, 10, Random.Range(-20, 6)), Quaternion.identity);
+            aiBot.SetTeamID("AI" + Random.Range(100,1000).ToString()); // Assign an AI-specific team ID
+            players[aiBot.Object.InputAuthority] = aiBot;
+
+            // Update remaining players count
+            int remainPlayer = MAX_PLAYER - players.Count;
+            //string text = "Waiting for other players: " + remainPlayer + " remaining";
+            FindObjectOfType<UIController>().SetText(remainPlayer.ToString());
+
+            // Break out if we've reached the max player count
+            if (players.Count == MAX_PLAYER)
+            {
+                Debug.Log("=== All slots filled. Starting battle...");
+                yield break; // Exit the coroutine
+            }
+
+            // Add a small delay between spawning bots to ensure game stability
+            yield return new WaitForSeconds(1);
+        }
     }
 
     private IEnumerator ReleasePlayer()
@@ -554,6 +652,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         yield return new WaitForSeconds(6f);
         FindObjectOfType<GameHandler>().InitializeTeams();
+        FindObjectOfType<GameHandler>().AssignRoute();
     }
 
     private IEnumerator WaitForPlayerObject(NetworkRunner runner, PlayerRef player)
@@ -572,6 +671,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 networkPlayer.SetNicknameUIColor(Color.blue); //Set teammate name plate UI color to blue
                 UpdatePlayButtonInteractability();
                 players[player].SetRoomID(runner.SessionInfo.Name);
+                matchSolo[player] = players[player].TeamID.ToString();
                 yield break;
             }
             elapsedTime += Time.deltaTime;
@@ -599,11 +699,6 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
                 NetworkPlayer networkPlayer = players[player].GetComponent<NetworkPlayer>();
                 networkPlayer.SetNicknameUIColor(Color.red); //Set enemy name plate UI color to red
                 matchSolo[player] = players[player].TeamID.ToString();
-                if (players.Count == MAX_PLAYER)
-                {
-                    Debug.Log("=== Start battle.......");
-                    StartBattle();
-                }
                 yield break;
             }
             elapsedTime += Time.deltaTime;
@@ -618,6 +713,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
+        Debug.Log($"///Player left " + player.PlayerId);
         if (currentMode == Mode.Solo && !isDone)
         {
             int remainPlayer = MAX_PLAYER - networkRunner.ActivePlayers.Count();
@@ -627,8 +723,10 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (currentMode == Mode.Solo && isDone)
         {
+            //if (matchSolo.ContainsKey(player) && players.ContainsKey(player))
             FindObjectOfType<GameHandler>().Eliminate(matchSolo[player], players[player]);
             FindObjectOfType<GameHandler>().CheckWin();
+            battleStarted = false;
         }
 
         players.Remove(player);
@@ -677,6 +775,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         // You can add validation here if needed
         currentSceneIndex = sceneIndex;
+    }
+
+    public bool HasBot()
+    {
+        return spawnAI;
     }
 
     public void OnConnectedToServer(NetworkRunner runner)

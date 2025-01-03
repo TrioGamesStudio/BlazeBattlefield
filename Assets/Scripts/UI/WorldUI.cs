@@ -14,6 +14,7 @@ public class WorldUI : MonoBehaviour
     public Button lobbyButton;
     public Button lobbyButtonWin;
     public TextMeshProUGUI informationText;
+    public TextMeshProUGUI waitingTimeText;
     public TextMeshProUGUI topText;
     public TextMeshProUGUI topTextTeam;
     public StatsDisplay statsDisplay;
@@ -72,7 +73,20 @@ public class WorldUI : MonoBehaviour
 
     public void SetText(string text)
     {
+        informationText.gameObject.SetActive(true);
+        informationText.text = "";
         informationText.text = text;
+    }
+
+    public void SetWaitingTime(string time)
+    {
+        waitingTimeText.gameObject.SetActive(true);
+        waitingTimeText.text = $"Estimated time remaining: {time}";
+    }
+
+    public void TurnOffWaitingTime()
+    {
+        waitingTimeText.gameObject.SetActive(false);
     }
 
     public void StartCountdown()

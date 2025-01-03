@@ -10,5 +10,8 @@ public class AmmoItem : ItemNetworkBase<AmmoType, AmmoItemConfig>
     //{
     //    StorageManager.instance.UpdateAmmo(_enumType, quantity, true);
     //}
-
+    public override void CollectAI(ActiveWeaponAI activeWeaponAI)
+    {
+        DestroyItem();
+    }
 }

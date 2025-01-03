@@ -11,6 +11,7 @@ public class BoundItem : NetworkBehaviour
     public bool IsInBoundCollider { get => isInBoundCollider; set => isInBoundCollider = value; }
     public BoundItemsCollider BoundItemsCollider;
     [Networked] public bool allowAddToCollider { get; set; }
+    //public bool allowAddToCollider;
 
     public void SetupFromStateAuthority()
     {

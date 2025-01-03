@@ -5,6 +5,7 @@ using Fusion;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerCollectManager : NetworkBehaviour
 {
+    [SerializeField] private bool isPlayer;
     private Rigidbody Rigidbody;
     private void Awake()
     {
@@ -25,7 +26,8 @@ public class PlayerCollectManager : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        CollectItem(other, true);
+        if (isPlayer)
+            CollectItem(other, true);
         TriggerDropBox(other);
 
     }

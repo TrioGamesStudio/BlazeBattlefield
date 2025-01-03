@@ -932,6 +932,15 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChatVoice"",
+                    ""type"": ""Button"",
+                    ""id"": ""8d147d19-d6ea-4add-aeae-a2cc8055827c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1088,6 +1097,17 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""98523b06-8cb9-46bf-99e3-21f18814acf4"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChatVoice"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1195,6 +1215,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Combat_SwapFireMode = m_Combat.FindAction("Swap Fire Mode", throwIfNotFound: true);
         m_Combat_ShowInventory = m_Combat.FindAction("Show Inventory", throwIfNotFound: true);
         m_Combat_Reload = m_Combat.FindAction("Reload", throwIfNotFound: true);
+        m_Combat_ChatVoice = m_Combat.FindAction("ChatVoice", throwIfNotFound: true);
     }
 
     ~@PlayerInputAction()
@@ -1543,6 +1564,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Combat_SwapFireMode;
     private readonly InputAction m_Combat_ShowInventory;
     private readonly InputAction m_Combat_Reload;
+    private readonly InputAction m_Combat_ChatVoice;
     public struct CombatActions
     {
         private @PlayerInputAction m_Wrapper;
@@ -1560,6 +1582,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         public InputAction @SwapFireMode => m_Wrapper.m_Combat_SwapFireMode;
         public InputAction @ShowInventory => m_Wrapper.m_Combat_ShowInventory;
         public InputAction @Reload => m_Wrapper.m_Combat_Reload;
+        public InputAction @ChatVoice => m_Wrapper.m_Combat_ChatVoice;
         public InputActionMap Get() { return m_Wrapper.m_Combat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1608,6 +1631,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Reload.started += instance.OnReload;
             @Reload.performed += instance.OnReload;
             @Reload.canceled += instance.OnReload;
+            @ChatVoice.started += instance.OnChatVoice;
+            @ChatVoice.performed += instance.OnChatVoice;
+            @ChatVoice.canceled += instance.OnChatVoice;
         }
 
         private void UnregisterCallbacks(ICombatActions instance)
@@ -1651,6 +1677,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Reload.started -= instance.OnReload;
             @Reload.performed -= instance.OnReload;
             @Reload.canceled -= instance.OnReload;
+            @ChatVoice.started -= instance.OnChatVoice;
+            @ChatVoice.performed -= instance.OnChatVoice;
+            @ChatVoice.canceled -= instance.OnChatVoice;
         }
 
         public void RemoveCallbacks(ICombatActions instance)
@@ -1756,5 +1785,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnSwapFireMode(InputAction.CallbackContext context);
         void OnShowInventory(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnChatVoice(InputAction.CallbackContext context);
     }
 }

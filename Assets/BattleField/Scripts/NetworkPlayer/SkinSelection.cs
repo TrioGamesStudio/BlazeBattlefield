@@ -8,12 +8,12 @@ public class SkinSelection : MonoBehaviour
     [SerializeField] Matchmaking matchmaking;
     [SerializeField] MatchmakingTeam matchmakingTeam;
 
-    [SerializeField] int skinsNextNumber = 12;
+    [SerializeField] int skinsNextNumber = 0;
     [SerializeField] Transform skinsParent;
     int skinMaxNumber;
     // buttons
     [SerializeField] Button selectButton;
-
+    [SerializeField] private SkinSelectionUI skinSelectionUI;
 
 
     private void Awake()
@@ -35,6 +35,14 @@ public class SkinSelection : MonoBehaviour
         skinMaxNumber = skinsParent.childCount;
 
         selectButton.onClick.AddListener(SkinSelectNext);
+        skinSelectionUI.OnChangedSkinAction += SetSkinByIndex;
+
+        skinSelectionUI.SetDeaultSkin(skinsNextNumber);
+    }
+
+    private void OnDestroy()
+    {
+        skinSelectionUI.OnChangedSkinAction -= SetSkinByIndex;
 
     }
 
@@ -80,7 +88,15 @@ public class SkinSelection : MonoBehaviour
 
     public void ToggleSelectSkinButton(bool isActive)
     {
-        selectButton.gameObject.SetActive(isActive);
+        //selectButton.gameObject.SetActive(isActive);
     }
 
+    public void SetSkinByIndex(int newIndex)
+    {
+        skinsNextNumber = newIndex;
+        SkinsSlectionSoloUpdate(skinsNextNumber);
+
+        matchmaking.SkinSelectedNumber = skinsNextNumber;
+        matchmakingTeam.SkinSelectedNumber = skinsNextNumber;
+    }
 }

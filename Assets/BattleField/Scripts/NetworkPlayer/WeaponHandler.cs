@@ -297,7 +297,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
         {
             // neu hitInfo do this.gameObject ban ra thi return
             byte localWeaponDamageCurr = 0;
-            if (hit.transform.GetComponent<WeaponHandler>() == this) return;
+            if (hit.transform.GetComponentInParent<WeaponHandler>() == this) return;
             // neu hitInfo la dong doi thi khong tru mau
             //if (hit.transform.CompareTag("TeamMate")) return;
             if (IsTeammate(hit)) return;
@@ -312,7 +312,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
                 string bodyName = hit.collider.transform.name;
                 Debug.Log($"_____bodyName = {bodyName}");
                 if (bodyName == HEAD) localWeaponDamageCurr = hPHandler.Networked_HP;
-                else if (bodyName == ARML || bodyName == ARMR) localWeaponDamageCurr = this.weaponDamageCurr;
+                else if (bodyName == ARML || bodyName == ARMR || bodyName == "HitBox") localWeaponDamageCurr = this.weaponDamageCurr;
 
                 if (Object.HasStateAuthority)
                 {
