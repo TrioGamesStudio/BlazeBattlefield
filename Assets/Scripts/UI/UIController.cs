@@ -209,6 +209,16 @@ public class UIController : MonoBehaviour
         FindObjectOfType<WorldUI>().SetText(formattedText);
     }
 
+    public void SetWaitingTime(string time)
+    {
+        FindObjectOfType<WorldUI>().SetWaitingTime(time);
+    }
+
+    public void TurnOffWaitingTime()
+    {
+        FindObjectOfType<WorldUI>().TurnOffWaitingTime();
+    }
+
     public void StartCountdown()
     {
         //StartCoroutine(CountdownCoroutine());

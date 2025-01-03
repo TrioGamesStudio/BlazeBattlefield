@@ -85,7 +85,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2765225612460693475}
   - component: {fileID: 2707697326631669358}
-  m_Layer: 7
+  - component: {fileID: 1234054443527731465}
+  - component: {fileID: 5122742927170769442}
+  m_Layer: 15
   m_Name: HitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +102,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72851290656616069}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -126,7 +128,41 @@ MonoBehaviour:
   CapsuleExtents: 0
   Offset: {x: 0, y: 0.9, z: 0}
   Root: {fileID: 4209804027836753055}
-  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 0.19607843}
+  GizmosColor: {r: 0.37522885, g: 1, b: 0.033018887, a: 0.9490196}
+--- !u!114 &1234054443527731465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72851290656616069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83062908b6a93a499ac626302ec8ef2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hPHandler: {fileID: 0}
+--- !u!65 &5122742927170769442
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72851290656616069}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6848377, y: 1.5269685, z: 0.6850109}
+  m_Center: {x: 0.0052049905, y: 0.7611368, z: 0.00030207634}
 --- !u!1 &87972234719739997
 GameObject:
   m_ObjectHideFlags: 0
@@ -33263,7 +33299,7 @@ MonoBehaviour:
   aimPoint_grandeRocket_3rd: {fileID: 980366272779043220}
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 98433
   audioSource: {fileID: 4356114935845866614}
   weaponSoundCurr: {fileID: 0}
   _isFiring: 0
@@ -33319,6 +33355,7 @@ MonoBehaviour:
   uiOnHitColor: {r: 0.6509434, g: 0.23028658, b: 0.23028658, a: 0}
   uiOnHitImage: {fileID: 7161972522368408250}
   playerModel: {fileID: 702367509307297863}
+  hitBox: {fileID: 72851290656616069}
   localGunHolder: {fileID: 313210496306553861}
   deathParticlePf: {fileID: 4968256401583644762, guid: 136094b40fc14b34ab568c032409f5df,
     type: 3}
@@ -33327,6 +33364,7 @@ MonoBehaviour:
   OnTakeDamageEvent:
     m_PersistentCalls:
       m_Calls: []
+  isBot: 0
 --- !u!114 &4043879867669260240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51076,6 +51114,11 @@ PrefabInstance:
         type: 3}
       propertyPath: SortKey
       value: 2574545097
+      objectReference: {fileID: 0}
+    - target: {fileID: 6452352528162196287, guid: b567bd548e41e214aae8b1b45dedeb79,
+        type: 3}
+      propertyPath: isPlayer
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8791259767813851350, guid: b567bd548e41e214aae8b1b45dedeb79,
         type: 3}

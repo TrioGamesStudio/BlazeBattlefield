@@ -84,6 +84,11 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         DestroyItem();
     }
 
+    public virtual void CollectAI(ActiveWeaponAI activeWeaponAI)
+    {
+        DestroyItem();
+    }
+  
     protected virtual void AddToStorage()
     {
         InventoryItem inventoryItem = new();
@@ -191,5 +196,10 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     private void rpc_disableOutline()
     {
         GetComponent<Outline>().enabled = false;
+    }
+
+    public void CollectAI()
+    {
+        throw new NotImplementedException();
     }
 }

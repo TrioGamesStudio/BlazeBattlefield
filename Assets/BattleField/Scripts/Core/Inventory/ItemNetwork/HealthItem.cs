@@ -5,6 +5,11 @@ using Fusion;
 using NaughtyAttributes;
 public class HealthItem : ItemNetworkBase<HealingItemType,HealthItemConfig>
 {
+    public override void CollectAI(ActiveWeaponAI activeWeaponAI)
+    {
+        DestroyItem();
+    }
+
     //public override void Collect()
     //{
     //    StorageManager.instance.UpdateHealth(_enumType, quantity, true);

@@ -10,6 +10,7 @@ public interface IRunTimeItem
     string UniqueID();
     int Quantity();
     void Collect();
+    void CollectAI(ActiveWeaponAI activeWeaponAI);
     void DestroyItem();
     void DisableOutline();
 }

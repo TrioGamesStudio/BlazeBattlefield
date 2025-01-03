@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Fusion;
 using UnityEngine;
 
@@ -6,13 +7,14 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
 {
     [Networked]
     public int skinsNumber_Network{get; set;}
-    /* [SerializeField] int defaultSkinsNumber = 12; */
+
+    [Header("Skin select settings")]
     [SerializeField] Transform skinsTrans;
     [SerializeField] List<Transform> skinsList;
     [SerializeField] int skinSelectedNum;
+
     //others
     ChangeDetector changeDetector;
-
 
 
     public override void Spawned() {
@@ -23,12 +25,12 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
             if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo) {
                 skinSelectedNum = Matchmaking.Instance.SkinSelectedNumber;
             }
-            
+            //skinSelectedNum = Random.Range(0, skinsList.Count());
+            //Debug.Log("zzz select skin " + skinSelectedNum);
             RPC_RandomSKinsNumsGenerator(skinSelectedNum);
         }
         
-
-        OnSkinsChanged();
+        //OnSkinsChanged();
     }
 
     private void Awake() {
@@ -45,8 +47,8 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
             switch (change)
             {
                 case nameof(skinsNumber_Network):
-                OnSkinsChanged();
-                break;
+                    OnSkinsChanged();
+                    break;
             }
         }
     }
