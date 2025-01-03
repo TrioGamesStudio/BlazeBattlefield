@@ -303,6 +303,17 @@ public class PlayerRoomController : NetworkBehaviour
         }
     }
 
+    // Broadcast the remaining time to all clients
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_BroadcastTimer(float remainingTime)
+    {
+        // Update the UI for clients
+        FindObjectOfType<UIController>().SetWaitingTime(remainingTime.ToString("F0"));
+
+        if (remainingTime <= 0)
+            FindObjectOfType<UIController>().TurnOffWaitingTime();
+    }
+
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
         base.Despawned(runner, hasState);

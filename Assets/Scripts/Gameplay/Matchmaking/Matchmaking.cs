@@ -49,8 +49,9 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     [SerializeField] private int MAX_PLAYER;
     [SerializeField] private bool spawnAI;
     [SerializeField] private float timeForSpawnBot;
+    private float estimateTimeRemaining;
+    private bool timerStarted = false;
 
-    
     private NetworkRunner networkRunner;   
     private PlayerRoomController localPlayerRoomController;
     private Vector3 spawnPosition;  
@@ -332,11 +333,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (networkRunner != null)
         {
             Debug.Log("Leaving room...");
-//<<<<<<< HEAD
-//            if (players.Count != 0)
-//=======
             if (players.Count > 0)
-//>>>>>>> develop_3_UI_Improvement
             {
                 if (players[networkRunner.LocalPlayer].IsRoomOwner)
                 {
@@ -384,11 +381,11 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         localPlayer.gameObject.SetActive(true);
         await JoinLobby();
 
-        if(currentMode == Mode.Duo) {
-            SkinSelection.Instance.ToggleSelectSkinButton(false);
-        } else {
-            SkinSelection.Instance.ToggleSelectSkinButton(true);
-        }
+        //if(currentMode == Mode.Duo) {
+        //    SkinSelection.Instance.ToggleSelectSkinButton(false);
+        //} else {
+        //    SkinSelection.Instance.ToggleSelectSkinButton(true);
+        //}
         PlayerStats.Instance.ResetStats();
     }
 
@@ -580,8 +577,38 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     private IEnumerator WaitForRealPlayerOrSpawnBot(NetworkRunner runner)
     {
-        yield return new WaitForSeconds(timeForSpawnBot);
-        Debug.Log("Waiting for real players...");
+        //yield return new WaitForSeconds(timeForSpawnBot);
+        //Debug.Log("Waiting for real players...");
+
+        if (!timerStarted)
+        {
+            timerStarted = true;
+            estimateTimeRemaining = timeForSpawnBot;
+        }
+
+        while (estimateTimeRemaining > -1)
+        {
+            // Dynamically get the updated list of players in each iteration
+            var currentPlayers = new Dictionary<PlayerRef, PlayerRoomController>(players);
+
+            foreach (var playerRoomController in currentPlayers.Values)
+            {
+                // Broadcast the remaining time to all clients
+                playerRoomController.RPC_BroadcastTimer(estimateTimeRemaining);
+            }   
+
+            // Update the UI locally for the master client
+            FindObjectOfType<UIController>().SetWaitingTime(estimateTimeRemaining.ToString("F0"));
+            yield return new WaitForSeconds(1);
+            estimateTimeRemaining--;
+            if (estimateTimeRemaining <= -1)
+                FindObjectOfType<UIController>().TurnOffWaitingTime();
+            //estimateTimeRemaining -= Time.deltaTime;
+            yield return null;
+        }
+
+        timerStarted = false;
+        Debug.Log("Waiting time elapsed. Spawning bots if necessary...");
 
         // Calculate the number of bots needed to fill the remaining slots
         //int botsToSpawn = MAX_PLAYER - players.Count;
@@ -696,6 +723,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (currentMode == Mode.Solo && isDone)
         {
+            //if (matchSolo.ContainsKey(player) && players.ContainsKey(player))
             FindObjectOfType<GameHandler>().Eliminate(matchSolo[player], players[player]);
             FindObjectOfType<GameHandler>().CheckWin();
             battleStarted = false;
