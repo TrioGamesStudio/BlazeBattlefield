@@ -102,7 +102,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         DestroyRPC();
     }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     private void DestroyRPC()
     {
         if (HasStateAuthority)

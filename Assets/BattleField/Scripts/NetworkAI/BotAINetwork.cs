@@ -20,8 +20,8 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     [Networked]
     private bool IsMoving { get; set; }
 
-    [Networked]
-    private bool HasGunNetworked { get; set; }
+    //[Networked]
+    //private bool HasGunNetworked { get; set; }
 
     [Networked]
     private Vector3 TargetPosition { get; set; }
@@ -63,7 +63,8 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     private bool isInitialized = false;
     private NetworkRunner runner;
 
-    public bool HasGun;
+    //public bool HasGun;
+    private ActiveWeaponAI activeWeaponAI;
     private NavMeshAgent agent;
     private HPHandler hpHandler;
     private BotState currentState;
@@ -81,8 +82,8 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         runner = Object.Runner;
 
         // Initialize networked properties
-        HasGun = false;
-        HasGunNetworked = false;
+        //HasGun = false;
+        //HasGunNetworked = false;
         CurrentNetworkedState = BotState.Idle;
         TargetPosition = transform.position; // Initialize with current position
 
@@ -96,7 +97,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     private void InitializeBot()
     {
         if (isInitialized) return;
-
+        activeWeaponAI = GetComponent<ActiveWeaponAI>();
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
         hpHandler = GetComponent<HPHandler>();
@@ -129,7 +130,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     private void RestoreBotState()
     {
         currentState = CurrentNetworkedState;
-        HasGun = HasGunNetworked;
+        //HasGun = HasGunNetworked;
 
         if (agent != null && TargetPosition != default)
         {
@@ -141,7 +142,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     public override void FixedUpdateNetwork()
     {
         IsMoving = agent != null && agent.velocity.magnitude > 0.1f;
-        HasGunNetworked = HasGun;
+        //HasGunNetworked = HasGun;
 
         if (agent != null && agent.hasPath)
         {
@@ -278,7 +279,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             MoveToNextRoutePoint();
         }
 
-        if (!HasGun)
+        if (!activeWeaponAI.HasGun)
         {
             CheckForDropBox();
             CheckForItem();
@@ -365,11 +366,12 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         foreach (var item in items)
         {
             Debug.Log("/// Item" + item.name);
-            if (item != null && item.TryGetComponent(out GunItem itemCollect) && !HasGun)
+            if (item != null && item.TryGetComponent(out GunItem itemCollect) && !activeWeaponAI.HasGun)
             {
+                if (item == null || itemCollect == null) return;
                 itemCollect.CollectAI(GetComponent<ActiveWeaponAI>()); // Collect and equip gun
                 Debug.Log("/// Collected" + item.name);
-                HasGun = true;
+                //HasGun = true;
                 SetState(BotState.ReturningToRoute);
                 break; // Found gun, exit
             }
@@ -388,11 +390,11 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         foreach (var item in items)
         {
             Debug.Log("/// Item" + item.name);
-            if (item != null && item.TryGetComponent(out GunItem itemCollect) && !HasGun)
+            if (item != null && item.TryGetComponent(out GunItem itemCollect) && !activeWeaponAI.HasGun)
             {
                 itemCollect.CollectAI(GetComponent<ActiveWeaponAI>()); // Collect and equip gun
                 Debug.Log("/// Collected" + item.name);
-                HasGun = true;
+                //HasGun = true;
                 break; // Found gun, exit
             }
         }
@@ -419,8 +421,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             currentTarget = playersInRange[0].transform; // Save the player as the target
 
             // Transition to the FacingAndFiring state
-            SetState(BotState.Firing);
-          
+            SetState(BotState.Firing);         
         }
     }
 
@@ -483,9 +484,6 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
     private void FireAtTarget(Transform target)
     {
-        //Look at player
-        //agent.SetDestination(Vector3.forward);
-        //Transform offsetFiringPos = new Vector3(0, 1, 0);
         // Check if the bot is ready to fire
         if (fireCooldownTimer <= 0f)
         {

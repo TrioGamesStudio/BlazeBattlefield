@@ -5,6 +5,9 @@ using Fusion;
 
 public class ActiveWeaponAI : NetworkBehaviour
 {
+    [Networked]
+    private bool HasGunNetworked { get; set; }
+
     [SerializeField] BulletHandler bulletVFXPF;
     [SerializeField] Transform aimPoint_grandeRocket_3rd; // VI TRI TREN NONG SUNG trong 3rdPersonCam
     public Transform[] weaponHoldersRemote;
@@ -28,9 +31,12 @@ public class ActiveWeaponAI : NetworkBehaviour
     [Networked] // bien updated through the server on all the clients
     public bool isFiring { get; set; }
     ChangeDetector changeDetector;
+    public bool HasGun;
 
     public override void Spawned()
     {
+        currentWeaponRemote = null;
+        HasGun = false;
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
     }
 
@@ -62,11 +68,25 @@ public class ActiveWeaponAI : NetworkBehaviour
         }
     }
 
+    public override void FixedUpdateNetwork()
+    {
+        //HasGun = currentWeaponRemote != null;
+        //if (!HasGun)
+        //{
+        //    anim.SetBool("isEquiped", false);
+        //}
+    }
+
     public void Equip(GameObject weaponPrefab)
     {
-        anim.SetBool("isEquiped", true);
+        //if (weaponPrefab == null) return;    
         weapon = weaponPrefab;
         currentWeaponRemote = SpawnItem(weapon, 0);
+        if (currentWeaponRemote)
+        {
+            anim.SetBool("isEquiped", true);
+            HasGun = true;
+        }
     }
 
     //Spawn weapon
@@ -86,6 +106,7 @@ public class ActiveWeaponAI : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_SetParentWeapon(NetworkObject weapon, int index)
     {
+        weapon.gameObject.layer = 0;
         weapon.transform.SetParent(weaponHoldersRemote[index].transform);
         weapon.transform.localPosition = Vector3.zero;
         weapon.transform.localRotation = Quaternion.identity;
