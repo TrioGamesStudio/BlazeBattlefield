@@ -61,17 +61,24 @@ public class SkinAvatarUI : MonoBehaviour
 
     public void Lock() => lockUI.gameObject.SetActive(true);
     public void Unlock() => lockUI.gameObject.SetActive(false);
-
+    private bool isSelect = false;
     public void TryToUnlock(bool isTryToUnlock)
     {
+        lockerIcon.DOKill();
         if (isTryToUnlock)
         {
-            lockerIcon.DOKill();
             lockerIcon.sprite = unlockSprite;
+            lockerIcon.transform.DOScale(Vector3.one * 1.3f,.25f).SetEase(Ease.InOutBounce);
+            isSelect = true;
         }
         else
         {
             lockerIcon.sprite = lockSprite;
+            if (isSelect)
+            {
+                lockerIcon.transform.DOScale(Vector3.one , .1f);
+                isSelect = false;
+            }
         }
     }
 
