@@ -33,4 +33,14 @@ public class HatSelection : MonoBehaviour
         HatDataHandler.currentHatIndex = newHatIndex;
         characterHatHandler.CreateHatLocal();
     }
+
+    private void OnApplicationQuit()
+    {
+        HatDataHandler.currentHatIndex = 0;
+    }
+
+    public void ResetHatIndex()
+    {
+        HatDataHandler.currentHatIndex = 0;
+    }
 }
