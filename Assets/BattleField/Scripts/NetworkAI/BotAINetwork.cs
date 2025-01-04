@@ -171,16 +171,6 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     // Logic to request authority
     public void RequestAuthority()
     {
-        //if (Object != null && !Object.HasStateAuthority)
-        //{
-        //    Object.RequestStateAuthority();
-        //    Debug.Log($"///Requesting state authority for bot {gameObject.name}.");
-        //}
-        //else
-        //{
-        //    Debug.Log("///Object has been destroy or already has state authority");
-        //}
-
         if (Object == null)
         {
             Debug.Log($"///Object is null or destroyed on {gameObject.name}");
@@ -230,7 +220,6 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     {
         currentState = newState;
         CurrentNetworkedState = newState;
-        //Debug.Log($"///Bot state changed to: {newState}");
     }
 
     private IEnumerator StateBehaviorRoutine()
@@ -278,10 +267,6 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
     private void ExecuteFollowingRouteState()
     {
-        //if (Object != null && !Object.HasStateAuthority) return;
-        //if (hpHandler.Networked_HP <= 0)
-        //    SetState(BotState.Idle);
-
         if (routePoints == null || routePoints.Length == 0)
         {
             Debug.Log("/// no routes");
@@ -296,6 +281,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         if (!HasGun)
         {
             CheckForDropBox();
+            CheckForItem();
         }
         else
         {
@@ -393,11 +379,29 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         SetState(BotState.ReturningToRoute);
     }
 
+    private void CheckForItem()
+    {
+        Debug.Log("///Bot check for item");
+        Collider[] items = Physics.OverlapSphere(playerModel.position, itemCollectRadius, itemLayer);
+        Debug.Log("///Found item qty: " + items.Length);
+
+        foreach (var item in items)
+        {
+            Debug.Log("/// Item" + item.name);
+            if (item != null && item.TryGetComponent(out GunItem itemCollect) && !HasGun)
+            {
+                itemCollect.CollectAI(GetComponent<ActiveWeaponAI>()); // Collect and equip gun
+                Debug.Log("/// Collected" + item.name);
+                HasGun = true;
+                break; // Found gun, exit
+            }
+        }
+    }
+
     private bool IsPositionOnNavMesh(Vector3 position, float radius)
     {
-        NavMeshHit hit;
         // Check if the position is on the NavMesh within the given radius
-        bool isOnNavMesh = NavMesh.SamplePosition(position, out hit, radius, NavMesh.AllAreas);
+        bool isOnNavMesh = NavMesh.SamplePosition(position, out NavMeshHit hit, radius, NavMesh.AllAreas);
 
         return isOnNavMesh;
     }
