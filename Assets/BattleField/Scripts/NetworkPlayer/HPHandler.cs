@@ -211,6 +211,7 @@ public class HPHandler : NetworkBehaviour
             Networked_HP += amount;
         }
 
+        if (isBot) return;
         //OnTakeDamageEvent.Invoke(-amount);
         RPC_UpdateTeammateHP(-amount);
 

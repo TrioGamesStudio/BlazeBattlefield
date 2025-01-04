@@ -7,13 +7,15 @@ public class ActiveWeaponAI : NetworkBehaviour
 {
     [Networked]
     private bool HasGunNetworked { get; set; }
+    public NetworkObject currentWeaponRemote;
+    public GameObject weapon;
 
     [SerializeField] BulletHandler bulletVFXPF;
     [SerializeField] Transform aimPoint_grandeRocket_3rd; // VI TRI TREN NONG SUNG trong 3rdPersonCam
     public Transform[] weaponHoldersRemote;
-    public NetworkObject currentWeaponRemote;
+   
     //public ActiveWeapon activeWeapon;
-    public GameObject weapon;
+    
     Animator anim;
 
     //? network object nao tao ra tia raycast
@@ -103,7 +105,7 @@ public class ActiveWeaponAI : NetworkBehaviour
         return networkObject;
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_SetParentWeapon(NetworkObject weapon, int index)
     {
         weapon.gameObject.layer = 0;

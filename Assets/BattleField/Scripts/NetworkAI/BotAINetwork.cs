@@ -15,6 +15,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         CollectingDropBox,
         ReturningToRoute,
         Firing,
+        Healing,
     }
 
     [Networked]
@@ -158,6 +159,11 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             StopAllCoroutines();
             return;
         }
+        if (hpHandler.Networked_HP <= 30)
+        {
+            if (currentState != BotState.Healing)
+                SetState(BotState.Healing);
+        }
         // Reduce the cooldown timer over time
         if (fireCooldownTimer > 0f)
         {
@@ -246,6 +252,9 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
                     break;
                 case BotState.Firing:
                     ExecuteFiringState();
+                    break;
+                case BotState.Healing:
+                    ExecuteHealing();
                     break;
             }
 
@@ -571,6 +580,47 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         // Return to the ground
         transform.position = startPos;
     }
+    #endregion
+
+    #region BOT HEALING STATE
+
+    private void ExecuteHealing()
+    {
+        Debug.Log("///Bot is going to find health iten and heal");
+        agent.speed = 8; // Bot inscrease speed for escape
+        agent.isStopped = false;
+        if (!agent.pathPending && agent.remainingDistance <= pointReachDistance)
+        {
+            MoveToNextRoutePoint();
+        }
+
+        //CheckForDropBox();
+        CheckForHealthItem();
+
+        if (hpHandler.Networked_HP >= 60)
+        {
+            agent.speed = 6;
+            SetState(BotState.FollowingRoute);
+        }
+    }
+
+    private void CheckForHealthItem()
+    {
+        Debug.Log("///Bot check for item");
+        Collider[] items = Physics.OverlapSphere(playerModel.position, itemCollectRadius, itemLayer);
+        Debug.Log("///Found item qty: " + items.Length);
+
+        foreach (var item in items)
+        {
+            Debug.Log("/// Item" + item.name);
+            if (item != null && item.TryGetComponent(out HealthItem itemCollect))
+            {
+                itemCollect.CollectAI(hpHandler); // Collect and heal
+                Debug.Log("/// Collected" + item.name);
+            }
+        }
+    }
+
     #endregion
 
     public override void Despawned(NetworkRunner runner, bool hasState)

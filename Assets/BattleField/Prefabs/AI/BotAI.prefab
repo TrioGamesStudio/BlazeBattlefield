@@ -13709,8 +13709,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3
-  m_Acceleration: 8
+  m_Speed: 6
+  m_Acceleration: 12
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -13773,7 +13773,6 @@ MonoBehaviour:
   evadeInterval: 0.5
   jumpHeight: 0.8
   evadeSpeed: 1.6
-  HasGun: 0
 --- !u!114 &-8422475685057307926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13800,6 +13799,7 @@ MonoBehaviour:
   audioSource: {fileID: 9162745344633377286}
   weaponSoundCurr: {fileID: 8300000, guid: 88837867717b25946b0196121cd6b357, type: 3}
   _isFiring: 0
+  HasGun: 0
 --- !u!114 &-4708531423129684952
 MonoBehaviour:
   m_ObjectHideFlags: 0

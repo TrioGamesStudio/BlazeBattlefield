@@ -88,7 +88,12 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     {
         DestroyItem();
     }
-  
+
+    public virtual void CollectAI(HPHandler hPHandler)
+    {
+        DestroyItem();
+    }
+
     protected virtual void AddToStorage()
     {
         InventoryItem inventoryItem = new();
