@@ -210,6 +210,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             Debug.Log("Match room name: " + networkRunner.SessionInfo.Name);
             DataSaver.Instance.dataToSave.totalPlaySolo += 1;
             DataSaver.Instance.SaveData();
+            timerStarted = false;
         }
         else
         {
