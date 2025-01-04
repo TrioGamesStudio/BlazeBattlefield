@@ -58,6 +58,11 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         {
             //Invoke(nameof(BoundItemSetup), .3f);
         }
+        if (gameObject.CompareTag("Item"))
+        {
+            ItemDatabase.instance.AddItem(Object);
+        }
+
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -67,6 +72,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         {
             OnRemoveItemUI?.Invoke(this);
         }
+        ItemDatabase.instance.RemoveItem(Object);
     }
 
 

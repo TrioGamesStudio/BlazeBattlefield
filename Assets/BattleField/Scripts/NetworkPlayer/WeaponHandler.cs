@@ -461,4 +461,13 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             PlayerStats.Instance.AddTotalKill(1);
         }
     }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        base.Despawned(runner, hasState);
+        Debug.Log("Request Item Database State authority");
+        ItemDatabase.instance.RequestStateAuthority();
+        RandomGroupManager.OnRequestStateAuthority?.Invoke();
+
+    }
 }

@@ -12,23 +12,17 @@ public class ItemDatabase : NetworkBehaviour
     [SerializeField] private ItemPrefabDatabase ItemPrefabDatabase;
 
     public Transform PlayerObject;
-
+    [SerializeField] public List<NetworkObject> itemList = new();
     private void Awake()
     {
         instance = this;
         ItemPrefabDatabase.Convert();
-    }
-    public override void Spawned()
-    {
-        base.Spawned();
     }
 
     public GameObject GetItemPrefab(ItemType key1, Enum key2)
     {
         return ItemPrefabDatabase.GetItemPrefab(key1, key2);
     }
-
-
 
     // Use by inventory spawning
     public void InventoryItemToWorld(InventoryItem inventoryItem, int newAmount)
@@ -56,10 +50,12 @@ public class ItemDatabase : NetworkBehaviour
         var itemPrefab = GetItemPrefab(key1, key2);
         if (itemPrefab == null) return null;
 
-        var item = Runner.Spawn(itemPrefab, position).GetComponent<ItemDataEnum>();
-        item.SetQuantity(newAmount);
-
-        return item;
+        var networkobject = Runner.Spawn(itemPrefab, position);
+        var itemDataEnum = networkobject.GetComponent<ItemDataEnum>();
+      
+        itemDataEnum.SetQuantity(newAmount);
+      
+        return itemDataEnum;
     }
 
     public NetworkObject SpawnItem(GameObject prefab, Vector3 position, string _tag)
@@ -80,5 +76,57 @@ public class ItemDatabase : NetworkBehaviour
         return ItemPrefabDatabase.GetRandomItemPrefabByRarity();
     }
 
+    // duplicate code
+    public void RequestStateAuthority()
+    {
+        if (Object == null)
+        {
+            Debug.Log($"///Object is null or destroyed on {gameObject.name}");
+            return;
+        }
 
+        if (!Object.HasStateAuthority)
+        {
+            try
+            {
+                Object.RequestStateAuthority();
+                Debug.Log($"///Requesting state authority for bot {gameObject.name}.");
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"///Failed to request state authority: {ex.Message}");
+            }
+            TestRequest();
+        }
+        else
+        {
+            Debug.Log("///Object already has state authority.");
+        }
+    }
+
+    [EditorButton] 
+    private void TestRequest()
+    {
+        foreach (var item in itemList)
+        {
+            item.RequestStateAuthority();
+        }
+    }
+
+
+    public void AddItem(NetworkObject networkObject)
+    {
+        if (!itemList.Contains(networkObject))
+        {
+            itemList.Add(networkObject);
+        }
+    }
+
+    public void RemoveItem(NetworkObject networkObject)
+    {
+        if (itemList.Contains(networkObject))
+        {
+            itemList.Remove(networkObject);
+        }
+    }
 }

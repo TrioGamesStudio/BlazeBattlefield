@@ -227,7 +227,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2288200371015589233}
   - component: {fileID: 5299906756604042905}
-  - component: {fileID: 2264258792011460989}
   m_Layer: 0
   m_Name: Random_Group_7
   m_TagString: Untagged
@@ -310,24 +309,6 @@ MonoBehaviour:
   drawAllChildLocation: 1
   drawValidSpawnPoint: 1
   isRefreshChild: 0
---- !u!114 &2264258792011460989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508896776134684554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 4002470636
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 5299906756604042905}
 --- !u!1 &528431498601378597
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,7 +350,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4718921524756277911}
   - component: {fileID: 2544753049381875063}
-  - component: {fileID: 5711948347963667016}
   m_Layer: 0
   m_Name: Random_Group_5
   m_TagString: Untagged
@@ -453,24 +433,6 @@ MonoBehaviour:
   drawAllChildLocation: 1
   drawValidSpawnPoint: 1
   isRefreshChild: 0
---- !u!114 &5711948347963667016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 606785835305193336}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 2492792561
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 2544753049381875063}
 --- !u!1 &685361684526908173
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,7 +598,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4780741858537730646}
   - component: {fileID: 8868432968036869296}
-  - component: {fileID: 640249905977846957}
   m_Layer: 0
   m_Name: Random_Group_2
   m_TagString: Untagged
@@ -712,24 +673,6 @@ MonoBehaviour:
   drawAllChildLocation: 1
   drawValidSpawnPoint: 1
   isRefreshChild: 0
---- !u!114 &640249905977846957
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 944845485716883096}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 3235227040
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 8868432968036869296}
 --- !u!1 &961859799725508520
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,6 +1663,7 @@ MonoBehaviour:
     type: 3}
   totalBoxCountInAllRegion: 35
   randomGroups: []
+  dropBoxesSpawned: []
 --- !u!114 &8597293524281855579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1734,18 +1678,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 241059450
   ObjectInterest: 1
-  Flags: 262145
-  NestedObjects:
-  - {fileID: 7752779905065838161}
-  - {fileID: 640249905977846957}
-  - {fileID: 5711948347963667016}
-  - {fileID: 4785111785708006803}
-  - {fileID: 596932383633676590}
-  - {fileID: 2264258792011460989}
-  - {fileID: 7142525263242755778}
-  - {fileID: 7615091518975784507}
-  - {fileID: 1990652984609299203}
-  - {fileID: 1641159668819291083}
+  Flags: 524289
+  NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4158865266402061759}
 --- !u!1 &2857703002402791244
@@ -2130,7 +2064,6 @@ GameObject:
   m_Component:
   - component: {fileID: 758366262516058350}
   - component: {fileID: 6282531101599007458}
-  - component: {fileID: 596932383633676590}
   m_Layer: 0
   m_Name: Random_Group_4
   m_TagString: Untagged
@@ -2217,24 +2150,6 @@ MonoBehaviour:
   drawAllChildLocation: 1
   drawValidSpawnPoint: 1
   isRefreshChild: 0
---- !u!114 &596932383633676590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3427187622175314237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 3710206259
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 6282531101599007458}
 --- !u!1 &3481530443348956059
 GameObject:
   m_ObjectHideFlags: 0
@@ -3051,7 +2966,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7418133921693952603}
   - component: {fileID: 8414976036086688876}
-  - component: {fileID: 1990652984609299203}
   m_Layer: 0
   m_Name: Random_Group_9
   m_TagString: Untagged
@@ -3138,24 +3052,6 @@ MonoBehaviour:
   drawAllChildLocation: 1
   drawValidSpawnPoint: 1
   isRefreshChild: 0
---- !u!114 &1990652984609299203
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4715538440425095674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 1443211654
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 8414976036086688876}
 --- !u!1 &4833438352248541466
 GameObject:
   m_ObjectHideFlags: 0
@@ -4003,7 +3899,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6196851856438302815}
   - component: {fileID: 5815907513175900681}
-  - component: {fileID: 7142525263242755778}
   m_Layer: 0
   m_Name: Random_Group_8
   m_TagString: Untagged
@@ -4068,24 +3963,6 @@ MonoBehaviour:
   drawAllChildLocation: 1
   drawValidSpawnPoint: 1
   isRefreshChild: 0
---- !u!114 &7142525263242755778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5803892010700813944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 1873728847
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 5815907513175900681}
 --- !u!1 &5810439367884378808
 GameObject:
   m_ObjectHideFlags: 0
@@ -4406,7 +4283,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1892846593485051946}
   - component: {fileID: 2143262217351497602}
-  - component: {fileID: 1641159668819291083}
   m_Layer: 0
   m_Name: Random_Group_3
   m_TagString: Untagged
@@ -4503,24 +4379,6 @@ MonoBehaviour:
   drawAllChildLocation: 1
   drawValidSpawnPoint: 1
   isRefreshChild: 0
---- !u!114 &1641159668819291083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6295775349163298691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 1039773773
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 2143262217351497602}
 --- !u!1 &6361467406211330851
 GameObject:
   m_ObjectHideFlags: 0
@@ -5647,7 +5505,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6285126623636823811}
   - component: {fileID: 4744403367530523277}
-  - component: {fileID: 4785111785708006803}
   m_Layer: 0
   m_Name: Random_Group_6
   m_TagString: Untagged
@@ -5745,24 +5602,6 @@ MonoBehaviour:
   drawAllChildLocation: 1
   drawValidSpawnPoint: 1
   isRefreshChild: 1
---- !u!114 &4785111785708006803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8048641658048954361}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 3190649077
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 4744403367530523277}
 --- !u!1 &8109629662882757251
 GameObject:
   m_ObjectHideFlags: 0
@@ -6021,7 +5860,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8823770075339505104}
   - component: {fileID: 796333913716013617}
-  - component: {fileID: 7615091518975784507}
   m_Layer: 0
   m_Name: Random_Group_10
   m_TagString: Untagged
@@ -6086,24 +5924,6 @@ MonoBehaviour:
   drawAllChildLocation: 1
   drawValidSpawnPoint: 1
   isRefreshChild: 0
---- !u!114 &7615091518975784507
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8434337151222649507}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 3868830393
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 796333913716013617}
 --- !u!1 &8527313838749726342
 GameObject:
   m_ObjectHideFlags: 0
@@ -6114,7 +5934,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2958276121577504562}
   - component: {fileID: 3524668300720235704}
-  - component: {fileID: 7752779905065838161}
   m_Layer: 0
   m_Name: Random_Group_1
   m_TagString: Untagged
@@ -6197,24 +6016,6 @@ MonoBehaviour:
   drawAllChildLocation: 1
   drawValidSpawnPoint: 0
   isRefreshChild: 0
---- !u!114 &7752779905065838161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8527313838749726342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 1001740754
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 3524668300720235704}
 --- !u!1 &8651636351113272541
 GameObject:
   m_ObjectHideFlags: 0

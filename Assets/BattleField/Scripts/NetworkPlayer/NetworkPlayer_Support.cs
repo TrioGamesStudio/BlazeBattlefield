@@ -44,7 +44,7 @@ public class NetworkPlayer_Support : NetworkBehaviour
         
         CameraEffectControl.instance.EyeBlinkEffect.OpenEye();
     }
- 
+   
 }
 public interface INetworkInitialize
 {
