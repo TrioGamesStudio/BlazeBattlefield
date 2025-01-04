@@ -461,4 +461,19 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             PlayerStats.Instance.AddTotalKill(1);
         }
     }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        base.Despawned(runner, hasState);
+        foreach (var player in runner.ActivePlayers)
+        {
+            if (player == Runner.LocalPlayer) // Exclude the current local player
+            {
+                Debug.Log("/// Transferring StateAuthority to player: " + player.PlayerId);
+
+                ItemDatabase.instance.RequestState();
+                break; // Ensure only one player is selected
+            }
+        }
+    }
 }

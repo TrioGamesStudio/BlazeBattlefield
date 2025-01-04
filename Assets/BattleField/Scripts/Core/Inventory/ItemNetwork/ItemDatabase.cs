@@ -80,5 +80,23 @@ public class ItemDatabase : NetworkBehaviour
         return ItemPrefabDatabase.GetRandomItemPrefabByRarity();
     }
 
-
+    public void RequestState()
+    {
+        if (!Object.HasStateAuthority)
+        {
+            try
+            {
+                Object.RequestStateAuthority();
+                Debug.Log($"///Requesting state authority for bot {gameObject.name}.");
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"///Failed to request state authority: {ex.Message}");
+            }
+        }
+        else
+        {
+            Debug.Log("///Object already has state authority.");
+        }
+    }
 }
