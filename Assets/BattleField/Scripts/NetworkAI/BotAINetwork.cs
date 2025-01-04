@@ -20,8 +20,8 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     [Networked]
     private bool IsMoving { get; set; }
 
-    //[Networked]
-    //private bool HasGunNetworked { get; set; }
+    [Networked]
+    private bool HasGunNetworked { get; set; }
 
     [Networked]
     private Vector3 TargetPosition { get; set; }
@@ -130,7 +130,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     private void RestoreBotState()
     {
         currentState = CurrentNetworkedState;
-        //HasGun = HasGunNetworked;
+        activeWeaponAI.HasGun = HasGunNetworked;
 
         if (agent != null && TargetPosition != default)
         {
@@ -142,7 +142,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
     public override void FixedUpdateNetwork()
     {
         IsMoving = agent != null && agent.velocity.magnitude > 0.1f;
-        //HasGunNetworked = HasGun;
+        HasGunNetworked = activeWeaponAI.HasGun;
 
         if (agent != null && agent.hasPath)
         {
@@ -203,7 +203,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
             Debug.Log($"///Gained authority over bot by ${Object.StateAuthority}");
             InitializeBot();
             RestoreBotState();
-            AlivePlayerControl.UpdateAliveCount(-1);
+            //AlivePlayerControl.UpdateAliveCount(-1);
         }
         else
         {
