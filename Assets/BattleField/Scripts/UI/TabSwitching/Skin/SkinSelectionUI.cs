@@ -77,6 +77,8 @@ public class SkinSelectionUI : MonoBehaviour
         // reset state for UI
         buyBtn.interactable = CanBuySkin();
         SetChooseSkinToBuy(skinIndex);
+
+        selectLockSkinAudio.Play();
     }
 
     private void SetChooseSkinToBuy(int skinIndex)
