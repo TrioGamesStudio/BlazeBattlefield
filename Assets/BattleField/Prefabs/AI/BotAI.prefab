@@ -13757,7 +13757,7 @@ MonoBehaviour:
   dropBoxDetectionRadius: 5
   collectDistance: 0.5
   itemCollectRadius: 3
-  playerDetectionRadius: 15
+  playerDetectionRadius: 10
   fireDistance: 8
   dropBoxLayer:
     serializedVersion: 2
@@ -13785,13 +13785,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00bef71e6e574e6aa4c6e3056183881, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentWeaponRemote: {fileID: 0}
+  weapon: {fileID: 0}
   bulletVFXPF: {fileID: 6216534217294888657, guid: ab5a5d742d99a9c4199c23bce5427e47,
     type: 3}
   aimPoint_grandeRocket_3rd: {fileID: 980366272779043220}
   weaponHoldersRemote:
   - {fileID: 1375562210468276060}
-  currentWeaponRemote: {fileID: 0}
-  weapon: {fileID: 0}
   opponentLayer:
     serializedVersion: 2
     m_Bits: 32768
