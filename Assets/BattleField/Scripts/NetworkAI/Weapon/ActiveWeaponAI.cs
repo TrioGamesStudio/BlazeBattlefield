@@ -112,6 +112,7 @@ public class ActiveWeaponAI : NetworkBehaviour
         weapon.transform.SetParent(weaponHoldersRemote[index].transform);
         weapon.transform.localPosition = Vector3.zero;
         weapon.transform.localRotation = Quaternion.identity;
+        weapon.GetComponent<Outline>().enabled = false;
     }
 
     // fire bullet laser VFX => chi tao ra virtual o nong sung + bullet trails + impact
