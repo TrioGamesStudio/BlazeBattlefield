@@ -748,7 +748,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
             }
             UpdatePlayButtonInteractability();
         }
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count());
+        //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count());
     }
 
 

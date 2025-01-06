@@ -46,7 +46,7 @@ public class HPHandler : NetworkBehaviour
 
     // show thong tin player in game HP
     [SerializeField] InGamePlayerStatusUIHandler inGamePlayerStatusUIHandler;
-    bool isShowResultTable = false;
+    [SerializeField] bool isShowResultTable = false;
     public UnityEvent<float> OnTakeDamageEvent = new UnityEvent<float>();
 
     LocalCameraHandler localCameraHandler;
