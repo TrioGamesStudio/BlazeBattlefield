@@ -1,5 +1,6 @@
 ﻿using NaughtyAttributes;
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class AlivePlayerControl : MonoBehaviour
@@ -17,14 +18,19 @@ public class AlivePlayerControl : MonoBehaviour
     [Button]
     private void OnUpdateAliveCount()
     {
-    
-        AliveKillUI.UpdateAliveCount?.Invoke(GetAlivePlayer());
+        StartCoroutine(DelayUpdateUI());
+        //AliveKillUI.UpdateAliveCount?.Invoke(GetAlivePlayer());
     }
-
+    private IEnumerator DelayUpdateUI()
+    {
+        yield return new WaitForSeconds(.3f);
+        GetAlivePlayer();
+    }
     private int GetAlivePlayer()
     {
         PlayerRoomController[] players = FindObjectsByType<PlayerRoomController>(FindObjectsSortMode.None);
         int aliveCount = 0;
+        Debug.Log("PLAYER COUNT:" + players.Length, gameObject);
         foreach(var item in players)
         {
             if (item.IsAlive)
