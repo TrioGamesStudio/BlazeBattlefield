@@ -94,7 +94,7 @@ public class GameHandler : MonoBehaviour
             //int ranking = teams.Count + 1;
             int ranking;
             if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
-                ranking = CheckRanking();
+                ranking = CheckRanking() + 1;
             else
                 ranking = teams.Count + 1;
             Debug.Log("===Rank " + ranking);
