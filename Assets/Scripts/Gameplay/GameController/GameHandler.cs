@@ -67,15 +67,6 @@ public class GameHandler : MonoBehaviour
                     networkPlayer.SetNicknameUIColor(Color.red); //Set enemy name plate UI color to red
             }
         }
-        Debug.Log("===AFTER initialize");
-        foreach (var key in teams.Keys)
-        {
-            Debug.Log("===Key: " + key);
-            foreach (var playerRoom in teams[key])
-            {
-                Debug.Log("====Player team id: " + playerRoom.TeamID);
-            }
-        }
         Debug.Log("===Team count: " + teams.Count);
         AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
         if (teams.Count == 1)
@@ -137,11 +128,6 @@ public class GameHandler : MonoBehaviour
 
     public void AssignRoute()
     {
-        //BotAI[] botAIs = FindObjectsOfType<BotAI>();
-        //foreach(var botAI in botAIs)
-        //{
-        //    botAI.SetRoutePoints(routePoints);
-        //}
         BotAINetwork[] botAIs = FindObjectsOfType<BotAINetwork>();
         foreach (var botAI in botAIs)
         {
