@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class AlivePlayerControl : MonoBehaviour
 {
-    public static Action<int> OnUpdateAliveCountAction;
-    static int alivePlayer = 0;
+    public static Action OnUpdateAliveCountAction;
 
     private void Awake()
     {
@@ -16,16 +15,23 @@ public class AlivePlayerControl : MonoBehaviour
         OnUpdateAliveCountAction -= OnUpdateAliveCount;
     }
     [Button]
-    private void OnUpdateAliveCount(int alive)
+    private void OnUpdateAliveCount()
     {
-        alivePlayer = alive;
     
-        AliveKillUI.UpdateAliveCount?.Invoke(alive);
+        AliveKillUI.UpdateAliveCount?.Invoke(GetAlivePlayer());
     }
 
-    public static void UpdateAliveCount(int amount)
+    private int GetAlivePlayer()
     {
-        alivePlayer -= amount;
-        AliveKillUI.UpdateAliveCount?.Invoke(alivePlayer);
+        PlayerRoomController[] players = FindObjectsByType<PlayerRoomController>(FindObjectsSortMode.None);
+        int aliveCount = 0;
+        foreach(var item in players)
+        {
+            if (item.IsAlive)
+            {
+                aliveCount++;
+            }
+        }
+        return aliveCount;
     }
 }

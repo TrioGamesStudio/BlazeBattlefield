@@ -332,7 +332,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             GameHandler.instance.CheckWin();
         players.Remove(player);
 
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count);
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
