@@ -94,6 +94,15 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         }
         SetState(BotState.Idle);
     }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        base.Despawned(runner, hasState);
+        Debug.Log("/// Despawn Bot AI called for runner: " + runner.name);
+        StopAllCoroutines();
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+    }
+
     public PlayerCollectManager playerCollectManager;
     private void InitializeBot()
     {
@@ -629,10 +638,4 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
     #endregion
 
-    public override void Despawned(NetworkRunner runner, bool hasState)
-    {
-        base.Despawned(runner, hasState);
-        Debug.Log("/// Despawn Bot AI called for runner: " + runner.name);
-        StopAllCoroutines();
-    }
 }
