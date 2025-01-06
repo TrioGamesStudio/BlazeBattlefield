@@ -104,7 +104,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         hpHandler = GetComponent<HPHandler>();
         SetState(BotState.FollowingRoute);
         StartCoroutine(StateBehaviorRoutine());
-
+        GetComponentInChildren<PlayerCollectManager>().Object.RequestStateAuthority();
         isInitialized = true;
         Debug.Log($"///Bot initialized by authority: {runner.LocalPlayer}");
     }

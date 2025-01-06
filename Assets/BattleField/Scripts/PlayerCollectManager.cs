@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerCollectManager : NetworkBehaviour
+public class PlayerCollectManager : NetworkBehaviour, IStateAuthorityChanged
 {
     [SerializeField] private bool isPlayer;
     private Rigidbody Rigidbody;
@@ -99,6 +99,18 @@ public class PlayerCollectManager : NetworkBehaviour
                 runTimeItem.isDisplayedUI = false;
                 ItemCollectionUI.instance.RemoveItemUI(runTimeItem);
             }
+        }
+    }
+
+    public void StateAuthorityChanged()
+    {
+        if (!HasStateAuthority)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            gameObject.SetActive(true);
         }
     }
 }
