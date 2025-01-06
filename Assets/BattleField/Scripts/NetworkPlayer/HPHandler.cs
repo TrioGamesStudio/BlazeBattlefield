@@ -117,18 +117,27 @@ public class HPHandler : NetworkBehaviour
             isShowResultTable = true;
             PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
             RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
+            playerRoomController.enabled = false;
             if (isBot)
             {
                 GameHandler.instance.CheckWin(); //check win for remaining real player        
                 OnDeath();
                 Runner.Despawn(Object);
                 return;
-            }
-            playerRoomController.enabled = false;
+            }   
             RPC_HideLocalPlayerUI();
             RPC_ShowResultDuo();
         }
 
+    }
+
+    void Update()
+    {
+        if (Networked_HP <= 0)
+        {
+            PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
+            playerRoomController.enabled = false;
+        }
     }
 
     //? server call | coll 55 WeaponHandler.cs | khi hitInfo.HitBox tren player
