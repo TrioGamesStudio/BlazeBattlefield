@@ -2,7 +2,7 @@ using DG.Tweening;
 using Fusion;
 using System.Collections;
 using UnityEngine;
-public class NetworkPlayer_Support : NetworkBehaviour
+public class NetworkPlayer_Support : NetworkBehaviour, IPlayerLeft
 {
     [SerializeField] private Animator animator;
     public void Awake()
@@ -44,7 +44,16 @@ public class NetworkPlayer_Support : NetworkBehaviour
         
         CameraEffectControl.instance.EyeBlinkEffect.OpenEye();
     }
-   
+
+    public void PlayerLeft(PlayerRef player)
+    {
+        StartCoroutine(Test());
+    }
+    private IEnumerator Test()
+    {
+        yield return new WaitForSeconds(.5f);
+        AlivePlayerControl.UpdateAliveCount(1);
+    }
 }
 public interface INetworkInitialize
 {
