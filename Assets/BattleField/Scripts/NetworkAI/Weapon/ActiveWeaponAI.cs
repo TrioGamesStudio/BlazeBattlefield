@@ -110,8 +110,8 @@ public class ActiveWeaponAI : NetworkBehaviour
     {
         weapon.gameObject.layer = 0;
         weapon.transform.SetParent(weaponHoldersRemote[index].transform);
-        weapon.transform.localPosition = Vector3.zero;
-        weapon.transform.localRotation = Quaternion.identity;
+        weapon.GetComponent<NetworkTransform>().Teleport(Vector3.zero, Quaternion.identity);
+        //weapon.transform.localRotation = Quaternion.identity;
         weapon.GetComponent<Outline>().enabled = false;
     }
 
