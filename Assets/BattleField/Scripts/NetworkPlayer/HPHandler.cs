@@ -122,6 +122,7 @@ public class HPHandler : NetworkBehaviour
                 if (isBot)
                 {
                     GameHandler.instance.CheckWin(); //check win for remaining real player
+                    Runner.Despawn(Object);
                     return;
                 }
                 RPC_HideLocalPlayerUI();
