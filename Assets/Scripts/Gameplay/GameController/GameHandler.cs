@@ -90,7 +90,13 @@ public class GameHandler : MonoBehaviour
         yield return new WaitForSeconds(2);
         if (!teams.ContainsKey(teamID)) //All teammate eliminated
         {
-            int ranking = teams.Count + 1;
+            //int ranking = teams.Count + 1;
+            int ranking;
+            if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
+                ranking = CheckRanking();
+            else
+                ranking = teams.Count + 1;
+            Debug.Log("===Rank " + ranking);
             foreach (var playerRoomControl in teamsOriginal[teamID])
             {
                 if (playerRoomControl != null)
@@ -133,6 +139,11 @@ public class GameHandler : MonoBehaviour
         {
             botAI.SetRoutePoints(routePoints);
         }
+    }
+
+    private int CheckRanking()
+    {
+        return FindObjectsOfType<PlayerRoomController>().Count();
     }
 
     private void OnDrawGizmosSelected()
