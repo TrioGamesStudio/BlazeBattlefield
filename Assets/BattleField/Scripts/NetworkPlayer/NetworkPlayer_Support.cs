@@ -47,11 +47,13 @@ public class NetworkPlayer_Support : NetworkBehaviour, IPlayerLeft
 
     public void PlayerLeft(PlayerRef player)
     {
+        if (GetComponent<HPHandler>().Networked_HP <= 0) return;
         StartCoroutine(Test());
     }
     private IEnumerator Test()
     {
         yield return new WaitForSeconds(.5f);
+
         AlivePlayerControl.UpdateAliveCount(1);
     }
 }

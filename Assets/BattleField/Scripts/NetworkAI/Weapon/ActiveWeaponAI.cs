@@ -108,11 +108,14 @@ public class ActiveWeaponAI : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_SetParentWeapon(NetworkObject weapon, int index)
     {
+        var temp = weaponHoldersRemote[index].transform;
+
         weapon.gameObject.layer = 0;
-        weapon.transform.SetParent(weaponHoldersRemote[index].transform);
-        weapon.GetComponent<NetworkTransform>().Teleport(weaponHoldersRemote[index].transform.position, Quaternion.identity);
+        weapon.transform.SetParent(temp);
+        weapon.GetComponent<NetworkTransform>().Teleport(temp.position, temp.rotation);
         //weapon.transform.localRotation = Quaternion.identity;
         weapon.GetComponent<Outline>().enabled = false;
+        weapon.GetComponent<Collider>().enabled = false;
     }
 
     // fire bullet laser VFX => chi tao ra virtual o nong sung + bullet trails + impact
