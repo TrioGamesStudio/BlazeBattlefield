@@ -84,44 +84,22 @@ public class GameHandler : MonoBehaviour
 
     public void Eliminate(string teamID, PlayerRoomController player)
     {
-        //Debug.Log("===Eliminate player" + player.TeamID + " in local");
         if (!teams.ContainsKey(teamID)) return;
         teams[teamID].Remove(player);
         if (teams[teamID].Count == 0)
         {
-            Debug.Log("===BEFORE remove");
-            foreach (var key in teams.Keys)
-            {
-                Debug.Log("===Key: " + key);
-                foreach (var playerRoom in teams[key])
-                {
-                    //Debug.Log("====Player team id: " + playerRoom.TeamID);
-                }
-            }
             teams.Remove(teamID);
-            Debug.Log("===AFTER remove");
-            foreach (var key in teams.Keys)
-            {
-                Debug.Log("===Key: " + key);
-                foreach (var playerRoom in teams[key])
-                {
-                    //Debug.Log("====Player team id: " + playerRoom.TeamID);
-                }
-            }
-            Debug.Log("===Remain team after remove " + teams.Count);
         }
         if (teams.Count == 1) CheckWin();
         AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
     }
 
     public IEnumerator CheckLose(string teamID)
-    {
-        //await Task.Delay(500);
+    {;
         yield return new WaitForSeconds(2);
         if (!teams.ContainsKey(teamID)) //All teammate eliminated
         {
             int ranking = teams.Count + 1;
-            //Debug.Log("===No teammate remain -> Defeat " + "Top " + ranking);
             foreach (var playerRoomControl in teamsOriginal[teamID])
             {
                 if (playerRoomControl != null)
@@ -130,21 +108,13 @@ public class GameHandler : MonoBehaviour
         }
         else
         {
-            //Debug.Log("===Team " + teamID + " remain " + teams[teamID].Count + " player");
-            //Debug.Log("===Remain teammate alive -> Watch or leave");
             if (!teamID.Contains("AI") && Matchmaking.Instance.currentMode != Matchmaking.Mode.Solo)
                 FindObjectOfType<WorldUI>().ShowEliminateUI();
-            else if (!teamID.Contains("AI"))
-            {
-                int ranking = teams.Count + 1;
-                //Debug.Log("===No teammate remain -> Defeat " + "Top " + ranking);
-                //foreach (var playerRoomControl in teamsOriginal[teamID])
-                //{
-                //    if (playerRoomControl != null)
-                //        playerRoomControl.RPC_ShowLose(ranking);
-                //}
-                teamsOriginal[teamID].First().RPC_ShowLose(ranking);
-            }
+            //else if (!teamID.Contains("AI"))
+            //{
+            //    int ranking = teams.Count + 1;
+            //    teamsOriginal[teamID].First().RPC_ShowLose(ranking);
+            //}
         }
         CheckWin();
     }

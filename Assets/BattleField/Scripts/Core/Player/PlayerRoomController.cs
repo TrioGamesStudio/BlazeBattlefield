@@ -238,10 +238,6 @@ public class PlayerRoomController : NetworkBehaviour
             FindObjectOfType<WorldUI>().ShowHideUI(rank);
         }
 
-        // Update coin
-
-
-
         var playerData = DataSaver.Instance.dataToSave;
 
         // Update coin
