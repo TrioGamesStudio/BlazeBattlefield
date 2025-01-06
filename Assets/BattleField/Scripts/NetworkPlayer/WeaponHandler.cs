@@ -459,6 +459,7 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             AliveKillUI.UpdateKillCount?.Invoke(killCount);
             //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
             PlayerStats.Instance.AddTotalKill(1);
+            Debug.Log("Request Kill Count: " + killCount, gameObject);
         }
     }
 
