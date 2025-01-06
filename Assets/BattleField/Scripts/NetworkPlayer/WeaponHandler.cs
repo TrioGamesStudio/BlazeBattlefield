@@ -369,8 +369,11 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     {
         string playerTeamID = GetComponent<PlayerRoomController>().TeamID.ToString();
         string targetTeamID = "";
-        if (hit.transform.GetComponent<PlayerRoomController>() != null)
-            targetTeamID = hit.transform.GetComponent<PlayerRoomController>()?.TeamID.ToString();
+        if (hit.transform.GetComponentInParent<PlayerRoomController>() != null)
+            targetTeamID = hit.transform.GetComponentInParent<PlayerRoomController>()?.TeamID.ToString();
+        
+        Debug.Log("Current ID: " + playerTeamID);
+        Debug.Log("Target team: " + targetTeamID);
         return playerTeamID == targetTeamID && playerTeamID != "";
     }
 
