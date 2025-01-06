@@ -1,22 +1,30 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class GameHandler : MonoBehaviour
 {
+    public static GameHandler instance;
     public Dictionary<string, List<PlayerRoomController>> teamsOriginal = new();
     public Dictionary<string, List<PlayerRoomController>> teams = new();
     private string localTeamID;
     [SerializeField] private Transform[] routePoints;
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     public void InitializeTeams()
     {
+        teamsOriginal.Clear();
+        teams.Clear();
         PlayerRoomController[] players = FindObjectsByType<PlayerRoomController>(FindObjectsSortMode.None);
 
         Debug.Log("===Players count: " + players.Length);
-        
+
         foreach (var player in players)
         {
             if (teams.ContainsKey(player.TeamID.ToString()))
@@ -33,7 +41,7 @@ public class GameHandler : MonoBehaviour
                 localTeamID = player.TeamID.ToString();
         }
 
-        foreach (var player in players) 
+        foreach (var player in players)
         {
             if (teamsOriginal.ContainsKey(player.TeamID.ToString()))
             {
@@ -124,7 +132,7 @@ public class GameHandler : MonoBehaviour
         {
             //Debug.Log("===Team " + teamID + " remain " + teams[teamID].Count + " player");
             //Debug.Log("===Remain teammate alive -> Watch or leave");
-            if (!teamID.Contains("AI") && Matchmaking.Instance.currentMode != Matchmaking.Mode.Solo) 
+            if (!teamID.Contains("AI") && Matchmaking.Instance.currentMode != Matchmaking.Mode.Solo)
                 FindObjectOfType<WorldUI>().ShowEliminateUI();
             else if (!teamID.Contains("AI"))
             {
@@ -149,7 +157,7 @@ public class GameHandler : MonoBehaviour
             Debug.Log("===Victory team: " + teamID);
             if (teamID.Contains("AI")) return;
 
-            foreach(var playerRoomControl in teamsOriginal[teamID])
+            foreach (var playerRoomControl in teamsOriginal[teamID])
             {
                 if (playerRoomControl != null)
                     playerRoomControl.RPC_ShowWin();
@@ -205,4 +213,27 @@ public class GameHandler : MonoBehaviour
         //Gizmos.DrawWireSphere(transform.position, collectDistance);
     }
 
+    [Button]
+    private void CheckTeam()
+    {
+        int deathCount = 0;
+        int aliveCount = 0;
+        foreach (var item in teams)
+        {
+            foreach (var _item in item.Value)
+            {
+                if (_item.IsAlive)
+                {
+                    aliveCount++;
+                }
+                else
+                {
+                    deathCount++;
+                }
+            }
+
+        }
+        Debug.Log("Alive Count: " + aliveCount);
+        Debug.Log("Death count: " + deathCount);
+    }
 }

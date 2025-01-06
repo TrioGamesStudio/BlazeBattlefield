@@ -652,8 +652,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     private IEnumerator InitializeTeams()
     {
         yield return new WaitForSeconds(6f);
-        FindObjectOfType<GameHandler>().InitializeTeams();
-        FindObjectOfType<GameHandler>().AssignRoute();
+        GameHandler.instance.InitializeTeams();
+        GameHandler.instance.AssignRoute();
     }
 
     private IEnumerator WaitForPlayerObject(NetworkRunner runner, PlayerRef player)
@@ -725,8 +725,8 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
         if (currentMode == Mode.Solo && isDone)
         {
             //if (matchSolo.ContainsKey(player) && players.ContainsKey(player))
-            FindObjectOfType<GameHandler>().Eliminate(matchSolo[player], players[player]);
-            FindObjectOfType<GameHandler>().CheckWin();
+            GameHandler.instance.Eliminate(matchSolo[player], players[player]);
+            GameHandler.instance.CheckWin();
             battleStarted = false;
         }
 

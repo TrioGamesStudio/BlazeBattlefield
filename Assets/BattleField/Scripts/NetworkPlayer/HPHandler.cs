@@ -121,7 +121,7 @@ public class HPHandler : NetworkBehaviour
                 RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
                 if (isBot)
                 {
-                    FindObjectOfType<GameHandler>().CheckWin(); //check win for remaining real player
+                    GameHandler.instance.CheckWin(); //check win for remaining real player
                     return;
                 }
                 RPC_HideLocalPlayerUI();
@@ -401,7 +401,7 @@ public class HPHandler : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     void RPC_EliminatePlayer(string teamID, PlayerRoomController playerRoomController)
     {
-        FindObjectOfType<GameHandler>().Eliminate(teamID, playerRoomController);
+        GameHandler.instance.Eliminate(teamID, playerRoomController);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -409,7 +409,7 @@ public class HPHandler : NetworkBehaviour
     {
         GetComponent<PlayerRoomController>().IsAlive = false;
         Debug.Log(":::Player shut down");
-        StartCoroutine(FindObjectOfType<GameHandler>().CheckLose(GetComponent<PlayerRoomController>().TeamID.ToString()));
+        StartCoroutine(GameHandler.instance.CheckLose(GetComponent<PlayerRoomController>().TeamID.ToString()));
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]

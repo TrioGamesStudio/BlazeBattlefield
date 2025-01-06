@@ -102,9 +102,12 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
         hpHandler = GetComponent<HPHandler>();
+       
         SetState(BotState.FollowingRoute);
         StartCoroutine(StateBehaviorRoutine());
 
+        GameHandler.instance.InitializeTeams();
+        
         playerCollectManager.gameObject.SetActive(true);
         playerCollectManager.Object.RequestStateAuthority();
 
