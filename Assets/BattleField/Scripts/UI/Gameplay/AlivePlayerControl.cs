@@ -24,7 +24,7 @@ public class AlivePlayerControl : MonoBehaviour
     private IEnumerator DelayUpdateUI()
     {
         yield return new WaitForSeconds(.3f);
-        GetAlivePlayer();
+        AliveKillUI.UpdateAliveCount?.Invoke(GetAlivePlayer());
     }
     private int GetAlivePlayer()
     {
