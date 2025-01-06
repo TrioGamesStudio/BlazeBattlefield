@@ -13,9 +13,9 @@ public class ActiveWeaponAI : NetworkBehaviour
     [SerializeField] BulletHandler bulletVFXPF;
     [SerializeField] Transform aimPoint_grandeRocket_3rd; // VI TRI TREN NONG SUNG trong 3rdPersonCam
     public Transform[] weaponHoldersRemote;
-   
+
     //public ActiveWeapon activeWeapon;
-    
+
     Animator anim;
 
     //? network object nao tao ra tia raycast
@@ -110,7 +110,7 @@ public class ActiveWeaponAI : NetworkBehaviour
     {
         weapon.gameObject.layer = 0;
         weapon.transform.SetParent(weaponHoldersRemote[index].transform);
-        weapon.GetComponent<NetworkTransform>().Teleport(Vector3.zero, Quaternion.identity);
+        weapon.GetComponent<NetworkTransform>().Teleport(weaponHoldersRemote[index].transform.position, Quaternion.identity);
         //weapon.transform.localRotation = Quaternion.identity;
         weapon.GetComponent<Outline>().enabled = false;
     }
@@ -130,9 +130,9 @@ public class ActiveWeaponAI : NetworkBehaviour
             {
                 spawnBullet.GetComponent<BulletHandler>().FireBullet(Object.InputAuthority, networkObject, "bot");
             });
-           
+
             //bulletFireDelay = TickTimer.CreateFromSeconds(Runner, 0.15f); // sau 3s se exp or notRunning
-        }      
+        }
     }
 
 
@@ -164,7 +164,7 @@ public class ActiveWeaponAI : NetworkBehaviour
                         {
                             hp.OnTakeDamage("bot", weaponDamageCurr, null);
                         }
-                    }                 
+                    }
                 }
                 //PlayerStats.Instance.AddDamageDealt(localWeaponDamageCurr);
             }
