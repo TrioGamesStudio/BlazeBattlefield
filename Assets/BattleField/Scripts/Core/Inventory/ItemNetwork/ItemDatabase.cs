@@ -90,13 +90,14 @@ public class ItemDatabase : NetworkBehaviour
             try
             {
                 Object.RequestStateAuthority();
+                TestRequest();
+
                 Debug.Log($"///Requesting state authority for bot {gameObject.name}.");
             }
             catch (Exception ex)
             {
                 Debug.Log($"///Failed to request state authority: {ex.Message}");
             }
-            TestRequest();
         }
         else
         {

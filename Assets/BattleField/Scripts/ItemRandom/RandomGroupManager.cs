@@ -29,10 +29,12 @@ public class RandomGroupManager : NetworkBehaviour
         StartSpawnEvent += StartSpawn;
         OnRequestStateAuthority += RequestStateAuthority;
     }
+
     private void OnDestroy()
     {
         StartSpawnEvent -= StartSpawn;
         OnRequestStateAuthority -= RequestStateAuthority;
+        Debug.Log("Despawn RNNDSDWDASDW!!!!!", gameObject);
     }
 
     [EditorButton]
@@ -69,15 +71,17 @@ public class RandomGroupManager : NetworkBehaviour
                 Object.RequestStateAuthority();
                 
                 Debug.Log($"///Requesting state authority for bot {gameObject.name}.");
+
+                foreach (var item in dropBoxesSpawned)
+                {
+                    item.RequestStateAuthority();
+                }
             }
             catch (Exception ex)
             {
                 Debug.Log($"///Failed to request state authority: {ex.Message}");
             }
-            foreach (var item in dropBoxesSpawned)
-            {
-                item.RequestStateAuthority();
-            }
+            
         }
         else
         {
