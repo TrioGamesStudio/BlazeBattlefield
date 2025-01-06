@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using DG.Tweening;
+using static UnityEditor.Progress;
 public class DropBox : NetworkBehaviour
 {
     [SerializeField] private BoxCollider boxCollider;
@@ -25,6 +26,8 @@ public class DropBox : NetworkBehaviour
         boxCollider = GetComponent<BoxCollider>();
         Close();
         SetPosition();
+        RandomGroupManager.instance.AddItem(Object);
+
     }
     [EditorButton]
     private void SetPosition()
@@ -43,6 +46,13 @@ public class DropBox : NetworkBehaviour
     {
         base.Spawned();
     }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        base.Despawned(runner, hasState);
+        RandomGroupManager.instance.RemoveItem(Object);
+    }
+
     [EditorButton]
     private void Open()
     {

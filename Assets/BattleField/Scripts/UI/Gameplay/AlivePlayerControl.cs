@@ -1,11 +1,11 @@
 ﻿using NaughtyAttributes;
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class AlivePlayerControl : MonoBehaviour
 {
-    public static Action<int> OnUpdateAliveCountAction;
-    static int alivePlayer = 0;
+    public static Action OnUpdateAliveCountAction;
 
     private void Awake()
     {
@@ -16,36 +16,28 @@ public class AlivePlayerControl : MonoBehaviour
         OnUpdateAliveCountAction -= OnUpdateAliveCount;
     }
     [Button]
-    private void OnUpdateAliveCount(int alive)
+    private void OnUpdateAliveCount()
     {
-        alivePlayer = alive;
-        //int alive = 0;
-        //if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
-        //{
-        //    foreach (var item in Matchmaking.Instance.players.Values)
-        //    {
-        //        if (item.IsAlive)
-        //        {
-        //            alive++;
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    foreach (var item in MatchmakingTeam.Instance.players.Values)
-        //    {
-        //        if (item.IsAlive)
-        //        {
-        //            alive++;
-        //        }
-        //    }
-        //}
-        AliveKillUI.UpdateAliveCount?.Invoke(alive);
+        StartCoroutine(DelayUpdateUI());
+        //AliveKillUI.UpdateAliveCount?.Invoke(GetAlivePlayer());
     }
-
-    public static void UpdateAliveCount(int amount)
+    private IEnumerator DelayUpdateUI()
     {
-        alivePlayer -= amount;
-        AliveKillUI.UpdateAliveCount?.Invoke(alivePlayer);
+        yield return new WaitForSeconds(.3f);
+        AliveKillUI.UpdateAliveCount?.Invoke(GetAlivePlayer());
+    }
+    private int GetAlivePlayer()
+    {
+        PlayerRoomController[] players = FindObjectsByType<PlayerRoomController>(FindObjectsSortMode.None);
+        int aliveCount = 0;
+        Debug.Log("PLAYER COUNT:" + players.Length, gameObject);
+        foreach(var item in players)
+        {
+            if (item.IsAlive)
+            {
+                aliveCount++;
+            }
+        }
+        return aliveCount;
     }
 }

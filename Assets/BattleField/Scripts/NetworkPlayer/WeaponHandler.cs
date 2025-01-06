@@ -369,8 +369,11 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
     {
         string playerTeamID = GetComponent<PlayerRoomController>().TeamID.ToString();
         string targetTeamID = "";
-        if (hit.transform.GetComponent<PlayerRoomController>() != null)
-            targetTeamID = hit.transform.GetComponent<PlayerRoomController>()?.TeamID.ToString();
+        if (hit.transform.GetComponentInParent<PlayerRoomController>() != null)
+            targetTeamID = hit.transform.GetComponentInParent<PlayerRoomController>()?.TeamID.ToString();
+        
+        Debug.Log("Current ID: " + playerTeamID);
+        Debug.Log("Target team: " + targetTeamID);
         return playerTeamID == targetTeamID && playerTeamID != "";
     }
 
@@ -459,6 +462,16 @@ public class WeaponHandler : NetworkBehaviour, INetworkInitialize
             AliveKillUI.UpdateKillCount?.Invoke(killCount);
             //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
             PlayerStats.Instance.AddTotalKill(1);
+            Debug.Log("Request Kill Count: " + killCount, gameObject);
         }
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        base.Despawned(runner, hasState);
+        Debug.Log("Request Item Database State authority");
+        ItemDatabase.instance.RequestStateAuthority();
+        RandomGroupManager.OnRequestStateAuthority?.Invoke();
+
     }
 }

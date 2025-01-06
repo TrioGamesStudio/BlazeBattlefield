@@ -1,22 +1,30 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class GameHandler : MonoBehaviour
 {
+    public static GameHandler instance;
     public Dictionary<string, List<PlayerRoomController>> teamsOriginal = new();
     public Dictionary<string, List<PlayerRoomController>> teams = new();
     private string localTeamID;
     [SerializeField] private Transform[] routePoints;
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     public void InitializeTeams()
     {
+        teamsOriginal.Clear();
+        teams.Clear();
         PlayerRoomController[] players = FindObjectsByType<PlayerRoomController>(FindObjectsSortMode.None);
 
         Debug.Log("===Players count: " + players.Length);
-        
+
         foreach (var player in players)
         {
             if (teams.ContainsKey(player.TeamID.ToString()))
@@ -33,7 +41,7 @@ public class GameHandler : MonoBehaviour
                 localTeamID = player.TeamID.ToString();
         }
 
-        foreach (var player in players) 
+        foreach (var player in players)
         {
             if (teamsOriginal.ContainsKey(player.TeamID.ToString()))
             {
@@ -59,61 +67,37 @@ public class GameHandler : MonoBehaviour
                     networkPlayer.SetNicknameUIColor(Color.red); //Set enemy name plate UI color to red
             }
         }
-        Debug.Log("===AFTER initialize");
-        foreach (var key in teams.Keys)
-        {
-            Debug.Log("===Key: " + key);
-            foreach (var playerRoom in teams[key])
-            {
-                Debug.Log("====Player team id: " + playerRoom.TeamID);
-            }
-        }
         Debug.Log("===Team count: " + teams.Count);
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count());
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
         if (teams.Count == 1)
             CheckWin();
     }
 
     public void Eliminate(string teamID, PlayerRoomController player)
     {
-        Debug.Log("===Eliminate player" + player.TeamID + " in local");
         if (!teams.ContainsKey(teamID)) return;
         teams[teamID].Remove(player);
         if (teams[teamID].Count == 0)
         {
-            Debug.Log("===BEFORE remove");
-            foreach (var key in teams.Keys)
-            {
-                Debug.Log("===Key: " + key);
-                foreach (var playerRoom in teams[key])
-                {
-                    Debug.Log("====Player team id: " + playerRoom.TeamID);
-                }
-            }
             teams.Remove(teamID);
-            Debug.Log("===AFTER remove");
-            foreach (var key in teams.Keys)
-            {
-                Debug.Log("===Key: " + key);
-                foreach (var playerRoom in teams[key])
-                {
-                    Debug.Log("====Player team id: " + playerRoom.TeamID);
-                }
-            }
-            Debug.Log("===Remain team after remove " + teams.Count);
         }
         if (teams.Count == 1) CheckWin();
-        AlivePlayerControl.UpdateAliveCount(1);
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
     }
 
     public IEnumerator CheckLose(string teamID)
     {
-        //await Task.Delay(500);
+        ;
         yield return new WaitForSeconds(2);
         if (!teams.ContainsKey(teamID)) //All teammate eliminated
         {
-            int ranking = teams.Count + 1;
-            //Debug.Log("===No teammate remain -> Defeat " + "Top " + ranking);
+            //int ranking = teams.Count + 1;
+            int ranking;
+            if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
+                ranking = CheckRanking() + 1;
+            else
+                ranking = teams.Count + 1;
+            Debug.Log("===Rank " + ranking);
             foreach (var playerRoomControl in teamsOriginal[teamID])
             {
                 if (playerRoomControl != null)
@@ -122,21 +106,13 @@ public class GameHandler : MonoBehaviour
         }
         else
         {
-            //Debug.Log("===Team " + teamID + " remain " + teams[teamID].Count + " player");
-            //Debug.Log("===Remain teammate alive -> Watch or leave");
-            if (!teamID.Contains("AI") && Matchmaking.Instance.currentMode != Matchmaking.Mode.Solo) 
+            if (!teamID.Contains("AI") && Matchmaking.Instance.currentMode != Matchmaking.Mode.Solo)
                 FindObjectOfType<WorldUI>().ShowEliminateUI();
-            else if (!teamID.Contains("AI"))
-            {
-                int ranking = teams.Count + 1;
-                //Debug.Log("===No teammate remain -> Defeat " + "Top " + ranking);
-                //foreach (var playerRoomControl in teamsOriginal[teamID])
-                //{
-                //    if (playerRoomControl != null)
-                //        playerRoomControl.RPC_ShowLose(ranking);
-                //}
-                teamsOriginal[teamID].First().RPC_ShowLose(ranking);
-            }
+            //else if (!teamID.Contains("AI"))
+            //{
+            //    int ranking = teams.Count + 1;
+            //    teamsOriginal[teamID].First().RPC_ShowLose(ranking);
+            //}
         }
         CheckWin();
     }
@@ -149,7 +125,7 @@ public class GameHandler : MonoBehaviour
             Debug.Log("===Victory team: " + teamID);
             if (teamID.Contains("AI")) return;
 
-            foreach(var playerRoomControl in teamsOriginal[teamID])
+            foreach (var playerRoomControl in teamsOriginal[teamID])
             {
                 if (playerRoomControl != null)
                     playerRoomControl.RPC_ShowWin();
@@ -159,16 +135,24 @@ public class GameHandler : MonoBehaviour
 
     public void AssignRoute()
     {
-        //BotAI[] botAIs = FindObjectsOfType<BotAI>();
-        //foreach(var botAI in botAIs)
-        //{
-        //    botAI.SetRoutePoints(routePoints);
-        //}
         BotAINetwork[] botAIs = FindObjectsOfType<BotAINetwork>();
         foreach (var botAI in botAIs)
         {
             botAI.SetRoutePoints(routePoints);
         }
+    }
+
+    private int CheckRanking()
+    {
+        int playerLive = 0;
+        foreach (var item in FindObjectsOfType<PlayerRoomController>())
+        {
+            if (item.IsAlive)
+            {
+                playerLive++;
+            }
+        }
+        return playerLive;
     }
 
     private void OnDrawGizmosSelected()
@@ -205,4 +189,27 @@ public class GameHandler : MonoBehaviour
         //Gizmos.DrawWireSphere(transform.position, collectDistance);
     }
 
+    [Button]
+    private void CheckTeam()
+    {
+        int deathCount = 0;
+        int aliveCount = 0;
+        foreach (var item in teams)
+        {
+            foreach (var _item in item.Value)
+            {
+                if (_item.IsAlive)
+                {
+                    aliveCount++;
+                }
+                else
+                {
+                    deathCount++;
+                }
+            }
+
+        }
+        Debug.Log("Alive Count: " + aliveCount);
+        Debug.Log("Death count: " + deathCount);
+    }
 }
