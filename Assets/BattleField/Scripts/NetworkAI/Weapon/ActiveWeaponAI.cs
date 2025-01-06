@@ -116,6 +116,7 @@ public class ActiveWeaponAI : NetworkBehaviour
         //weapon.transform.localRotation = Quaternion.identity;
         weapon.GetComponent<Outline>().enabled = false;
         weapon.GetComponent<Collider>().enabled = false;
+        HasGun = true;
     }
 
     // fire bullet laser VFX => chi tao ra virtual o nong sung + bullet trails + impact
