@@ -124,6 +124,7 @@ public class HPHandler : NetworkBehaviour
                 Runner.Despawn(Object);
                 return;
             }
+            playerRoomController.enabled = false;
             RPC_HideLocalPlayerUI();
             RPC_ShowResultDuo();
         }
