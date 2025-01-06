@@ -86,7 +86,8 @@ public class GameHandler : MonoBehaviour
     }
 
     public IEnumerator CheckLose(string teamID)
-    {;
+    {
+        ;
         yield return new WaitForSeconds(2);
         if (!teams.ContainsKey(teamID)) //All teammate eliminated
         {
@@ -143,7 +144,15 @@ public class GameHandler : MonoBehaviour
 
     private int CheckRanking()
     {
-        return FindObjectsOfType<PlayerRoomController>().Count();
+        int playerLive = 0;
+        foreach (var item in FindObjectsOfType<PlayerRoomController>())
+        {
+            if (item.IsAlive)
+            {
+                playerLive++;
+            }
+        }
+        return playerLive;
     }
 
     private void OnDrawGizmosSelected()
