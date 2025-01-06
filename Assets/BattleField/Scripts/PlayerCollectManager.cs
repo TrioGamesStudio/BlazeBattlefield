@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerCollectManager : NetworkBehaviour, IStateAuthorityChanged
+public class PlayerCollectManager : NetworkBehaviour
 {
     [SerializeField] private bool isPlayer;
     private Rigidbody Rigidbody;
@@ -102,15 +102,4 @@ public class PlayerCollectManager : NetworkBehaviour, IStateAuthorityChanged
         }
     }
 
-    public void StateAuthorityChanged()
-    {
-        if (!HasStateAuthority)
-        {
-            gameObject.SetActive(false);
-        }
-        else
-        {
-            gameObject.SetActive(true);
-        }
-    }
 }

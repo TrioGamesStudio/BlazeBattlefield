@@ -94,7 +94,7 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         }
         SetState(BotState.Idle);
     }
-
+    public PlayerCollectManager playerCollectManager;
     private void InitializeBot()
     {
         if (isInitialized) return;
@@ -104,7 +104,10 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         hpHandler = GetComponent<HPHandler>();
         SetState(BotState.FollowingRoute);
         StartCoroutine(StateBehaviorRoutine());
-        GetComponentInChildren<PlayerCollectManager>().Object.RequestStateAuthority();
+
+        playerCollectManager.gameObject.SetActive(true);
+        playerCollectManager.Object.RequestStateAuthority();
+
         isInitialized = true;
         Debug.Log($"///Bot initialized by authority: {runner.LocalPlayer}");
     }
