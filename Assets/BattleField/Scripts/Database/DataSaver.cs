@@ -5,7 +5,6 @@ using Firebase.Database;
 using UnityEngine.SceneManagement;
 using NaughtyAttributes;
 using System.Collections.Generic;
-using static UnityEditor.Progress;
 
 [Serializable]
 public class DataToSave
@@ -240,7 +239,7 @@ public class DataSaver : MonoBehaviour
         {
             Debug.Log($"found jsonData");
             inventoryDataToSave = JsonUtility.FromJson<InventoryDataToSave>(jsonData);
-            inventoryDataToSave.InitWhenLoad(skinDataHandler, hatDataHandler);
+            //inventoryDataToSave.InitWhenLoad(skinDataHandler, hatDataHandler);
         }
         else
         {
