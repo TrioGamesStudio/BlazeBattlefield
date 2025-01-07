@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b6166844acfe242a255b1043c0e9fb, type: 3}
+  m_Name: Scar
+  m_EditorClassIdentifier: 
+  displayName: SCAR_L
+  Icon: {fileID: 21300000, guid: 40ea0e17679fb3c409bdd7d5f8d2d6b7, type: 3}
+  SubItemType: 102
+  maxStack: 1
+  ItemType: 0
+  IconActualGun: {fileID: 21300000, guid: 50026446e22da86428281f0fd2751bf5, type: 3}
+  ammoUsingType: {fileID: 11400000, guid: 966ba81660ca8964aa9e8ab7ccb9d033, type: 2}
+  slotWeaponIndex: 0
+  isSingleMode: 0
+  isContainScope: 0
+  cooldownTime: 0.1
+  damagePerHit: 15
+  maxRounds: 30
+  shootingSound: {fileID: 8300000, guid: 88837867717b25946b0196121cd6b357, type: 3}
+  reloadSound: {fileID: 0}
+  recoil:
+    currentRecoilX: -2.5
+    currentRecoilY: 1.5
+    currentRecoilZ: 0.2
+    currentReturnSpeed: 2
+    currentSnappiness: 6

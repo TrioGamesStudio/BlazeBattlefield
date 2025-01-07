@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b6166844acfe242a255b1043c0e9fb, type: 3}
+  m_Name: P92
+  m_EditorClassIdentifier: 
+  displayName: P92
+  Icon: {fileID: 21300000, guid: e8a0d47ec9424654cb4aa6a30fb3589c, type: 3}
+  SubItemType: 500
+  maxStack: 1
+  ItemType: 0
+  IconActualGun: {fileID: 21300000, guid: f0144203a1e5daa428920e0f484504bd, type: 3}
+  ammoUsingType: {fileID: 11400000, guid: efe0a45e38273ed4293075d538c5e17e, type: 2}
+  slotWeaponIndex: 2
+  isSingleMode: 1
+  isContainScope: 0
+  cooldownTime: 0.4
+  damagePerHit: 20
+  maxRounds: 15
+  shootingSound: {fileID: 8300000, guid: bb9c2d45c19c01d48821b1ead96f981b, type: 3}
+  reloadSound: {fileID: 0}
+  recoil:
+    currentRecoilX: -7
+    currentRecoilY: 1
+    currentRecoilZ: 0.35
+    currentReturnSpeed: 2
+    currentSnappiness: 6

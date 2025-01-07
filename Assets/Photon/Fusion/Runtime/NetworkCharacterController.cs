@@ -1,7 +1,8 @@
-namespace Fusion {
   using System.Runtime.CompilerServices;
   using System.Runtime.InteropServices;
   using UnityEngine;
+  
+namespace Fusion {
 
   [StructLayout(LayoutKind.Explicit)]
   [NetworkStructWeaved(WORDS + 4)]
@@ -43,8 +44,9 @@ namespace Fusion {
     public float jumpImpulse   = 8.0f;
     public float acceleration  = 10.0f;
     public float braking       = 10.0f;
-    public float maxSpeed      = 2.0f;
+    public float maxSpeed      = 4.0f;
     public float rotationSpeed = 15.0f;
+    public float viewRotationSpeed = 50f;
 
     Tick                _initial;
     CharacterController _controller;
@@ -95,7 +97,9 @@ namespace Fusion {
         horizontalVel = Vector3.Lerp(horizontalVel, default, braking * deltaTime);
       } else {
         horizontalVel      = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, maxSpeed);
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
+        
+        // xoay player theo huong dir input
+        //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
       }
 
       moveVelocity.x = horizontalVel.x;
@@ -110,10 +114,6 @@ namespace Fusion {
     public override void Spawned() {
       _initial = default;
       TryGetComponent(out _controller);
-      // Without disabling and re-enabling the CharacterController here, the first Move call will reset the position to 0,0,0 instead of
-      // keeping the position it was spawned at. Presumably disabling it clears some kind of internally cached "previous position" value
-      _controller.enabled = false;
-      _controller.enabled = true;
       CopyToBuffer();
     }
 
