@@ -368,6 +368,8 @@ public class LoginManager : MonoBehaviour
         string email = loginEmail.text;
         string password = loginPassword.text;
 
+        SetPlayerPref(email, password);
+
         Credential credential =
         EmailAuthProvider.GetCredential(email, password);
         auth.SignInAndRetrieveDataWithCredentialAsync(credential).ContinueWithOnMainThread(task => {
@@ -421,7 +423,7 @@ public class LoginManager : MonoBehaviour
 
             //Load data
             DataSaver.Instance.LoadData();
-            SetPlayerPref(email, password);
+            //SetPlayerPref(email, password);
         });
     }
 
