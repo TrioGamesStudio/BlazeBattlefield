@@ -567,13 +567,14 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
     public void StartBattle()
     {
-        //AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
         networkRunner.SessionInfo.IsOpen = false;
         isDone = true;
-        FindObjectOfType<UIController>().StartCountdown();
-        StartCoroutine(ReleasePlayer());
-        StartCoroutine(InitializeTeams());
+        //FindObjectOfType<UIController>().StartCountdown();
+        //StartCoroutine(ReleasePlayer());
+        //StartCoroutine(InitializeTeams());
 
+        StartGameHandler.instance.PassAllPlayer();
     }
 
     private IEnumerator WaitForRealPlayerOrSpawnBot(NetworkRunner runner)
