@@ -95,6 +95,15 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         SetState(BotState.Idle);
     }
 
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        base.Despawned(runner, hasState);
+        Debug.Log("/// Despawn Bot AI called for runner: " + runner.name);
+        StopAllCoroutines();
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
+    }
+
+    public PlayerCollectManager playerCollectManager;
     private void InitializeBot()
     {
         if (isInitialized) return;
@@ -102,8 +111,14 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
         hpHandler = GetComponent<HPHandler>();
+       
         SetState(BotState.FollowingRoute);
         StartCoroutine(StateBehaviorRoutine());
+
+        GameHandler.instance.InitializeTeams();
+        
+        playerCollectManager.gameObject.SetActive(true);
+        playerCollectManager.Object.RequestStateAuthority();
 
         isInitialized = true;
         Debug.Log($"///Bot initialized by authority: {runner.LocalPlayer}");
@@ -623,10 +638,4 @@ public class BotAINetwork : NetworkBehaviour, IStateAuthorityChanged
 
     #endregion
 
-    public override void Despawned(NetworkRunner runner, bool hasState)
-    {
-        base.Despawned(runner, hasState);
-        Debug.Log("/// Despawn Bot AI called for runner: " + runner.name);
-        StopAllCoroutines();
-    }
 }

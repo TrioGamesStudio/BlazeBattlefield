@@ -46,7 +46,7 @@ public class HPHandler : NetworkBehaviour
 
     // show thong tin player in game HP
     [SerializeField] InGamePlayerStatusUIHandler inGamePlayerStatusUIHandler;
-    bool isShowResultTable = false;
+    [SerializeField] bool isShowResultTable = false;
     public UnityEvent<float> OnTakeDamageEvent = new UnityEvent<float>();
 
     LocalCameraHandler localCameraHandler;
@@ -115,27 +115,29 @@ public class HPHandler : NetworkBehaviour
         if (!isShowResultTable && Networked_HP <= 0)
         {
             isShowResultTable = true;
-            //if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
+            PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
+            RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
+            playerRoomController.enabled = false;
+            if (isBot)
             {
-                PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
-                RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
-                if (isBot)
-                {
-                    FindObjectOfType<GameHandler>().CheckWin(); //check win for remaining real player
-                    return;
-                }
-                RPC_HideLocalPlayerUI();
-                RPC_ShowResultDuo();
-            }
-            //else
-            //{
-            //    PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
-            //    RPC_EliminatePlayer(playerRoomController.TeamID.ToString(), playerRoomController);
-            //    RPC_HideLocalPlayerUI();
-            //    RPC_ShowResultDuo();
-            //}
+                GameHandler.instance.CheckWin(); //check win for remaining real player        
+                OnDeath();
+                Runner.Despawn(Object);
+                return;
+            }   
+            RPC_HideLocalPlayerUI();
+            RPC_ShowResultDuo();
         }
 
+    }
+
+    void Update()
+    {
+        if (Networked_HP <= 0)
+        {
+            PlayerRoomController playerRoomController = GetComponent<PlayerRoomController>();
+            playerRoomController.enabled = false;
+        }
     }
 
     //? server call | coll 55 WeaponHandler.cs | khi hitInfo.HitBox tren player
@@ -401,7 +403,7 @@ public class HPHandler : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     void RPC_EliminatePlayer(string teamID, PlayerRoomController playerRoomController)
     {
-        FindObjectOfType<GameHandler>().Eliminate(teamID, playerRoomController);
+        GameHandler.instance.Eliminate(teamID, playerRoomController);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -409,7 +411,7 @@ public class HPHandler : NetworkBehaviour
     {
         GetComponent<PlayerRoomController>().IsAlive = false;
         Debug.Log(":::Player shut down");
-        StartCoroutine(FindObjectOfType<GameHandler>().CheckLose(GetComponent<PlayerRoomController>().TeamID.ToString()));
+        StartCoroutine(GameHandler.instance.CheckLose(GetComponent<PlayerRoomController>().TeamID.ToString()));
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]

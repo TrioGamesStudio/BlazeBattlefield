@@ -44,7 +44,18 @@ public class NetworkPlayer_Support : NetworkBehaviour
         
         CameraEffectControl.instance.EyeBlinkEffect.OpenEye();
     }
- 
+
+    //public void PlayerLeft(PlayerRef player)
+    //{
+    //    if (GetComponent<HPHandler>().Networked_HP <= 0) return;
+    //    StartCoroutine(Test());
+    //}
+    //private IEnumerator Test()
+    //{
+    //    yield return new WaitForSeconds(.5f);
+
+    //    AlivePlayerControl.UpdateAliveCount(1);
+    //}
 }
 public interface INetworkInitialize
 {

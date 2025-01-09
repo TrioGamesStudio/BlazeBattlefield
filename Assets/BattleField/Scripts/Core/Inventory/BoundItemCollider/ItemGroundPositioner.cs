@@ -3,7 +3,7 @@ using NaughtyAttributes;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-public class ItemGroundPositioner : NetworkBehaviour
+public class ItemGroundPositioner : MonoBehaviour
 {
     public static ItemGroundPositioner instance;
     public LayerMask GroundLayerMask;
