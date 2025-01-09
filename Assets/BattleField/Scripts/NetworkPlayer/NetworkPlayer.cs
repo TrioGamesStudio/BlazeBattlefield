@@ -156,10 +156,15 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft, IPlayerJoined
 
             // lay gia tri Gamemanager.playerNickName gan vao
             //RPC_SetNickName(GameManager.playerNickName);
-            nickName = DataSaver.Instance.dataToSave.userName;
-            if (nickName == "")
-                nickName = "Guest";
-            RPC_SetNickName(nickName);
+            if(DataSaver.Instance != null) {
+                nickName = DataSaver.Instance.dataToSave.userName;
+                if (nickName == "")
+                    nickName = "Guest";
+                RPC_SetNickName(nickName);
+            } else {
+                RPC_SetNickName(GameManager.playerNickName);
+            }
+            
 
 
             /* RPC_SetNickName(PlayerPrefs.GetString("PlayerNickName_Local")); */

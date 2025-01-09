@@ -47,8 +47,12 @@ public class ShowPlayerInfo : MonoBehaviour
     DataSaver _dataSaver;
     private void Awake()
     {
-        _dataSaver = FindObjectOfType<DataSaver>();
-        _dataSaver.LoadData();
+        
+        /* _dataSaver = FindObjectOfType<DataSaver>();
+        _dataSaver.LoadData(); */
+
+        if(DataSaver.Instance == null) return;
+        DataSaver.Instance.LoadData();
     }
 
     private void OnEnable()
@@ -73,12 +77,14 @@ public class ShowPlayerInfo : MonoBehaviour
     private void Start()
     {
         Debug.Log("xxx MainLobby scene loaded. Restarting coroutine load player info.");
+        if(DataSaver.Instance == null) return;
         StartCoroutine(LoadPlayerDataCo(0.1f));
     }
 
     public IEnumerator LoadPlayerDataCo(float time)
     {
         yield return new WaitForSeconds(time);
+        
         currentRank = DataSaver.Instance.dataToSave.rank;
         Debug.Log("xxx " + currentRank);
     }
@@ -123,6 +129,7 @@ public class ShowPlayerInfo : MonoBehaviour
 
     public void ShowInfoStat()
     {
+        if(DataSaver.Instance == null) return;
         userNameStat.text = DataSaver.Instance.dataToSave.userName;
         rankNameStat.text = RankSystem.GetRankName(DataSaver.Instance.dataToSave.rank);
         winSoloStat.text = DataSaver.Instance.dataToSave.winSolo.ToString();
@@ -135,17 +142,20 @@ public class ShowPlayerInfo : MonoBehaviour
 
     public void ShowPlayerName()
     {
+        if(DataSaver.Instance == null) return;
         userName.text = DataSaver.Instance.dataToSave.userName;
     }
 
     public void ShowCoin()
     {
+        if(DataSaver.Instance == null) return;
         coinInMainLobby.text = DataSaver.Instance.dataToSave.coins.ToString();
         coin2.text = DataSaver.Instance.dataToSave.coins.ToString();
     }
 
     void UpdateRankUI()
     {
+        if(DataSaver.Instance == null) return;
         var playerData = DataSaver.Instance.dataToSave;
 
         // Update rank icon
@@ -161,6 +171,7 @@ public class ShowPlayerInfo : MonoBehaviour
 
     void UpdateExperienceUI()
     {
+        if(DataSaver.Instance == null) return;
         var playerData = DataSaver.Instance.dataToSave;
 
         // Update experience display
@@ -202,6 +213,7 @@ public class ShowPlayerInfo : MonoBehaviour
     {
         // Update coin
         //int coinAdded = 10;
+        if(DataSaver.Instance == null) return;
         var playerData = DataSaver.Instance.dataToSave;
 
         // Update coin

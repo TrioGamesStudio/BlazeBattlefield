@@ -116,8 +116,13 @@ public class SkinSelectionUI : MonoBehaviour
 
     private bool CanBuySkin()
     {
-        int currentCoint = DataSaver.Instance.dataToSave.coins;
-        int skinPrice = SkinDataHandler.skinSpriteIcons[buyIndex].price;
+        int currentCoint = 0;
+        int skinPrice = 0;
+        if(DataSaver.Instance != null) {
+            currentCoint = DataSaver.Instance.dataToSave.coins;
+            skinPrice = SkinDataHandler.skinSpriteIcons[buyIndex].price;
+        }
+        
         return currentCoint >= skinPrice;
     }
 
@@ -188,6 +193,7 @@ public class SkinSelectionUI : MonoBehaviour
     [Button]
     public void RefreshUIByData()
     {
+        if(DataSaver.Instance == null) return;
         SkinDataHandler.UnlockPlayerOwnSkin(DataSaver.Instance.inventoryDataToSave.GetCollections(SkinDataHandler.CollectionsName));
 
         for (int i = 0; i < avatarUIList.Count; i++)
@@ -203,12 +209,14 @@ public class SkinSelectionUI : MonoBehaviour
     [Button]
     public void SaveSkin()
     {
+        if(DataSaver.Instance == null) return;
         DataSaver.Instance.inventoryDataToSave.SaveSkinData(SkinDataHandler.CollectionsName,SkinDataHandler.GetAllUnlockSkin());
         DataSaver.Instance.SaveInventoryData();
     }
     [Button]
     public void SaveDefaultSkin()
     {
+        if(DataSaver.Instance == null) return;
         DataSaver.Instance.inventoryDataToSave.SaveSkinData(SkinDataHandler.CollectionsName,SkinDataHandler.GetDefautlSkinData());
         DataSaver.Instance.SaveInventoryData();
     }

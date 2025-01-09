@@ -15,6 +15,7 @@ public class InputName : MonoBehaviour
     {
         playButton.onClick.AddListener(SetName);
         nameInputField.text = GameManager.names[Random.Range(0, GameManager.names.Length)];
+        GameManager.playerNickName = nameInputField.text;
     }
 
     public void SetName()
