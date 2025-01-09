@@ -25,8 +25,13 @@ public class SkinSelectionUI : MonoBehaviour
     [SerializeField] private ShowPlayerInfo showPlayerInfo;
     [SerializeField] private Color priceColor;
     [SerializeField] private Image buyPanelSkinIcon;
-
+    [Header("Audio")]
     [SerializeField] private AudioSource selectAudio;
+    [SerializeField] private AudioSource accpetAudio;
+    [SerializeField] private AudioSource cancelAudio;
+    [SerializeField] private AudioSource selectLockSkinAudio;
+
+    
     public event Action<int> OnChangedSkinAction;
     private int buyIndex;
 
@@ -48,6 +53,16 @@ public class SkinSelectionUI : MonoBehaviour
             avatarUI.OnSkinSelection = OnChangeSkinByIndex;
             avatarUI.OnUnlockSkin = TryToBuySkin;
         }
+        SetupSound();
+    }
+
+    [Button]
+    private void SetupSound()
+    {
+        selectAudio.clip = SoundManager.SoundAsset.GetSound("select_skin");
+        accpetAudio.clip = SoundManager.SoundAsset.GetSound("skin_selection_buy");
+        cancelAudio.clip = SoundManager.SoundAsset.GetSound("skin_selection_cancel");
+        selectLockSkinAudio.clip = SoundManager.SoundAsset.GetSound("select_lock_avatar");
     }
 
     private void TryToBuySkin(int skinIndex)
@@ -62,6 +77,8 @@ public class SkinSelectionUI : MonoBehaviour
         // reset state for UI
         buyBtn.interactable = CanBuySkin();
         SetChooseSkinToBuy(skinIndex);
+
+        selectLockSkinAudio.Play();
     }
 
     private void SetChooseSkinToBuy(int skinIndex)

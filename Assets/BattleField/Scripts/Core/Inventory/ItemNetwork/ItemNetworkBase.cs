@@ -88,7 +88,12 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     {
         DestroyItem();
     }
-  
+
+    public virtual void CollectAI(HPHandler hPHandler)
+    {
+        DestroyItem();
+    }
+
     protected virtual void AddToStorage()
     {
         InventoryItem inventoryItem = new();
@@ -102,7 +107,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         DestroyRPC();
     }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     private void DestroyRPC()
     {
         if (HasStateAuthority)

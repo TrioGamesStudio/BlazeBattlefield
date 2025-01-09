@@ -50,7 +50,7 @@ public class SkinDataHandler : ScriptableObject
         if(skinOwns == null || skinOwns.Count == 0)
         {
             Debug.Log(skinOwns);
-            Debug.Log("Skin Count is zero, please check it out");
+            Debug.LogError("Skin Count is zero, please check it out");
             return;
         }
         foreach (var skinIngame in skinSpriteIcons)

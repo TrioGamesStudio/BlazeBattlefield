@@ -11,7 +11,7 @@ public class TabSwitchingUI : MonoBehaviour
     public Sprite TabIcon;
 
     public UnityEvent OnShowUIEvent;
-
+    public UnityEvent OnHideUIEvent;
     [Tooltip("You can use these button to hide current UI cover diffents UI exits")]
     [SerializeField] private List<GameObject> viewsObject = new();
     [Button("Show (Can use to show object quickly of this UI)")]
@@ -31,5 +31,6 @@ public class TabSwitchingUI : MonoBehaviour
         {
             view.SetActive(false);
         }
+        OnHideUIEvent?.Invoke();
     }
 }
