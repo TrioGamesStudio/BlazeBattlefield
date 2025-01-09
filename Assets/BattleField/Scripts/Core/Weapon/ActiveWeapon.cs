@@ -73,7 +73,7 @@ public partial class ActiveWeapon : NetworkBehaviour, INetworkInitialize
     {
         weapon.transform.SetParent(isLocal ? weaponHoldersLocal[index] : weaponHoldersRemote[index], false);
         weapon.GetComponent<NetworkTransform>().Teleport(isLocal ? weaponHoldersLocal[index].position : weaponHoldersRemote[index].position);
-
+        weapon.GetComponent<Collider>().enabled = false;
 
         /* weapon.transform.SetParent(parent.transform);
         Debug.Log($"Weapon name {weapon.name}"); */

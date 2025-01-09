@@ -22,14 +22,15 @@ public class CharacterOutfitsGenerator : NetworkBehaviour
 
         if(Object.HasInputAuthority) {
 
-            if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo) {
-                skinSelectedNum = Matchmaking.Instance.SkinSelectedNumber;
-            }
-            //skinSelectedNum = Random.Range(0, skinsList.Count());
-            //Debug.Log("zzz select skin " + skinSelectedNum);
-            RPC_RandomSKinsNumsGenerator(skinSelectedNum);
+            //if(Matchmaking.Instance.currentMode == Matchmaking.Mode.Duo) {
+            //    skinSelectedNum = Matchmaking.Instance.SkinSelectedNumber;
+            //}
+            ////skinSelectedNum = Random.Range(0, skinsList.Count());
+            ////Debug.Log("zzz select skin " + skinSelectedNum);
+            //RPC_RandomSKinsNumsGenerator(skinSelectedNum);
+            skinsNumber_Network = Matchmaking.Instance.SkinSelectedNumber;
         }
-        
+        OnSkinsChanged();
         //OnSkinsChanged();
     }
 

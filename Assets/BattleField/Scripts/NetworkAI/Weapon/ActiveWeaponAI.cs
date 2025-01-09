@@ -5,12 +5,17 @@ using Fusion;
 
 public class ActiveWeaponAI : NetworkBehaviour
 {
+    [Networked]
+    private bool HasGunNetworked { get; set; }
+    public NetworkObject currentWeaponRemote;
+    public GameObject weapon;
+
     [SerializeField] BulletHandler bulletVFXPF;
     [SerializeField] Transform aimPoint_grandeRocket_3rd; // VI TRI TREN NONG SUNG trong 3rdPersonCam
     public Transform[] weaponHoldersRemote;
-    public NetworkObject currentWeaponRemote;
+
     //public ActiveWeapon activeWeapon;
-    public GameObject weapon;
+
     Animator anim;
 
     //? network object nao tao ra tia raycast
@@ -28,9 +33,12 @@ public class ActiveWeaponAI : NetworkBehaviour
     [Networked] // bien updated through the server on all the clients
     public bool isFiring { get; set; }
     ChangeDetector changeDetector;
+    public bool HasGun;
 
     public override void Spawned()
     {
+        currentWeaponRemote = null;
+        HasGun = false;
         changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
     }
 
@@ -62,11 +70,25 @@ public class ActiveWeaponAI : NetworkBehaviour
         }
     }
 
+    public override void FixedUpdateNetwork()
+    {
+        //HasGun = currentWeaponRemote != null;
+        //if (!HasGun)
+        //{
+        //    anim.SetBool("isEquiped", false);
+        //}
+    }
+
     public void Equip(GameObject weaponPrefab)
     {
-        anim.SetBool("isEquiped", true);
+        //if (weaponPrefab == null) return;    
         weapon = weaponPrefab;
         currentWeaponRemote = SpawnItem(weapon, 0);
+        if (currentWeaponRemote)
+        {
+            anim.SetBool("isEquiped", true);
+            HasGun = true;
+        }
     }
 
     //Spawn weapon
@@ -83,12 +105,18 @@ public class ActiveWeaponAI : NetworkBehaviour
         return networkObject;
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_SetParentWeapon(NetworkObject weapon, int index)
     {
-        weapon.transform.SetParent(weaponHoldersRemote[index].transform);
-        weapon.transform.localPosition = Vector3.zero;
-        weapon.transform.localRotation = Quaternion.identity;
+        var temp = weaponHoldersRemote[index].transform;
+
+        weapon.gameObject.layer = 0;
+        weapon.transform.SetParent(temp);
+        weapon.GetComponent<NetworkTransform>().Teleport(temp.position, temp.rotation);
+        //weapon.transform.localRotation = Quaternion.identity;
+        weapon.GetComponent<Outline>().enabled = false;
+        weapon.GetComponent<Collider>().enabled = false;
+        HasGun = true;
     }
 
     // fire bullet laser VFX => chi tao ra virtual o nong sung + bullet trails + impact
@@ -106,9 +134,9 @@ public class ActiveWeaponAI : NetworkBehaviour
             {
                 spawnBullet.GetComponent<BulletHandler>().FireBullet(Object.InputAuthority, networkObject, "bot");
             });
-           
+
             //bulletFireDelay = TickTimer.CreateFromSeconds(Runner, 0.15f); // sau 3s se exp or notRunning
-        }      
+        }
     }
 
 
@@ -140,7 +168,7 @@ public class ActiveWeaponAI : NetworkBehaviour
                         {
                             hp.OnTakeDamage("bot", weaponDamageCurr, null);
                         }
-                    }                 
+                    }
                 }
                 //PlayerStats.Instance.AddDamageDealt(localWeaponDamageCurr);
             }

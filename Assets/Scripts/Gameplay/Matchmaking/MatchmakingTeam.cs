@@ -207,7 +207,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         networkRunner.SessionInfo.IsOpen = false;
         isDone = true;
-        StartGameHandler.OnStartGameAction?.Invoke();
+        StartGameHandler.instance.PassAllPlayer();
+
         //FindObjectOfType<UIController>().StartCountdown();
         //StartCoroutine(ReleasePlayer());
         //StartCoroutine(InitializeTeams());
@@ -222,7 +223,7 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     private IEnumerator InitializeTeams()
     {
         yield return new WaitForSeconds(8f);
-        FindObjectOfType<GameHandler>().InitializeTeams();
+        GameHandler.instance.InitializeTeams();
     }
 
     public string GenerateRoomName()
@@ -327,12 +328,12 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
             players.Clear();
         string team = matchTeam[player];
         PlayerRoomController playerRoom = players[player];
-        FindObjectOfType<GameHandler>().Eliminate(team, playerRoom);
+        GameHandler.instance.Eliminate(team, playerRoom);
         if (runner.ActivePlayers.Count() > 1)
-            FindObjectOfType<GameHandler>().CheckWin();
+            GameHandler.instance.CheckWin();
         players.Remove(player);
 
-        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke(players.Count);
+        AlivePlayerControl.OnUpdateAliveCountAction?.Invoke();
     }
 
     public void OnConnectedToServer(NetworkRunner runner)

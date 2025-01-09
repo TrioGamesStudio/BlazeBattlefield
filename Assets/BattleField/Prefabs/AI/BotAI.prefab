@@ -13757,7 +13757,7 @@ MonoBehaviour:
   dropBoxDetectionRadius: 5
   collectDistance: 0.5
   itemCollectRadius: 3
-  playerDetectionRadius: 15
+  playerDetectionRadius: 10
   fireDistance: 8
   dropBoxLayer:
     serializedVersion: 2
@@ -13773,7 +13773,7 @@ MonoBehaviour:
   evadeInterval: 0.5
   jumpHeight: 0.8
   evadeSpeed: 1.6
-  HasGun: 0
+  playerCollectManager: {fileID: 5473477067462154210}
 --- !u!114 &-8422475685057307926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13786,13 +13786,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00bef71e6e574e6aa4c6e3056183881, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentWeaponRemote: {fileID: 0}
+  weapon: {fileID: 0}
   bulletVFXPF: {fileID: 6216534217294888657, guid: ab5a5d742d99a9c4199c23bce5427e47,
     type: 3}
   aimPoint_grandeRocket_3rd: {fileID: 980366272779043220}
   weaponHoldersRemote:
   - {fileID: 1375562210468276060}
-  currentWeaponRemote: {fileID: 0}
-  weapon: {fileID: 0}
   opponentLayer:
     serializedVersion: 2
     m_Bits: 32768
@@ -13800,6 +13800,7 @@ MonoBehaviour:
   audioSource: {fileID: 9162745344633377286}
   weaponSoundCurr: {fileID: 8300000, guid: 88837867717b25946b0196121cd6b357, type: 3}
   _isFiring: 0
+  HasGun: 0
 --- !u!114 &-4708531423129684952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13823,10 +13824,10 @@ MonoBehaviour:
   playerModel: {fileID: 702367509307297863}
   hitBox: {fileID: 72851290656616069}
   localGunHolder: {fileID: 0}
-  deathParticlePf: {fileID: 4968256401583644762, guid: 136094b40fc14b34ab568c032409f5df,
-    type: 3}
+  deathParticlePf: {fileID: 166404, guid: e55288307f317b34bbc0ad7e5a744e1f, type: 3}
   isSkipSettingStartValues: 0
   inGamePlayerStatusUIHandler: {fileID: 0}
+  isShowResultTable: 0
   OnTakeDamageEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -25501,7 +25502,7 @@ PrefabInstance:
     - target: {fileID: 5359046980623043594, guid: b567bd548e41e214aae8b1b45dedeb79,
         type: 3}
       propertyPath: Flags
-      value: 262145
+      value: 524289
       objectReference: {fileID: 0}
     - target: {fileID: 5359046980623043594, guid: b567bd548e41e214aae8b1b45dedeb79,
         type: 3}
@@ -25568,6 +25569,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b567bd548e41e214aae8b1b45dedeb79, type: 3}
+--- !u!114 &5473477067462154210 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6452352528162196287, guid: b567bd548e41e214aae8b1b45dedeb79,
+    type: 3}
+  m_PrefabInstance: {fileID: 1332764311879654621}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 283d53d4e88bd054b9f6266539a98c76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6350575483080216791 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5359046980623043594, guid: b567bd548e41e214aae8b1b45dedeb79,

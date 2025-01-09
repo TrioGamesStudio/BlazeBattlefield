@@ -5,8 +5,9 @@ using Fusion;
 using NaughtyAttributes;
 public class HealthItem : ItemNetworkBase<HealingItemType,HealthItemConfig>
 {
-    public override void CollectAI(ActiveWeaponAI activeWeaponAI)
+    public override void CollectAI(HPHandler hPHandler)
     {
+        hPHandler.OnHealRPC(40);
         DestroyItem();
     }
 

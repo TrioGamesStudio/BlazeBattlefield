@@ -2,9 +2,10 @@ using Fusion;
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
-public class RandomGroup : NetworkBehaviour
+public class RandomGroup : MonoBehaviour
 {
     [SerializeField] private DropBox dropBoxPrefab;
     [SerializeField] private GameObject dropBoxContainer;
@@ -23,13 +24,12 @@ public class RandomGroup : NetworkBehaviour
     [SerializeField] private bool isRefreshChild = false;
 
     private int spawnCount = 1;
-
     public void SetDropBoxPrefab(DropBox newDropBoxPrefab)
     {
         dropBoxPrefab = newDropBoxPrefab;
     }
 
-    public void SpawnDropBoxesInGroup(int _spawnCount)
+    public void SpawnDropBoxesInGroup(int _spawnCount, NetworkRunner Runner)
     {
         if (dropBoxPrefab == null)
         {
@@ -40,14 +40,15 @@ public class RandomGroup : NetworkBehaviour
 
         SelectValidSpawnPoints();
 
-        SpawnDropBoxes();
+        SpawnDropBoxes(Runner);
     }
 
-    private void SpawnDropBoxes()
+    private void SpawnDropBoxes(NetworkRunner Runner)
     {
         foreach (var validSpawnPos in validSpawnPoints)
         {
-            Runner.Spawn(dropBoxPrefab, validSpawnPos.position);
+            var item = Runner.Spawn(dropBoxPrefab, validSpawnPos.position);
+
             //networkObject.transform.SetParent(dropBoxContainer.transform);
         }
         Debug.Log($"This check point is create {validSpawnPoints.Count}");

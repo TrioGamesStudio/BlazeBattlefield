@@ -97,7 +97,7 @@ public class InventoryDataToSave
         {
             skinData, hatData
         };
-
+        CustomDatas.Clear();
         foreach (var item in skinDataHandlers)
         {
             CustomDatas.Add(new CustomData(item.CollectionsName, item.GetDefautlSkinData()));
@@ -258,7 +258,8 @@ public class DataSaver : MonoBehaviour
         {
             Debug.Log($"found jsonData");
             inventoryDataToSave = JsonUtility.FromJson<InventoryDataToSave>(jsonData);
-            inventoryDataToSave.InitWhenLoad(skinDataHandler, hatDataHandler);
+            //inventoryDataToSave.InitWhenLoad(skinDataHandler, hatDataHandler);
+            //inventoryDataToSave.InitWhenLoad(skinDataHandler, hatDataHandler);
         }
         else
         {

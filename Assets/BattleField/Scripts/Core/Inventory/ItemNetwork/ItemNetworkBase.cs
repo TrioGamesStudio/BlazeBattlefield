@@ -58,6 +58,11 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         {
             //Invoke(nameof(BoundItemSetup), .3f);
         }
+        if (gameObject.CompareTag("Item"))
+        {
+            ItemDatabase.instance.AddItem(Object);
+        }
+
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -67,6 +72,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         {
             OnRemoveItemUI?.Invoke(this);
         }
+        ItemDatabase.instance.RemoveItem(Object);
     }
 
 
@@ -88,7 +94,12 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
     {
         DestroyItem();
     }
-  
+
+    public virtual void CollectAI(HPHandler hPHandler)
+    {
+        DestroyItem();
+    }
+
     protected virtual void AddToStorage()
     {
         InventoryItem inventoryItem = new();
@@ -102,7 +113,7 @@ public abstract class ItemNetworkBase<_EnumType, _Config> : NetworkBehaviour, It
         DestroyRPC();
     }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     private void DestroyRPC()
     {
         if (HasStateAuthority)

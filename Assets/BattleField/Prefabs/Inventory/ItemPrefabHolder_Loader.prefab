@@ -193,7 +193,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6223177620621654137}
   - component: {fileID: 7028057528691969333}
-  - component: {fileID: 3858303718980081586}
   m_Layer: 0
   m_Name: ItemGroundPositioner
   m_TagString: Untagged
@@ -232,24 +231,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   heightCheck: 50
---- !u!114 &3858303718980081586
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3262541878178045484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 406843952
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 7028057528691969333}
 --- !u!1 &3415694142416002895
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,7 +576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 528992087
   ObjectInterest: 1
-  Flags: 262145
+  Flags: 524289
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 6840984206512833627}
@@ -654,7 +635,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4873743389071372107}
-  - component: {fileID: 5802895473691512047}
   - component: {fileID: 7637018878949778934}
   m_Layer: 0
   m_Name: WeaponManger
@@ -678,23 +658,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2410822809969261775}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5802895473691512047
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8186736578462466174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 749190047
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours: []
 --- !u!114 &7637018878949778934
 MonoBehaviour:
   m_ObjectHideFlags: 0

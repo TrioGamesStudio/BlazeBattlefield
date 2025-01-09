@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 049a3bfc458d8fd46952d624d50c2ffb, type: 3}
+  m_Name: Selection_Skin
+  m_EditorClassIdentifier: 
+  _SoundAssets:
+  - soundName: select_lock_avatar
+    AudioClip: {fileID: 8300000, guid: b8ece2e0e5b9cc846a01c55bc8b32a30, type: 3}
+  - soundName: skin_selection_cancel
+    AudioClip: {fileID: 8300000, guid: b9813de09aec2fd4e89265b2990db372, type: 3}
+  - soundName: skin_selection_buy
+    AudioClip: {fileID: 8300000, guid: e66f038860307e44ba93fb81d7502fcc, type: 3}
+  - soundName: select_skin
+    AudioClip: {fileID: 8300000, guid: fd43f7430613d6b448134a77922deb7a, type: 3}
+  prefix: 
+  addClip: []
