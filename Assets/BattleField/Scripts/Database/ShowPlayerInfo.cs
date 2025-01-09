@@ -129,7 +129,11 @@ public class ShowPlayerInfo : MonoBehaviour
 
     public void ShowInfoStat()
     {
-        if(DataSaver.Instance == null) return;
+        if(DataSaver.Instance == null) {
+            userNameStat.text = GameManager.playerNickName;
+            return;
+        }
+
         userNameStat.text = DataSaver.Instance.dataToSave.userName;
         rankNameStat.text = RankSystem.GetRankName(DataSaver.Instance.dataToSave.rank);
         winSoloStat.text = DataSaver.Instance.dataToSave.winSolo.ToString();
@@ -142,7 +146,10 @@ public class ShowPlayerInfo : MonoBehaviour
 
     public void ShowPlayerName()
     {
-        if(DataSaver.Instance == null) return;
+        if(DataSaver.Instance == null) {
+            userName.text = GameManager.playerNickName;
+            return;
+        }
         userName.text = DataSaver.Instance.dataToSave.userName;
     }
 
