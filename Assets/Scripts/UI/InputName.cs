@@ -23,6 +23,7 @@ public class InputName : MonoBehaviour
     IEnumerator LoadToMainLobby(float time) {
         GameManager.playerNickName = nameInputField.text;
         DataSaver.Instance.dataToSave.userName = nameInputField.text;
+        DataSaver.Instance.dataToSave.coins = 600;
         yield return new WaitForSeconds(time);
         //SceneManager.LoadSceneAsync(MAINLOBBY);
         LoadingScene.Instance.LoadScene(MAINLOBBY);
