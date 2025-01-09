@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class SettingPanel : MonoBehaviour
     [SerializeField] private AudioSource backgroundMusic; // Reference to Audio Source
     [SerializeField] private string backgroundMusicTag = "BackgroundMusic";
     private const string BGM_VOLUME_KEY = "BGMVolume"; // PlayerPrefs key to save volume
-
+    public static Action OnLogoutEvent;
     private void Start()
     {
         // Load saved volume or set default
@@ -66,17 +67,10 @@ public class SettingPanel : MonoBehaviour
 
     public void SignOut()
     {
-        #if UNITY_WEBGL || UNITY_IOS
-            Debug.Log("===This is webgl");
-            SceneManager.LoadSceneAsync("Start");
-            UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
-            Matchmaking.Instance.LeaveRoom();
-            return;
-        #else
-            LoginManager.Instance.SignOut();
-            Matchmaking.Instance.LeaveRoom();
-            UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
-        #endif
+        LoginManager.Instance.SignOut();
+        Matchmaking.Instance.LeaveRoom();
+        UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
+        OnLogoutEvent?.Invoke();
     }
 
     private void OnDestroy()
