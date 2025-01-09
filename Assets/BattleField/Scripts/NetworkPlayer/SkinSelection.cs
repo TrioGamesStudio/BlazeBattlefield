@@ -1,3 +1,5 @@
+using NaughtyAttributes;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +10,7 @@ public class SkinSelection : MonoBehaviour
     [SerializeField] Matchmaking matchmaking;
     [SerializeField] MatchmakingTeam matchmakingTeam;
 
-    [SerializeField] int skinsNextNumber = 0;
+    //[SerializeField] int skinsNextNumber = 0;
     [SerializeField] Transform skinsParent;
     int skinMaxNumber;
     // buttons
@@ -29,15 +31,13 @@ public class SkinSelection : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
-
+    
         matchmaking = FindObjectOfType<Matchmaking>();
         matchmakingTeam = FindObjectOfType<MatchmakingTeam>();
         skinMaxNumber = skinsParent.childCount;
 
-        selectButton.onClick.AddListener(SkinSelectNext);
         skinSelectionUI.OnChangedSkinAction += SetSkinByIndex;
-
-        skinSelectionUI.SetDeaultSkin(skinsNextNumber);
+       
         SettingPanel.OnLogoutEvent += ResetSkinIndex;
     }
 
@@ -45,39 +45,23 @@ public class SkinSelection : MonoBehaviour
     {
         skinSelectionUI.OnChangedSkinAction -= SetSkinByIndex;
         SettingPanel.OnLogoutEvent -= ResetSkinIndex;
-
-
     }
 
     private void Start()
     {
         if (Matchmaking.Instance.currentMode == Matchmaking.Mode.Solo)
         {
-            SkinsSlectionSoloUpdate(skinsNextNumber);
+            int currentSkin = skinDataHandler.CurrentSkinIndex;
 
-            matchmaking.SkinSelectedNumber = skinsNextNumber;
-            matchmakingTeam.SkinSelectedNumber = skinsNextNumber;
+            SkinsSlectionSoloUpdate(currentSkin);
+
+            matchmaking.SkinSelectedNumber = currentSkin;
+            matchmakingTeam.SkinSelectedNumber = currentSkin;
         }
+
     }
 
-    void SkinSelectNext()
-    {
-
-        if (skinsNextNumber == skinMaxNumber - 1)
-        {
-            skinsNextNumber = 0;
-
-        }
-        else
-        {
-            skinsNextNumber++;
-        }
-
-        SkinsSlectionSoloUpdate(skinsNextNumber);
-
-        matchmaking.SkinSelectedNumber = skinsNextNumber;
-        matchmakingTeam.SkinSelectedNumber = skinsNextNumber;
-    }
+    
 
     void SkinsSlectionSoloUpdate(int skinNumber)
     {
@@ -96,7 +80,9 @@ public class SkinSelection : MonoBehaviour
 
     public void SetSkinByIndex(int newIndex)
     {
-        skinsNextNumber = newIndex;
+        int skinsNextNumber = newIndex;
+        skinDataHandler.CurrentSkinIndex = newIndex;
+
         SkinsSlectionSoloUpdate(skinsNextNumber);
 
         matchmaking.SkinSelectedNumber = skinsNextNumber;
@@ -105,14 +91,12 @@ public class SkinSelection : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        skinMaxNumber = 0;
-        skinDataHandler.LockAll();
+        ResetSkinIndex();
     }
 
     public void ResetSkinIndex()
     {
-        skinMaxNumber = 0;
+        skinDataHandler.CurrentSkinIndex = 0;
         skinDataHandler.LockAll();
     }
-
 }

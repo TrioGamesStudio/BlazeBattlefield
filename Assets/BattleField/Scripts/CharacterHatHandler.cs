@@ -15,7 +15,7 @@ public class CharacterHatHandler : NetworkBehaviour
         base.Spawned();
         if (HasStateAuthority)
         {
-            playerHatIndex = HatDataHandler.currentHatIndex;
+            playerHatIndex = HatDataHandler.CurrentSkinIndex;
         }
         CreateHatRemote();
     }
@@ -28,7 +28,7 @@ public class CharacterHatHandler : NetworkBehaviour
     [EditorButton]
     public void CreateHatLocal()
     {
-        CreateHatByIndex(HatDataHandler.currentHatIndex);
+        CreateHatByIndex(HatDataHandler.CurrentSkinIndex);
     }
 
     private void CreateHatByIndex(int hatIndex)

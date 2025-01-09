@@ -31,7 +31,7 @@ public class SkinSelectionUI : MonoBehaviour
     [SerializeField] private AudioSource cancelAudio;
     [SerializeField] private AudioSource selectLockSkinAudio;
 
-    
+
     public event Action<int> OnChangedSkinAction;
     private int buyIndex;
 
@@ -126,9 +126,9 @@ public class SkinSelectionUI : MonoBehaviour
         Debug.Log("On Click UI:" + index, gameObject);
 
         ResetAvatarButtonState();
-
+        // event logic
         OnChangedSkinAction?.Invoke(index);
-       
+
         SetSelectButton(index);
 
         skinDescription.text = SkinDataHandler.skinSpriteIcons[index].skinDescription;
@@ -136,6 +136,8 @@ public class SkinSelectionUI : MonoBehaviour
         BuyPanel.gameObject.SetActive(false);
 
         selectAudio.Play();
+
+        SaveSkin();
     }
 
     public void SetDeaultSkin(int defaultIndex)
@@ -188,7 +190,10 @@ public class SkinSelectionUI : MonoBehaviour
     [Button]
     public void RefreshUIByData()
     {
-        SkinDataHandler.UnlockPlayerOwnSkin(DataSaver.Instance.inventoryDataToSave.GetCollections(SkinDataHandler.CollectionsName));
+        var collections = DataSaver.Instance.inventoryDataToSave.GetCollections(SkinDataHandler.CollectionsName);
+        var skinIndex = DataSaver.Instance.inventoryDataToSave.GetCurrentSkinIndex(SkinDataHandler.CollectionsName);
+      
+        SkinDataHandler.UnlockPlayerOwnSkin(collections, skinIndex);
 
         for (int i = 0; i < avatarUIList.Count; i++)
         {
@@ -200,19 +205,23 @@ public class SkinSelectionUI : MonoBehaviour
         }
     }
 
+    private const int DEFAULT_SKIN_INDEX = 2;
+
+
     [Button]
     public void SaveSkin()
     {
-        DataSaver.Instance.inventoryDataToSave.SaveSkinData(SkinDataHandler.CollectionsName,SkinDataHandler.GetAllUnlockSkin());
+        DataSaver.Instance.inventoryDataToSave.SaveSkinData(
+            SkinDataHandler.CollectionsName, SkinDataHandler.GetAllUnlockSkin(), SkinDataHandler.CurrentSkinIndex);
         DataSaver.Instance.SaveInventoryData();
     }
     [Button]
     public void SaveDefaultSkin()
     {
-        DataSaver.Instance.inventoryDataToSave.SaveSkinData(SkinDataHandler.CollectionsName,SkinDataHandler.GetDefautlSkinData());
+        DataSaver.Instance.inventoryDataToSave.SaveSkinData(
+            SkinDataHandler.CollectionsName, SkinDataHandler.GetDefautlSkinData(), DEFAULT_SKIN_INDEX);
         DataSaver.Instance.SaveInventoryData();
     }
 
 
-    
 }

@@ -8,6 +8,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Skin Data Handler", menuName = "Skin Data Handler/ Skin data")]
 public class SkinDataHandler : ScriptableObject
 {
+    public int CurrentSkinIndex;
+
     public List<SkinData> skinSpriteIcons = new();
     public string CollectionsName
     {
@@ -48,7 +50,7 @@ public class SkinDataHandler : ScriptableObject
         return unlockSkin;
     }
 
-    public void UnlockPlayerOwnSkin(List<string> skinOwns)
+    public void UnlockPlayerOwnSkin(List<string> skinOwns, int currentIndex)
     {
         if(skinOwns == null || skinOwns.Count == 0)
         {
@@ -56,6 +58,7 @@ public class SkinDataHandler : ScriptableObject
             Debug.LogError("Skin Count is zero, please check it out");
             return;
         }
+        CurrentSkinIndex = currentIndex;
         foreach (var skinIngame in skinSpriteIcons)
         {
             if (skinOwns.Contains(skinIngame.skinName))

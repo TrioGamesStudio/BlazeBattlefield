@@ -45,9 +45,11 @@ public class InventoryDataToSave
         {
             collectionsName = _collectionsName;
             collectionsList = _collectionsList;
+            index = 0;
         }
         public string collectionsName;
         public List<string> collectionsList;
+        public int index;
     }
     public string inventoryName;
     //public string[] skinsArr = new string[5];
@@ -66,13 +68,14 @@ public class InventoryDataToSave
         
     }
 
-    public void SaveSkinData(string collectionsName, List<string> collections)
+    public void SaveSkinData(string collectionsName, List<string> collections, int currentIndex)
     {
         foreach(var item in CustomDatas)
         {
             if(item.collectionsName == collectionsName)
             {
                 item.collectionsList = collections;
+                item.index = currentIndex;
             }
         }
     }
@@ -102,6 +105,20 @@ public class InventoryDataToSave
         {
             CustomDatas.Add(new CustomData(item.CollectionsName, item.GetDefautlSkinData()));
         }
+    }
+
+    public int GetCurrentSkinIndex(string collectionsName)
+    {
+        Debug.Log("Get Skin Collections name: " + collectionsName);
+
+        foreach (var item in CustomDatas)
+        {
+            if (item.collectionsName == collectionsName)
+            {
+                return item.index;
+            }
+        }
+        return 0;
     }
 }
 
@@ -240,11 +257,21 @@ public class DataSaver : MonoBehaviour
             Debug.Log($"found jsonData");
             inventoryDataToSave = JsonUtility.FromJson<InventoryDataToSave>(jsonData);
             //inventoryDataToSave.InitWhenLoad(skinDataHandler, hatDataHandler);
+            LoadToSkinDataHandler(skinDataHandler);
+            LoadToSkinDataHandler(hatDataHandler);
         }
         else
         {
             Debug.Log("jsonData not found");
         }
+    }
+
+    private void LoadToSkinDataHandler(SkinDataHandler skinData)
+    {
+        var collections = inventoryDataToSave.GetCollections(skinData.CollectionsName);
+        var skinIndex = inventoryDataToSave.GetCurrentSkinIndex(skinData.CollectionsName);
+
+        skinData.UnlockPlayerOwnSkin(collections, skinIndex);
     }
 
     public void ResetData()
@@ -267,4 +294,10 @@ public class DataSaver : MonoBehaviour
     }
     #endregion SAVE LOAD FIREBASE
 
+    public void SaveSkinDataHandler()
+    {
+        var collections = inventoryDataToSave.GetCollections(skinDataHandler.CollectionsName);
+        var skinIndex = inventoryDataToSave.GetCurrentSkinIndex(skinDataHandler.CollectionsName);
+        skinDataHandler.UnlockPlayerOwnSkin(collections, skinIndex);
+    }
 }

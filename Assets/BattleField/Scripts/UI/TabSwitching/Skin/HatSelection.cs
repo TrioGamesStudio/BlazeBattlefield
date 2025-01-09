@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
 #endif
+using NaughtyAttributes;
 using UnityEngine;
-
 public class HatSelection : MonoBehaviour
 {
     public static HatSelection Instance;
@@ -21,10 +21,13 @@ public class HatSelection : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
         }
 
+
         SkinSelectionUI.OnChangedSkinAction += SkinSelectionUI_OnChangedSkinAction;
-        SkinSelectionUI.SetDeaultSkin(HatDataHandler.currentHatIndex);
+
         SettingPanel.OnLogoutEvent += ResetHatIndex;
     }
+
+
     private void OnDestroy()
     {
         SkinSelectionUI.OnChangedSkinAction -= SkinSelectionUI_OnChangedSkinAction;
@@ -33,19 +36,19 @@ public class HatSelection : MonoBehaviour
     }
     private void SkinSelectionUI_OnChangedSkinAction(int newHatIndex)
     {
-        HatDataHandler.currentHatIndex = newHatIndex;
+        HatDataHandler.CurrentSkinIndex = newHatIndex;
         characterHatHandler.CreateHatLocal();
     }
 
     private void OnApplicationQuit()
     {
-        HatDataHandler.currentHatIndex = 0;
+        HatDataHandler.CurrentSkinIndex = 0;
         HatDataHandler.LockAll();
     }
 
     public void ResetHatIndex()
     {
-        HatDataHandler.currentHatIndex = 0;
+        HatDataHandler.CurrentSkinIndex = 0;
         HatDataHandler.LockAll();
     }
 }
