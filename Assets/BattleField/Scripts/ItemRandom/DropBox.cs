@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using DG.Tweening;
-using static UnityEditor.Progress;
+//using static UnityEditor.Progress;
 public class DropBox : NetworkBehaviour
 {
     [SerializeField] private BoxCollider boxCollider;
