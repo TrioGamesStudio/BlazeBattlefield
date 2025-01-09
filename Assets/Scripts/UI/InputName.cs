@@ -26,10 +26,9 @@ public class InputName : MonoBehaviour
         //GameManager.playerNickName = nameInputField.text;
         DataSaver.Instance.dataToSave.userName = nameInputField.text;
         DataSaver.Instance.dataToSave.coins = 1200;
+        yield return new WaitForSeconds(time);
+        LoadingScene.Instance.LoadScene(MAINLOBBY);
         SkinDataHandler.UnLockDefaultSkinForWebGL();
         HatDataHandler.UnLockDefaultSkinForWebGL();
-
-        yield return new WaitForSeconds(time);
-        SceneManager.LoadSceneAsync(MAINLOBBY);
     }
 }

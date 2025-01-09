@@ -44,7 +44,7 @@ public class LoadingScene : MonoBehaviour
     private void SetupLoadingScreen()
     {
         // Initially hide the loading screen
-        loadingCanvas.gameObject.SetActive(false);
+        loadingCanvas.SetActive(false);
 
         // Ensure loading screen appears on top of everything
         //loadingCanvas.sortingOrder = 999;
@@ -92,10 +92,10 @@ public class LoadingScene : MonoBehaviour
         sceneLoadOperation.allowSceneActivation = true;
 
         // Wait for the scene to activate
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.2f);
 
         // Hide the loading screen
-        loadingCanvas.gameObject.SetActive(false);
+        loadingCanvas.SetActive(false);
 
         if (UIController.Instance != null)
             UIController.Instance.ShowHidePanel(UIController.Instance.mainLobbyPanel);
