@@ -98,7 +98,7 @@ public class InventoryDataToSave
         {
             skinData, hatData
         };
-
+        CustomDatas.Clear();
         foreach (var item in skinDataHandlers)
         {
             CustomDatas.Add(new CustomData(item.CollectionsName, item.GetDefautlSkinData()));
