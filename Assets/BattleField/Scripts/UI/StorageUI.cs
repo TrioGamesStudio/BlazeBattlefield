@@ -45,8 +45,10 @@ public class StorageUI : MonoBehaviour
         ShowCanvasGroup(storageCanvasGroup, true);
         onShowStorageEvent?.Invoke();
 
+        if(DataSaver.Instance != null) {
+            DataSaver.Instance.LoadData();
+        }
         
-        DataSaver.Instance.LoadData();
 
         animatorLocalHandler.ActiveAnimatonLocal();
     }
