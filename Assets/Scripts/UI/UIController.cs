@@ -61,7 +61,7 @@ public class UIController : MonoBehaviour
     void Update()
     {
         //if (SceneManager.GetActiveScene().name != "MainLobby") return;
-        HandleTouchInput();
+        //HandleTouchInput();
     }
 
     // Method to handle the Toggle UI value change

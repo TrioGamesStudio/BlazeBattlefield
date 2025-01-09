@@ -12,7 +12,7 @@ public class SkinSelection : MonoBehaviour
     [SerializeField] Transform skinsParent;
     int skinMaxNumber;
     // buttons
-    [SerializeField] Button selectButton;
+    //[SerializeField] Button selectButton;
     [SerializeField] private SkinSelectionUI skinSelectionUI;
     [SerializeField] private SkinDataHandler skinDataHandler;
 
@@ -34,7 +34,7 @@ public class SkinSelection : MonoBehaviour
         matchmakingTeam = FindObjectOfType<MatchmakingTeam>();
         skinMaxNumber = skinsParent.childCount;
 
-        selectButton.onClick.AddListener(SkinSelectNext);
+        //selectButton.onClick.AddListener(SkinSelectNext);
         skinSelectionUI.OnChangedSkinAction += SetSkinByIndex;
 
         skinSelectionUI.SetDeaultSkin(skinsNextNumber);
