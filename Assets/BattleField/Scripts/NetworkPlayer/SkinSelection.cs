@@ -14,7 +14,7 @@ public class SkinSelection : MonoBehaviour
     // buttons
     [SerializeField] Button selectButton;
     [SerializeField] private SkinSelectionUI skinSelectionUI;
-
+    [SerializeField] private SkinDataHandler skinDataHandler;
 
     private void Awake()
     {
@@ -38,11 +38,14 @@ public class SkinSelection : MonoBehaviour
         skinSelectionUI.OnChangedSkinAction += SetSkinByIndex;
 
         skinSelectionUI.SetDeaultSkin(skinsNextNumber);
+        SettingPanel.OnLogoutEvent += ResetSkinIndex;
     }
 
     private void OnDestroy()
     {
         skinSelectionUI.OnChangedSkinAction -= SetSkinByIndex;
+        SettingPanel.OnLogoutEvent -= ResetSkinIndex;
+
 
     }
 
@@ -99,4 +102,17 @@ public class SkinSelection : MonoBehaviour
         matchmaking.SkinSelectedNumber = skinsNextNumber;
         matchmakingTeam.SkinSelectedNumber = skinsNextNumber;
     }
+
+    private void OnApplicationQuit()
+    {
+        skinMaxNumber = 0;
+        skinDataHandler.LockAll();
+    }
+
+    public void ResetSkinIndex()
+    {
+        skinMaxNumber = 0;
+        skinDataHandler.LockAll();
+    }
+
 }

@@ -9,6 +9,8 @@ public class InputName : MonoBehaviour
     public TMP_InputField nameInputField;
     [SerializeField] Button playButton;
     const string MAINLOBBY = "MainLobby";
+    [SerializeField] private SkinDataHandler SkinDataHandler;
+    [SerializeField] private SkinDataHandler HatDataHandler;
     void Start()
     {
         playButton.onClick.AddListener(SetName);
@@ -22,7 +24,10 @@ public class InputName : MonoBehaviour
 
     IEnumerator LoadToMainLobby(float time) {
         GameManager.playerNickName = nameInputField.text;
-        
+
+        SkinDataHandler.UnLockDefaultSkinForWebGL();
+        HatDataHandler.UnLockDefaultSkinForWebGL();
+
         yield return new WaitForSeconds(time);
         SceneManager.LoadSceneAsync(MAINLOBBY);
     }

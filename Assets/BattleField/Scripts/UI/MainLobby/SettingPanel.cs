@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class SettingPanel : MonoBehaviour
     [SerializeField] private AudioSource backgroundMusic; // Reference to Audio Source
     [SerializeField] private string backgroundMusicTag = "BackgroundMusic";
     private const string BGM_VOLUME_KEY = "BGMVolume"; // PlayerPrefs key to save volume
-
+    public static Action OnLogoutEvent;
     private void Start()
     {
         // Load saved volume or set default
@@ -69,6 +70,7 @@ public class SettingPanel : MonoBehaviour
         LoginManager.Instance.SignOut();
         Matchmaking.Instance.LeaveRoom();
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
+        OnLogoutEvent?.Invoke();
     }
 
     private void OnDestroy()
