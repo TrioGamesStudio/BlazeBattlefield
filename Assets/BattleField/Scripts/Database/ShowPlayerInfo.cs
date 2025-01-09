@@ -85,9 +85,12 @@ public class ShowPlayerInfo : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         
-        currentRank = DataSaver.Instance.dataToSave.rank;
-        Debug.Log("xxx " + currentRank);
+        if(DataSaver.Instance != null) {
+            currentRank = DataSaver.Instance.dataToSave.rank;
+            Debug.Log("xxx " + currentRank);
+        }
     }
+        
 
     public IEnumerator ShowPlayerDataCo(float time)
     {
