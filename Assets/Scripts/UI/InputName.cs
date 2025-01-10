@@ -26,7 +26,7 @@ public class InputName : MonoBehaviour
     IEnumerator LoadToMainLobby(float time) {
         GameManager.playerNickName = nameInputField.text;
         DataSaver.Instance.dataToSave.userName = nameInputField.text;
-        DataSaver.Instance.localCoin = 1200;
+        DataSaver.Instance.dataToSave.coins = 1200;
 
         SkinDataHandler.UnLockDefaultSkinForWebGL();
         HatDataHandler.UnLockDefaultSkinForWebGL();

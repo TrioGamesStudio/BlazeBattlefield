@@ -39,13 +39,14 @@ public class HatSelection : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        HatDataHandler.currentHatIndex = 0;
-        HatDataHandler.LockAll();
+        ResetHatIndex();
     }
 
     public void ResetHatIndex()
     {
         HatDataHandler.currentHatIndex = 0;
         HatDataHandler.LockAll();
+        SkinSelectionUI.SetDeaultSkin(HatDataHandler.currentHatIndex);
+
     }
 }

@@ -105,14 +105,14 @@ public class SkinSelection : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        skinMaxNumber = 0;
-        skinDataHandler.LockAll();
+        ResetSkinIndex();
     }
 
     public void ResetSkinIndex()
     {
-        skinMaxNumber = 0;
+        skinsNextNumber = 0;
         skinDataHandler.LockAll();
+        skinSelectionUI.SetDeaultSkin(skinsNextNumber);
     }
 
 }

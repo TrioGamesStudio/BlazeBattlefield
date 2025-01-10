@@ -11,6 +11,7 @@ public class StartGameHandler : MonoBehaviour
     public WaitingArea waitingArea;
     public UIController UIController;
     public PlaySoundReady PlaySoundReady;
+    private bool isStartGame = false;
     private void Awake()
     {
         instance = this;
@@ -19,6 +20,12 @@ public class StartGameHandler : MonoBehaviour
 
     public void PassAllPlayer()
     {
+        if (isStartGame)
+        {
+            Debug.LogWarning("Game is start", gameObject);
+            return;
+        }
+        isStartGame = true;
         Debug.Log("PassAllPlayer", gameHandler);
         NetworkPlayer.Local.StartCoroutine(PlayerCoroutine());
     }
@@ -41,13 +48,13 @@ public class StartGameHandler : MonoBehaviour
         CameraEffectControl.instance.EyeBlinkEffect.CloseEye();
 
         yield return new WaitForSeconds(2);
-        
+
         NetworkPlayer.Local.GetComponent<CharacterMovementHandler>().RespawnOnStartingBattle();
-     
+
         gameHandler.InitializeTeams();
         gameHandler.AssignRoute();
         waitingArea.ReleasePlayer();
-      
+
         yield return new WaitForSeconds(1);
         Debug.Log("Start spawn");
         CameraEffectControl.instance.EyeBlinkEffect.OpenEyeImmediately();

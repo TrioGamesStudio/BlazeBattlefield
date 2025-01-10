@@ -147,8 +147,8 @@ public class ShowPlayerInfo : MonoBehaviour
     public void ShowCoin()
     {
 #if UNITY_WEBGL
-        coinInMainLobby.text = DataSaver.Instance.localCoin.ToString();
-        coin2.text = DataSaver.Instance.localCoin.ToString();
+        coinInMainLobby.text = DataSaver.Instance.dataToSave.coins.ToString();
+        coin2.text = DataSaver.Instance.dataToSave.coins.ToString();
 #else
         coinInMainLobby.text = DataSaver.Instance.dataToSave.coins.ToString();
         coin2.text = DataSaver.Instance.dataToSave.coins.ToString();
@@ -218,7 +218,7 @@ public class ShowPlayerInfo : MonoBehaviour
 
         // Update coin
 #if UNITY_WEBGL
-        DataSaver.Instance.localCoin += coin;
+        DataSaver.Instance.dataToSave.coins += coin;
 #else
         playerData.coins += coin;
 #endif

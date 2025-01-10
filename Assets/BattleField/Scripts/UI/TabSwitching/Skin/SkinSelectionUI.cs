@@ -123,7 +123,7 @@ public class SkinSelectionUI : MonoBehaviour
         if (DataSaver.Instance != null) {
 
 #if UNITY_WEBGL
-            currentCoint = DataSaver.Instance.localCoin;
+            currentCoint = DataSaver.Instance.dataToSave.coins;
 
 #else
             currentCoint = DataSaver.Instance.dataToSave.coins;
