@@ -51,7 +51,6 @@ public class ShowPlayerInfo : MonoBehaviour
         _dataSaver.LoadData(); */
 
         DataSaver.Instance.LoadData();
-        DataSaver.Instance.localCoin = 1200;
     }
 
     private void OnEnable()
