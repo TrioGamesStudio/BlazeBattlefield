@@ -85,9 +85,12 @@ public class ShowPlayerInfo : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         
-        currentRank = DataSaver.Instance.dataToSave.rank;
-        Debug.Log("xxx " + currentRank);
+        if(DataSaver.Instance != null) {
+            currentRank = DataSaver.Instance.dataToSave.rank;
+            Debug.Log("xxx " + currentRank);
+        }
     }
+        
 
     public IEnumerator ShowPlayerDataCo(float time)
     {
@@ -129,7 +132,11 @@ public class ShowPlayerInfo : MonoBehaviour
 
     public void ShowInfoStat()
     {
-        if(DataSaver.Instance == null) return;
+        if(DataSaver.Instance == null) {
+            userNameStat.text = GameManager.playerNickName;
+            return;
+        }
+
         userNameStat.text = DataSaver.Instance.dataToSave.userName;
         rankNameStat.text = RankSystem.GetRankName(DataSaver.Instance.dataToSave.rank);
         winSoloStat.text = DataSaver.Instance.dataToSave.winSolo.ToString();
@@ -142,7 +149,10 @@ public class ShowPlayerInfo : MonoBehaviour
 
     public void ShowPlayerName()
     {
-        if(DataSaver.Instance == null) return;
+        if(DataSaver.Instance == null) {
+            userName.text = GameManager.playerNickName;
+            return;
+        }
         userName.text = DataSaver.Instance.dataToSave.userName;
     }
 

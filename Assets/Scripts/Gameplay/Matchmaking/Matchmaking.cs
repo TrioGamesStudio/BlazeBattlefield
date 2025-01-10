@@ -203,7 +203,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
 
         if (result.Ok)
         {
-            //LoadingScene.Instance.ShowLoadingScreen(networkRunner);
+            LoadingScene.Instance.ShowLoadingScreen(networkRunner);
             UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
             localPlayer.gameObject.SetActive(false);
             // all good
@@ -378,7 +378,7 @@ public class Matchmaking : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         await networkRunner.Shutdown();
         //SceneManager.LoadScene("MainLobby");
-        //LoadingScene.Instance.LoadScene("MainLobby");
+        LoadingScene.Instance.LoadScene("MainLobby");
         SceneManager.LoadSceneAsync("MainLobby");
         isDone = false;
         battleStarted = false;

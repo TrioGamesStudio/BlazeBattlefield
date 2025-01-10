@@ -30,6 +30,6 @@ public class InputName : MonoBehaviour
         HatDataHandler.UnLockDefaultSkinForWebGL();
 
         yield return new WaitForSeconds(time);
-        SceneManager.LoadSceneAsync(MAINLOBBY);
+        LoadingScene.Instance.LoadScene(MAINLOBBY);
     }
 }
