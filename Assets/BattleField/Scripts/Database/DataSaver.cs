@@ -116,7 +116,7 @@ public class DataSaver : MonoBehaviour
     public HatDataHandler hatDataHandler;
     //others
     DatabaseReference dbRef;
-
+    public int localCoin = 1200;
     private void Awake()
     {
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;

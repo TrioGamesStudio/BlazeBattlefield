@@ -67,9 +67,14 @@ public class SettingPanel : MonoBehaviour
 
     public void SignOut()
     {
+#if UNITY_WEBGL
+        SceneManager.LoadSceneAsync("Start");
+#else
         LoginManager.Instance.SignOut();
+#endif
         Matchmaking.Instance.LeaveRoom();
         UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
+
         OnLogoutEvent?.Invoke();
     }
 

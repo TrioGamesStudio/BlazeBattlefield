@@ -53,6 +53,7 @@ public class ShowPlayerInfo : MonoBehaviour
 
         if(DataSaver.Instance == null) return;
         DataSaver.Instance.LoadData();
+        DataSaver.Instance.localCoin = 1200;
     }
 
     private void OnEnable()
@@ -159,8 +160,14 @@ public class ShowPlayerInfo : MonoBehaviour
     public void ShowCoin()
     {
         if(DataSaver.Instance == null) return;
+#if UNITY_WEBGL
+        coinInMainLobby.text = DataSaver.Instance.localCoin.ToString();
+        coin2.text = DataSaver.Instance.localCoin.ToString();
+#else
         coinInMainLobby.text = DataSaver.Instance.dataToSave.coins.ToString();
         coin2.text = DataSaver.Instance.dataToSave.coins.ToString();
+#endif
+        
     }
 
     void UpdateRankUI()
@@ -227,8 +234,11 @@ public class ShowPlayerInfo : MonoBehaviour
         var playerData = DataSaver.Instance.dataToSave;
 
         // Update coin
+#if UNITY_WEBGL
+        DataSaver.Instance.localCoin += coin;
+#else
         playerData.coins += coin;
-
+#endif
         // save to firebase datatosave
         DataSaver.Instance.SaveData();
 

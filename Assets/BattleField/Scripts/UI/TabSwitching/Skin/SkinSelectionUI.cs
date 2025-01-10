@@ -3,9 +3,10 @@ using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 public class SkinSelectionUI : MonoBehaviour
@@ -118,8 +119,17 @@ public class SkinSelectionUI : MonoBehaviour
     {
         int currentCoint = 0;
         int skinPrice = 0;
-        if(DataSaver.Instance != null) {
+
+        if (DataSaver.Instance != null) {
+
+#if UNITY_WEBGL
+            currentCoint = DataSaver.Instance.localCoin;
+
+#else
             currentCoint = DataSaver.Instance.dataToSave.coins;
+
+#endif
+
             skinPrice = SkinDataHandler.skinSpriteIcons[buyIndex].price;
         }
         
