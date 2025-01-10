@@ -174,6 +174,9 @@ public class DataSaver : MonoBehaviour
     //? Save progress data
     public void SaveData()
     {
+#if UNITY_WEBGL
+        return;
+#endif 
         // chuyen dataToSave -> json
         string json = JsonUtility.ToJson(dataToSave);
 
@@ -184,6 +187,9 @@ public class DataSaver : MonoBehaviour
 
     public void LoadData()
     {
+#if UNITY_WEBGL
+        return;
+#endif 
         StartCoroutine(LoadDataCO());
 
         LoadInventoryData();
@@ -215,6 +221,9 @@ public class DataSaver : MonoBehaviour
     [Button]
     public void SaveInventoryData()
     {
+#if UNITY_WEBGL
+        return;
+#endif 
         string json = JsonUtility.ToJson(inventoryDataToSave);
         dbRef.Child("Inventory").Child(userId).SetRawJsonValueAsync(json);
 
@@ -223,6 +232,9 @@ public class DataSaver : MonoBehaviour
     [Button]
     public void LoadInventoryData()
     {
+#if UNITY_WEBGL
+        return;
+#endif 
         Debug.Log($"_____co load inventory");
         StartCoroutine(LoadInventoryDataCO());
 
