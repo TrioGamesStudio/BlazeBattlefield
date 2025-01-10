@@ -193,8 +193,10 @@ public class SkinSelectionUI : MonoBehaviour
     [Button]
     public void RefreshUIByData()
     {
-        if(DataSaver.Instance == null) return;
-        SkinDataHandler.UnlockPlayerOwnSkin(DataSaver.Instance.inventoryDataToSave.GetCollections(SkinDataHandler.CollectionsName));
+        if(DataSaver.Instance != null)
+        {
+            SkinDataHandler.UnlockPlayerOwnSkin(DataSaver.Instance.inventoryDataToSave.GetCollections(SkinDataHandler.CollectionsName));
+        }
 
         for (int i = 0; i < avatarUIList.Count; i++)
         {
@@ -205,6 +207,7 @@ public class SkinSelectionUI : MonoBehaviour
             avatarUI.ToggleLocker(skinData.isUnlock);
         }
     }
+
 
     [Button]
     public void SaveSkin()

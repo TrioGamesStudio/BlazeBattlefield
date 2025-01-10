@@ -25,7 +25,7 @@ public class InputName : MonoBehaviour
 
     IEnumerator LoadToMainLobby(float time) {
         GameManager.playerNickName = nameInputField.text;
-
+        GameManager.CoinLocal = 1200;
         SkinDataHandler.UnLockDefaultSkinForWebGL();
         HatDataHandler.UnLockDefaultSkinForWebGL();
 
