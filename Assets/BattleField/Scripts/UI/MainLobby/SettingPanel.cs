@@ -72,7 +72,7 @@ public class SettingPanel : MonoBehaviour
             SceneManager.LoadSceneAsync("Start");
             UIController.Instance.ShowHideUI(UIController.Instance.mainLobbyPanel);
             Matchmaking.Instance.LeaveRoom();
-            OnLogoutEvent?.Invoke();
+            //OnLogoutEvent?.Invoke();
         #else
             LoginManager.Instance.SignOut();
             Matchmaking.Instance.LeaveRoom();
