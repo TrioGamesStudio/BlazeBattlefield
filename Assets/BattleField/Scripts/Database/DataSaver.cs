@@ -174,6 +174,11 @@ public class DataSaver : MonoBehaviour
     //? Save progress data
     public void SaveData()
     {
+        #if (UNITY_WEBGL)
+            Debug.Log("This is WebGL");
+            return;
+        #endif
+
         // chuyen dataToSave -> json
         string json = JsonUtility.ToJson(dataToSave);
 
@@ -184,6 +189,11 @@ public class DataSaver : MonoBehaviour
 
     public void LoadData()
     {
+        #if (UNITY_WEBGL)
+            Debug.Log("This is WebGL");
+            return;
+        #endif
+
         StartCoroutine(LoadDataCO());
 
         LoadInventoryData();

@@ -111,7 +111,7 @@ public class SkinDataHandler : ScriptableObject
 
     public void UnLockDefaultSkinForWebGL()
     {
-        for (int i = 0; i < skinSpriteIcons.Count; i++)
+        for (int i = 0; i < 3; i++)
         {
             skinSpriteIcons[i].isUnlock = true;
         }
