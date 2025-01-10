@@ -119,7 +119,6 @@ public class DataSaver : MonoBehaviour
     public int localCoin = 1200;
     private void Awake()
     {
-        dbRef = FirebaseDatabase.DefaultInstance.RootReference;
         if (Instance != null && this.gameObject != null)
         {
             Destroy(this.gameObject);
@@ -128,6 +127,11 @@ public class DataSaver : MonoBehaviour
         {
             Instance = this;
         }
+        #if UNITY_WEBGL
+            return;
+        #endif
+        
+        dbRef = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
     private void Start()
