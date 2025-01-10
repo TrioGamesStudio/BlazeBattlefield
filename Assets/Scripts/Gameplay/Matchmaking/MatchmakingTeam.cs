@@ -207,7 +207,8 @@ public class MatchmakingTeam : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         networkRunner.SessionInfo.IsOpen = false;
         isDone = true;
-        StartGameHandler.OnStartGameAction?.Invoke();
+        StartGameHandler.instance.PassAllPlayer();
+
         //FindObjectOfType<UIController>().StartCountdown();
         //StartCoroutine(ReleasePlayer());
         //StartCoroutine(InitializeTeams());

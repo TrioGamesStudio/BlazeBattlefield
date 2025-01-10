@@ -21,6 +21,7 @@ public class SkinDataHandler : ScriptableObject
         }
     }
     [SerializeField] private string collectionsName;
+
     public List<string> GetDefautlSkinData()
     {
         {
@@ -34,6 +35,7 @@ public class SkinDataHandler : ScriptableObject
             return defaultSkins;
         }
     }
+
     public List<string> GetAllUnlockSkin()
     {
         List<string> unlockSkin = new List<string>();
@@ -45,6 +47,7 @@ public class SkinDataHandler : ScriptableObject
         Debug.Log("Total skin: " + unlockSkin.Count);
         return unlockSkin;
     }
+
     public void UnlockPlayerOwnSkin(List<string> skinOwns)
     {
         if(skinOwns == null || skinOwns.Count == 0)
@@ -71,11 +74,13 @@ public class SkinDataHandler : ScriptableObject
     {
         SkinLocker(true);
     }
+
     [Button]
     public void LockAll()
     {
         SkinLocker(false);
     }
+
     private void SkinLocker(bool isUnlock)
     {
         foreach (var skin in skinSpriteIcons)
@@ -83,6 +88,7 @@ public class SkinDataHandler : ScriptableObject
             skin.isUnlock = isUnlock;
         }
     }
+
     [Button]
     private void CreatePriceForSkin()
     {
@@ -101,6 +107,13 @@ public class SkinDataHandler : ScriptableObject
             EditorUtility.SetDirty(skin);
 #endif
         }
+    }
 
+    public void UnLockDefaultSkinForWebGL()
+    {
+        for (int i = 0; i < skinSpriteIcons.Count; i++)
+        {
+            skinSpriteIcons[i].isUnlock = true;
+        }
     }
 }

@@ -17,6 +17,7 @@ public class StorageUI : MonoBehaviour
     public UnityEvent onShowMainLobbyEvent;
     public UnityEvent onShowStorageEvent;
 
+    [SerializeField] AnimatorLocalHandler animatorLocalHandler;
     private void Awake()
     {
         ShowMainLobby();
@@ -46,6 +47,7 @@ public class StorageUI : MonoBehaviour
 
         DataSaver.Instance.LoadData();
 
+        animatorLocalHandler.ActiveAnimatonLocal();
     }
 
     public void ShowMainLobby()
@@ -53,6 +55,8 @@ public class StorageUI : MonoBehaviour
         ShowCanvasGroup(mainLobbyCanvasGroup, true);
         ShowCanvasGroup(storageCanvasGroup, false);
         onShowMainLobbyEvent?.Invoke();
+
+        animatorLocalHandler.DeActiveAnimatonLocal();
     }
 
     private void ShowCanvasGroup(CanvasGroup canvasGroup, bool enable)

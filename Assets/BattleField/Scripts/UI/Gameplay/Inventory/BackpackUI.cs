@@ -70,9 +70,12 @@ public class BackpackUI : MonoBehaviour
     public void ActiveHealthTimer()
     {
         if (currentItem == null) return;
-        var healthConfig = ItemDatabase.instance.ItemConfigDatabase.FindHealthItem(currentItem._SubItemEnum);
-        healthAmount = healthConfig.healthAmount;
-        TimerActionHandler.instance.StartTimer(healthConfig.usingTime, () => { OnUseHealthItem(currentItem); },null);
+        if(NetworkPlayer.Local.GetComponent<HPHandler>().Networked_HP < 100)
+        {
+            var healthConfig = ItemDatabase.instance.ItemConfigDatabase.FindHealthItem(currentItem._SubItemEnum);
+            healthAmount = healthConfig.healthAmount;
+            TimerActionHandler.instance.StartTimer(healthConfig.usingTime, () => { OnUseHealthItem(currentItem); }, null);
+        }
     }
     private byte healthAmount = 0;
     private void OnUseHealthItem(InventoryItem currentItem)

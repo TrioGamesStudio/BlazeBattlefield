@@ -5,7 +5,6 @@ using Firebase.Database;
 using UnityEngine.SceneManagement;
 using NaughtyAttributes;
 using System.Collections.Generic;
-//using static UnityEditor.Progress;
 
 [Serializable]
 public class DataToSave
@@ -175,25 +174,16 @@ public class DataSaver : MonoBehaviour
     //? Save progress data
     public void SaveData()
     {
-        #if UNITY_WEBGL || UNITY_IOS
-            Debug.Log("===This is webgl");
-            return;
-        #endif
-        Debug.Log("===This is not webgl");
         // chuyen dataToSave -> json
         string json = JsonUtility.ToJson(dataToSave);
+
 
         // tao folder trong database realtime
         dbRef.Child("Users").Child(userId).SetRawJsonValueAsync(json);
     }
 
-    public void LoadData() {
-        #if UNITY_WEBGL || UNITY_IOS
-            Debug.Log("===This is webgl");
-            return;
-        #endif
-
-        Debug.Log("===This is not webgl");
+    public void LoadData()
+    {
         StartCoroutine(LoadDataCO());
 
         LoadInventoryData();
@@ -225,11 +215,6 @@ public class DataSaver : MonoBehaviour
     [Button]
     public void SaveInventoryData()
     {
-        #if UNITY_WEBGL || UNITY_IOS
-            Debug.Log("===This is webgl");
-            return;
-        #endif
-        Debug.Log("===This is not webgl");
         string json = JsonUtility.ToJson(inventoryDataToSave);
         dbRef.Child("Inventory").Child(userId).SetRawJsonValueAsync(json);
 
@@ -238,11 +223,6 @@ public class DataSaver : MonoBehaviour
     [Button]
     public void LoadInventoryData()
     {
-        #if UNITY_WEBGL || UNITY_IOS
-            Debug.Log("===This is webgl");
-            return;
-        #endif
-            Debug.Log("===This is not webgl");
         Debug.Log($"_____co load inventory");
         StartCoroutine(LoadInventoryDataCO());
 
@@ -259,7 +239,7 @@ public class DataSaver : MonoBehaviour
         {
             Debug.Log($"found jsonData");
             inventoryDataToSave = JsonUtility.FromJson<InventoryDataToSave>(jsonData);
-            inventoryDataToSave.InitWhenLoad(skinDataHandler, hatDataHandler);
+            //inventoryDataToSave.InitWhenLoad(skinDataHandler, hatDataHandler);
         }
         else
         {
@@ -285,6 +265,6 @@ public class DataSaver : MonoBehaviour
 
         Debug.Log("Player data has been reset.");
     }
-#endregion SAVE LOAD FIREBASE
+    #endregion SAVE LOAD FIREBASE
 
 }
