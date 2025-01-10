@@ -129,9 +129,10 @@ public class DataSaver : MonoBehaviour
         }
         #if UNITY_WEBGL
             return;
-        #endif
-        
+        #else
+
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+        #endif
     }
 
     private void Start()
