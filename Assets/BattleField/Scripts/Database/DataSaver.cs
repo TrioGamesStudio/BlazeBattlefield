@@ -133,6 +133,8 @@ public class DataSaver : MonoBehaviour
 
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
         #endif
+
+        Application.targetFrameRate = 60;
     }
 
     private void Start()
