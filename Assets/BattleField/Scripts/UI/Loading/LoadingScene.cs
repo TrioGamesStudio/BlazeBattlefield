@@ -101,8 +101,19 @@ public class LoadingScene : MonoBehaviour
             UIController.Instance.ShowHidePanel(UIController.Instance.mainLobbyPanel);
 
         //FindObjectOfType<ShowPlayerInfo>().ShowPlayerData();
-        StartCoroutine(FindObjectOfType<ShowPlayerInfo>().LoadPlayerDataCo(0.1f));
-        StartCoroutine(FindObjectOfType<ShowPlayerInfo>().ShowPlayerDataCo(0.3f));
+        var showPlayerInfor = FindObjectOfType<ShowPlayerInfo>();
+        if(showPlayerInfor != null)
+        {
+            Debug.Log("Show player canvas not null");
+
+            StartCoroutine(showPlayerInfor.LoadPlayerDataCo(0.1f));
+            StartCoroutine(showPlayerInfor.ShowPlayerDataCo(0.3f));
+        }
+        else
+        {
+            Debug.Log("Show player canvas is null");
+        }
+        
         isLoading = false;
     }
 
