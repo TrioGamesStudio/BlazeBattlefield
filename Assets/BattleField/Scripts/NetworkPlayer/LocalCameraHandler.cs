@@ -72,7 +72,6 @@ public class LocalCameraHandler : NetworkBehaviour
         viewInput.y = aim.y * -1f;
 
         RecoilUpdate();
-
     }
 
     void LateUpdate()
@@ -124,7 +123,7 @@ public class LocalCameraHandler : NetworkBehaviour
         _cameraRotationY += viewInput.x * Time.deltaTime * networkCharacterController.rotationSpeed;
 
         //localCamera.transform.rotation = Quaternion.Euler(_cameraRotationX, _cameraRotationY, 0);
-        localCamera.transform.rotation = Quaternion.Euler(new Vector3(_cameraRotationX, _cameraRotationY, 0) + currentRotation);
+        localCamera.transform.rotation = Quaternion.Euler(new Vector3(_cameraRotationX, _cameraRotationY, 0));
     }
     public Vector3 accuryVector = Vector3.one;
     public void RaycastHitPoint() {
