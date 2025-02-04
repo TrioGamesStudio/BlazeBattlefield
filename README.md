@@ -3,6 +3,28 @@
 ## Game Overview  
 Blaze Battlefield is a multiplayer shooting game set in a futuristic world where large corporations and secret organizations control society. The Black Eagle corporation conducts experimental trials on isolated islands, seeking to transform humans into fighting machines.  
 
+## Play Now
+### Online Platforms
+* 🎮 Itch.io: https://triogames.itch.io/blaze-battlefield
+
+## Illustrating Images
+
+### Game Screenshots
+![Login](/Images/Login.png)
+Login Screen
+
+![Main Lobby](/Images/MainLobby.png)
+Main lobby Screen
+
+![Shop](/Images/Shop.png)
+Shop UI
+
+![Play Scene](/Images/PlayScene.png)
+Play Scene
+
+![Result UI](/Images/Result.png)
+Result UI
+
 ## Core Features  
 
 ### Gameplay  
