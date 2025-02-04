@@ -11,19 +11,19 @@ Blaze Battlefield is a multiplayer shooting game set in a futuristic world where
 ## Illustrating Images
 
 ### Game Screenshots
-![Login](/Images/Login.png)
+![Login](/ImagesIllustrate/Login.png)
 Login Screen
 
-![Main Lobby](/Images/MainLobby.png)
+![Main Lobby](/ImagesIllustrate/MainLobby.png)
 Main lobby Screen
 
-![Shop](/Images/Shop.png)
+![Shop](/ImagesIllustrate/Shop.png)
 Shop UI
 
-![Play Scene](/Images/PlayScene.png)
+![Play Scene](/ImagesIllustrate/PlayScene.png)
 Play Scene
 
-![Result UI](/Images/Result.png)
+![Result UI](/ImagesIllustrate/Result.png)
 Result UI
 
 ## Core Features  
