@@ -8,6 +8,11 @@ Blaze Battlefield is a multiplayer shooting game set in a futuristic world where
 * 🎮 Itch.io: https://triogames.itch.io/blaze-battlefield
 * 🎮 APK (Dowload): https://drive.google.com/file/d/1qrHZ9_NrTjzGg80onL66dMbN9rcqJEHF/view?usp=sharing
 * 🎮 Window (Dowload): https://drive.google.com/file/d/1zMTXxRdcSfFn1XStjpIWv655Cnjvs8rQ/view?usp=sharing
+
+## Video
+
+* Youtube: https://youtu.be/7TPPbZsBlto
+
 ## Illustrating Images
 
 ### Game Screenshots
